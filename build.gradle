@@ -1,210 +1,143 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-    }
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
+    id 'com.gtnewhorizons.retrofuturagradle' version '1.4.1'
+    id 'com.matthewprenger.cursegradle' version '1.4.0' apply false
+    id 'com.modrinth.minotaur' version '2.+' apply false
+    id 'org.jetbrains.changelog' version '2.2.1'
 }
-apply plugin: 'net.minecraftforge.gradle.forge'
+
+apply from: 'gradle/scripts/helpers.gradle'
+
+// Project metadata configuration
+version = "${mc_version}-${mod_version_massive}.${mod_version_major}.${mod_version_minor}"
+group = "me.desht.pneumaticcraft"
+archivesBaseName = "pneumaticcraft-repressurized"
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+        vendor = JvmVendorSpec.AZUL
+    }
+    withSourcesJar()
+}
+
+minecraft {
+    mcVersion = '1.12.2'
+    mcpMappingChannel = 'stable'
+    mcpMappingVersion = '39'
+    username = 'Developer'
+
+    extraRunJvmArguments.addAll([
+            '-Dfml.coreMods.load=elucent.albedo.asm.FMLPlugin'
+    ])
+}
 
 repositories {
     maven {
+        name = "CleanroomMC Maven"
+        url = "https://maven.cleanroommc.com"
+    }
+    maven {
         name = "CoFH Maven"
-        url = "http://maven.covers1624.net"
+        url = "https://maven.covers1624.net"
     }
     maven {
         name = "JEI"
-        url = "http://dvs1.progwml6.com/files/maven"
+        url = "https://dvs1.progwml6.com/files/maven"
     }
     maven {
         name = "MCMP"
-        url = "http://maven.amadornes.com/"
+        url = "https://maven.amadornes.com/"
     }
     maven {
         name = "OpenComputers"
-        url = "http://maven.cil.li/"
-    }
-    maven {
-        name = "ComputerCraft"
-        url = "http://cc.crzd.me/maven"
+        url = "https://maven.cil.li/"
     }
     maven {
         name = "hwyla"
-        url = 'http://tehnut.info/maven/'
+        url = 'https://tehnut.info/maven'
     }
     maven { // TOP
         name = "tterrag maven"
-        url = "http://maven.tterrag.com/"
+        url = "https://maven.tterrag.com/"
     }
     maven {
         name = 'BlameJared - Crafttweaker/Patchouli'
-        url = 'http://maven.blamejared.com/'
+        url = 'https://maven.blamejared.com/'
     }
     maven {
         name = "K-4u Mod maven"
         url = "https://modmaven.k-4u.nl/"
     }
     maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven {
         name = "Curseforge"
-        url = "https://minecraft.curseforge.com/api/maven/"
+        url = "https://cursemaven.com"
     }
     maven { // Albedo Lights
-        url = 'https://repo.elytradev.com/'
+        url = 'https://oldrepo.y2k.diy/'
     }
     maven { // Baubles
         name = "thiakil"
-        url = "http://maven.thiakil.com"
-    }
-}
-
-task copyCIArtifacts << {
-    if (System.getenv("CIRCLECI").equals("true")) {
-        copy {
-            from(file('build/libs/').listFiles())
-            into System.getenv('CIRCLE_ARTIFACTS')
-        }
-    }
-}
-
-// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
-version = "${mc_version}-${mod_version_massive}.${mod_version_major}.${mod_version_minor}"
-group = "me.desht.pneumaticcraft"
-archivesBaseName = "pneumaticcraft-repressurized"
-
-if (System.getenv().BUILD_NUMBER != null) {
-    version += "-${System.getenv().BUILD_NUMBER}"
-} else {
-    version += "-CUSTOM"
-}
-
-sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-// prevent java 8's strict doclint for javadocs from failing builds
-allprojects {
-    tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-    }
-}
-
-jar {
-    from sourceSets.main.output
-    from sourceSets.api.output
-}
-
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
-    from sourceSets.main.allJava
-    from sourceSets.api.allJava
-}
-
-task apiJar(type: Jar) {
-    classifier = 'api'
-    from sourceSets.api.java
-    // TODO: when FG bug is fixed, remove allJava from the api jar.
-    // https://github.com/MinecraftForge/ForgeGradle/issues/369
-    // Gradle should be able to pull them from the -sources jar.
-    from sourceSets.api.allJava
-}
-
-task("uploadJars", dependsOn:"reobf") {
-    description = "uploads JARs"
-    if (System.getenv("local_maven") != null) {
-        apply plugin: 'maven'
-        uploadArchives {
-            repositories {
-                mavenDeployer {
-                    repository(url: "file://" + System.getenv("local_maven"))
-                }
-            }
-        }
-    }
-}
-
-artifacts {
-    archives sourcesJar
-    archives apiJar
-}
-
-compileJava {
-    sourceCompatibility = targetCompatibility = '1.8'
-}
-
-minecraft {
-    version = "${forge_version}"
-    runDir = "run"
-    mappings = "${mappings_version}"
-    clientJvmArgs += "-Dfml.coreMods.load=elucent.albedo.asm.FMLPlugin"
-    replace '@VERSION@', project.version
-    replaceIn 'PneumaticCraftRepressurized.java'
-    replace '@MASSIVE@', mod_version_massive
-    replaceIn 'lib/Versions.java'
-    replace '@MAJOR@', mod_version_major
-    replaceIn 'lib/Versions.java'
-    replace '@MINOR@', mod_version_minor
-    replaceIn 'lib/Versions.java'
-    replace '@MC_VERSION@', version
-    replaceIn 'lib/Versions.java'
-    if (System.getenv("BUILD_NUMBER") != null) {
-        replace '@BUILD_NUMBER@', System.getenv("BUILD_NUMBER")
-    } else {
-        replace '@BUILD_NUMBER@', 0
+        url = "https://maven.thiakil.com/"
     }
 }
 
 dependencies {
-    compileOnly "cofh:RedstoneFlux:1.12-${redstone_flux_version}:universal"
-    compileOnly("mekanism:Mekanism:${mekanism_version}:api") { exclude group: "mezz.jei" }
-    compileOnly "mezz.jei:jei_${mc_version}:${jei_version}"
+    // Core dependencies
+    implementation "cofh:RedstoneFlux:1.12-${redstone_flux_version}:universal"
+    compileOnly "mezz.jei:jei_1.12.2:${jei_version}"
     compileOnly "cofh:CoFHCore:1.12.2-${cofhcore_version}:deobf"
     compileOnly "MCMultiPart2:MCMultiPart:${mcmultipart_version}"
     compileOnly "li.cil.oc:OpenComputers:MC1.12.2-${oc_version}:api"
     compileOnly "dan200.computercraft:ComputerCraft:${computercraft_version}"
-    compileOnly "mcp.mobius.waila:Hwyla:${hwyla_version}:api"
+    compileOnly "curse.maven:hwyla-253449:${hwyla_cfid}"
     compileOnly "mcjty.theoneprobe:TheOneProbe-1.12:${top_version}"
     compileOnly "CraftTweaker2:CraftTweaker2-API:${crafttweaker_version}"
     compileOnly "CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-${crafttweaker_version}"
-    compileOnly "igwmod:IGW-Mod-1.12.2:${igwmod_version}:universal"  // using universal instead of userdev for now
     compileOnly "net.industrial-craft:industrialcraft-2:2.8.27-ex112:api"
     compileOnly "thaumcraft:Thaumcraft:${thaumcraft_version}"
     compileOnly "team.chisel.ctm:CTM:${ctm_version}:api"
     compileOnly "vazkii.botania:Botania:${botania_version}"
     compileOnly("appeng:appliedenergistics2:${ae2_version}:api")
-    //compileOnly "elucent:albedo:${albedo_version}"
     compileOnly "vazkii.patchouli:Patchouli:${patchouli_version}"
     compileOnly "blusunrize:ImmersiveEngineering:${immersive_engineering_version}"
     compileOnly "com.azanor.baubles:Baubles:${baubles_version}"
-    compileOnly "com.github.glitchfiend.biomesoplenty:ToughAsNails:${tan_version}:universal"
+
+    // Modern dependency resolution
+    compileOnly "curse.maven:mekanism-268560:2835175" // Mekanism-1.12.2-9.8.3.390
+    compileOnly "curse.maven:igw-mod-268495:2801979" // IGW-Mod-1.12.2-1.4.3-14
+    compileOnly "curse.maven:albedo-301051:2806127" // albedo-2.0-SNAPSHOT
 }
 
 processResources {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
+    filesMatching("mcmod.info") {
+        expand 'version': project.version, 'mcversion': minecraft.mcVersion
     }
 }
-
-idea { module { inheritOutputDirs = true } }
 
 jar {
     manifest {
-        attributes 'FMLAT': 'pneumaticcraft_at.cfg'
+        attributes([
+                "FMLAT": "pneumaticcraft_at.cfg",
+                "FMLCorePlugin": "elucent.albedo.asm.FMLPlugin",
+                "FMLCorePluginContainsFMLMod": "true"
+        ])
+    }
+
+    from("LICENSE") {
+        rename { "${it}_${archivesBaseName}" }
     }
 }
+
+idea {
+    module {
+        inheritOutputDirs = true
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+apply from: 'gradle/scripts/publishing.gradle'
