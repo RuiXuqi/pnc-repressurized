@@ -49,7 +49,7 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
         drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2, enabled ? 0xFFA0A0A0 : 0xFF999999);
         drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2 - 1, enabled ? 0XFF202020 : 0xFFAAAAAA);
         if (checked) {
-            drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, 1, enabled ? 0xFFFFFFFF : 0xFFAAAAAA);
+            drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, 1, enabled ? 0xFF00C000 : 0xFFAAAAAA);
         }
         fontRenderer.drawString(I18n.format(text), x + 1 + BUTTON_WIDTH, y + BUTTON_HEIGHT / 2 - fontRenderer.FONT_HEIGHT / 2, enabled ? color : 0xFF888888);
     }

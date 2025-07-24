@@ -89,6 +89,8 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     private int diggingX, diggingY, diggingZ;
     @DescSynced
     private int speedUpgrades;
+    @DescSynced
+    public boolean isIdle;
 
     public static final Set<String> BLACKLISTED_WIDGETS = ImmutableSet.of(
             "computerCraft",
@@ -100,6 +102,9 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
             "entityExport",
             "entityImport"
     );
+
+    private static final double SPEED_PER_UPGRADE = 0.05;
+    private static final double BASE_SPEED = 0.15;
 
     private UUID ownerID;
     private String ownerName;
@@ -142,8 +147,8 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
             updateNeighbours = false;
         }
 
-        double speed = getSpeed();
-        if (PneumaticCraftUtils.distBetweenSq(getPos(), targetX, targetY, targetZ) <= speed * speed) {
+        double speed = BASE_SPEED + speedUpgrades * SPEED_PER_UPGRADE;
+        if (PneumaticCraftUtils.distBetweenSq(getPos(), targetX, targetY, targetZ) <= 1 && isIdle) {
             curX = targetX;
             curY = targetY;
             curZ = targetZ;
@@ -194,10 +199,6 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
         if (drone != null) {
             drone.setDead();
         }
-    }
-
-    private double getSpeed() {
-        return Math.min(10, speedUpgrades) * 0.1 + 0.1;
     }
 
     private UUID getOwnerUUID() {
@@ -257,6 +258,7 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
             ItemStack stack = getStackInSlot(slot);
             if (!stack.isEmpty() && isProgrammableAndValidForDrone(TileEntityProgrammableController.this, stack)) {
                 progWidgets = TileEntityProgrammer.getProgWidgets(stack);
+                isIdle = false;
             } else {
                 progWidgets.clear();
                 setDugBlock(null);
@@ -271,6 +273,7 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
                     }
                 }
                 if (updateNeighbours) updateNeighbours();
+                isIdle = true;
             }
             if (!getWorld().isRemote) {
                 getAIManager().setWidgets(progWidgets);

@@ -4,8 +4,8 @@ import me.desht.pneumaticcraft.client.model.module.ModelFlowDetector;
 import me.desht.pneumaticcraft.client.model.module.ModelModuleBase;
 import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
 import me.desht.pneumaticcraft.lib.Names;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -47,8 +47,7 @@ public class ModuleFlowDetector extends TubeModuleRedstoneEmitting implements II
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Flow: " + TextFormatting.WHITE + oldFlow + " mL/tick");
-        super.addInfo(curInfo);
+        curInfo.add(I18n.format("waila.flowModule.level", oldFlow));
     }
 
     @Override

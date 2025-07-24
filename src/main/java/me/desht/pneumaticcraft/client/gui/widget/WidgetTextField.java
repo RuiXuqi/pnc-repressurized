@@ -35,6 +35,18 @@ public class WidgetTextField extends GuiTextField implements IGuiWidget {
     }
 
     @Override
+    public void drawTextBox() {
+        super.drawTextBox();
+        if (getVisible() && isFocused()) {
+            int borderColor = 0xFFFFFFFF;
+            drawRect(x - 1, y - 1, x + width + 1, y, borderColor);
+            drawRect(x - 1, y + height, x + width + 1, y + height + 1, borderColor);
+            drawRect(x - 1, y - 1, x, y + height + 1, borderColor);
+            drawRect(x + width, y - 1, x + width + 1, y + height + 1, borderColor);
+        }
+    }
+
+    @Override
     public void render(int mouseX, int mouseY, float partialTick) {
         String oldText = getText();
         int oldCursorPos = getCursorPosition();

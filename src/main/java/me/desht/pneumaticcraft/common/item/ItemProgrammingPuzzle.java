@@ -55,7 +55,7 @@ public class ItemProgrammingPuzzle extends ItemPneumaticSubtyped {
 
 //    @Override
 //    public void registerItemVariants() {
-//        ResourceLocation resLoc = new ResourceLocation(Names.MOD_ID, getTranslationKey().substring(5));
+//        ResourceLocation resLoc = new ResourceLocation(Tags.MOD_ID, getTranslationKey().substring(5));
 //        ModelBakery.registerItemVariants(this, resLoc);
 //        for (int i = 0; i < 16; i++)
 //            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, i, new ModelResourceLocation(resLoc, "inventory"));

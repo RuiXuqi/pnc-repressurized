@@ -65,4 +65,32 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+
+//    compileOnly 'curse.maven:albedo-275300:2714505'
+    compileOnly 'curse.maven:applied-energistics-2-223794:2747063'
+    compileOnly 'curse.maven:baubles-227083:2518667'
+    compileOnly 'curse.maven:botania-225643:3330934'
+    implementation 'curse.maven:cofh-core-69162:2920433'
+    compileOnly 'curse.maven:computercraft-67504:2478952'
+    implementation 'curse.maven:ctm-267602:2915363'
+    implementation 'curse.maven:had-enough-items-557549:6463525'
+    compileOnly 'curse.maven:hwyla-253449:2568751'
+    compileOnly 'curse.maven:igw-mod-223815:2501941'
+    compileOnly 'curse.maven:immersive-engineering-231951:2974106'
+    compileOnly 'curse.maven:industrial-craft-242638:3838713'
+    implementation 'curse.maven:mcmultipart-239431:2615930'
+    implementation 'curse.maven:mekanism-268560:2835175'
+    compileOnly 'curse.maven:patchouli-306770:3162874'
+    implementation 'curse.maven:redstone-flux-270789:2920436'
+    compileOnly 'curse.maven:thaumcraft-223628:2629023'
+    implementation 'curse.maven:the-one-probe-community-edition-885670:6736118'
+    compileOnly 'curse.maven:tough-as-nails-246391:2661865'
+    compileOnly 'CraftTweaker2:CraftTweaker2-API:4.0.9.285'
+    compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.0.9.285'
+    compileOnly 'li.cil.oc:OpenComputers:MC1.12.2-1.7.2.71:api'
+
+    // runtimeOnly
+    runtimeOnly 'curse.maven:bilingualname-417557:5797200'
+    runtimeOnly 'curse.maven:had-enough-characters-640802:4874506'
+    runtimeOnly 'curse.maven:just-enough-characters-250702:4692184'
 }

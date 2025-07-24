@@ -22,6 +22,7 @@ import me.desht.pneumaticcraft.common.tileentity.TileEntityPressureTube;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -38,8 +39,6 @@ import java.util.List;
 import java.util.function.Function;
 
 public class TOPCallback implements Function<ITheOneProbe, Void> {
-    private static final TextFormatting COLOR = TextFormatting.GRAY;
-
     static int elementPressure;
 
     @Override
@@ -74,7 +73,7 @@ public class TOPCallback implements Function<ITheOneProbe, Void> {
             public void addProbeEntityInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, Entity entity, IProbeHitEntityData data) {
                 if (entity instanceof IPressurizable) {
                     String p = PneumaticCraftUtils.roundNumberTo(((IPressurizable) entity).getPressure(ItemStack.EMPTY), 1);
-                    probeInfo.text(COLOR + "Pressure: " + p + " bar");
+                    probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure") + " " + p + " bar");
                 }
             }
         });
@@ -83,16 +82,16 @@ public class TOPCallback implements Function<ITheOneProbe, Void> {
 
     public static void handlePneumatic(ProbeMode mode, IProbeInfo probeInfo, IPneumaticMachine pneumaticMachine) {
         IAirHandler airHandler = pneumaticMachine.getAirHandler(null);
-        probeInfo.text(COLOR + "Max Pressure: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(airHandler.getDangerPressure(), 1) + " bar");
+        String pressure = PneumaticCraftUtils.roundNumberTo(airHandler.getPressure(), 2) + "/" + PneumaticCraftUtils.roundNumberTo(airHandler.getDangerPressure(), 1) + " bar";
         if (mode == ProbeMode.EXTENDED) {
-            probeInfo.text(COLOR + "Pressure:");
+            probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure"));
             probeInfo.horizontal()
                     .element(new ElementPressure(pneumaticMachine))
                     .vertical()
                     .text("")
-                    .text("  \u2b05 " + PneumaticCraftUtils.roundNumberTo(airHandler.getPressure(), 2) + " bar");
+                    .text("  \u2b05 " + pressure);
         } else {
-            probeInfo.text(COLOR + "Pressure: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(airHandler.getPressure(), 2) + " bar");
+            probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure") + " " + pressure);
         }
     }
 
@@ -129,7 +128,7 @@ public class TOPCallback implements Function<ITheOneProbe, Void> {
     public static void handleRedstoneMode(ProbeMode mode, IProbeInfo probeInfo, TileEntityBase te) {
         if (te instanceof IRedstoneControl) {
             int redstoneMode = ((IRedstoneControl) te).getRedstoneMode();
-            probeInfo.text(COLOR + PneumaticCraftUtils.xlate(te.getRedstoneTabTitle()) + ": " + TextFormatting.RED + PneumaticCraftUtils.xlate(te.getRedstoneButtonText(redstoneMode)));
+            probeInfo.text(PneumaticCraftUtils.xlate(te.getRedstoneTabTitle()) + ": " + TextFormatting.RED + PneumaticCraftUtils.xlate(te.getRedstoneButtonText(redstoneMode)));
         }
     }
 
@@ -152,12 +151,12 @@ public class TOPCallback implements Function<ITheOneProbe, Void> {
                 IFluidTankProperties properties = tankProperties[i];
                 FluidStack fluidStack = properties.getContents();
                 String fluidDesc = fluidStack == null ? PneumaticCraftUtils.xlate("gui.liquid.empty") : fluidStack.amount + "mB " + fluidStack.getLocalizedName();
-                probeInfo.text(COLOR + "Tank " + (i + 1) + ": " + TextFormatting.AQUA + fluidDesc);
+                probeInfo.text(PneumaticCraftUtils.xlate("waila.tank") + (i + 1) + ": " + TextFormatting.AQUA + fluidDesc);
             }
         }
     }
 
     public static void handleCamo(ProbeMode mode, IProbeInfo probeInfo, IBlockState camo) {
-        probeInfo.text(TextFormatting.YELLOW + "[Camo: " + ItemCamoApplicator.getCamoStateDisplayName(camo) + "]");
+        probeInfo.text(I18n.format("waila.camo", ItemCamoApplicator.getCamoStateDisplayName(camo)));
     }
 }

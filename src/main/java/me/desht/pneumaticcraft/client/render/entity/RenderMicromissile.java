@@ -85,6 +85,6 @@ public class RenderMicromissile extends Render<EntityMicromissile> {
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(EntityMicromissile entity) {
-        return Textures.MICROMISSILE_TEXTURE;
+        return Textures.MICROMISSILE_ENTITY;
     }
 }

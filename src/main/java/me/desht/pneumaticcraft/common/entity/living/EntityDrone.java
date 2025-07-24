@@ -548,11 +548,6 @@ public class EntityDrone extends EntityDroneBase implements
         dataManager.set(DRONE_COLOR, color);
     }
 
-    @Override
-    public int getDroneColor() {
-        return dataManager.get(DRONE_COLOR);
-    }
-
     private void setMinigunActivated(boolean activated) {
         dataManager.set(MINIGUN_ACTIVE, activated);
     }
@@ -844,7 +839,6 @@ public class EntityDrone extends EntityDroneBase implements
         tag.setFloat("propSpeed", propSpeed);
         tag.setBoolean("disabledByHacking", disabledByHacking);
         tag.setBoolean("hackedByOwner", gotoOwnerAI != null);
-        tag.setInteger("color", getDroneColor());
         tag.setBoolean("standby", standby);
         tag.setFloat("volume", volume);
 

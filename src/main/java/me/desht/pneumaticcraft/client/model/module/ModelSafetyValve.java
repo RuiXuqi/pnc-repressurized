@@ -1,52 +1,60 @@
 package me.desht.pneumaticcraft.client.model.module;
 
-import me.desht.pneumaticcraft.client.util.RenderUtils;
 import me.desht.pneumaticcraft.common.block.tubes.ModuleSafetyValve;
 import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.util.ResourceLocation;
 
 public class ModelSafetyValve extends ModelModuleBase {
-    private final ModelRenderer shape1;
-    private final ModelRenderer shape2;
-    private final ModelRenderer shape3;
     private final ModuleSafetyValve valveModule;
+    private final ModelRenderer tubeConnector;
+    private final ModelRenderer valve0;
+    private final ModelRenderer valveHandle;
+    private final ModelRenderer valveLid;
+
 
     public ModelSafetyValve(ModuleSafetyValve valve){
         this.valveModule = valve;
-        textureWidth = 64;
+        textureWidth = 32;
         textureHeight = 32;
 
-        shape1 = new ModelRenderer(this, 32, 0);
-        shape1.addBox(0F, 0F, 0F, 3, 3, 2);
-        shape1.setRotationPoint(-1.5F, 14.5F, 2F);
-        shape1.setTextureSize(64, 32);
-        shape1.mirror = true;
-        setRotation(shape1, 0F, 0F, 0F);
-        shape2 = new ModelRenderer(this, 0, 0);
-        shape2.addBox(0F, 0F, 0F, 2, 2, 3);
-        shape2.setRotationPoint(-1F, 15F, 4F);
-        shape2.setTextureSize(64, 32);
-        shape2.mirror = true;
-        setRotation(shape2, 0F, 0F, 0F);
-        shape3 = new ModelRenderer(this, 32, 0);
-        shape3.addBox(0F, 0F, 0F, 1, 1, 3);
-        shape3.setRotationPoint(2F, 15.5F, 4F);
-        shape3.setTextureSize(64, 32);
-        shape3.mirror = true;
-        setRotation(shape3, 0F, -0.5934119F, 0F);
+        tubeConnector = new ModelRenderer(this, 0, 0);
+        tubeConnector.setRotationPoint(-1.5F, 14.5F, 2.0F);
+        tubeConnector.addBox(-0.5F, -0.5F, 0.0F, 4, 4, 2);
+        tubeConnector.mirror = true;
+
+        valve0 = new ModelRenderer(this, 0, 6);
+        valve0.setRotationPoint(-1.0F, 15.0F, 4.0F);
+        valve0.addBox(0.0F, 0.0F, 0.0F, 2, 2, 4);
+        valve0.mirror = true;
+
+        valveHandle = new ModelRenderer(this, 0, 16);
+        valveHandle.setRotationPoint(2.0F, 15.5F, 4.0F);
+        setRotation(valveHandle, 0.0F, -0.5934F, 0.0F);
+        valveHandle.addBox(0.5592F, 0.0F, 0.829F, 1, 1, 3);
+        valveHandle.mirror = true;
+
+        valveLid = new ModelRenderer(this, 0, 12);
+        valveLid.setRotationPoint(1.5F, 15.5F, 7.25F);
+        valveLid.addBox(-3.0F, -1.0F, 0.0F, 3, 3, 1);
     }
 
     @Override
     protected void renderDynamic(float scale, float partialTicks) {
-        if (valveModule != null && valveModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
-        shape1.render(scale);
-        shape2.render(scale);
-        shape3.render(scale);
+        tubeConnector.render(scale);
+        valve0.render(scale);
+        valveHandle.render(scale);
+        valveLid.render(scale);
     }
 
     @Override
     protected ResourceLocation getTexture() {
-        return Textures.MODEL_SAFETY_VALVE;
+        ResourceLocation texture;
+        if (valveModule != null && valveModule.isUpgraded()) {
+            texture = Textures.MODEL_SAFETY_VALVE_UPGRADED;
+        } else {
+            texture = Textures.MODEL_SAFETY_VALVE;
+        }
+        return texture;
     }
 }

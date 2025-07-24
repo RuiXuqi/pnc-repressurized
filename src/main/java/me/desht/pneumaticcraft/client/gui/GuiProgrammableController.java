@@ -46,12 +46,6 @@ public class GuiProgrammableController extends GuiPneumaticContainerBase<TileEnt
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 46, 19, 4210752);
-    }
-
-    @Override
     protected void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
         if (te.getPrimaryInventory().getStackInSlot(0).isEmpty()) curInfo.add("gui.tab.problems.programmableController.noProgram");

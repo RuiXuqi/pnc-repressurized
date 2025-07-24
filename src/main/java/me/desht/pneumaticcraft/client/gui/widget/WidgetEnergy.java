@@ -1,5 +1,6 @@
 package me.desht.pneumaticcraft.client.gui.widget;
 
+import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.ResourceLocation;
@@ -10,7 +11,6 @@ import java.util.List;
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
 public class WidgetEnergy extends WidgetBase {
-    private static final ResourceLocation DEFAULT_TEXTURE = RL("textures/gui/widget/energy.png");
     private static final int DEFAULT_SCALE = 42;
 
     private final IEnergyStorage storage;
@@ -24,7 +24,7 @@ public class WidgetEnergy extends WidgetBase {
     public void render(int mouseX, int mouseY, float partialTick){
         int amount = getScaled();
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(DEFAULT_TEXTURE);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGET_ENERGY);
         Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, getBounds().width, getBounds().height, 32, 64);
         Gui.drawModalRectWithCustomSizedTexture(x, y + DEFAULT_SCALE - amount, 16, DEFAULT_SCALE - amount, getBounds().width, amount, 32, 64);
     }

@@ -23,7 +23,7 @@ public class RenderVacuumPump extends AbstractModelRenderer<TileEntityVacuumPump
     void renderModel(TileEntityVacuumPump te, float partialTicks) {
         if (te != null) {
             RenderUtils.rotateMatrixByMetadata(te.getBlockMetadata());
-            GlStateManager.rotate(-90, 0, 1, 0);
+            GlStateManager.rotate(-90, 1, 0, 0);
             model.renderModel(0.0625f, te.oldRotation + (te.rotation - te.oldRotation) * partialTicks);
         } else {
             model.renderModel(0.0625f, 0);

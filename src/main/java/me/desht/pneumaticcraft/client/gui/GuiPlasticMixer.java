@@ -160,7 +160,6 @@ public class GuiPlasticMixer extends GuiPneumaticContainerBase<TileEntityPlastic
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        fontRenderer.drawString("Upgr.", 15, 19, 4210752);
         fontRenderer.drawString("Hull", 56, 16, 4210752);
         fontRenderer.drawString("Item", 88, 16, 4210752);
     }

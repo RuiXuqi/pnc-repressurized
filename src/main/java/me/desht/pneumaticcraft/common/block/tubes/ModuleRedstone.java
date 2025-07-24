@@ -11,13 +11,13 @@ import me.desht.pneumaticcraft.common.network.PacketSyncRedstoneModuleToClient;
 import me.desht.pneumaticcraft.common.thirdparty.ModdedWrenchUtils;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Names;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.oredict.DyeUtils;
 
 import java.util.List;
@@ -246,15 +246,15 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
         if (getRedstoneDirection() == EnumRedstoneDirection.INPUT) {
-            curInfo.add("Receiving Redstone: " + TextFormatting.YELLOW + inputLevel);
+            curInfo.add(I18n.format("waila.redstoneModule.receiving", inputLevel));
         } else {
-            curInfo.add("Emitting Redstone: " + TextFormatting.YELLOW + outputLevel);
+            curInfo.add(I18n.format("waila.redstoneModule.emitting", outputLevel));
             if (upgraded) addAdvancedInfo(curInfo);
         }
     }
 
     private void addAdvancedInfo(List<String> curInfo) {
-        String s = "Operation: " + TextFormatting.YELLOW + PneumaticCraftUtils.xlate(operation.getTranslationKey()) + " ";
+        String s = I18n.format("waila.redstoneModule.op", PneumaticCraftUtils.xlate(operation.getTranslationKey())) + " ";
         if (operation.useOtherColor) {
             s += "(" + PneumaticCraftUtils.dyeColorDesc(otherColor) + ")";
         }
@@ -262,7 +262,9 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
             s += "(" + constantVal + ")";
         }
         curInfo.add(s);
-        curInfo.add("Output inverted: " + TextFormatting.YELLOW + (invert ? "Yes" : "No"));
+        if (invert) {
+            curInfo.add(PneumaticCraftUtils.xlate("waila.redstoneModule.inverted"));
+        }
     }
 
     @Override

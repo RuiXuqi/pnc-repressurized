@@ -19,7 +19,7 @@ public class VillagerHandler {
 
     public static void init() {
         mechanicProfession = new VillagerProfession(Names.MOD_ID + ":mechanic",
-                Textures.VILLAGER_MECHANIC, "minecraft:textures/entity/zombie_villager/zombie_villager.png");
+                Textures.VILLAGER_MECHANIC, Textures.VILLAGER_MECHANIC_ZOMBIE);
         VillagerCareer career = new VillagerCareer(mechanicProfession, Names.MOD_ID + ".mechanic");
         career.addTrade(1,
                 new ListItemForEmeralds(Itemss.PCB_BLUEPRINT, new PriceInfo(10, 19)),

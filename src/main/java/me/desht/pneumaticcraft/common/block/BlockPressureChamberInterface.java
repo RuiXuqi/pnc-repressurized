@@ -17,7 +17,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
@@ -77,9 +76,11 @@ public class BlockPressureChamberInterface extends BlockPneumaticCraftModeled im
         TileEntity te = world.getTileEntity(data.getPos());
         if (te instanceof TileEntityPressureChamberInterface) {
             EnumInterfaceMode interfaceMode = ((TileEntityPressureChamberInterface) te).interfaceMode;
-            String text = TextFormatting.GRAY + "Interface mode: " + TextFormatting.WHITE
-                    + PneumaticCraftUtils.xlate("waila.interface.mode." + interfaceMode.toString().toLowerCase());
-            probeInfo.text(text);
+            if (interfaceMode != EnumInterfaceMode.NONE) {
+                String text = PneumaticCraftUtils.xlate("waila.interface.mode") + " "
+                        + PneumaticCraftUtils.xlate("waila.interface.mode." + interfaceMode.toString().toLowerCase());
+                probeInfo.text(text);
+            }
         }
     }
 }

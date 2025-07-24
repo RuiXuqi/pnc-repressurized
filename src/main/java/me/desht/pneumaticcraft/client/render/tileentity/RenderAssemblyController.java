@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderAssemblyController extends AbstractModelRenderer<TileEntityAssemblyController> {
+    private static final float TEXT_SIZE = 0.007F;
     private final ModelAssemblyControllerScreen model;
 
     public RenderAssemblyController() {
@@ -31,14 +32,13 @@ public class RenderAssemblyController extends AbstractModelRenderer<TileEntityAs
         model.renderModel(0.0625f);
 
         // status text & possible problem icon
-        double textSize = 1 / 100D;
-        GlStateManager.translate(-0.25D, 0.53D, 0.04D);
+        GlStateManager.translate(-0.23D, 0.50D, -0.04D);
         GlStateManager.rotate(-34, 1, 0, 0);
-        GlStateManager.scale(textSize, textSize, textSize);
+        GlStateManager.scale(TEXT_SIZE, TEXT_SIZE, TEXT_SIZE);
         GlStateManager.disableLighting();
-        Minecraft.getMinecraft().fontRenderer.drawString(te.displayedText, 1, 4, 0xFFFFFFFF);
+        Minecraft.getMinecraft().fontRenderer.drawString("> " + te.displayedText, 1, 4, 0xFF4ce568);
         if(te.hasProblem) {
-            GuiPneumaticContainerBase.drawTexture(Textures.GUI_PROBLEMS_TEXTURE, 28, 12);
+            GuiPneumaticContainerBase.drawTexture(Textures.GUI_GREEN_PROBLEMS_TEXTURE, 0, 18);
         }
         GlStateManager.enableLighting();
     }

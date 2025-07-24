@@ -8,9 +8,11 @@ import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityHeatSink;
 import me.desht.pneumaticcraft.common.util.EntityFilter;
 import me.desht.pneumaticcraft.common.util.IOHelper;
+import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.EnumCustomParticleType;
 import me.desht.pneumaticcraft.lib.Names;
 import me.desht.pneumaticcraft.lib.PneumaticValues;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +25,6 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -199,10 +200,10 @@ public class ModuleAirGrate extends TubeModule {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Status: " + TextFormatting.WHITE + (grateRange == 0 ? "Idle" : vacuum ? "Attracting" : "Repelling"));
-        curInfo.add("Range: " + TextFormatting.WHITE + grateRange + " blocks");
+        curInfo.add(grateRange == 0 ? PneumaticCraftUtils.xlate("waila.airGrateModule.idle") : vacuum ? PneumaticCraftUtils.xlate("waila.airGrateModule.attracting") : PneumaticCraftUtils.xlate("waila.airGrateModule.repelling"));
+        curInfo.add(I18n.format("waila.airGrateModule.range", grateRange));
         if (entityFilter != null)
-            curInfo.add("Entity Filter: " + TextFormatting.WHITE + "\"" + entityFilter.toString() + "\"");
+            curInfo.add(PneumaticCraftUtils.xlate("waila.airGrateModule.filter") + " " + "\"" + entityFilter.toString() + "\"");
     }
 
     @Override

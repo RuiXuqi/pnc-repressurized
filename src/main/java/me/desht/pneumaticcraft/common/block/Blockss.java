@@ -217,7 +217,7 @@ public class Blockss {
             if (blockAccess != null && pos != null) {
                 TileEntity te = blockAccess.getTileEntity(pos);
                 if (te instanceof TileEntityOmnidirectionalHopper) {
-                    return ((TileEntityOmnidirectionalHopper) te).isCreative ? 0xFFFF60FF : 0xFFFFFFFF;
+                    return ((TileEntityOmnidirectionalHopper) te).isCreative ? 0xFFDB46CF : 0xFF2b2727;
                 }
             }
             return 0xFFFFFFFF;

@@ -1,18 +1,25 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "pneumaticcraft:flux_compressor"
-  },
-  "variants": {
-    "normal": [{}],
-    "inventory": [{}],
-    "facing": {
-      "up": {},
-      "down": {},
-      "north": { "y": 180 },
-      "south": {},
-      "east": { "y": 270 },
-      "west": { "y": 90 }
-    }
-  }
+    "forge_marker": 1,
+    "defaults": {
+        "model": "pneumaticcraft:flux_compressor"
+    },
+	"variants": {
+		"facing": {
+			"up": {},
+			"down": {},
+			"east": {"y": 270},
+			"north": {"y": 180},
+			"west": {"y": 90},
+			"south": {}
+		},
+		"active": {
+			"true": {
+				"textures": {
+					"0": "pneumaticcraft:pnc_model/flux_compressor_on"
+				}
+			},
+			"false": {}
+		},
+		"inventory": [{}]
+	}
 }

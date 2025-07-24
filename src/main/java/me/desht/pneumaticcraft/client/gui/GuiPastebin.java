@@ -51,7 +51,7 @@ public class GuiPastebin extends GuiPneumaticScreenBase {
             addWidget(passwordBox);
 
             GuiButtonSpecial loginButton = new GuiButtonSpecial(0, guiLeft + 100, guiTop + 30, 60, 20, I18n.format("gui.pastebin.button.login"));
-            loginButton.setTooltipText("Pastebin login is optional");
+            loginButton.setTooltipText(I18n.format("gui.pastebin.loginOptional"));
             addWidget(loginButton);
 
             addLabel(I18n.format("gui.pastebin.username"), guiLeft + 10, guiTop + 20);
@@ -151,7 +151,7 @@ public class GuiPastebin extends GuiPneumaticScreenBase {
     public void drawScreen(int x, int y, float partialTicks) {
         drawDefaultBackground();
         super.drawScreen(x, y, partialTicks);
-        if (errorMessage != null) fontRenderer.drawString(errorMessage, guiLeft + 5, guiTop + 5, 0xFFFF0000);
+        if (errorMessage != null) fontRenderer.drawString(errorMessage, guiLeft + 5, guiTop + 5, 0xFFFFFF00);
     }
 
     /**

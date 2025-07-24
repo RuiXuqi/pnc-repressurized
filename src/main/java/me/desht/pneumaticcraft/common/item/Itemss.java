@@ -268,7 +268,7 @@ public class Itemss {
         }, Itemss.PLASTIC);
 
         event.getItemColors().registerItemColorHandler((stack, tintIndex) ->
-                NBTUtil.hasTag(stack, UpgradableItemUtils.NBT_CREATIVE) ? 0xFFFF60FF : 0xFFFFFFFF,
+                NBTUtil.hasTag(stack, UpgradableItemUtils.NBT_CREATIVE) ? 0xFFDB46CF : 0xFF2b2727,
                 Item.getItemFromBlock(Blockss.OMNIDIRECTIONAL_HOPPER), Item.getItemFromBlock(Blockss.LIQUID_HOPPER));
 
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {

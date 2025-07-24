@@ -43,10 +43,6 @@ public abstract class EntityDroneBase extends EntityCreature {
         return 0xFF0000;
     }
 
-    public int getDroneColor() {
-        return 0;
-    }
-
     public boolean isAccelerating() {
         return true;
     }

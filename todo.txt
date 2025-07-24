@@ -1,0 +1,9 @@
+There are something I can't do now, so I list them below...
+
+Disable Minigun render & usage on left hand
+Fix Minigun render in player's hand in inventory gui
+Port back pressure gauge new textures in gui
+Render liquid on Liquid Compressors models
+Fix Programmer Controller drone propSpeed (why this happens???)
+Mechanic villager missing hats (goggles). They should be rendered in all biomes.
+Pneumatic Door json model can't be mirrored when on the right side (java model can).

@@ -212,10 +212,10 @@ public class GuiUnitProgrammer extends GuiScreen {
         GlStateManager.pushMatrix();
         GlStateManager.translate(widget.getX() + guiLeft, widget.getY() + guiTop, 0);
         GlStateManager.scale(0.5, 0.5, 1);
-        drawVerticalLine(inset, inset, widget.getHeight() - inset, color);
-        drawVerticalLine(widget.getWidth() - inset, inset, widget.getHeight() - inset, color);
-        drawHorizontalLine(widget.getWidth() - inset, inset, inset, color);
-        drawHorizontalLine(widget.getWidth() - inset, inset, widget.getHeight() - inset, color);
+        drawVerticalLine(inset, inset, widget.getHeight() - inset - 1, color);
+        drawVerticalLine(widget.getWidth() - inset - 1, inset, widget.getHeight() - inset - 1, color);
+        drawHorizontalLine(widget.getWidth() - inset - 1, inset, inset, color);
+        drawHorizontalLine(widget.getWidth() - inset - 1, inset, widget.getHeight() - inset - 1, color);
         GlStateManager.popMatrix();
     }
 

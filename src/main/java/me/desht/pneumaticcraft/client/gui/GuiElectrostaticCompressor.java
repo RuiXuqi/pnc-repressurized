@@ -36,12 +36,6 @@ public class GuiElectrostaticCompressor extends GuiPneumaticContainerBase<TileEn
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
-    }
-
-    @Override
     protected void addWarnings(List<String> textList) {
         super.addWarnings(textList);
         if (PneumaticValues.MAX_REDIRECTION_PER_IRON_BAR * te.ironBarsBeneath < PneumaticValues.PRODUCTION_ELECTROSTATIC_COMPRESSOR / connectedCompressors) {

@@ -39,12 +39,6 @@ public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxC
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
-    }
-
-    @Override
     public void updateScreen() {
         super.updateScreen();
         inputStat.setText(getOutputStat());

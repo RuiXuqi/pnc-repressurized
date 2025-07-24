@@ -1,6 +1,6 @@
 package me.desht.pneumaticcraft.client.render.tileentity;
 
-import me.desht.pneumaticcraft.client.model.block.ModelDoor;
+import me.desht.pneumaticcraft.client.model.block.ModelPneumaticDoor;
 import me.desht.pneumaticcraft.client.util.RenderUtils;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityPneumaticDoor;
 import me.desht.pneumaticcraft.lib.Textures;
@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderPneumaticDoor extends AbstractModelRenderer<TileEntityPneumaticDoor> {
-    private final ModelDoor modelDoor;
+    private final ModelPneumaticDoor modelDoor;
 
     public RenderPneumaticDoor() {
-        modelDoor = new ModelDoor();
+        modelDoor = new ModelPneumaticDoor();
     }
 
     @Override
@@ -32,6 +32,12 @@ public class RenderPneumaticDoor extends AbstractModelRenderer<TileEntityPneumat
         GlStateManager.translate((rightGoing ? -1 : 1) * 6.5F / 16F, 0, -6.5F / 16F);
         GlStateManager.rotate(rotation, 0, rightGoing ? -1 : 1, 0);
         GlStateManager.translate((rightGoing ? -1 : 1) * -6.5F / 16F, 0, 6.5F / 16F);
+
+        if (rightGoing) {
+            GlStateManager.translate(0, 0, -6.5/16F);
+            GlStateManager.rotate(180, 0, 1, 0);
+            GlStateManager.translate(0, 0, 6.5/16F);
+        }
         if (te.getBlockMetadata() < 6) {
             modelDoor.renderModel(0.0625f);
         }

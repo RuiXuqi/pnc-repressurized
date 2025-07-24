@@ -31,13 +31,6 @@ public class GuiThermalCompressor extends GuiPneumaticContainerBase<TileEntityTh
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-    }
-
-    @Override
     protected Point getGaugeLocation() {
         int xStart = (width - xSize) / 2;
         int yStart = (height - ySize) / 2;

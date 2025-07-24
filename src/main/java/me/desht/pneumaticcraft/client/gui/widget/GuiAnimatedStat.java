@@ -38,7 +38,6 @@ import java.util.stream.IntStream;
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
 public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetListener {
-    private static final int ANIMATED_STAT_SPEED = 30;
     private static final int WIDGET_SCROLLBAR_ID = -1000;
 
     private IGuiAnimatedStat affectingStat;
@@ -308,20 +307,26 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         oldHeight = height;
 
         doneExpanding = true;
-        if (isClicked) {
-            Pair<Integer, Integer> maxSize = calculateMaxSize();
-            int maxWidth = maxSize.getLeft(), maxHeight = maxSize.getRight();
+        Pair<Integer, Integer> maxSize = calculateMaxSize();
+        int maxWidth = maxSize.getLeft();
+        int maxHeight = maxSize.getRight();
 
+        // Calculate expansion speed proportionally
+        int expandX = maxWidth / 4;
+        int expandY = maxHeight / 4;
+
+        if (isClicked) {
             // expand the box
-            width = Math.min(maxWidth, width + ANIMATED_STAT_SPEED);
-            height = Math.min(maxHeight, height + ANIMATED_STAT_SPEED);
+            width = Math.min(maxWidth, width + expandX);
+            height = Math.min(maxHeight, height + expandY);
             doneExpanding = width == maxWidth && height == maxHeight;
 
-            Pair<Integer,Integer> size = PneumaticCraftRepressurized.proxy.getScaledScreenSize();
+            // Screen boundary constraints
+            Pair<Integer, Integer> size = PneumaticCraftRepressurized.proxy.getScaledScreenSize();
             if (isLeftSided()) {
-                if (baseX >= size.getLeft()) baseX = size.getLeft();
+                baseX = Math.min(baseX, size.getLeft());
             } else {
-                if (baseX < 0) baseX = 1;
+                baseX = Math.max(baseX, 1);
             }
             if (baseY + height >= size.getRight()) {
                 baseY = size.getRight() - height - 1;
@@ -337,8 +342,8 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
             }
         } else {
             // contract the box
-            width = Math.max(minWidth, width - ANIMATED_STAT_SPEED);
-            height = Math.max(minHeight, height - ANIMATED_STAT_SPEED);
+            width = Math.max(minWidth, width - expandX);
+            height = Math.max(minHeight, height - expandY);
             doneExpanding = false;
         }
 
@@ -405,10 +410,10 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         int renderWidth = (int) (oldWidth + (width - oldWidth) * partialTicks);
         int renderHeight = (int) (oldHeight + (height - oldHeight) * partialTicks);
 
-        if (leftSided) renderWidth *= -1;
-        Gui.drawRect(renderBaseX, renderAffectedY, renderBaseX + renderWidth, renderAffectedY + renderHeight, backGroundColor);
+        int rw = leftSided ? -renderWidth : renderWidth;
         GlStateManager.disableTexture2D();
-        GlStateManager.glLineWidth(3.0F);
+        ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
+        GlStateManager.glLineWidth(2.0F * sr.getScaleFactor());
         GlStateManager.color(0, 0, 0, 1);
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
@@ -417,12 +422,12 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         float[] c3 = leftSided ? bgColorHi.getComponents(null) : bgColorLo.getComponents(null);
         float[] c4 = bgColorLo.getComponents(null);
         wr.pos(renderBaseX, renderAffectedY, zLevel).color(c1[0], c1[1], c1[2], c1[3]).endVertex();
-        wr.pos(renderBaseX + renderWidth, renderAffectedY, zLevel).color(c2[0], c2[1], c2[2], c2[3]).endVertex();
-        wr.pos(renderBaseX + renderWidth, renderAffectedY + renderHeight, zLevel).color(c3[0], c3[1], c3[2],c3[3]).endVertex();
+        wr.pos(renderBaseX + rw, renderAffectedY, zLevel).color(c2[0], c2[1], c2[2], c2[3]).endVertex();
+        wr.pos(renderBaseX + rw, renderAffectedY + renderHeight, zLevel).color(c3[0], c3[1], c3[2],c3[3]).endVertex();
         wr.pos(renderBaseX, renderAffectedY + renderHeight, zLevel).color(c4[0], c4[1], c4[2], c4[3]).endVertex();
         Tessellator.getInstance().draw();
         GlStateManager.enableTexture2D();
-        if (leftSided) renderWidth *= -1;
+        Gui.drawRect(renderBaseX, renderAffectedY, renderBaseX + rw, renderAffectedY + renderHeight, backGroundColor);
 
         // if done expanding, draw the information
         int titleYoffset = title.isEmpty() ? 3 : 12;

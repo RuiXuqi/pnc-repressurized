@@ -11,13 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class WailaPneumaticHandler implements IWailaDataProvider {
     @Override
@@ -54,16 +51,8 @@ public class WailaPneumaticHandler implements IWailaDataProvider {
 //    }
 
     private static void addTipToMachine(List<String> currenttip, IPneumaticMachine machine, float pressure) {
-        Map<String, String> values = new HashMap<>();
-
-        values.put("Pressure", PneumaticCraftUtils.roundNumberTo(pressure, 1) + " bar");
-
         IAirHandler base = machine.getAirHandler(null);
-        values.put("Max Pressure", PneumaticCraftUtils.roundNumberTo(base.getDangerPressure(), 1) + " bar");
-
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            currenttip.add(WailaCallback.COLOR + entry.getKey() + ": " + TextFormatting.WHITE + entry.getValue());
-        }
+        currenttip.add(PneumaticCraftUtils.xlate("waila.pressure") + " " + PneumaticCraftUtils.roundNumberTo(pressure, 2) + "/" + PneumaticCraftUtils.roundNumberTo(base.getDangerPressure(), 1) + " bar");
     }
 
     @Override

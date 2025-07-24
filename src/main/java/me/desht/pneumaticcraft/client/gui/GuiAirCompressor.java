@@ -27,13 +27,6 @@ public class GuiAirCompressor extends GuiPneumaticContainerBase<TileEntityAirCom
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
 

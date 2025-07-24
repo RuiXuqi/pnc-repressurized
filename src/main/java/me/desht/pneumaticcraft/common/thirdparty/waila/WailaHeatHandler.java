@@ -47,7 +47,7 @@ public class WailaHeatHandler implements IWailaDataProvider {
                 currenttip.add(HeatUtil.formatHeatString(face, heatTag.getInteger("temp")));
             }
         } else {
-            currenttip.add(WailaCallback.COLOR + HeatUtil.formatHeatString(tag.getInteger("temp")));
+            currenttip.add(HeatUtil.formatHeatString(tag.getInteger("temp")));
         }
     }
 

@@ -13,6 +13,7 @@ import me.desht.pneumaticcraft.api.tileentity.IPneumaticMachine;
 import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
 import me.desht.pneumaticcraft.common.config.ConfigHandler;
 import me.desht.pneumaticcraft.common.heat.HeatExchangerLogicAmbient;
+import me.desht.pneumaticcraft.common.heat.TemperatureCategory;
 import me.desht.pneumaticcraft.common.inventory.handler.ChargeableItemHandler;
 import me.desht.pneumaticcraft.common.item.Itemss;
 import me.desht.pneumaticcraft.common.thirdparty.ModdedWrenchUtils;
@@ -72,6 +73,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     public static final PropertyBool SOUTH = PropertyBool.create("south");
     public static final PropertyBool WEST = PropertyBool.create("west");
     static final PropertyBool[] CONNECTION_PROPERTIES = new PropertyBool[]{DOWN, UP, NORTH, SOUTH, WEST, EAST};
+    public static final PropertyEnum<TemperatureCategory> TEMPERATURE = PropertyEnum.create("temperature", TemperatureCategory.class);
 
     private static final String NBT_SIDECONFIG = "SideConfiguration";
     private static final String NBT_AIR_AMOUNT = "AirAmount";

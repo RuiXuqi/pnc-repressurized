@@ -14,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +97,7 @@ public class PastebinHandler extends Thread {
     }
 
     public boolean loginInternal(String userName, String password) {
-        HttpPost httppost = new HttpPost("http://pastebin.com/api/api_login.php");
+        HttpPost httppost = new HttpPost("https://pastebin.com/api/api_login.php");
 
         List<NameValuePair> params = new ArrayList<>(3);
         params.add(new BasicNameValuePair("api_dev_key", DEV_KEY));
@@ -108,7 +109,7 @@ public class PastebinHandler extends Thread {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                userKey = IOUtils.toString(instream, "UTF-8");
+                userKey = IOUtils.toString(instream, StandardCharsets.UTF_8);
                 if (userKey.startsWith("Bad API request")) {
                     Log.warning("User tried to log in into pastebin, it responded with the following: " + userKey);
                     userKey = null;
@@ -123,11 +124,12 @@ public class PastebinHandler extends Thread {
     }
 
     public String putInternal(String contents) {
-        HttpPost httppost = new HttpPost("http://pastebin.com/api/api_post.php");
+        HttpPost httppost = new HttpPost("https://pastebin.com/api/api_post.php");
 
         List<NameValuePair> params = new ArrayList<>();
         params.add(new BasicNameValuePair("api_dev_key", DEV_KEY));
         params.add(new BasicNameValuePair("api_paste_code", contents));
+        params.add(new BasicNameValuePair("api_paste_format", "json"));
         params.add(new BasicNameValuePair("api_option", "paste"));
         if (isLoggedIn()) params.add(new BasicNameValuePair("api_user_key", userKey));
         try {
@@ -136,7 +138,7 @@ public class PastebinHandler extends Thread {
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                return IOUtils.toString(instream, "UTF-8");
+                return IOUtils.toString(instream, StandardCharsets.UTF_8);
             }
 
         } catch (Exception e) {
@@ -147,6 +149,6 @@ public class PastebinHandler extends Thread {
 
     public String getInternal(String key) throws IOException {
         if (key.contains("pastebin")) key = key.substring(key.lastIndexOf('/') + 1);
-        return PneumaticCraftUtils.getPage("http://pastebin.com/raw.php?i=" + key);
+        return PneumaticCraftUtils.getPage("https://pastebin.com/raw.php?i=" + key);
     }
 }

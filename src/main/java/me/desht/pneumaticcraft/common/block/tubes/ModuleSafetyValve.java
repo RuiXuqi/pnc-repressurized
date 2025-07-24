@@ -4,6 +4,7 @@ import me.desht.pneumaticcraft.client.model.module.ModelModuleBase;
 import me.desht.pneumaticcraft.client.model.module.ModelSafetyValve;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Names;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class ModuleSafetyValve extends TubeModuleRedstoneReceiving {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Threshold: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(getThreshold(), 1) + " bar");
+        curInfo.add(I18n.format("waila.tubeModule.threshold", PneumaticCraftUtils.roundNumberTo(getThreshold(), 1)));
     }
 
     @Override

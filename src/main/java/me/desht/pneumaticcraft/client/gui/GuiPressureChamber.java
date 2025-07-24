@@ -40,7 +40,6 @@ public class GuiPressureChamber extends GuiPneumaticContainerBase<TileEntityPres
         super.drawGuiContainerForegroundLayer(x, y);
         String containerName = I18n.format("gui.pressureChamberTitle", te.multiBlockSize + "x" + te.multiBlockSize + "x" + te.multiBlockSize);
         fontRenderer.drawString(containerName, xSize / 2 - fontRenderer.getStringWidth(containerName) / 2, 6, 4210752);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
     }
 
     @Override

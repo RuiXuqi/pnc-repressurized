@@ -7,27 +7,26 @@ import net.minecraft.util.ResourceLocation;
 
 public class ModelFlowDetector extends ModelModuleBase {
     private final ModuleFlowDetector flowDetector;
-    private final ModelRenderer shape1;
+    private static final int TUBE_PARTS = 4;
+    private final ModelRenderer face;
 
     public ModelFlowDetector(ModuleFlowDetector flowDetector){
-        textureWidth = 64;
+        this.flowDetector = flowDetector;
+        textureWidth = 32;
         textureHeight = 32;
 
-        shape1 = new ModelRenderer(this, 0, 8);
-        shape1.addBox(-1F, -3F, -2F, 2, 1, 5);
-        shape1.setRotationPoint(0F, 16F, 4.5F);
-        shape1.setTextureSize(64, 32);
-        shape1.mirror = true;
-        setRotation(shape1, 0F, 0F, 0F);
-        this.flowDetector = flowDetector;
+        face = new ModelRenderer(this, 0, 0);
+        face.addBox(-2.0F, -3.0F, -2.0F, 4, 1, 5);
+        face.setRotationPoint(0.0F, 16.0F, 4.5F);
+        face.mirror = true;
     }
 
     @Override
     public void renderDynamic(float scale, float partialTicks) {
-        int parts = 9;
-        for(int i = 0; i < parts; i++) {
-            shape1.rotateAngleZ = (float)i / parts * 2 * (float)Math.PI + (flowDetector != null ? flowDetector.oldRotation + (flowDetector.rotation - flowDetector.oldRotation) * partialTicks : 0);
-            shape1.render(scale);
+        float rot = flowDetector != null ? flowDetector.oldRotation + (flowDetector.rotation - flowDetector.oldRotation) * partialTicks : 0f;
+        for (int i = 0; i < TUBE_PARTS; i++) {
+            face.rotateAngleZ = (float)i / TUBE_PARTS * 2 * (float)Math.PI + rot;
+            face.render(scale);
         }
     }
 

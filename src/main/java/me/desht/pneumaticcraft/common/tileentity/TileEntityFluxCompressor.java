@@ -8,6 +8,7 @@ import me.desht.pneumaticcraft.api.tileentity.IHeatExchanger;
 import me.desht.pneumaticcraft.common.block.Blockss;
 import me.desht.pneumaticcraft.common.config.ConfigHandler;
 import me.desht.pneumaticcraft.common.heat.HeatUtil;
+import me.desht.pneumaticcraft.common.network.DescSynced;
 import me.desht.pneumaticcraft.common.network.GuiSynced;
 import me.desht.pneumaticcraft.lib.PneumaticValues;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,6 +27,8 @@ public class TileEntityFluxCompressor extends TileEntityPneumaticBase implements
     private int rfPerTick;
     @GuiSynced
     private int airPerTick;
+    @DescSynced
+    public boolean isEnabled;
     @GuiSynced
     private int redstoneMode;
     @GuiSynced
@@ -56,10 +59,16 @@ public class TileEntityFluxCompressor extends TileEntityPneumaticBase implements
                 airPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * getEfficiency() * ConfigHandler.machineProperties.fluxCompressorEfficiency / 100 / 100);
                 rfPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades());
             }
+            boolean newEnabled = false;
             if (redstoneAllows() && energy.getEnergyStored() >= rfPerTick) {
                 this.addAir(airPerTick);
                 energy.extractEnergy(rfPerTick, false);
                 heatExchanger.addHeat(rfPerTick / 100D);
+                newEnabled = true;
+            }
+            if (world.getTotalWorldTime() % 20 == 0 && newEnabled != isEnabled) {
+                isEnabled = newEnabled;
+                sendDescriptionPacket();
             }
         }
 
@@ -77,6 +86,11 @@ public class TileEntityFluxCompressor extends TileEntityPneumaticBase implements
     @Override
     public boolean isConnectedTo(EnumFacing side) {
         return side == getRotation().getOpposite();
+    }
+
+    @Override
+    protected boolean shouldRerenderChunkOnDescUpdate() {
+        return true;
     }
 
     @Override

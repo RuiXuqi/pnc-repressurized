@@ -34,7 +34,6 @@ public abstract class EntityBasicDrone extends EntityDrone {
     protected ItemStack getDroppedStack() {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setFloat("currentAir", currentAir);
-        tag.setInteger("color", getDroneColor());
         NBTTagCompound invTag = new NBTTagCompound();
         writeEntityToNBT(invTag);
         tag.setTag(ChargeableItemHandler.NBT_UPGRADE_TAG, invTag.getTag(ChargeableItemHandler.NBT_UPGRADE_TAG));

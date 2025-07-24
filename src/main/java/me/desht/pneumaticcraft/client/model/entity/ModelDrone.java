@@ -1,275 +1,217 @@
 package me.desht.pneumaticcraft.client.model.entity;
 
-import me.desht.pneumaticcraft.client.util.RenderUtils;
-import me.desht.pneumaticcraft.common.entity.EntityProgrammableController;
-import me.desht.pneumaticcraft.common.entity.living.EntityDrone;
 import me.desht.pneumaticcraft.common.entity.living.EntityDroneBase;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.math.AxisAlignedBB;
 
 public class ModelDrone extends ModelBase {
     //fields
-    private final ModelRenderer Base;
-    private final ModelRenderer Base2;
-    private final ModelRenderer Base3;
-    private final ModelRenderer Base4;
-    private final ModelRenderer Base5;
-    private final ModelRenderer Prop1Part1;
-    private final ModelRenderer Prop1Part2;
-    private final ModelRenderer Prop1Part3;
-    private final ModelRenderer Prop2Part1;
-    private final ModelRenderer Prop2Part2;
-    private final ModelRenderer Prop2Part3;
-    private final ModelRenderer Prop3Part1;
-    private final ModelRenderer Prop3Part2;
-    private final ModelRenderer Prop3Part3;
-    private final ModelRenderer Prop4Part1;
-    private final ModelRenderer Prop4Part2;
-    private final ModelRenderer Prop4Part3;
-    private final ModelRenderer Frame1;
-    private final ModelRenderer Frame2;
-    private final ModelRenderer LandingStand1;
-    private final ModelRenderer LandingStand2;
-    private final ModelRenderer LandingStand3;
-    private final ModelRenderer LandingStand4;
-    private final ModelRenderer LaserArm;
-    private final ModelRenderer LaserSource;
-    private final ModelDroneMinigun minigun = new ModelDroneMinigun();
-    private boolean renderFrame = false;
-    private int frameColor = 0;
-
-    public ModelDrone(int frameColor){
-        this();
-        renderFrame = true;
-        this.frameColor = frameColor;
-    }
+    private final ModelRenderer done;
+    private final ModelRenderer body;
+    private final ModelRenderer lower_frame_r1;
+    private final ModelRenderer north_west_wing;
+    private final ModelRenderer prop_1;
+    private final ModelRenderer blade3_connection_r1;
+    private final ModelRenderer blade2_connection_r1;
+    private final ModelRenderer blade1_connection_r1;
+    private final ModelRenderer south_west_wing;
+    private final ModelRenderer prop_2;
+    private final ModelRenderer blade6_connection_r1;
+    private final ModelRenderer blade5_connection_r1;
+    private final ModelRenderer blade4_connection_r1;
+    private final ModelRenderer south_east_wing;
+    private final ModelRenderer prop_3;
+    private final ModelRenderer blade9_connection_r1;
+    private final ModelRenderer blade8_connection_r1;
+    private final ModelRenderer blade7_connection_r1;
+    private final ModelRenderer north_east_wing;
+    private final ModelRenderer prop_4;
+    private final ModelRenderer blade12_connection_r1;
+    private final ModelRenderer blade11_connection_r1;
+    private final ModelRenderer blade10_connection_r1;
+    private final ModelMinigun minigun = new ModelMinigun();
     
     public ModelDrone() {
-        textureWidth = 64;
-        textureHeight = 32;
+        textureWidth = 128;
+        textureHeight = 128;
 
-        Base = new ModelRenderer(this, 0, 0);
-        Base.addBox(0F, 0F, 0F, 6, 6, 6);
-        Base.setRotationPoint(-3F, 14F, -3F);
-        Base.setTextureSize(64, 32);
-        Base.mirror = true;
-        setRotation(Base, 0F, 0F, 0F);
-        Base2 = new ModelRenderer(this, 0, 12);
-        Base2.addBox(0F, 0F, 0F, 4, 4, 1);
-        Base2.setRotationPoint(-2F, 15F, -4F);
-        Base2.setTextureSize(64, 32);
-        Base2.mirror = true;
-        setRotation(Base2, 0F, 0F, 0F);
-        Base3 = new ModelRenderer(this, 0, 12);
-        Base3.addBox(0F, 0F, 0F, 4, 4, 1);
-        Base3.setRotationPoint(-2F, 15F, 3F);
-        Base3.setTextureSize(64, 32);
-        Base3.mirror = true;
-        setRotation(Base3, 0F, 0F, 0F);
-        Base4 = new ModelRenderer(this, 10, 12);
-        Base4.addBox(0F, 0F, 0F, 1, 4, 4);
-        Base4.setRotationPoint(3F, 15F, -2F);
-        Base4.setTextureSize(64, 32);
-        Base4.mirror = true;
-        setRotation(Base4, 0F, 0F, 0F);
-        Base5 = new ModelRenderer(this, 10, 12);
-        Base5.addBox(0F, 0F, 0F, 1, 4, 4);
-        Base5.setRotationPoint(-4F, 15F, -2F);
-        Base5.setTextureSize(64, 32);
-        Base5.mirror = true;
-        setRotation(Base5, 0F, 0F, 0F);
-        Prop1Part1 = new ModelRenderer(this, 0, 17);
-        Prop1Part1.addBox(0.5F, 0F, -0.8F, 3, 1, 2);
-        Prop1Part1.setRotationPoint(11.5F, 14F, 0F);
-        Prop1Part1.setTextureSize(64, 32);
-        Prop1Part1.mirror = true;
-        setRotation(Prop1Part1, -0.3490659F, 0F, 0F);
-        Prop1Part2 = new ModelRenderer(this, 0, 17);
-        Prop1Part2.addBox(-3.5F, 0F, -1.2F, 3, 1, 2);
-        Prop1Part2.setRotationPoint(11.5F, 14F, 0F);
-        Prop1Part2.setTextureSize(64, 32);
-        Prop1Part2.mirror = true;
-        setRotation(Prop1Part2, 0.3490659F, 0F, 0F);
-        Prop1Part3 = new ModelRenderer(this, 0, 20);
-        Prop1Part3.addBox(-0.5F, 0F, -0.5F, 1, 2, 1);
-        Prop1Part3.setRotationPoint(11.5F, 14F, 0F);
-        Prop1Part3.setTextureSize(64, 32);
-        Prop1Part3.mirror = true;
-        setRotation(Prop1Part3, 0F, 0F, 0F);
-        Prop2Part1 = new ModelRenderer(this, 0, 17);
-        Prop2Part1.addBox(0.5F, 0F, -0.8F, 3, 1, 2);
-        Prop2Part1.setRotationPoint(-11.5F, 14F, 0F);
-        Prop2Part1.setTextureSize(64, 32);
-        Prop2Part1.mirror = true;
-        setRotation(Prop2Part1, -0.3490659F, 0F, 0F);
-        Prop2Part2 = new ModelRenderer(this, 0, 17);
-        Prop2Part2.addBox(-3.5F, 0F, -1.2F, 3, 1, 2);
-        Prop2Part2.setRotationPoint(-11.5F, 14F, 0F);
-        Prop2Part2.setTextureSize(64, 32);
-        Prop2Part2.mirror = true;
-        setRotation(Prop2Part2, 0.3490659F, 0F, 0F);
-        Prop2Part3 = new ModelRenderer(this, 0, 20);
-        Prop2Part3.addBox(-0.5F, 0F, -0.5F, 1, 2, 1);
-        Prop2Part3.setRotationPoint(-11.5F, 14F, 0F);
-        Prop2Part3.setTextureSize(64, 32);
-        Prop2Part3.mirror = true;
-        setRotation(Prop2Part3, 0F, 0F, 0F);
-        Prop3Part1 = new ModelRenderer(this, 0, 17);
-        Prop3Part1.addBox(-3.5F, 0F, -0.8F, 3, 1, 2);
-        Prop3Part1.setRotationPoint(0F, 13.7F, -11.5F);
-        Prop3Part1.setTextureSize(64, 32);
-        Prop3Part1.mirror = true;
-        setRotation(Prop3Part1, -0.3490659F, 0F, 0F);
-        Prop3Part2 = new ModelRenderer(this, 0, 17);
-        Prop3Part2.addBox(0.5F, 0F, -1.1F, 3, 1, 2);
-        Prop3Part2.setRotationPoint(0F, 14F, -11.5F);
-        Prop3Part2.setTextureSize(64, 32);
-        Prop3Part2.mirror = true;
-        setRotation(Prop3Part2, 0.3490659F, 0F, 0F);
-        Prop3Part3 = new ModelRenderer(this, 0, 20);
-        Prop3Part3.addBox(-0.5F, 0F, -0.5F, 1, 2, 1);
-        Prop3Part3.setRotationPoint(0F, 14F, -11.5F);
-        Prop3Part3.setTextureSize(64, 32);
-        Prop3Part3.mirror = true;
-        setRotation(Prop3Part3, 0F, 0F, 0F);
-        Prop4Part1 = new ModelRenderer(this, 0, 17);
-        Prop4Part1.addBox(-3.5F, 0F, -0.8F, 3, 1, 2);
-        Prop4Part1.setRotationPoint(0F, 14F, 11.5F);
-        Prop4Part1.setTextureSize(64, 32);
-        Prop4Part1.mirror = true;
-        setRotation(Prop4Part1, -0.3490659F, 0F, 0F);
-        Prop4Part2 = new ModelRenderer(this, 0, 17);
-        Prop4Part2.addBox(0.5F, 0F, -1.1F, 3, 1, 2);
-        Prop4Part2.setRotationPoint(0F, 14F, 11.5F);
-        Prop4Part2.setTextureSize(64, 32);
-        Prop4Part2.mirror = true;
-        setRotation(Prop4Part2, 0.3490659F, 0F, 0F);
-        Prop4Part3 = new ModelRenderer(this, 0, 20);
-        Prop4Part3.addBox(-0.5F, 0F, -0.5F, 1, 2, 1);
-        Prop4Part3.setRotationPoint(0F, 14F, 11.5F);
-        Prop4Part3.setTextureSize(64, 32);
-        Prop4Part3.mirror = true;
-        setRotation(Prop4Part3, 0F, 0F, 0F);
-        Frame1 = new ModelRenderer(this, 0, 26);
-        Frame1.addBox(0F, 0F, 0F, 26, 2, 2);
-        Frame1.setRotationPoint(-13F, 16F, -1F);
-        Frame1.setTextureSize(64, 32);
-        Frame1.mirror = true;
-        setRotation(Frame1, 0F, 0F, 0F);
-        Frame2 = new ModelRenderer(this, 0, 0);
-        Frame2.addBox(0F, 0F, 0F, 2, 2, 26);
-        Frame2.setRotationPoint(-1F, 16F, -13F);
-        Frame2.setTextureSize(64, 32);
-        Frame2.mirror = true;
-        setRotation(Frame2, 0F, 0F, 0F);
-        LandingStand1 = new ModelRenderer(this, 30, 0);
-        LandingStand1.addBox(-1F, 0F, -0.5F, 1, 6, 1);
-        LandingStand1.setRotationPoint(-8F, 18F, 0F);
-        LandingStand1.setTextureSize(64, 32);
-        LandingStand1.mirror = true;
-        setRotation(LandingStand1, 0F, 0F, 0F);
-        LandingStand2 = new ModelRenderer(this, 30, 0);
-        LandingStand2.addBox(0F, 0F, -0.5F, 1, 6, 1);
-        LandingStand2.setRotationPoint(8F, 18F, 0F);
-        LandingStand2.setTextureSize(64, 32);
-        LandingStand2.mirror = true;
-        setRotation(LandingStand2, 0F, 0F, 0F);
-        LandingStand3 = new ModelRenderer(this, 30, 0);
-        LandingStand3.addBox(-0.5F, 0F, -1F, 1, 6, 1);
-        LandingStand3.setRotationPoint(0F, 18F, -8F);
-        LandingStand3.setTextureSize(64, 32);
-        LandingStand3.mirror = true;
-        setRotation(LandingStand3, 0F, 0F, 0F);
-        LandingStand4 = new ModelRenderer(this, 30, 0);
-        LandingStand4.addBox(-0.5F, 0F, 0F, 1, 6, 1);
-        LandingStand4.setRotationPoint(0F, 18F, 8F);
-        LandingStand4.setTextureSize(64, 32);
-        LandingStand4.mirror = true;
-        setRotation(LandingStand4, 0F, 0F, 0F);
-        LaserArm = new ModelRenderer(this, 56, 0);
-        LaserArm.addBox(0F, 0F, 0F, 1, 2, 1);
-        LaserArm.setRotationPoint(-0.5F, 20F, -0.5F);
-        LaserArm.setTextureSize(64, 32);
-        LaserArm.mirror = true;
-        setRotation(LaserArm, 0F, 0F, 0F);
-        LaserSource = new ModelRenderer(this, 56, 3);
-        LaserSource.addBox(0F, 0F, 0F, 2, 2, 2);
-        LaserSource.setRotationPoint(-1F, 22F, -1F);
-        LaserSource.setTextureSize(64, 32);
-        LaserSource.mirror = true;
-        setRotation(LaserSource, 0F, 0F, 0F);
+        done = new ModelRenderer(this);
+        done.setRotationPoint(0.0F, 22.5F, 0.0F);
 
-        LaserArm.offsetY = LaserSource.offsetY = -4.5F / 16;
+
+        body = new ModelRenderer(this);
+        body.setRotationPoint(0.0F, -3.0F, 0.0F);
+        done.addChild(body);
+        body.setTextureOffset(0, 93).addBox(-4.0F, -4.0F, -12.0F, 8, 4, 24);
+        body.setTextureOffset(10, 121).addBox(4.0F, -4.0F, 6.0F, 2, 4, 3);
+        body.setTextureOffset(20, 121).addBox(-6.0F, -4.0F, 6.0F, 2, 4, 3);
+        body.setTextureOffset(0, 121).addBox(4.0F, -4.0F, -9.0F, 2, 4, 3);
+        body.setTextureOffset(30, 121).addBox(-6.0F, -4.0F, -9.0F, 2, 4, 3);
+        body.setTextureOffset(0, 67).addBox(-4.5F, -3.5F, -12.5F, 9, 1, 25);
+        body.setTextureOffset(48, 106).addBox(-3.5F, -5.0F, -4.5F, 7, 6, 16);
+
+        lower_frame_r1 = new ModelRenderer(this);
+        lower_frame_r1.setRotationPoint(-0.25F, -0.75F, -31.25F);
+        body.addChild(lower_frame_r1);
+        setRotation(lower_frame_r1, -3.1416F, 0.0F, 3.1416F);
+        lower_frame_r1.setTextureOffset(0, 67).addBox(-4.75F, -0.75F, -43.75F, 9, 1, 25);
+
+        north_west_wing = new ModelRenderer(this);
+        north_west_wing.setRotationPoint(6.0F, -5.5F, -7.5F);
+        done.addChild(north_west_wing);
+        setRotation(north_west_wing, 0.0F, 0.3927F, 0.0F);
+        north_west_wing.setTextureOffset(0, 113).addBox(-1.0F, -1.0F, -1.0F, 7, 2, 2);
+        north_west_wing.setTextureOffset(44, 110).addBox(4.5F, 1.0F, -0.5F, 1, 6, 1);
+        north_west_wing.setTextureOffset(52, 107).addBox(4.5F, -3.0F, -0.5F, 1, 2, 1);
+
+        prop_1 = new ModelRenderer(this);
+        prop_1.setRotationPoint(5.0F, -2.5F, 0.0F);
+        north_west_wing.addChild(prop_1);
+        setRotation(prop_1, 0.0F, 0.0F, 0.0F);
+        prop_1.setTextureOffset(52, 105).addBox(-0.5F, -1.5F, -0.5F, 1, 1, 1);
+
+        blade3_connection_r1 = new ModelRenderer(this);
+        blade3_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_1.addChild(blade3_connection_r1);
+        setRotation(blade3_connection_r1, 0.1572F, -0.3614F, -0.4215F);
+        blade3_connection_r1.setTextureOffset(52, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade3_connection_r1.setTextureOffset(68, 93).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
+
+        blade2_connection_r1 = new ModelRenderer(this);
+        blade2_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_1.addChild(blade2_connection_r1);
+        setRotation(blade2_connection_r1, 2.7761F, -0.7119F, -2.6117F);
+        blade2_connection_r1.setTextureOffset(48, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade2_connection_r1.setTextureOffset(54, 99).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
+
+        blade1_connection_r1 = new ModelRenderer(this);
+        blade1_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_1.addChild(blade1_connection_r1);
+        setRotation(blade1_connection_r1, -1.5708F, 1.1781F, -1.5708F);
+        blade1_connection_r1.setTextureOffset(44, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade1_connection_r1.setTextureOffset(40, 93).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
+
+        south_west_wing = new ModelRenderer(this);
+        south_west_wing.setRotationPoint(6.0F, -5.5F, 7.5F);
+        done.addChild(south_west_wing);
+        setRotation(south_west_wing, 0.0F, -0.3927F, 0.0F);
+        south_west_wing.setTextureOffset(0, 105).addBox(-1.0F, -1.0F, -1.0F, 7, 2, 2);
+        south_west_wing.setTextureOffset(48, 110).addBox(4.5F, 1.0F, -0.5F, 1, 6, 1);
+        south_west_wing.setTextureOffset(48, 107).addBox(4.5F, -3.0F, -0.5F, 1, 2, 1);
+
+        prop_2 = new ModelRenderer(this);
+        prop_2.setRotationPoint(5.0F, -2.5F, 0.0F);
+        south_west_wing.addChild(prop_2);
+        setRotation(prop_2, 0.0F, 0.0F, 0.0F);
+        prop_2.setTextureOffset(48, 105).addBox(-0.5F, -1.5F, -0.5F, 1, 1, 1);
+
+        blade6_connection_r1 = new ModelRenderer(this);
+        blade6_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_2.addChild(blade6_connection_r1);
+        setRotation(blade6_connection_r1, -0.1572F, 0.3614F, -0.4215F);
+        blade6_connection_r1.setTextureOffset(48, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade6_connection_r1.setTextureOffset(68, 99).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        blade5_connection_r1 = new ModelRenderer(this);
+        blade5_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_2.addChild(blade5_connection_r1);
+        setRotation(blade5_connection_r1, -2.7761F, 0.7119F, -2.6117F);
+        blade5_connection_r1.setTextureOffset(52, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade5_connection_r1.setTextureOffset(54, 93).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        blade4_connection_r1 = new ModelRenderer(this);
+        blade4_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_2.addChild(blade4_connection_r1);
+        setRotation(blade4_connection_r1, 1.5708F, -1.1781F, -1.5708F);
+        blade4_connection_r1.setTextureOffset(40, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade4_connection_r1.setTextureOffset(40, 99).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        south_east_wing = new ModelRenderer(this);
+        south_east_wing.setRotationPoint(-6.0F, -5.5F, 7.5F);
+        done.addChild(south_east_wing);
+        setRotation(south_east_wing, 0.0F, 0.3927F, 0.0F);
+        south_east_wing.setTextureOffset(0, 101).addBox(-6.0F, -1.0F, -1.0F, 7, 2, 2);
+        south_east_wing.setTextureOffset(52, 110).addBox(-5.5F, 1.0F, -0.5F, 1, 6, 1);
+        south_east_wing.setTextureOffset(44, 107).addBox(-5.5F, -3.0F, -0.5F, 1, 2, 1);
+
+        prop_3 = new ModelRenderer(this);
+        prop_3.setRotationPoint(-5.0F, -2.5F, 0.0F);
+        south_east_wing.addChild(prop_3);
+        setRotation(prop_3, 0.0F, 0.0F, 0.0F);
+        prop_3.setTextureOffset(44, 105).addBox(-0.5F, -1.5F, -0.5F, 1, 1, 1);
+
+        blade9_connection_r1 = new ModelRenderer(this);
+        blade9_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_3.addChild(blade9_connection_r1);
+        setRotation(blade9_connection_r1, -0.1572F, -0.3614F, 0.4215F);
+        blade9_connection_r1.setTextureOffset(40, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade9_connection_r1.setTextureOffset(68, 93).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        blade8_connection_r1 = new ModelRenderer(this);
+        blade8_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_3.addChild(blade8_connection_r1);
+        setRotation(blade8_connection_r1, -2.7761F, -0.7119F, 2.6117F);
+        blade8_connection_r1.setTextureOffset(52, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade8_connection_r1.setTextureOffset(68, 99).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        blade7_connection_r1 = new ModelRenderer(this);
+        blade7_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_3.addChild(blade7_connection_r1);
+        setRotation(blade7_connection_r1, 1.5708F, 1.1781F, 1.5708F);
+        blade7_connection_r1.setTextureOffset(44, 105).addBox(-0.5F, -0.5F, 0.5F, 1, 1, 1);
+        blade7_connection_r1.setTextureOffset(54, 93).addBox(-1.0F, -0.5F, 1.5F, 2, 1, 5);
+
+        north_east_wing = new ModelRenderer(this);
+        north_east_wing.setRotationPoint(-6.0F, -5.5F, -7.5F);
+        done.addChild(north_east_wing);
+        setRotation(north_east_wing, 0.0F, -0.3927F, 0.0F);
+        north_east_wing.setTextureOffset(0, 109).addBox(-6.0F, -1.0F, -1.0F, 7, 2, 2);
+        north_east_wing.setTextureOffset(40, 110).addBox(-5.5F, 1.0F, -0.5F, 1, 6, 1);
+        north_east_wing.setTextureOffset(40, 107).addBox(-5.5F, -3.0F, -0.5F, 1, 2, 1);
+
+        prop_4 = new ModelRenderer(this);
+        prop_4.setRotationPoint(-5.0F, -2.5F, 0.0F);
+        north_east_wing.addChild(prop_4);
+        setRotation(prop_4, 0.0F, 0.0F, 0.0F);
+        prop_4.setTextureOffset(40, 105).addBox(-0.5F, -1.5F, -0.5F, 1, 1, 1);
+
+        blade12_connection_r1 = new ModelRenderer(this);
+        blade12_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_4.addChild(blade12_connection_r1);
+        setRotation(blade12_connection_r1, 0.1572F, 0.3614F, 0.4215F);
+        blade12_connection_r1.setTextureOffset(48, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade12_connection_r1.setTextureOffset(40, 99).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
+
+        blade11_connection_r1 = new ModelRenderer(this);
+        blade11_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_4.addChild(blade11_connection_r1);
+        setRotation(blade11_connection_r1, 2.7761F, 0.7119F, 2.6117F);
+        blade11_connection_r1.setTextureOffset(40, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade11_connection_r1.setTextureOffset(40, 93).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
+
+        blade10_connection_r1 = new ModelRenderer(this);
+        blade10_connection_r1.setRotationPoint(0.0F, -1.0F, 0.0F);
+        prop_4.addChild(blade10_connection_r1);
+        setRotation(blade10_connection_r1, -1.5708F, -1.1781F, 1.5708F);
+        blade10_connection_r1.setTextureOffset(44, 105).addBox(-0.5F, -0.5F, -1.5F, 1, 1, 1);
+        blade10_connection_r1.setTextureOffset(54, 99).addBox(-1.0F, -0.5F, -6.5F, 2, 1, 5);
     }
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-        if (entity instanceof EntityProgrammableController) f5 /= 2F;
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-        if (entity != null) RenderUtils.glColorHex(0xFF000000 + ((EntityDroneBase) entity).getDroneColor());
-        Base2.render(f5);
-        Base3.render(f5);
-        Base4.render(f5);
-        Base5.render(f5);
-        GlStateManager.color(1, 1, 1, 1);
-        Base.render(f5);
-        Prop1Part1.render(f5);
-        Prop1Part2.render(f5);
-        Prop1Part3.render(f5);
-        Prop2Part1.render(f5);
-        Prop2Part2.render(f5);
-        Prop2Part3.render(f5);
-        Prop3Part1.render(f5);
-        Prop3Part2.render(f5);
-        Prop3Part3.render(f5);
-        Prop4Part1.render(f5);
-        Prop4Part2.render(f5);
-        Prop4Part3.render(f5);
-        Frame1.render(f5);
-        Frame2.render(f5);
-        LandingStand1.render(f5);
-        LandingStand2.render(f5);
-        LandingStand3.render(f5);
-        LandingStand4.render(f5);
-        LaserArm.render(f5);
-        LaserSource.render(f5);
-        if (entity instanceof EntityDrone && ((EntityDrone) entity).hasMinigun())
-            minigun.render(entity, f, f1, f2, f3, f4, f5);
-        if (renderFrame) {
-            GlStateManager.disableTexture2D();
-            RenderUtils.glColorHex(frameColor);
-            double s = 3 / 16D;
-            double y = 17 / 16D;
-            RenderUtils.renderFrame(new AxisAlignedBB(-s, y - s, -s, s, y + s, s), 1 / 32D);
-            GlStateManager.enableTexture2D();
-        }
+        done.render(f5);
     }
 
     @Override
     public void setLivingAnimations(EntityLivingBase entity, float par2, float par3, float partialTicks) {
         EntityDroneBase drone = (EntityDroneBase) entity;
         float propRotation = drone.oldPropRotation + (drone.propRotation - drone.oldPropRotation) * partialTicks;
-        Prop1Part1.rotateAngleY = propRotation;
-        Prop1Part2.rotateAngleY = propRotation;
-        Prop1Part3.rotateAngleY = propRotation;
-        Prop2Part1.rotateAngleY = propRotation;
-        Prop2Part2.rotateAngleY = propRotation;
-        Prop2Part3.rotateAngleY = propRotation;
-        Prop3Part1.rotateAngleY = -propRotation;
-        Prop3Part2.rotateAngleY = -propRotation;
-        Prop3Part3.rotateAngleY = -propRotation;
-        Prop4Part1.rotateAngleY = -propRotation;
-        Prop4Part2.rotateAngleY = -propRotation;
-        Prop4Part3.rotateAngleY = -propRotation;
-
-        float laserExtension = drone.oldLaserExtension + (drone.laserExtension - drone.oldLaserExtension) * partialTicks;
-        laserExtension = (1F - laserExtension) * -4.5F / 16F;
-        LaserArm.offsetY = LaserSource.offsetY = laserExtension;
+        prop_1.rotateAngleY = propRotation;
+        prop_2.rotateAngleY = propRotation;
+        prop_3.rotateAngleY = -propRotation;
+        prop_4.rotateAngleY = -propRotation;
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {

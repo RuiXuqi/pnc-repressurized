@@ -79,7 +79,6 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
 
         super.drawGuiContainerForegroundLayer(x, y);
         fontRenderer.drawString("Item Filter", 115, 15, 4210752);
-        fontRenderer.drawString("Upgr.", 24, 16, 4210752);
 
         creativeTabButton.visible = false;
         switch (te.filterMode) {

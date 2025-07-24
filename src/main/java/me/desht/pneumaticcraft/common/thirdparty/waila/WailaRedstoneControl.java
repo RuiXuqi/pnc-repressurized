@@ -50,7 +50,7 @@ public class WailaRedstoneControl implements IWailaDataProvider {
 
         //Get all the values from the map and put them in the list.
         for (Map.Entry<String, String> entry : values.entrySet()) {
-            currenttip.add(WailaCallback.COLOR + I18n.format(entry.getKey()) + ": " + TextFormatting.RED + I18n.format(entry.getValue()));
+            currenttip.add(I18n.format(entry.getKey()) + ": " + TextFormatting.RED + I18n.format(entry.getValue()));
         }
     }
 

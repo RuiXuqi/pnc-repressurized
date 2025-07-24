@@ -4,6 +4,7 @@ import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityAdvancedLiquidCompressor;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 
 public class BlockAdvancedLiquidCompressor extends BlockPneumaticCraftModeled {
 
@@ -26,4 +27,8 @@ public class BlockAdvancedLiquidCompressor extends BlockPneumaticCraftModeled {
         return EnumGuiId.ADVANCED_LIQUID_COMPRESSOR;
     }
 
+    @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT_MIPPED;
+    }
 }

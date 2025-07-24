@@ -37,7 +37,6 @@ public class GuiAssemblyController extends GuiPneumaticContainerBase<TileEntityA
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 18, 21, 4210752);
         fontRenderer.drawString("Prog.", 70, 24, 4210752);
     }
 

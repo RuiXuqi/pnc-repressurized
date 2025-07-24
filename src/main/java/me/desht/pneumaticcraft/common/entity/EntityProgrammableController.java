@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 
 public class EntityProgrammableController extends EntityDroneBase {
     private final TileEntityProgrammableController controller;
+    private float propSpeed = 0f;
 
     public EntityProgrammableController(World world) {
         this(world, null);
@@ -40,10 +41,19 @@ public class EntityProgrammableController extends EntityDroneBase {
     @Override
     public void onUpdate() {
         if (controller != null) {
-            if (controller.isInvalid()) setDead();
-            if (digLaser != null) digLaser.update();
-            oldPropRotation = propRotation;
-            propRotation += 1;
+            if (controller.isInvalid()) {
+                // expire stale minidrones
+                setDead();
+            } else {
+                if (controller.isIdle) {
+                    propSpeed = Math.max(0, propSpeed - 0.04F);
+                } else {
+                    propSpeed = Math.min(1, propSpeed + 0.04F);
+                }
+                oldPropRotation = propRotation;
+                propRotation += propSpeed;
+                if (digLaser != null) digLaser.update();
+            }
         }
     }
 

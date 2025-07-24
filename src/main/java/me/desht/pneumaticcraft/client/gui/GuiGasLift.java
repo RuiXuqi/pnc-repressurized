@@ -55,7 +55,6 @@ public class GuiGasLift extends GuiPneumaticContainerBase<TileEntityGasLift> {
     protected void drawGuiContainerForegroundLayer(int x, int y) {
 
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 17, 19, 4210752);
     }
 
     @Override

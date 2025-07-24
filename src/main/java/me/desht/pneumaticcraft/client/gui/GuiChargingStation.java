@@ -44,12 +44,6 @@ public class GuiChargingStation extends GuiPneumaticContainerBase<TileEntityChar
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 46, 19, 4210752);
-    }
-
-    @Override
     protected Point getInvTextOffset() {
         return new Point(0, 3);
     }

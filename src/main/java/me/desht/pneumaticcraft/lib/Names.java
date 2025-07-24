@@ -1,4 +1,5 @@
 package me.desht.pneumaticcraft.lib;
+import me.desht.pneumaticcraft.lib.Tags;
 
 public class Names {
     // Ore dict strings; camel-case is OK here
@@ -19,13 +20,13 @@ public class Names {
 
     public static final String PNEUMATIC_KEYBINDING_CATEGORY = "key.pneumaticcraft.category";
 
-    public static final String MOD_ID = "pneumaticcraft";
-    public static final String MOD_NAME = "PneumaticCraft: Repressurized";
+    public static final String MOD_ID = Tags.MOD_ID;
+    public static final String MOD_NAME = Tags.MOD_NAME;
 
     // Agreed by convention among several mods to denote item entities which should not be magnet'd
     public static final String PREVENT_REMOTE_MOVEMENT = "PreventRemoteMovement";
 
     // Permission nodes
-    public static final String AMADRON_ADD_PERIODIC_TRADE = MOD_ID + ".amadron.addPeriodicTrade";
-    public static final String AMADRON_ADD_STATIC_TRADE = MOD_ID + ".amadron.addStaticTrade";
+    public static final String AMADRON_ADD_PERIODIC_TRADE = Names.MOD_ID + ".amadron.addPeriodicTrade";
+    public static final String AMADRON_ADD_STATIC_TRADE = Names.MOD_ID + ".amadron.addStaticTrade";
 }

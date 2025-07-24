@@ -10,16 +10,24 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 
 public class RenderDrone extends RenderLiving<EntityDroneBase> {
-    public static final IRenderFactory<EntityDroneBase> REGULAR_FACTORY = RenderDrone::new;
-    public static final IRenderFactory<EntityDroneBase> LOGISTICS_FACTORY = manager -> new RenderDrone(manager, 0xFFFF0000);
-    public static final IRenderFactory<EntityDroneBase> HARVESTING_FACTORY = manager -> new RenderDrone(manager, 0xFF006102);
+    public static final IRenderFactory<EntityDroneBase> REGULAR_FACTORY = manager -> new RenderDrone(manager, Textures.DRONE_ENTITY);
+    public static final IRenderFactory<EntityDroneBase> PROGRAMMABLE_CONTROLLER_FACTORY = manager -> new RenderDrone(manager, Textures.DRONE_ENTITY, 0.25f);
+    public static final IRenderFactory<EntityDroneBase> LOGISTICS_FACTORY = manager -> new RenderDrone(manager, Textures.LOGISTICS_DRONE_ENTITY);
+    public static final IRenderFactory<EntityDroneBase> HARVESTING_FACTORY = manager -> new RenderDrone(manager, Textures.HARVESTING_DRONE_ENTITY);
 
-    public RenderDrone(RenderManager manager) {
-        super(manager, new ModelDrone(), 0);
+    private final ResourceLocation texture;
+
+    private final float scale;
+
+    private RenderDrone(RenderManager manager, ResourceLocation texture, float scale) {
+        super(manager, new ModelDrone(), 0f);
+
+        this.scale = scale;
+        this.texture = texture;
     }
-    
-    public RenderDrone(RenderManager manager, int frameColor) {
-        super(manager, new ModelDrone(frameColor), 0);
+
+    private RenderDrone(RenderManager manager, ResourceLocation texture) {
+        this(manager,  texture, 0.35f);
     }
 
     private void renderDrone(EntityDroneBase drone, double x, double y, double z, float yaw, float partialTicks) {
@@ -30,7 +38,7 @@ public class RenderDrone extends RenderLiving<EntityDroneBase> {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0.76F, 0);
-        GlStateManager.scale(0.5F, -0.5F, -0.5F);
+        GlStateManager.scale(scale, -scale, -scale);
         bindEntityTexture(drone);
         mainModel.setLivingAnimations(drone, 0, 0, partialTicks);
         mainModel.render(drone, 0, 0, 0, 0, partialTicks, 1 / 16F);
@@ -42,7 +50,7 @@ public class RenderDrone extends RenderLiving<EntityDroneBase> {
 
     @Override
     protected ResourceLocation getEntityTexture(EntityDroneBase par1Entity) {
-        return Textures.MODEL_DRONE;
+        return texture;
     }
 
     @Override

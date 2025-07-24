@@ -1,21 +1,17 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "textures": {
-      "pipe": "pneumaticcraft:blocks/pressure_tube",
-      "base": "pneumaticcraft:blocks/assembly_base",
-      "leg": "pneumaticcraft:blocks/compressed_iron_block",
-      "particle": "pneumaticcraft:blocks/assembly_base"
-    },
     "model": "pneumaticcraft:assembly_controller"
   },
   "variants": {
-    "normal": [{}],
-    "inventory": [{
-      "model": "pneumaticcraft:assembly_controller_inv.obj",
-      "custom": { "flip-v" : true},
-      "transform": "forge:default-block"
-    }],
+    "normal": [
+      {}
+    ],
+    "inventory": [
+      {
+        "model": "pneumaticcraft:assembly_controller_inv"
+      }
+    ],
     "down": {
       "false": {},
       "true": {}
@@ -24,7 +20,10 @@
       "false": {},
       "true": {
         "submodel": {
-          "north": { "model": "pneumaticcraft:assembly_connector",  "transform": { "translation": [ 0, 0, -0.375 ], "rotation": { "y": 180 } } }
+          "north": {
+            "model": "pneumaticcraft:assembly_connector_edge",
+            "y": 270
+          }
         }
       }
     },
@@ -32,7 +31,10 @@
       "false": {},
       "true": {
         "submodel": {
-          "south": { "model": "pneumaticcraft:assembly_connector",  "transform": { "translation": [ 0, 0, 0.375 ]} }
+          "south": {
+            "model": "pneumaticcraft:assembly_connector_edge",
+            "y": 90
+          }
         }
       }
     },
@@ -40,7 +42,10 @@
       "false": {},
       "true": {
         "submodel": {
-          "west": { "model": "pneumaticcraft:assembly_connector",  "transform": { "translation": [ -0.375, 0, 0 ], "rotation": { "y": 270 } } }
+          "west": {
+            "model": "pneumaticcraft:assembly_connector_edge",
+            "y": 180
+          }
         }
       }
     },
@@ -48,7 +53,9 @@
       "false": {},
       "true": {
         "submodel": {
-          "east": { "model": "pneumaticcraft:assembly_connector",  "transform": { "translation": [ 0.375, 0, -0 ], "rotation": { "y": 90 } } }
+          "east": {
+            "model": "pneumaticcraft:assembly_connector_edge"
+          }
         }
       }
     }

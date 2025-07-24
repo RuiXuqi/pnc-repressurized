@@ -13,7 +13,7 @@ public class SemiBlockRendererCropSupport implements ISemiBlockRenderer<SemiBloc
     @Override
     public void render(SemiBlockCropSupport semiBlock, float partialTick) {
         GlStateManager.pushMatrix();
-        Minecraft.getMinecraft().renderEngine.bindTexture(Textures.MODEL_HEAT_FRAME);
+        Minecraft.getMinecraft().renderEngine.bindTexture(Textures.MODEL_CROP_SUPPORT);
 
         float brightness = 0.2F;
         GlStateManager.color(brightness, brightness, brightness, 1F);

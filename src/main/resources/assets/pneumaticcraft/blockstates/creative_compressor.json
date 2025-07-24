@@ -2,13 +2,11 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {},
-		"custom": { "flip-v": true },
-        "model": "pneumaticcraft:creative_compressor.obj"
+		"custom": {},
+        "model": "pneumaticcraft:creative_compressor"
     },
 	"variants": {
 		"normal": [{}],
-		"inventory": [{
-          "transform": "forge:default-block"
-        }]
+		"inventory": [{}]
 	}
 }

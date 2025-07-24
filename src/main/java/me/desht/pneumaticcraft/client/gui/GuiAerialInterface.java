@@ -165,13 +165,6 @@ public class GuiAerialInterface extends GuiPneumaticContainerBase<TileEntityAeri
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
-
-    }
-
-    @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
         if (te.getPressure() > PneumaticValues.MIN_PRESSURE_AERIAL_INTERFACE && te.isConnectedToPlayer) {

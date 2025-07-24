@@ -1,4 +1,7 @@
 {
+  "textures": {
+    "pipe": "pneumaticcraft:pnc_model/pressure_tube"
+  },
   "elements": [
     {
       "from": [ 6, 1, 7 ],

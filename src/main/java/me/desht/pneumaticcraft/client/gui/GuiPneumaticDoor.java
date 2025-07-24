@@ -15,10 +15,4 @@ public class GuiPneumaticDoor extends GuiPneumaticContainerBase<TileEntityPneuma
         super(new ContainerPneumaticDoor(player, te), te, Textures.GUI_PNEUMATIC_DOOR);
     }
 
-    @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-    }
-
 }

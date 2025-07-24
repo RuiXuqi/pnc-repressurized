@@ -88,13 +88,6 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-
-        fontRenderer.drawString("Upgr.", 15, 19, 4210752);
-    }
-
-    @Override
     public void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
         IFluidHandler fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);

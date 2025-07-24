@@ -1,26 +1,25 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "pneumaticcraft:pneumatic_dynamo",
-    "textures": {
-      "particle": "pneumaticcraft:blocks/pneumatic_dynamo_off",
-      "dynamo": "pneumaticcraft:blocks/pneumatic_dynamo_on"
-    }
-  },
-  "variants": {
-    "normal": [{}],
-    "inventory": [{ "transform": "forge:default-block" }],
-    "facing": {
-      "up": { "transform": { "rotation": { "z": 90 } } },
-      "down": { "transform": { "rotation": { "z": -90 } } },
-      "north": { "transform": { "rotation": { "y": 90 } } },
-      "south": { "transform": { "rotation": { "y": -90 } } },
-      "east": { },
-      "west": { "transform": { "rotation": { "y": 180 }} }
-    },
-    "active": {
-      "true": { },
-      "false": { "textures": { "dynamo": "pneumaticcraft:blocks/pneumatic_dynamo_off" } }
-    }
-  }
+	"forge_marker": 1,
+    "defaults": {
+		"model": "pneumaticcraft:pneumatic_dynamo"
+	},
+	"variants": {
+		"facing": {
+			"up": {},
+			"down": {"x": 180},
+			"east": {"x": 90,"y": 90},
+			"north": {"x": 90},
+			"west": {"x": 90,"y": 270},
+			"south": {"x": 90,"y": 180}
+		},
+		"active": {
+			"true": {
+				"textures": {
+					"0": "pneumaticcraft:pnc_model/pneumatic_dynamo_on"
+				}
+			},
+			"false": {}
+		},
+		"inventory": [{}]
+	}
 }

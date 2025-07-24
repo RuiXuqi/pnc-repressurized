@@ -1,6 +1,6 @@
 package me.desht.pneumaticcraft.client.model.block;
 
-import me.desht.pneumaticcraft.client.model.entity.ModelDroneMinigun;
+import me.desht.pneumaticcraft.client.model.entity.ModelMinigun;
 import me.desht.pneumaticcraft.client.render.tileentity.AbstractModelRenderer;
 import me.desht.pneumaticcraft.common.tileentity.TileEntitySentryTurret;
 import me.desht.pneumaticcraft.lib.Textures;
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.BlockPos;
 
 public class ModelSentryTurret extends AbstractModelRenderer.BaseModel {
-    private final ModelDroneMinigun model = new ModelDroneMinigun();
+    private final ModelMinigun model = new ModelMinigun();
     private TileEntitySentryTurret fakeTurret;// = new TileEntitySentryTurret();
 
     public ModelSentryTurret() {

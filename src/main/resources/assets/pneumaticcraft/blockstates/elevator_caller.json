@@ -1,20 +1,16 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "model": "pneumaticcraft:elevator_caller"
-  },
-  "variants":{
-    "normal": { "model": "pneumaticcraft:elevator_caller" },
-    "inventory": [{
-      "model": "pneumaticcraft:elevator_caller"
-    }],
-    "facing": {
-      "down": {},
-      "up": {},
-      "north": {},
-      "east": {},
-      "south": {},
-      "west": {}
-    }
-  }
+	"forge_marker": 1,
+	"defaults": {"model": "pneumaticcraft:elevator_caller"},
+	"variants": {
+		"normal":{"model": "pneumaticcraft:elevator_caller"},
+		"facing": {
+			"up":{},
+			"down":{},
+			"east":{"y": 270},
+			"north": {"y": 180},
+			"west": {"y": 90},
+			"south": {}
+		},
+		"inventory": [{"model": "pneumaticcraft:elevator_caller"}]
+	}
 }

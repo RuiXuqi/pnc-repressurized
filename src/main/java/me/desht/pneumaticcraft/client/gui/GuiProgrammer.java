@@ -236,8 +236,17 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             addWidget(radioButton);
             difficultyButtons.add(radioButton);
             radioButton.otherChoices = difficultyButtons;
-            if (i == 1) radioButton.setTooltip(I18n.format("gui.programmer.difficulty.medium.tooltip"));
-            if (i == 2) radioButton.setTooltip(I18n.format("gui.programmer.difficulty.advanced.tooltip"));
+            switch (i) {
+                case 0:
+                    radioButton.setTooltip(I18n.format("gui.programmer.difficulty.easy.tooltip"));
+                    break;
+                case 1:
+                    radioButton.setTooltip(I18n.format("gui.programmer.difficulty.medium.tooltip"));
+                    break;
+                case 2:
+                    radioButton.setTooltip(I18n.format("gui.programmer.difficulty.advanced.tooltip"));
+                    break;
+            }
         }
 
         buttonList.add(new GuiButtonExt(5, xStart + 5, yStart + yBottom + 4, 87, 20, I18n.format("gui.programmer.button.showStart")));
@@ -311,6 +320,23 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
+        for (GuiButton button : buttonList) {
+            if (button instanceof GuiButtonExt && button.isMouseOver()) {
+                List<String> tooltip = new ArrayList<>();
+                switch (button.id) {
+                    case 5: // ShowStart
+                        tooltip.add(I18n.format("gui.programmer.button.showStart.tooltip"));
+                        break;
+                    case 6: // ShowLatest
+                        tooltip.add(I18n.format("gui.programmer.button.showLatest.tooltip"));
+                        break;
+                }
+                if (!tooltip.isEmpty()) {
+                    drawHoveringText(tooltip, x - guiLeft, y - guiTop, fontRenderer);
+                }
+            }
+        }
+
         int xRight = getProgrammerBounds().x + getProgrammerBounds().width; // 299 or 649
         int yBottom = getProgrammerBounds().y + getProgrammerBounds().height; // 171 or 427
 
@@ -343,10 +369,9 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     protected void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
 
-        if (nameField.isFocused() || filterField.isFocused() && keyCode != Keyboard.KEY_TAB) {
+        if (nameField.isFocused() || filterField.isFocused() && Keyboard.KEY_TAB != keyCode) {
             return;
         }
-
         if (Keyboard.KEY_I == keyCode) {
             showWidgetDocs();
         }
@@ -355,21 +380,32 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                 NetworkHandler.sendToServer(new PacketGuiButton(0));
             }
         }
-        if (Keyboard.KEY_SPACE == keyCode || Keyboard.KEY_TAB == keyCode) {
+        if (Keyboard.KEY_TAB == keyCode) {
             toggleShowWidgets();
         }
         if (Keyboard.KEY_DELETE == keyCode) {
-            IProgWidget widget = programmerUnit.getHoveredWidget(lastMouseX, lastMouseY);
-            if (widget != null) {
-                te.progWidgets.remove(widget);
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT)) {
+                clear();
+            } else {
+                remove();
             }
         }
-        if (Keyboard.KEY_Z == keyCode) {
-            NetworkHandler.sendToServer(new PacketGuiButton(undoButton.id));
+        if (Keyboard.KEY_HOME == keyCode) {
+            gotoStart();
         }
+        if (Keyboard.KEY_END == keyCode) {
+            gotoLatest();
+        }
+        if (Keyboard.KEY_P == keyCode) {
+            pastebin();
+        }
+        // Undo
+        if (Keyboard.KEY_Z == keyCode) {
+            NetworkHandler.sendToServer(new PacketGuiButton(9));
+        }
+        // Redo
         if (Keyboard.KEY_Y == keyCode) {
-            NetworkHandler.sendToServer(new PacketGuiButton(redoButton.id));
+            NetworkHandler.sendToServer(new PacketGuiButton(10));
         }
     }
 
@@ -435,18 +471,24 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             if (showingAllWidgets && draggingWidget != null) toggleShowWidgets();
         }
         GlStateManager.enableTexture2D();
+
+        // draw widgets in the widget tray
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        int maxProgress = maxPage * WIDGET_X_SPACING;
         for (int i = 0; i < visibleSpawnWidgets.size(); i++) {
             IProgWidget widget = visibleSpawnWidgets.get(i);
             GlStateManager.pushMatrix();
             GlStateManager.translate(widget.getX() + guiLeft, widget.getY() + guiTop, 0);
             GlStateManager.scale(0.5, 0.5, 1);
+            int alpha = 255;
             if (showingAllWidgets && filteredSpawnWidgets != null && !filteredSpawnWidgets.get(i)) {
-                GlStateManager.color(1, 1, 1, 0.2f);
-            } else {
-                GlStateManager.color(1, 1, 1, 1);
+                alpha = 48;
+            } else if (showingWidgetProgress > 0 && showingWidgetProgress < maxProgress) {
+                float p = (float) showingWidgetProgress / maxProgress;
+                alpha = 32 + (int) (223 * (1 - p));
             }
+            GlStateManager.color(1.0F, 1.0F, 1.0F, alpha / 255.0F);
             widget.render();
             GlStateManager.popMatrix();
         }
@@ -462,6 +504,22 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             draggingWidget.render();
             GlStateManager.popMatrix();
         }
+        GlStateManager.popMatrix();
+
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(programmerUnit.getTranslatedX(), programmerUnit.getTranslatedY(), 0);
+        GlStateManager.scale(programmerUnit.getScale(), programmerUnit.getScale(), 1);
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        for (RemovingWidget rw : removingWidgets) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(rw.tx, rw.ty, 0);
+            GlStateManager.scale(0.5, 0.5, 1);
+            GlStateManager.color(1, 1, 1, 1.0f);
+            rw.widget.render();
+            GlStateManager.popMatrix();
+        }
+        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
 
         boolean isLeftClicking = Mouse.isButtonDown(0);
@@ -483,7 +541,7 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                     break;
                 }
             }
-            
+
             // create area widgets straight from GPS Area Tools
             ItemStack heldItem = mc.player.inventory.getItemStack();
             ProgWidgetArea areaToolWidget = heldItem.getItem() instanceof ItemGPSAreaTool ? ItemGPSAreaTool.getArea(heldItem) : null;
@@ -496,7 +554,7 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                     dragMouseStartY = y - guiTop;
                     dragWidgetStartX = widget.getX();
                     dragWidgetStartY = widget.getY();
-                    
+
                     if (areaToolWidget != null && widget instanceof ProgWidgetArea) {
                         NBTTagCompound tag = new NBTTagCompound();
                         areaToolWidget.writeToNBT(tag);
@@ -560,19 +618,19 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         }
 
         if (!isLeftClicking && !isMiddleClicking && draggingWidget != null) {
+            double tx = (lastMouseX - programmerUnit.getTranslatedX()) / scale;
+            double ty = (lastMouseY - programmerUnit.getTranslatedY()) / scale;
+            handlePuzzleMargins();
             if (programmerUnit.isOutsideProgrammingArea(draggingWidget)) {
-                deleteConnectingWidgets(draggingWidget);
-            } else {
-                handlePuzzleMargins();
-                if (!isValidPlaced(draggingWidget)) {
-                    setConnectingWidgetsToXY(draggingWidget, dragWidgetStartX, dragWidgetStartY);
-                    if (programmerUnit.isOutsideProgrammingArea(draggingWidget))
-                        deleteConnectingWidgets(draggingWidget);
+                deleteConnectingWidgets(draggingWidget, tx, ty);
+            } else if (!isValidPlaced(draggingWidget)) {
+                setConnectingWidgetsToXY(draggingWidget, dragWidgetStartX, dragWidgetStartY);
+                if (programmerUnit.isOutsideProgrammingArea(draggingWidget) || !isValidPlaced(draggingWidget)) {
+                    deleteConnectingWidgets(draggingWidget, tx, ty);
                 }
             }
             NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
             TileEntityProgrammer.updatePuzzleConnections(te.progWidgets);
-
             draggingWidget = null;
         }
         wasClicking = isLeftClicking || isMiddleClicking;
@@ -714,16 +772,40 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         }
     }
 
-    private void deleteConnectingWidgets(IProgWidget widget) {
+    private final List<RemovingWidget> removingWidgets = new ArrayList<>();
+
+    private static class RemovingWidget {
+        final IProgWidget widget;
+        double tx, ty;
+        final double velX;
+        double velY;
+
+        RemovingWidget(IProgWidget widget, double tx, double ty) {
+            this.widget = widget;
+            this.tx = tx;
+            this.ty = ty;
+            this.velX = (new Random().nextDouble() - 0.5) * 3;
+            this.velY = -4;
+        }
+
+        public void tick() {
+            tx += velX;
+            ty += velY;
+            velY += 0.35;
+        }
+    }
+
+    private void deleteConnectingWidgets(IProgWidget widget, double tx, double ty) {
+        removingWidgets.add(new RemovingWidget(widget, tx, ty));
         te.progWidgets.remove(widget);
         IProgWidget[] connectingWidgets = widget.getConnectedParameters();
         if (connectingWidgets != null) {
             for (IProgWidget widg : connectingWidgets) {
-                if (widg != null) deleteConnectingWidgets(widg);
+                if (widg != null) deleteConnectingWidgets(widg, tx, ty);
             }
         }
         IProgWidget outputWidget = widget.getOutputWidget();
-        if (outputWidget != null) deleteConnectingWidgets(outputWidget);
+        if (outputWidget != null) deleteConnectingWidgets(outputWidget, tx, ty);
     }
 
     /**
@@ -745,21 +827,16 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                 updateVisibleProgWidgets();
                 return;
             case 5:
-                programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
+                gotoStart();
                 return;
             case 6:
-                if (te.progWidgets.size() > 0) {
-                    programmerUnit.gotoPiece(te.progWidgets.get(te.progWidgets.size() - 1));
-                }
+                gotoLatest();
                 return;
             case 7:
-                NBTTagCompound mainTag = new NBTTagCompound();
-                te.writeProgWidgetsToNBT(mainTag);
-                FMLClientHandler.instance().showGuiScreen(pastebinGui = new GuiPastebin(this, mainTag));
+                pastebin();
                 break;
             case 11:
-                te.progWidgets.clear();
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+                clear();
                 break;
             case 12:
                 for (IProgWidget widget : te.progWidgets) {
@@ -779,6 +856,43 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         allWidgetsButton.displayString = showingAllWidgets ? "\u25e2" : "\u25e4";
         updateVisibleProgWidgets();
         filterField.setFocused(showingAllWidgets);
+    }
+
+    private void gotoLatest() {
+        if (te.progWidgets.size() > 0) {
+            programmerUnit.gotoPiece(te.progWidgets.get(te.progWidgets.size() - 1));
+        }
+    }
+
+    private void gotoStart() {
+        programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
+    }
+
+    private void pastebin() {
+        NBTTagCompound mainTag = new NBTTagCompound();
+        te.writeProgWidgetsToNBT(mainTag);
+        FMLClientHandler.instance().showGuiScreen(pastebinGui = new GuiPastebin(this, mainTag));
+    }
+
+    private void clear() {
+        te.progWidgets.forEach(widget -> {
+            double tx = widget.getX() + guiLeft;
+            double ty = widget.getY() + guiTop;
+            removingWidgets.add(new RemovingWidget(widget, tx, ty));
+        });
+        te.progWidgets.clear();
+        NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+    }
+
+    private void remove() {
+        IProgWidget widget = programmerUnit.getHoveredWidget(lastMouseX, lastMouseY);
+        if (widget != null) {
+            double tx = widget.getX() + guiLeft;
+            double ty = widget.getY() + guiTop;
+            removingWidgets.add(new RemovingWidget(widget, tx, ty));
+            te.progWidgets.remove(widget);
+            NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+        }
     }
 
     @Override
@@ -804,6 +918,16 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     public void updateScreen() {
         super.updateScreen();
 
+        Iterator<RemovingWidget> iter = removingWidgets.iterator();
+        while (iter.hasNext()) {
+            RemovingWidget rw = iter.next();
+            if (rw.ty > height) {
+                iter.remove();
+            } else {
+                rw.tick();
+            }
+        }
+
         if (te.recentreStartPiece) {
             programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
             te.recentreStartPiece = false;
@@ -816,17 +940,18 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
 
         ItemStack programmedItem = te.getIteminProgrammingSlot();
         oldShowingWidgetProgress = showingWidgetProgress;
+        int maxProgress = maxPage * WIDGET_X_SPACING;
+        int step = Math.max(1, maxProgress / 5);
         if (showingAllWidgets) {
-            int maxProgress = maxPage * WIDGET_X_SPACING;
             if (showingWidgetProgress < maxProgress) {
-                showingWidgetProgress += 60;
+                showingWidgetProgress += step;
                 if (showingWidgetProgress >= maxProgress) {
                     showingWidgetProgress = maxProgress;
                     updateVisibleProgWidgets();
                 }
             }
         } else {
-            showingWidgetProgress -= 60;
+            showingWidgetProgress -= step;
             if (showingWidgetProgress < 0) showingWidgetProgress = 0;
         }
 

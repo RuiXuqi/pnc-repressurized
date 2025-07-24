@@ -1,7 +1,6 @@
 {
-   "parent" : "item/generated",
-   "textures" : {
-      "layer0" : "pneumaticcraft:items/gun_ammo",
-      "layer1" : "pneumaticcraft:items/gun_ammo_overlay"
-   }
+	"parent" : "item/generated",
+	"textures" : {
+		"layer0" : "pneumaticcraft:items/gun_ammo"
+	}
 }

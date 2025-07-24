@@ -76,7 +76,6 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
         fontRenderer.drawString("Network Layout", 15, 12, 4210752);
-        fontRenderer.drawString("Upgr.", 133, 52, 4210752);
     }
 
     @Override

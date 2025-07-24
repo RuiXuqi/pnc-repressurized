@@ -159,7 +159,7 @@ public abstract class TubeModule implements ISidedPart {
     public void addInfo(List<String> curInfo) {
         if (upgraded) {
             ItemStack stack = new ItemStack(Itemss.ADVANCED_PCB);
-            curInfo.add(TextFormatting.GREEN + stack.getDisplayName() + " installed");
+            curInfo.add(PneumaticCraftUtils.xlate("waila.tubeModule.upgraded"));
         }
         if (this instanceof INetworkedModule) {
             int colorChannel = ((INetworkedModule) this).getColorChannel();

@@ -5,9 +5,9 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 import me.desht.pneumaticcraft.common.item.ItemCamoApplicator;
 import me.desht.pneumaticcraft.common.tileentity.ICamouflageableTE;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -24,7 +24,7 @@ public class WailaCamoHandler implements IWailaDataProvider {
         TileEntity te = accessor.getTileEntity();
         if (te instanceof ICamouflageableTE && ((ICamouflageableTE) te).getCamouflage() != null) {
             String str = ItemCamoApplicator.getCamoStateDisplayName(((ICamouflageableTE) te).getCamouflage());
-            currenttip.add(TextFormatting.YELLOW + "[ Camo: " + str + "]");
+            currenttip.add(I18n.format("waila.camo", str));
         }
         return currenttip;
     }

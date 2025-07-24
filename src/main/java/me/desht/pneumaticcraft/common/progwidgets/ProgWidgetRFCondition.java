@@ -13,7 +13,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 public class ProgWidgetRFCondition extends ProgWidgetCondition {
     @Override
     public ResourceLocation getTexture() {
-        return Textures.PROG_WIDGET_CONDITION_RF;
+        return Textures.PROG_WIDGET_CONDITION_ENERGY;
     }
 
     @Override

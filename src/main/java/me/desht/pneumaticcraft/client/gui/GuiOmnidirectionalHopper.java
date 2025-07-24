@@ -50,12 +50,6 @@ public class GuiOmnidirectionalHopper extends GuiPneumaticContainerBase<TileEnti
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-    }
-
-    @Override
     public void updateScreen() {
         super.updateScreen();
         statusStat.setText(getStatus());

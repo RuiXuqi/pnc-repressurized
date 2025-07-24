@@ -1,16 +1,16 @@
 package me.desht.pneumaticcraft.client.render.tileentity;
 
-import me.desht.pneumaticcraft.client.model.block.ModelDoorBase;
+import me.desht.pneumaticcraft.client.model.block.ModelPneumaticDoorBase;
 import me.desht.pneumaticcraft.client.util.RenderUtils;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityPneumaticDoorBase;
 import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.util.ResourceLocation;
 
 public class RenderPneumaticDoorBase extends AbstractModelRenderer<TileEntityPneumaticDoorBase> {
-    private final ModelDoorBase model;
+    private final ModelPneumaticDoorBase model;
 
     public RenderPneumaticDoorBase() {
-        model = new ModelDoorBase();
+        model = new ModelPneumaticDoorBase();
     }
 
     @Override

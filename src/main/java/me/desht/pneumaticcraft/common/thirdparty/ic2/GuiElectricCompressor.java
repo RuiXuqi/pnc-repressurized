@@ -29,12 +29,6 @@ public class GuiElectricCompressor extends GuiPneumaticContainerBase<TileEntityE
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 0x404040);
-    }
-
-    @Override
     public void updateScreen() {
         super.updateScreen();
         inputStat.setText(getOutputStat());

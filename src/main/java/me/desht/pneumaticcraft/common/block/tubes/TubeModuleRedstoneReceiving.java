@@ -1,8 +1,8 @@
 package me.desht.pneumaticcraft.common.block.tubes;
 
 import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public abstract class TubeModuleRedstoneReceiving extends TubeModule {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Applied redstone: " + TextFormatting.WHITE + redstoneLevel);
+        curInfo.add(I18n.format("waila.redstoneModule.emitting", redstoneLevel));
     }
 
     @Override

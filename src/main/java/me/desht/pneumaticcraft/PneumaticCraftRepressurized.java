@@ -38,7 +38,7 @@ import me.desht.pneumaticcraft.common.util.Reflections;
 import me.desht.pneumaticcraft.common.worldgen.WorldGeneratorPneumaticCraft;
 import me.desht.pneumaticcraft.lib.Log;
 import me.desht.pneumaticcraft.lib.Names;
-import me.desht.pneumaticcraft.lib.Versions;
+import me.desht.pneumaticcraft.lib.Tags;
 import me.desht.pneumaticcraft.proxy.IProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
@@ -62,18 +62,14 @@ import org.apache.logging.log4j.Logger;
 
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
-@Mod(modid = Names.MOD_ID, name = Names.MOD_NAME, version = PneumaticCraftRepressurized.MODVERSION,
-        dependencies = "required-after:forge@[14.23.5.2768,);after:forestry;after:igwmod@[1.4.2-11,);after:thaumcraft;after:computercraft;after:appliedenergistics2@[rv6,];after:jei@[4.12.0,)",
-        updateJSON = "https://raw.github.com/TeamPneumatic/pnc-repressurized/master/release_info.json",
-        acceptedMinecraftVersions = "1.12"
+@Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION,
+        dependencies = "required-after:forge@[14.23.5.2768,);after:forestry;after:igwmod@[1.4.2-11,);after:thaumcraft;after:computercraft;after:appliedenergistics2@[rv6,];after:jei@[4.12.0,)"
 )
 public class PneumaticCraftRepressurized {
-    public static final String MODVERSION = "@VERSION@";
-
     @SidedProxy(clientSide = "me.desht.pneumaticcraft.proxy.ClientProxy", serverSide = "me.desht.pneumaticcraft.proxy.ServerProxy")
     public static IProxy proxy;
 
-    @Instance(Names.MOD_ID)
+    @Instance(Tags.MOD_ID)
     public static PneumaticCraftRepressurized instance;
 
     public static Logger logger;
@@ -88,8 +84,6 @@ public class PneumaticCraftRepressurized {
     @EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
-
-        event.getModMetadata().version = Versions.fullVersionString();
 
         Reflections.init();
         PneumaticRegistry.init(PneumaticCraftAPIHandler.getInstance());

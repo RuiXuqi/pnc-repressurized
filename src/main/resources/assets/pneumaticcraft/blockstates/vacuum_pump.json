@@ -1,36 +1,17 @@
 {
-  "forge_marker": 1,
-  "defaults": {
-    "textures": {},
-    "custom": { "flip-v" : true},
-    "model": "pneumaticcraft:vacuum_pump.obj"
-  },
-  "variants": {
-    "facing": {
-      "up": {"transform": {"rotation" : {"x" : 90}}},
-      "down": {"x" : -90},
-      "north": {
-        "transform": {
-          "rotation": {"y" : 90}
-        }
-      },
-      "west": {
-        "transform": {
-          "rotation": {"y" : 180}
-        }
-      },
-      "south": {
-        "transform": {
-          "rotation": {"y": 270}
-        }
-      },
-      "east": {
-        "transform": {
-        }
-      }
+    "forge_marker": 1,
+    "defaults": {
+        "model": "pneumaticcraft:vacuum_pump"
     },
-    "inventory": [{
-      "transform": "forge:default-block"
-    }]
-  }
+	"variants": {
+		"facing": {
+			"up": {},
+			"down": {},
+			"east": {},
+			"north": {"y":-90},
+			"west": {"y":180},
+			"south": {"y":90}
+		},
+		"inventory": [{}]
+	}
 }

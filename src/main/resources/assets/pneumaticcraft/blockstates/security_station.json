@@ -2,35 +2,18 @@
     "forge_marker": 1,
     "defaults": {
         "textures": {},
-        "custom": { "flip-v" : true},
-        "model": "pneumaticcraft:security_station.obj"
+		"custom": {},
+        "model": "pneumaticcraft:security_station"
     },
 	"variants": {
 		"facing": {
-			"up": {"transform": {"rotation" : {"x" : 90}}},
-			"down": {"x" : -90},
-			"east": {
-				"transform": {
-					"rotation": {"y" : 90}
-				}
-			},
-			"north": {
-				"transform": {
-					"rotation": {"y" : 180}
-				}
-			},
-			"west": {
-				"transform": {
-					"rotation": {"y": 270}
-				}
-			},
-			"south": {
-				"transform": {
-				}
-			}
+			"up": {},
+			"down": {},
+			"east": {"y":-90},
+			"north": {"y":180},
+			"west": {"y":90},
+			"south": {}
 		},
-		"inventory": [{
-          "transform": "forge:default-block"
-        }]
+		"inventory": [{}]
 	}
 }

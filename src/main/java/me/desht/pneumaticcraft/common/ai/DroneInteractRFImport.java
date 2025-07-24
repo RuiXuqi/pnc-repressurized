@@ -20,7 +20,7 @@ public class DroneInteractRFImport implements ICustomBlockInteract {
 
     @Override
     public ResourceLocation getTexture() {
-        return Textures.PROG_WIDGET_RF_IM;
+        return Textures.PROG_WIDGET_RF_IMPORT;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package me.desht.pneumaticcraft.client;
 
-import me.desht.pneumaticcraft.common.block.Blockss;
+import me.desht.pneumaticcraft.common.item.Itemss;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class CreativeTabPneumaticCraft extends CreativeTabs {
@@ -13,7 +12,7 @@ public class CreativeTabPneumaticCraft extends CreativeTabs {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(Item.getItemFromBlock(Blockss.AIR_CANNON));
+        return new ItemStack(Itemss.PRESSURE_GAUGE);
     }
 
 }

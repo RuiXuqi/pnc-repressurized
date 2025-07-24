@@ -11,100 +11,87 @@ import net.minecraft.item.ItemBlock;
 
 public class ModelAssemblyIOUnit extends AbstractModelRenderer.BaseModel {
     private final ModelRenderer baseTurn;
-    private final ModelRenderer baseTurn2;
-    private final ModelRenderer armBase1;
-    private final ModelRenderer armBase2;
-    private final ModelRenderer supportMiddle;
-    private final ModelRenderer armMiddle1;
-    private final ModelRenderer armMiddle2;
+    private final ModelRenderer baseTurn2_0;
+    private final ModelRenderer baseTurn2_1;
+    private final ModelRenderer armBase;
+    private final ModelRenderer armMiddle;
     private final ModelRenderer clawBase;
-    private final ModelRenderer clawAxil;
+    private final ModelRenderer clawAxle;
     private final ModelRenderer clawTurn;
     private final ModelRenderer claw1;
     private final ModelRenderer claw2;
+
     private RenderEntityItem customRenderer = null;
+    // the backported number should be doubled
+    private static final float ITEM_SCALE = 1.0F;
 
     public ModelAssemblyIOUnit() {
         textureWidth = 64;
         textureHeight = 64;
 
-        baseTurn = new ModelRenderer(this, 0, 17);
-        baseTurn.addBox(0F, 0F, 0F, 7, 1, 7);
-        baseTurn.setRotationPoint(-3.5F, 22F, -3.5F);
-        baseTurn.setTextureSize(64, 32);
+        baseTurn = new ModelRenderer(this, 0, 0);
+        baseTurn.setRotationPoint(-3.5F, 22.0F, -3.5F);
+        baseTurn.setTextureOffset(0, 0).addBox(-1.0F, 0.0F, -1.0F, 9, 1, 9);
         baseTurn.mirror = true;
-        setRotation(baseTurn, 0F, 0F, 0F);
-        baseTurn2 = new ModelRenderer(this, 28, 17);
-        baseTurn2.addBox(0F, 0F, 0F, 4, 5, 4);
-        baseTurn2.setRotationPoint(-2F, 17F, -2F);
-        baseTurn2.setTextureSize(64, 32);
-        baseTurn2.mirror = true;
-        setRotation(baseTurn2, 0F, 0F, 0F);
-        armBase1 = new ModelRenderer(this, 0, 25);
-        armBase1.addBox(0F, 0F, 0F, 1, 2, 8);
-        armBase1.setRotationPoint(2F, 17F, -1F);
-        armBase1.setTextureSize(64, 32);
-        armBase1.mirror = true;
-        setRotation(armBase1, 0F, 0F, 0F);
-        armBase2 = new ModelRenderer(this, 0, 25);
-        armBase2.addBox(0F, 0F, 0F, 1, 2, 8);
-        armBase2.setRotationPoint(-3F, 17F, -1F);
-        armBase2.setTextureSize(64, 32);
-        armBase2.mirror = true;
-        setRotation(armBase2, 0F, 0F, 0F);
-        supportMiddle = new ModelRenderer(this, 0, 57);
-        supportMiddle.addBox(0F, 0F, 0F, 2, 1, 1);
-        supportMiddle.setRotationPoint(-1F, 17.5F, 5.5F);
-        supportMiddle.setTextureSize(64, 32);
-        supportMiddle.mirror = true;
-        setRotation(supportMiddle, 0F, 0F, 0F);
-        armMiddle1 = new ModelRenderer(this, 0, 35);
-        armMiddle1.addBox(0F, 0F, 0F, 1, 17, 2);
-        armMiddle1.setRotationPoint(-2F, 2F, 5F);
-        armMiddle1.setTextureSize(64, 32);
-        armMiddle1.mirror = true;
-        setRotation(armMiddle1, 0F, 0F, 0F);
-        armMiddle2 = new ModelRenderer(this, 0, 35);
-        armMiddle2.addBox(0F, 0F, 0F, 1, 17, 2);
-        armMiddle2.setRotationPoint(1F, 2F, 5F);
-        armMiddle2.setTextureSize(64, 32);
-        armMiddle2.mirror = true;
-        setRotation(armMiddle2, 0F, 0F, 0F);
-        clawBase = new ModelRenderer(this, 8, 38);
-        clawBase.addBox(0F, 0F, 0F, 2, 2, 3);
-        clawBase.setRotationPoint(-1F, 2F, 4.5F);
-        clawBase.setTextureSize(64, 32);
+
+        baseTurn2_0 = new ModelRenderer(this, 0, 0);
+        baseTurn2_0.setRotationPoint(-2.0F, 17.0F, -2.0F);
+        baseTurn2_0.setTextureOffset(0, 30).addBox(-2.0F, -0.5F, 0.5F, 2, 6, 3, 0.2F);
+
+        baseTurn2_1 = new ModelRenderer(this, 0, 0);
+        baseTurn2_1.setRotationPoint(-2.0F, 17.0F, -2.0F);
+        baseTurn2_1.setTextureOffset(0, 10).addBox(-2.0F, 3.75F, -2.0F, 2, 2, 8);
+        baseTurn2_1.setTextureOffset(10, 30).addBox(4.0F, -0.5F, 0.5F, 2, 6, 3, 0.2F);
+        baseTurn2_1.setTextureOffset(0, 20).addBox(4.0F, 3.75F, -2.0F, 2, 2, 8);
+        baseTurn2_1.mirror = true;
+
+        armBase = new ModelRenderer(this, 0, 0);
+        armBase.setRotationPoint(-3.0F, 17.0F, -1.0F);
+        armBase.setTextureOffset(0, 49).addBox(2.0F, 0.0F, 1.0F, 2, 2, 5, 0.3F);
+        armBase.setTextureOffset(0, 43).addBox(1.5F, -0.5F, -0.5F, 3, 3, 3);
+        armBase.setTextureOffset(12, 43).addBox(1.5F, -0.5F, 5.5F, 3, 3, 3);
+        armBase.setTextureOffset(0, 39).addBox(-1.5F, 0.0F, 0.0F, 9, 2, 2);
+        armBase.mirror = true;
+
+        armMiddle = new ModelRenderer(this, 0, 0);
+        armMiddle.setRotationPoint(-4.0F, 2.0F, 5.0F);
+        armMiddle.setTextureOffset(20, 10).addBox(0.0F, 2.0F, 0.0F, 2, 13, 2);
+        armMiddle.setTextureOffset(12, 24).addBox(0.0F, 0.0F, 0.0F, 2, 2, 2, 0.3F);
+        armMiddle.setTextureOffset(0, 24).addBox(0.0F, 15.0F, 0.0F, 2, 2, 2, 0.3F);
+        armMiddle.setTextureOffset(14, 52).addBox(-0.5F, 15.0F, 0.0F, 3, 2, 2);
+        armMiddle.mirror = true;
+
+
+        clawBase = new ModelRenderer(this, 0, 0);
+        clawBase.setRotationPoint(-1.0F, 2.0F, 4.5F);
+        clawBase.setTextureOffset(46, 0).addBox(-1.0F, -1.0F, 0.0F, 4, 4, 5);
         clawBase.mirror = true;
-        setRotation(clawBase, 0F, 0F, 0F);
-        clawAxil = new ModelRenderer(this, 8, 45);
-        clawAxil.addBox(0F, 0F, 0F, 1, 1, 1);
-        clawAxil.setRotationPoint(-0.5F, 2.5F, 4F);
-        clawAxil.setTextureSize(64, 32);
-        clawAxil.mirror = true;
-        setRotation(clawAxil, 0F, 0F, 0F);
-        clawTurn = new ModelRenderer(this, 8, 49);
-        clawTurn.addBox(0F, 0F, 0F, 4, 2, 1);
-        clawTurn.setRotationPoint(-2F, 2F, 3F);
-        clawTurn.setTextureSize(64, 32);
+
+        clawAxle = new ModelRenderer(this, 0, 0);
+        clawAxle.setRotationPoint(-0.5F, 2.5F, 4.0F);
+        clawAxle.setTextureOffset(58, 9).addBox(-0.5F, -0.5F, 0.0F, 2, 2, 1);
+        clawAxle.mirror = true;
+
+        clawTurn = new ModelRenderer(this, 0, 0);
+        clawTurn.setRotationPoint(-2.0F, 2.0F, 3.0F);
+        clawTurn.setTextureOffset(54, 12).addBox(0.0F, -0.5F, 0.0F, 4, 3, 1, 0.1F);
         clawTurn.mirror = true;
-        setRotation(clawTurn, 0F, 0F, 0F);
-        claw1 = new ModelRenderer(this, 8, 54);
-        claw1.addBox(0F, 0F, 0F, 1, 2, 1);
-        claw1.setRotationPoint(0F, 2F, 2F);
-        claw1.setTextureSize(64, 32);
+
+        claw1 = new ModelRenderer(this, 0, 0);
+        claw1.setRotationPoint(0.0F, 2.0F, 2.25F);
+        claw1.setTextureOffset(52, 21).addBox(-0.1F, -0.5F, -1.35F, 1, 3, 2, -0.1F);
+        claw1.setTextureOffset(58, 21).addBox(0.25F, 0.0F, -1.35F, 1, 2, 2);
         claw1.mirror = true;
-        setRotation(claw1, 0F, 0F, 0F);
-        claw2 = new ModelRenderer(this, 8, 59);
-        claw2.addBox(0F, 0F, 0F, 1, 2, 1);
-        claw2.setRotationPoint(-1F, 2F, 2F);
-        claw2.setTextureSize(64, 32);
+
+        claw2 = new ModelRenderer(this, 0, 0);
+        claw2.setRotationPoint(-1.0F, 2.0F, 2.25F);
+        claw2.setTextureOffset(52, 16).addBox(0.1F, -0.5F, -1.35F, 1, 3, 2, -0.1F);
+        claw2.setTextureOffset(58, 16).addBox(-0.25F, 0.0F, -1.35F, 1, 2, 2);
         claw2.mirror = true;
-        setRotation(claw2, 0F, 0F, 0F);
     }
 
     public void renderModel(float size, float[] angles, float clawProgress, EntityItem carriedItem) {
         float clawTrans;
-        float scaleFactor = 0.7F;
 
         if (customRenderer == null) {
             customRenderer = new AbstractModelRenderer.NoBobItemRenderer();
@@ -129,34 +116,45 @@ public class ModelAssemblyIOUnit extends AbstractModelRenderer.BaseModel {
         GlStateManager.pushMatrix();
 
         GlStateManager.rotate(angles[0], 0, 1, 0);
+
         baseTurn.render(size);
-        baseTurn2.render(size);
+        baseTurn2_0.render(size);
+        baseTurn2_1.render(size);
+
         GlStateManager.translate(0, 18 / 16F, 0);
         GlStateManager.rotate(angles[1], 1, 0, 0);
         GlStateManager.translate(0, -18 / 16F, 0);
-        armBase1.render(size);
-        armBase2.render(size);
-        supportMiddle.render(size);
+
+        armBase.render(size);
+
         GlStateManager.translate(0, 18 / 16F, 6 / 16F);
         GlStateManager.rotate(angles[2], 1, 0, 0);
         GlStateManager.translate(0, -18 / 16F, -6 / 16F);
-        armMiddle1.render(size);
-        armMiddle2.render(size);
+
+        armMiddle.render(size);
+
         GlStateManager.translate(0, 3 / 16F, 6 / 16F);
         GlStateManager.rotate(angles[3], 1, 0, 0);
         GlStateManager.translate(0, -3 / 16F, -6 / 16F);
+
         clawBase.render(size);
+
         GlStateManager.translate(0, 3 / 16F, 0);
         GlStateManager.rotate(angles[4], 0, 0, 1);
         GlStateManager.translate(0, -3 / 16F, 0);
-        clawAxil.render(size);
+
+        clawAxle.render(size);
         clawTurn.render(size);
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(clawTrans, 0, 0);
+
         claw1.render(size);
+
         GlStateManager.translate(-2 * clawTrans, 0, 0);
+
         claw2.render(size);
+
         GlStateManager.popMatrix();
 
         if (carriedItem != null) {
@@ -165,7 +163,7 @@ public class ModelAssemblyIOUnit extends AbstractModelRenderer.BaseModel {
                 double yOffset = carriedItem.getItem().getItem() instanceof ItemBlock ? 1.5 / 16D : 0.5 / 16D;
                 GlStateManager.translate(0, yOffset - 0.2, -3 / 16D);
                 GlStateManager.rotate(-90, 0, 1, 0);
-                GlStateManager.scale(scaleFactor, scaleFactor, scaleFactor);
+                GlStateManager.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
                 customRenderer.doRender(carriedItem, 0, 0, 0, 0, 0);
             }
         }

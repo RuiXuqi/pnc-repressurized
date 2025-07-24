@@ -96,7 +96,7 @@ item.nuke_virus.name=Nuke Virus
 item.compressed_iron_gear.name=Compressed Iron Gear
 item.pneumatic_wrench.name=Pneumatic Wrench
 item.drone.name=Drone
-item.advanced_pcb.name=Advanced PCB
+item.advanced_pcb.name=Module Expansion Card
 item.remote.name=Remote
 item.seismic_sensor.name=Seismic Sensor
 item.lpg_bucket.name=LPG Bucket
@@ -285,7 +285,7 @@ gui.remote.button.settingValue=Setting Value:
 gui.remote.button.width=Width:
 gui.remote.button.height=Height:
 gui.remote.button.importRemoteButton=Import an existing Remote lay-out from another Remote.
-gui.remote.button.pastebinButton=Import/Export layout from/to Pastebin.
+gui.remote.button.pastebinButton=Import/Export layout from/to Pastebin or clipboard [P]
 gui.remote.tooltip=Tooltip:
 remote.checkbox.name=CheckBox
 remote.checkbox.tooltip=A toggleable button which assigns 1 to the linked variable's X value when checked, and 0 when not checked.
@@ -311,7 +311,7 @@ gui.remote.dropdown.sort.tooltip=If checked, sort the list of elements in alphab
 entity.Drone.name=Drone
 entity.logisticDrone.name=Logistic Drone
 entity.harvestingDrone.name=Harvesting Drone
-entity.Villager.pneumaticcraft.mechanic=Mechanic
+entity.Villager.pneumaticcraft.mechanic=Pressure Mechanic
 entity.micromissile.name=Micromissile
 
 # Helmet hacking
@@ -446,7 +446,6 @@ gui.tab.info.tile.assembly_drill=§0Part of an Assembly line. Can drill items on
 gui.tab.info.tile.assembly_laser=§0Part of an Assembly line. Can laser items on an Assembly Platform adjacent to it. It cannot be set up diagonally in relation to the Assembly Platform!
 gui.tab.info.tile.uv_light_box=§0With this machine you can expose Empty PCB's to UV light. If this happens in such a way that only a part of the PCB gets exposed, this part will hold it's copper traces when etched in an Etching tank. The longer you expose a PCB, the higher the chance that the PCB will be successfully etched.
 gui.tab.info.tile.security_station=§0When you want to protect an area from others messing around with your belongings, you can use this block to prevent others from interacting/breaking with every block within its range. You can whitelist players by adding them in the Access Stat. There's no in-game tutorial available just yet for how to set up the network.
-gui.tab.info.tile.security_station.hacking=§0In here you can hack a Security Station. You start at the IO Port. From there, you can hack Network Nodes by left-clicking on them. Every time you do so, you have a chance to be detected by the Diagnostic Subroutine, which then will initiate a trace. You lose when the Subroutine has found your IO Port. You win when you've either hacked every Subroutine or every Registry.
 gui.tab.info.tile.security_station.stopWorm=§0With a STOP! Worm you can stop a Diagnostic Subroutine from tracing you for 5 seconds. This software will be used in the process. To use it click on the STOP! Worm icon on the right when you are detected (else it would serve no purpose).
 gui.tab.info.tile.security_station.nukeVirus=§0The Nuke Virus is a consumable item which can be used to insta-capture (without time loss) a Network Node without any chance of being detected by the Diagnostic Subroutine. This also works with every other Network component. To use it, middle-click a hackable node.
 gui.tab.info.tile.security_station.hacking=§0In here you can hack a Security Station. You start at the IO Port. From there, you can hack Network Nodes by left-clicking on them. Every time you do so, you have a chance to be detected by the Diagnostic Subroutine, which then will initiate a trace. You lose when the Subroutine has found your IO Port. You win when you've either hacked every Subroutine or every Registry.
@@ -707,8 +706,8 @@ gui.thermopneumatic.moveInput=Move Fluid \n§7Move any fluid from the input tank
 gui.universalSensor.button.showRange=Show Range
 gui.programmer.button.showArea=Show Area
 gui.programmer.button.stopShowingArea=Stop Showing Area
-gui.programmer.button.showStart=Show Start
-gui.programmer.button.showLatest=Show Latest
+gui.programmer.button.showStart=➡ Start
+gui.programmer.button.showLatest=➡ Latest
 gui.programmer.checkbox.showInfo=Show Info
 gui.programmer.checkbox.showFlow=Show Flow
 gui.programmer.pressIForInfo=§2Press 'I' for info
@@ -718,12 +717,15 @@ gui.programmer.warnings=Warnings:
 gui.programmer.errorCount=Cannot export program: %s error(s) found.
 gui.programmer.warningCount=There are %s warnings in the program.
 gui.programmer.difficulty=Difficulty:
+gui.programmer.difficulty.easy.tooltip=Only Basic Widgets are shown
 gui.programmer.difficulty.medium.tooltip=Enables Conditions, Jump and Labels
-gui.programmer.difficulty.advanced.tooltip=Enables Coordinates and variables
-gui.programmer.button.openPanel.tooltip=Open/Close panel [SPACE or TAB]
+gui.programmer.difficulty.advanced.tooltip=Enables Coordinates and Variables
+gui.programmer.button.openPanel.tooltip=Open/Close panel [TAB]
 gui.programmer.button.undoButton.tooltip=Undo [Z]
 gui.programmer.button.redoButton.tooltip=Redo [Y]
-gui.programmer.button.clearAllButton.tooltip=Clear all
+gui.programmer.button.clearAllButton.tooltip=Clear all [Shift + DEL]
+gui.programmer.button.showStart.tooltip=Go to the Start widget [HOME]
+gui.programmer.button.showLatest.tooltip=Go to the last-added widget [END]
 gui.programmer.name=Name:
 gui.progWidget.difficulty.easy=Easy
 gui.progWidget.difficulty.medium=Medium
@@ -871,6 +873,7 @@ gui.pastebin.pastebinLink=Pastebin link:
 gui.pastebin.invalidPastebin=Invalid Pastebin
 gui.pastebin.invalidFormattedPastebin=Invalid formatted Pastebin or JSON.
 gui.pastebin.invalidLogin=Invalid login
+gui.pastebin.loginOptional=Pastebin login is optional
 gui.pastebin.loggingIn=Logging in...
 gui.pastebin.uploadingToPastebin=Uploading to Pastebin...
 gui.pastebin.retrievingFromPastebin=Retrieving from Pastebin...
@@ -1087,14 +1090,14 @@ gui.tooltip.item.network_component4=Required component in a Security Station. \n
 gui.tooltip.item.network_component5=This is a generic Security Station component which allows a path to be created between the required Security Station components.
 gui.tooltip.item.micromissile=Micromissiles are small, hand-launched projectiles with smart guidance systems and an explosive payload. \nSneak + Right-click to open the setup GUI.
 
-gui.tooltip.item.safety_tube_module=§9Formula: Threshold(bar) = 7.5 - Redstone x 0.5 \n \n§bThis module will release high pressure air when the given threshold is reached. Although it prevents explosions, released air counts as energy loss. \n \nWhen upgraded with an Advanced PCB, the threshold can be configured precisely via GUI.
-gui.tooltip.item.pressure_gauge_module=§9Formula: Redstone = 2.0 x pressure(bar) \n \n§bThis module emits a redstone signal, the strength of which depends on the tube's pressure. \n \nWhen upgraded with an Advanced PCB, the threshold can be configured precisely via GUI.
+gui.tooltip.item.safety_tube_module=§9Formula: Threshold(bar) = 7.5 - Redstone x 0.5 \n \n§bThis module will release high pressure air when the given threshold is reached. Although it prevents explosions, released air counts as energy loss. \n \nWhen upgraded with an Module Expansion Card, the threshold can be configured precisely via GUI.
+gui.tooltip.item.pressure_gauge_module=§9Formula: Redstone = 2.0 x pressure(bar) \n \n§bThis module emits a redstone signal, the strength of which depends on the tube's pressure. \n \nWhen upgraded with an Module Expansion Card, the threshold can be configured precisely via GUI.
 gui.tooltip.item.flow_detector_module=§9Formula: Redstone = 0.2 x flow(mL/tick) \n \n§bThis module emits a redstone signal, the strength of which depends on how much air is travelling through the tube.
-gui.tooltip.item.air_grate_module=§9Formula: Range(blocks) = 4.0 x pressure(bar), or -16 x pressure(bar) if vacuum \n \n§bThis module will repel or attract any entity within range dependent on whether pressure is positive or negative, respectively, and will attempt to insert items into any adjacent inventory.  Can also be used to cool Heat Sinks. \n \nWhen upgraded with an Advanced PCB, the entities affected can be configured via GUI.
-gui.tooltip.item.regulator_tube_module=§9Formula: Threshold(bar) = 7.5 - Redstone x 0.5 \n \n§bThis module will stop pressurized air from travelling through this tube when a given pressure threshold is reached. \n \nWhen upgraded with an Advanced PCB, the threshold can be configured precisely via GUI.
-gui.tooltip.item.charging_module=§bThis module (de)pressurizes any pressurizable items in the inventory it points at. Note: air can flow both to and from items in the inventory, depending on their pressure and pressure in the tube! \n \nWhen upgraded with an Advanced PCB, air flows much more quickly.
+gui.tooltip.item.air_grate_module=§9Formula: Range(blocks) = 4.0 x pressure(bar), or -16 x pressure(bar) if vacuum \n \n§bThis module will repel or attract any entity within range dependent on whether pressure is positive or negative, respectively, and will attempt to insert items into any adjacent inventory.  Can also be used to cool Heat Sinks. \n \nWhen upgraded with an Module Expansion Card, the entities affected can be configured via GUI.
+gui.tooltip.item.regulator_tube_module=§9Formula: Threshold(bar) = 7.5 - Redstone x 0.5 \n \n§bThis module will stop pressurized air from travelling through this tube when a given pressure threshold is reached. \n \nWhen upgraded with an Module Expansion Card, the threshold can be configured precisely via GUI.
+gui.tooltip.item.charging_module=§bThis module (de)pressurizes any pressurizable items in the inventory it points at. Note: air can flow both to and from items in the inventory, depending on their pressure and pressure in the tube! \n \nWhen upgraded with an Module Expansion Card, air flows much more quickly.
 gui.tooltip.item.logistics_module=§bThis module communicates with other Logistics Modules on connected tubes to perform logistics tasks on any inventories/tanks it is pointing at which are fitted with a Logistic Frame. It uses pressure from the tube to do so.
-gui.tooltip.item.redstone_module=§bThis module transmits redstone signals to other Redstone Modules on connected tubes. Right-click with any dye to set the channel; right-click with a wrench to toggle between input and output. \n \nWhen upgraded with an Advanced PCB, some extra signal processing becomes available.
+gui.tooltip.item.redstone_module=§bThis module transmits redstone signals to other Redstone Modules on connected tubes. Right-click with any dye to set the channel; right-click with a wrench to toggle between input and output. \n \nWhen upgraded with an Module Expansion Card, some extra signal processing becomes available.
 
 gui.tooltip.terrainWarning=§6WARNING: terrain damage enabled.
 gui.tooltip.terrainSafe=§eTerrain damage disabled.
@@ -1137,24 +1140,40 @@ hud.msg.state=State
 hud.msg.active=Active
 hud.msg.inactive=Inactive
 
-waila.temperature=§7Temperature:
-waila.temperature.north=§7North Temperature:
-waila.temperature.south=§7South Temperature:
-waila.temperature.west=§7West Temperature:
-waila.temperature.east=§7East Temperature:
-waila.temperature.up=§7Top Temperature:
-waila.temperature.down=§7Bottom Temperature:
+waila.camo=[Camo: %s]
+waila.pressure=Pressure:
+waila.airGrateModule.attracting=§fStatus: Attracting
+waila.airGrateModule.filter=§fEntity Filter:
+waila.airGrateModule.idle=§fStatus: Idle
+waila.airGrateModule.range=§fRange: %s blocks
+waila.airGrateModule.repelling=§fStatus: Repelling
+waila.flowModule.level=Flow: §e%d mL/tick
 waila.logisticsModule.transporting=§9Transporting
 waila.logisticsModule.notEnoughAir=§6Not enough pressure to transport the items/fluids over that distance.
 waila.logisticsModule.powered=§2Online
 waila.logisticsModule.noPower=§cOffline (apply at least 3 bar)
 waila.logisticsModule.channel=Channel:
+waila.redstoneModule.emitting=Emitting redstone: §e%d
+waila.redstoneModule.inverted=§cOutput inverted
+waila.redstoneModule.op=Operation: §e%s
+waila.redstoneModule.receiving=Receiving redstone: §e%d
+waila.tank=Tank
+waila.temperature=Temperature:
+waila.temperature.north=North Temperature:
+waila.temperature.south=South Temperature:
+waila.temperature.west=West Temperature:
+waila.temperature.east=East Temperature:
+waila.temperature.up=Top Temperature:
+waila.temperature.down=Bottom Temperature:
+waila.tubeModule.threshold=Threshold: §e%d bar
+waila.tubeModule.upgraded=§aModule Expansion Card installed
 
+waila.interface.mode=Interface Mode:
 waila.interface.mode.import=Importing Items
 waila.interface.mode.export=Exporting Items
 
 # Misc
-itemGroup.tabPneumaticCraft=PneumaticCraft
+itemGroup.tabPneumaticCraft=PneumaticCraft: Repressurized
 message.date.ironman=Today an Iron Man movie went in premiere!
 message.securityStation.accessPrevented=§cAccess is prevented by %s Security Station(s).
 message.securityStation.stationPlacementPrevented=§cYou can't place a Security Station here: %s Security Station(s) are too close by!

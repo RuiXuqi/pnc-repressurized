@@ -12,29 +12,28 @@ import net.minecraft.item.ItemBlock;
 public class ModelAssemblyPlatform extends AbstractModelRenderer.BaseModel {
     private final ModelRenderer claw1;
     private final ModelRenderer claw2;
+
     private RenderEntityItem customRenderItem = null;
+    // the backported number should be doubled
+    private static final float ITEM_SCALE = 1.0F;
 
     public ModelAssemblyPlatform() {
         textureWidth = 64;
         textureHeight = 64;
 
-        claw1 = new ModelRenderer(this, 0, 32);
-        claw1.addBox(0F, 0F, 0F, 2, 1, 1);
-        claw1.setRotationPoint(-1F, 17F, 0F);
-        claw1.setTextureSize(64, 32);
-        claw1.mirror = true;
-        setRotation(claw1, 0F, 0F, 0F);
-        claw2 = new ModelRenderer(this, 0, 32);
-        claw2.addBox(0F, 0F, 0F, 2, 1, 1);
-        claw2.setRotationPoint(-1F, 17F, -1F);
-        claw2.setTextureSize(64, 32);
-        claw2.mirror = true;
-        setRotation(claw2, 0F, 0F, 0F);
+        claw1 = new ModelRenderer(this, 0, 0);
+        claw1.setRotationPoint(-1.0F, 17.0F, 0.0F);
+        claw1.setTextureOffset(0, 12).addBox(-0.5F, 0.0F, 0.1F, 3, 1, 1, -0.1F);
+        claw1.setTextureOffset(8, 14).addBox(-0.5F, 0.0F, 0.6F, 3, 1, 1);
+
+        claw2 = new ModelRenderer(this, 0, 0);
+        claw2.setRotationPoint(-1.0F, 17.0F, -1.0F);
+        claw2.setTextureOffset(0, 14).addBox(-0.5F, 0.0F, -0.1F, 3, 1, 1, -0.1F);
+        claw2.setTextureOffset(8, 12).addBox(-0.5F, 0.0F, -0.6F, 3, 1, 1);
     }
 
     public void renderModel(float size, float progress, EntityItem carriedItem) {
         float clawTrans;
-        float scaleFactor = 0.7F;
 
         if (customRenderItem == null) {
             customRenderItem = new AbstractModelRenderer.NoBobItemRenderer();
@@ -68,7 +67,7 @@ public class ModelAssemblyPlatform extends AbstractModelRenderer.BaseModel {
                 GlStateManager.rotate(180, 1, 0, 0);
                 double yOffset = carriedItem.getItem().getItem() instanceof ItemBlock ? -16.5 / 16F : -17.5 / 16F;
                 GlStateManager.translate(0, yOffset - 0.2, 0);
-                GlStateManager.scale(scaleFactor, scaleFactor, scaleFactor);
+                GlStateManager.scale(ITEM_SCALE, ITEM_SCALE, ITEM_SCALE);
                 customRenderItem.doRender(carriedItem, 0, 0, 0, 0, 0);
             }
         }

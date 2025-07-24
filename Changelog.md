@@ -4,44 +4,68 @@ This is an overview of significant new features and fixes by release.  See https
 
 Changes are in reverse chronological order; newest changes at the top.
 
-## Minecraft 1.12.2
+# Minecraft 1.12.2
 
-### 0.11.15-398 (12 Jun 2020)
-#### Fixes
+## [0.12.0]
+### Added
+* A complete retexture of the entire mod, courtesy of Ridanisaurus.
+  * Most textures and models are ported back, with some bugs I can't fix now (see todo.txt) because the lack of coding ability.
+* New Programmer GUI features, including backported deleting animations, improved puzzle piece placement and more hotkeys.
+  * SPACE to expand the widgets tab is removed. Use TAB.
+* Make tab expanding animation smoother, fix line scale bugs and tweak line boarder.
+* Border of text field now will be colored white when focused.
+### Changed
+* Switch to modern RFG and update dependencies to make sure the mod can be build successfully.
+* Shorten version codes.
+* Minor version is bumped to 12 since there is no incompatible API changes.
+  * It doesn't mean the mod is compatible with 0.11.15. You still need to update the mod on both the server and client.
+* The pressure gauge on Pressure Gauge Tube Module is no longer rendered when player is more than 16 blocks away from it.
+* Several translation changes in both en_us.lang and zh_cn.lang.
+  * Renames:
+    * Advanced PCB → Module Expansion Card
+    * (Villager) Mechanic → Pressure Mechanic
+  * More tooltips are added.
+  * More hard codes are switched to lang keys, useful for non-English players.
+  * zh_cn translations are from [Minecraft-Mod-Language-Package](https://github.com/CFPAOrg/Minecraft-Mod-Language-Package).
+### Fixed
+* Fix Pastebin upload not working(use https).
+
+## 0.11.15-398 (12 Jun 2020)
+### Fixes
 * Fixed Charging Station not allowing items to discharge into it if the station's pressure was at 0.
 * Made the Electrostatic Compressor item tooltip much shorter (the long text is still visible in the compressor GUI side tab)
 
-### 0.11.14-395 (18 Apr 2020)
-#### Updates
+## 0.11.14-395 (18 Apr 2020)
+### Updates
 * Programmable Controller now stores Forge Energy (up to 100,000 FE).  This allows the Import RF & Export RF programming widgets to work as you'd expect.
 * Programmable Controller fake drone entity now has an entity name, mainly for the purposes of blacklisting by Neat (Neat is a mod by Vazkii...)
   * Use the name "programmableController" in the Neat config to blacklist it
-#### Fixes
+### Fixes
 * Added missing "Move Input" GUI icon for the Thermopneumatic Processing Plant GUI (forgot to commit it to github in the last update, sorry)
 
-### 0.11.13-394 (6 Apr 2020)
-#### Updates
+## 0.11.13-394 (6 Apr 2020)
+### Updates
 * Thermopneumatic Processing Plant GUI "Dump Input" button is now "Move Input" by default, which moves the input fluid to the output tank if possible.
   * Hold down Shift to get the old "Dump Input" behaviour back
   * Gives players a chance to reclaim fluids from the TPP rather than forcing them to be voided
-#### Fixes
+### Fixes
 * Fixed an extended Elevator not always rendering (depending on player view angle)
 * Elevator now renders any camouflage on the extending elevator floor instead of the default flat grey colour
 * Stopped screen roll when flying in Jet Boots builder mode
 * Fixed client trying to send some network packets intended for server->client communication when placing tube modules
 
-### 0.11.12-392 (22 Mar 2020)
-#### Fixes
+## 0.11.12-392 (22 Mar 2020)
+### Fixes
 * Hotfix for bug introduced in last release: Thermopneumatic Processing Plant wasn't working for recipes needing no pressure (Plastic & Lubricant by default)
 * Also fixed TPP GUI temperature gauge not always working
 
-### 0.11.11-390 (13 Mar 2020)
-#### Updates
+## 0.11.11-390 (13 Mar 2020)
+### Updates
 * Thermopneumatic Processing Plant now supports custom recipes with a pressure < 0 bar.
 * Plastic Mixer CraftTweaker support enhancement
   * Can now add recipes with a specific item meta, and dye usage is configurable
   * E.g. `mods.pneumaticcraft.plasticmixer.addSolidifyOnlyRecipe(<liquid:rubber> * 100, <ic2:crafting>, false, 0);` will solidify Rubber liquid to IC2 Rubber (and not any other "ic2:crafting" sub-item) without using any dye.
-#### Fixes
+### Fixes
 * Fixed some bad text formatting in JEI display for Heat Frame Cooling recipes
 * Several Drone / ComputerCraft fixes 
   * Most drone actions (as set with the `setAction()` Lua method) were getting ignored
@@ -53,21 +77,21 @@ Changes are in reverse chronological order; newest changes at the top.
 * Possibly fix a Pneumatic Armor init client-side crash (not one I could reproduce myself, but possibly related some other mod cancelling a GUI-init event)
 * Assembly IO Unit can no longer have items piped into it (an item handler capability was exposed by mistake)
   
-### 0.11.10-385 (20 Feb 2020)
-#### Updates
+## 0.11.10-385 (20 Feb 2020)
+### Updates
 * Widgets in the Remote GUI now support global variable interpolation in their tooltips
-#### Fixes
+### Fixes
 * Fixed client NPE when logging in in specific circumstances
 * Fixed Remote GUI dropdown text being truncated to 32 characters
 * Fixed Programmer GUI zooming behaviour (position now properly remains focused on where the pointer is when the mouse wheel is rolled)
 
-### 0.11.9-383 (31 Jan 2020)
-#### Fixes
+## 0.11.9-383 (31 Jan 2020)
+### Fixes
 * Fixed Amadron player-player trades not always paying out to the selling player.
 * Fixed crash in Minigun magazine GUI if middle-clicking the wrong slot.
 
-### 0.11.8-380 (12 Jan 2020)
-#### Fixes
+## 0.11.8-380 (12 Jan 2020)
+### Fixes
 * Performance improvement for Charging Module when charging Pneumatic Armor, e.g. via Aerial Interface.
 * Fixed NPE in custom (CraftTweaker) Thermopneumatic Processing Plant recipes which don't have a fluid, only an item.
 * Fixed Drones being unable to place fluids in a flowing fluid block (such blocks should be easily replaceable).
@@ -75,33 +99,33 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed NPE when inserting unconfigured GPS tool into the Air Cannon
 * Fixed another NPE related to semiblock sync'ing.  Yay.
 
-### 0.11.7-375 (7 Nov 2019)
-#### Fixes
+## 0.11.7-375 (7 Nov 2019)
+### Fixes
 * Fixed bug causing clientside lockup if Pressure Chamber pressure reaches 6.0 bar (generally doesn't happen since this in the danger zone, but...)
 * Supplementary fix to Sentry Turret; previous fix in 0.11.6 was flawed and caused NBT read failure on startup.
 
-### 0.11.6-374 (6 Nov 2019)
-#### Fixes
+## 0.11.6-374 (6 Nov 2019)
+### Fixes
 * Hopefully fix ConcurrentModificationError related to semiblock (crop support) handling. Couldn't reproduce this myself.
 * Fixed server crash occurring after custom Amadron trade was added.  Again, couldn't reproduce this myself, but added extra checks to log an error in the server log instead of simply crashing.
 * Fixed client-side crash after editing a Sentry Turret entity filter.
 
-### 0.11.5-371 (6 Aug 2019)
-#### Fixes
+## 0.11.5-371 (6 Aug 2019)
+### Fixes
 * Fixed server crash with Amadron restocking and missing inventories
 * Fixed client crash related to copied coordinate puzzle pieces
 * Fixed client crash related to equipping Pneumatic Armor (possible race condition in HUD startup handling)
 * Fixed spurious "Air Conditioning not installed" message displayed even when Tough As Nails isn't present
 * Fixed "Drone Condition: Entity" puzzle piece not working (always measuring 0 carried entities)
 
-### 0.11.4-368 (16 Jul 2019)
-#### Updates
+## 0.11.4-368 (16 Jul 2019)
+### Updates
 * Buttons in the Remote GUI editor can now be made taller (previous max was 20 pixels, now 100).
 * Vastly increased the length of text which the Remote GUI dropdown editor can take, allowing for much longer dropdown labels to be configured.
 * Added tooltip information about displaying global variables in Remote GUI widgets, shown when mousing over the widget label editor field.
 * Air Grate no longer redisplays its range lines whenever the pressure changes (this can be visually disturbing and potentially lag-inducing). Instead, right-click the grate to force the range to be displayed visually.
 
-#### Fixes
+### Fixes
 * Fixed client-side NBT bug causing omni/liquid hoppers not to stack properly sometimes.
 * Fixed Pneumatic Helmet not accepting Security Upgrades.
 * Fixed Pressure Chamber enchanting adding duplicate enchants of the same type to items.
@@ -111,18 +135,18 @@ Changes are in reverse chronological order; newest changes at the top.
 * Jet Boots stat window text now aligns better when using fonts other than the default Minecraft font (e.g. Smooth Font mod)
 * Added a couple of missing images to the Patchouli guidebook (for Redstone Modules and Thermal Compressors)
 
-### 0.11.3-366 (20 Jun 2019)
-#### Fixes
+## 0.11.3-366 (20 Jun 2019)
+### Fixes
 * Hotfix: fix client crash on player login (an initialization error while migrating Pneumatic Armor HUD layout data)
 
-### 0.11.2-365 (19 Jun 2019)
-#### New
+## 0.11.2-365 (19 Jun 2019)
+### New
 * Guardians (and Elder Guardians) can now be hacked with the Pneumatic Helmet to disable their ranged attack. In addition, hacking an Elder Guardian will cancel any Mining Fatigue you may have.
 * Item Frames and Paintings can now be tracked (and hacked!) with the Pneumatic Helmet (entity tracker upgrade).
 * Fluid tanks can now be tracked with the Pneumatic Helmet (block tracker upgrade).
 * Villagers can now be hacked to reset the current trade list.  There's also a small chance they might drop something they were trading...
 * The Pneumatic Armor Jet Boots now come with a HUD display showing useful info like player velocity, altitude, heading etc.
-#### Updates
+### Updates
 * Rewrite of the Pneumatic Helmet Block Tracker for huge client-side performance improvements: those painful FPS drops are drastically reduced.
   * You may notice it takes slightly longer to start tracking new blocks as you look around (a second or two); this is due to much friendlier scanning of the surrounding area - scanning happens over multiple ticks. 
   * You can adjust the scan aggressiveness with the ``blockTrackerMaxTimePerTick`` client-side setting; this value limits scanning to the given percentage of a client tick (default: 10%).  Raise this for faster block scanning at the possible expense of client-side performance.
@@ -137,7 +161,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * The GUI for moving Pneumatic Armor HUD elements has had some tweaks:
   * There is now a "Snap to Grid" checkbox and associated grid size slider to make it easier to line elements up nicely
   * To drag an element, you now need to click on the element to start the drag (previously you could click anywhere on the screen)
-#### Fixes
+### Fixes
 * Fixed Pneumatic Armor becoming non-functional after a dimension change and requiring a relog to start again.
 * Fixed Redstone Tube Module channel display (via The One Probe) not working on dedicated server.
 * Fixed drones often wrongly showing "Routine: Stopped" in Entity Tracker display, even when they're busy.
@@ -145,21 +169,21 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed occasional spurious "Insert in a charging station to install upgrades" message that occasionally wrongly appeared on some items that aren't insertable in a Charging Station.
 * Fixed the upgraded Air Grate Module filter GUI ignoring the "!" entity filter blacklist prefix.
 
-### 0.11.1-361 (31 May 2019)
-#### Updates
+## 0.11.1-361 (31 May 2019)
+### Updates
 * Pneumatic Armor HUD panels (pressure, entity/block tracker, aircon etc.) now reposition themselves better if you change screen resolution and/or scaling.
   * Positioning info is now stored as a resolution-independent proportion from 0.0 to 1.0 in ``config/pneumaticcraft/PneumaticArmorHUDLayout.cfg``, migrated from the main config file ("helmet" section, which is now deprecated)
   * Best efforts are made to migrate the layout, but you might need to reposition the panels (use the "Move X Stat" button for the relevant upgrade in the armor GUI) the first time you start up with this version. If you start the game up at the same resolution you usually play at, you *should* be fine.
   * If your panels are aligned to the right-hand side of the screen, you should have them open to the left, and vice versa.  This will ensure panels stay properly aligned if/when you change resolution and/or scaling.  You can adjust the opening direction in the "Move X Stat" GUI for each panel.
 * Logistics and Redstone Tube Modules can now communicate across tubes divided by inline modules such as the Regulator Module.  Previously, inline modules blocked this communication.
-#### Fixes
+### Fixes
 * Fixed Plastic Mixer allowing items to be piped into the output slot.
 * Fixed clicking the tank in the Liquid Compressor GUI causing the machine's redstone mode to be changed.
 * Fixed problem where the Plastic Mixer "Item Selection" GUI side tab could sometimes be too small (depending on screen resolution), causing buttons to be outside the tab's area, and thus unclickable.
 * Fixed Chestplate upgrades being missing in charging station upgrade GUI when Tough As Nails not installed.
 
-### 0.11.0-357 (20 May 2019)
-#### New
+## 0.11.0-357 (20 May 2019)
+### New
 * Added the Redstone Module, a tube module that allows redstone signals to be transmitted along pressure tubes.
   * Toggle a module between input and output by right-clicking with a wrench.
   * 16 independent channels are available; right-click with a dye to set a module's channel (the dye will not be used up by default, but see ``useUpDyesWhenColoring`` config setting)).
@@ -171,7 +195,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Added the Thermal Compressor, a machine which converts temperature differences on opposite sides directly to air pressure.
   * Heat will attempt to equalize across sides, so effort is needed to maintain a temperature gradient across the compressor.
   * See ``thermalCompressorThermalResistance`` config setting.
-#### Updates
+### Updates
 * Plastic Mixer CraftTweaker support has been heavily reworked:
   * There is now far more extensive CraftTweaker support, allowing melting or solidifying more than just plastic. E.g. you could add a recipe to convert Thermal Foundation Rockwool to/from Blazing Pyrotheum.
   * Fluid->solid ratio (mB per item) can be defined on a per-recipe basis.
@@ -196,18 +220,18 @@ Changes are in reverse chronological order; newest changes at the top.
 * Made drone area sorting more deterministic (see https://github.com/TeamPneumatic/pnc-repressurized/issues/342).
 * JEI now shows an info tab for all items & blocks which have tooltip information (same info as the item tooltip is shown here - just another way to view it)
 * Dyeing drones no longer uses the dye by default (but see ``useUpDyesWhenColoring`` config setting)
-#### Fixes
+### Fixes
 * Restored the Thermopneumatic Processing Plant "Dump Input Tank" button. Was a mistake to remove that.
 * Added missing Patchouli docs page for the "Pick Up Item" programming widget.
 
-### 0.10.5-346 (29 Apr 2019)
-#### Fixes
+## 0.10.5-346 (29 Apr 2019)
+### Fixes
 * Hotfix: fix crashes due to null ItemStack field in Charging Station tile entity (manifested either as server crashes on world load or client crashes when rendering the Charging Station charged item)
 
-### 0.10.4-343 (28 Apr 2019)
-#### New
+## 0.10.4-343 (28 Apr 2019)
+### New
 * Added a Reinforced Air Canister, which can hold up to 120000mL of air at 20 bar. These can be used (with a little design) as a wireless pressure transfer mechanism using a couple of Aerial Interfaces & Charging Modules and a (vanilla) Ender Chest...
-#### Updates
+### Updates
 * Plastic Mixer can now be configured to accept alternative input fluids, either via Java API or via CraftTweaker.
   * Ratio of liquid to solid plastic sheets can be defined on a per-input basis too.
   * CT docs will be added to https://crafttweaker.readthedocs.io/en/latest/#Mods/PneumaticCraft_Repressurized/PneumaticCraft_Repressurized/ but see https://github.com/TeamPneumatic/pnc-repressurized/issues/326 for now.
@@ -223,7 +247,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Pneumatic Chestplate Magnet Upgrade will no longer pull unfinished PCB's from Etching Acid pools.
 * Pneumatic Chestplate Security Upgrade now provides electrical protection from Immersive Engineering wiring. You will not be injured, but air will be used from the chestplate to provide this protection. Knockback is *not* prevented.
 * Similarly, a Security Upgrade in a Drone will protect it from IE wiring, also at an air cost. Drones didn't get knocked back by the shock in any case. 
-#### Fixes
+### Fixes
 * Fixed crash in Programmable Controller when running a program which refers to the ``$owner`` special variable. The Programmable Controller's owner's (head) position is now returned, as expected.
 * Fixed Thermopneumatic Processing Plant sometimes forgetting what it was supposed to be doing.
 * GPS Area Tools may now be used when setting an area widget's position via the inventory search GUI (previously this caused a crash). Note that when the area tool contains multiple positions, an arbitrary position will be selected.
@@ -231,8 +255,8 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed item dupe issue relating to Drones with Magnet Upgrades in certain circumstances.
 * Fixed excessive packet sending causing FPS drops with Charging Station and UV Light Box when items were being processed.
 
-### 0.10.3-337 (6 Apr 2019)
-#### New
+## 0.10.3-337 (6 Apr 2019)
+### New
 * Experimental Immersive Engineering heat integration
   * Immersive Engineering External Heater will supply heat to PneumaticCraft machines (Refinery etc.) if given RF (Forge Energy)
   * By default it uses 100RF/t to provide 1 heat unit; this can be changed in config (``pneumaticcraft.cfg`` -> "integration" section) 
@@ -253,29 +277,29 @@ Changes are in reverse chronological order; newest changes at the top.
   * Right-click any block to set the direction to the clicked face, right-click air to clear the direction
   * This is used by the Gas Lift and Thermopneumatic Processing Plant to enforce a specific direction to eject fluids to
   * If no direction is defined, outputs are searched in D-U-N-S-W-E order, as before.
-#### Updates
+### Updates
 * Got rid of the "Dump Input" button from the Thermopneumatic Processing Plant GUI.  This isn't necessary anymore, since the TPP doesn't accept fluids that it can't process.
-#### Fixes
+### Fixes
 * Fixed another startup crash related to BlockHeatProperties.cfg (so many edge cases...) - this one occurred with fluids that don't have an associated block.
 * When hiding the GUI (with F1 by default), Pneumatic Armor HUD is now also properly hidden
 * Fixed minor problem with Air Grate vacuuming mode where items could get caught on edges, e.g. farmland->block transition
 * Slightly increased Air Grate vacuum mode range for adjacent inventory insertion (items could get stuck just outside insertion range)
 
-### 0.10.2-332 (30 Mar 2019)
-#### Updates
+## 0.10.2-332 (30 Mar 2019)
+### Updates
 * Air grate module now has slightly better range for inserting vacuumed items into an adjacent inventory
 * Plastic Mixer: liquid to solid plastic ratio can now be configured in pneumaticcraft.cfg, Machine Properties section
-#### Fixes
+### Fixes
 * Fix another potential startup crash related to new heat system and certain fluids
 * Fixed some rendering glitches related to Transfer Gadgets and Heat Frames
 * Fixed Plastic Mixer item heat gauge sometimes showing stupid values
 
-### 0.10.1-330 (28 Mar 2019)
-#### Fixes
+## 0.10.1-330 (28 Mar 2019)
+### Fixes
 * HOTFIX: fix crash on startup related to new heat system when mods referenced in BlockHeatProperties.cfg are not installed.
 
-### 0.10.0-328 (28 Mar 2019)
-#### New
+## 0.10.0-328 (28 Mar 2019)
+### New
 * Lots of work on the Logistics system:
   * Very major performance improvements for Logistics, both for Logistics Modules and Logistics Drones. Smarter caching of discovered logistics frames means a large reduction in server CPU used.
   * Logistics frames now have a facing direction, which tells Logistics Drones which side to access the framed inventory on. Not important for non-sided inventories like chests, but very important for sided inventories such as Furnaces or the Aerial Interface.
@@ -301,14 +325,14 @@ Changes are in reverse chronological order; newest changes at the top.
     * Ambient temperature drops above Y=80 and below Y=40 (by 0.1C per block by default, but configurable)
     * Temperature variations are configurable in ``config/pneumaticcraft/BlockHeatProperties.cfg`` and can be disabled entirely if you want (set "ambientTemperatureBiomeModifier" and "ambientTemperatureHeightModifier" to 0)
     * This makes biomes like Deserts great for running a Refinery, but less great for running advanced compressors (not impossible, just less efficient), and vice versa for biomes like Taiga or Extreme Hills.
-#### Updates
+### Updates
 * Charged and active Pneumatic Boots will no longer trample farmland.
 * Some Patchouli guidebook additions and improvements. Added missing page for the Logistics puzzle piece.
 * The Refinery, Thermopneumatic Processing Plant and Plastic Mixer now warn in their GUI if the block is poorly insulated, and thus wasting heat (Plastic Mixer only warns if you're trying to melt down plastic).
 * The Plastic Mixer now remembers any dye in its internal buffers if the block is broken and put down again, avoiding dye wastage if you need to move the machine.
 * Added "/dumpNBT" command (op level), which dumps the NBT of the currently-held item as a JSON string. Primarily intended for getting internal Forge fluid names from a bucket of the fluid, for adding to custom fluid properties to ``config/pneumaticcraft/BlockHeatProperties.cfg``, but is also generally useful for debugging purposes.
 * Pressure chamber textures don't look quite as flat now.
-#### Fixes
+### Fixes
 * Fixed two or more Transfer Gadgets on one block causing messy breakage.
 * Fixed Refinery & Thermopneumatic Processing Plant GUI's wrongly reporting insufficient temperature even if the temperature is fine and machine is running properly.
 * Programmer GUI: Fixed middle-click on rightmost column of expanded widget tray closing the tray instead of opening docs for the clicked widget
@@ -319,24 +343,24 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed minor problem where placing a pressure chamber wall against another pressure chamber wall didn't play the block-place sound.
 * Scaled down 8 programming widget textures with excessively large (256x256, ouch) textures sizes, saving a good chunk of texture atlas space.
 
-### 0.9.4-1 (4 Mar 2019)
-#### Fixes
+## 0.9.4-1 (4 Mar 2019)
+### Fixes
 * Hotfix release: fix fluid dupe bug in Liquid Hopper
 
-### 0.9.3-324 (4 Mar 2019)
-#### Fixes
+## 0.9.3-324 (4 Mar 2019)
+### Fixes
 * FOV modifications (as done by Pneumatic Leggings with Speed Upgrades and Minigun with Entity Tracker Upgrades) should now cooperate much better with other mods, assuming those mods do their FOV calculations correctly too (see https://github.com/TeamPneumatic/pnc-repressurized/issues/304).
 * Programmer GUI: Coordinate Operators will now report divide-by-zero attempts as an error instead of silently ignoring them.
 * Fixed Thermopneumatic Processing Plant recipes not showing their temperature in JEI.
 * Jet Boots Builder Mode speed modification should work better now in conjunction with other mods that modify dig speed (e.g. Aerial Affinity enchant).
 
-### 0.9.2-321 (16 Feb 2019)
-#### New
+## 0.9.2-321 (16 Feb 2019)
+### New
 * If you have 8 or more Jet Boots Upgrades installed, it is now possible to switch to Jet Boots "Builder Mode"
   * This allows more creative-like flight (where holding Space rises), but much slower movement
   * Dig speed is improved while in the air and in Builder Mode (need 10 Jet Boots upgrades for full normal dig speed)
   * Ideal when building and fine adjustment is needed.  Normal mode is still much better for fast travel.
-#### Updates
+### Updates
 * Pressure Chamber: interface doors now animate open and closing (like they did in 1.7.10)
 * ComputerCraft/OpenComputers improvements:
   * Significant performance improvement work
@@ -355,17 +379,17 @@ Changes are in reverse chronological order; newest changes at the top.
 * Patchouli guidebook is now advancement-gated, so only relevant sections of the book are displayed depending on how far you've progressed through the mod.
 * Remote Editor: Spruced up the GUI a little. Added a snap-to-grid option to make it easier to line up widgets on the GUI.
 * Universal Sensor: Added a "Global Analog Variable" sensor, which emits an analog (0..15) redstone signal based on the X value of the linked global variable. This is in addition to the existing "Global Variable" sensor which emits 15 if the linked variable is non-zero, and 0 otherwise.
-#### Fixes
+### Fixes
 * Fixed problem where machines could become unbreakable under some circumstances (related to trying to sneak-wrench a machine which had upgrades installed or other data that needs to be saved to the dropped item stack).
 * Refinery comparator support: "has work" now correctly emits a signal when Refinery isn't up to temperature (the check is "has work", not "did work"). This makes it more useful for enabling/disabling a heat source for the Refinery, depending on if it has work to do.
 * Fixed Remote Editor GUI not being able to modify the dimensions of button widgets.
 * Added missing Patchouli docs page for the Remote.
 
-### 0.9.1-317 (20 Jan 2019)
-#### New
+## 0.9.1-317 (20 Jan 2019)
+### New
 * NOTICE: If you use Applied Energistics 2, then rv6 is now required.  AE2-rv5 is no longer supported.
 * A Patchouli (https://minecraft.curseforge.com/projects/patchouli) manual has been added. IGWmod remains supported for now (a decision on future docs directions has yet to made).
-#### Updates
+### Updates
 * Omnidirectional Hopper can now take a Dispenser Upgrade to auto-eject items into the world at its output side (when there isn't an inventory there); this makes for an excellent replacement for the vanilla Dropper. Can be disabled in config (see 'B:omniHopperDispenser').
 * Omnidirectional Hopper should be more efficient on server CPU usage now when many speed upgrades are installed.
 * Pneumatic Boots: Jet Boots air usage is now configurable (see 'I:jetBootsAirUsage').
@@ -373,15 +397,15 @@ Changes are in reverse chronological order; newest changes at the top.
 * Blocks launcher via Chestplate Launcher now respect claim protection (no placing blocks in protected claims by firing them in there - blocks will drop in item form if you try).
 * Pneumatic Armor: Speed Upgrades have a slightly less marked effect on armor start-up time now (start-up time is 200 * 0.8^n ticks, where n is number of installed Speed Upgrades; it used to be 200 / (n+1) ticks).  Also, base start-up time is now configurable (see 'I:armorStartupTime').
 * Universal Sensor GUI has had a minor polish.
-#### Fixes
+### Fixes
 * AE2 Integration should be much more reliable now (fixed problems with Logistics Drones sometimes overfetching requests from AE2)
 * Fixed Sentry Turrets losing their contents & filters on reload due to an exception thrown when reading NBT.
 * Fixed Refinery not running in some situations (failing to search for a recipe), e.g. when placing down a Refinery block which already holds some Oil.
 * Fixed blocks launched via Chestplate Launcher not rendering clientside when connected to dedicated server.
 * Fixed bug in Pneumatic Helmet where SCUBA could be usable without a SCUBA upgrade installed.
 
-### 0.9.0-310 (28 Dec 2018)
-#### New
+## 0.9.0-310 (28 Dec 2018)
+### New
 * Major Minigun enhancements!
   * Minigun now has a 4-slot inventory for ammo, saving valuable player inventory slots.  The Minigun will only draw ammo from these slots.
   * Sneak & Right-Click the Minigun to open the inventory and load ammo
@@ -412,7 +436,7 @@ Changes are in reverse chronological order; newest changes at the top.
   * Some items (arrows, eggs, TNT...) have special behaviour, similar to how a dispenser would operate
   * Other items will be simply fired as item entities
   * Other blocks will be fired as "tumbling block" entities, which try to reform as a block on contact with any other block. This allows torch launching functionality and other remote block placing, for example.
-#### Updates
+### Updates
 * Programmer GUI improvements:
   * Added a hi-res version of the GUI, used when the (scaled) resolution is 700x512 or higher.  This hi-res GUI gives a much larger area for programming widgets.
   * The GUI will now auto-recentre on the Start widget when a program is loaded from an item (drone, network storage) or from Pastebin, or if all widgets are off-screen when the GUI is re-opened.
@@ -424,7 +448,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * The Pneumatic Chestplate Magnet upgrade now also works on XP orbs.
 * Camo Applicator now shows particle effects when applying/removing camo from a block.
 * Recipes requiring vanilla chests now accepts any oredicted "chestWood" chests.
-#### Fixes
+### Fixes
 * Fixed Minigun Drone sync issue: minigun not orienting toward targets and not display bullet traces when firing
 * Fixed bug where players sometimes take damage from jumping with Pneumatic Leggings + Range Upgrade (any fall damage from such a jump is supposed to be cancelled)
 * Fixed Pneumatic Door dropping an item when breaking top half in creative mode
@@ -433,8 +457,8 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed client crash when opening Refinery GUI while holding certain specific fluid containers.
 * Fixed some missing (black/purple) particle textures for some Assembly machines and the Pressure Chamber wall.
 
-### 0.8.4-303 (25 Nov 2018)
-#### Updates
+## 0.8.4-303 (25 Nov 2018)
+### Updates
 * The Kerosene Lamp can now hold 2000mB of fuel (up from 1000mb). This makes it practical to use fuel buckets to automatically fuel it (because the lamp reduces its lighting and fuel consumption when very low on fuel, it would previously run for ages on low lighting before exhausting its fuel supply and accepting a new bucket).
 * Pneumatic Helmet Entity Tracker mob targeting warnings are now all handled server-side, reducing network traffic requirements and also resolving a client-side crash with certain modded entities (Ice & Fire Gorgons in particular, but potentially others).
 * Restored some pre-0.8.0 functionality: the Aerial Interface once again allows access to the player's armor via the top face even when a Dispenser Upgrade is installed (but only when the top face is connected to armor). This was technically an unintended quirk, but some players were using it.
@@ -451,7 +475,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * In entity filters, "@boat" now matches boat entities.
 * In entity filters, "@mob" now matches any hostile entity, including Slimes and Shulkers (which were previously not included).
 * Added a new "Match by Block" checkbox to the Item Filter GUI in the Programmer, which is only used by the "Dig" programming piece. This allows Drones to match blocks which never drop an item, such as Abyssalcraft's Shoggoth Ooze. So you can get your Drones to clean up that nasty stuff now.
-#### Fixes
+### Fixes
 * Fixed a long-standing but rather subtle bug where Advanced Pressure Tubes only had 1000mL air volume following a world reload instead of the 4000mL they should have had.  More details:
   * Advanced Pressure Tubes are supposed to have a 4000mL volume, and they do when initially placed down. However due to a bug, upon reloading the world, their volume reverts to 1000mL (same as a basic Pressure Tube).
   * This changes resolves that problem for new Advanced Pressure Tubes placed from now on.
@@ -463,8 +487,8 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed client crash when selecting area type in Area GPS Tool.
 * Fixed client crash when selecting uninitialized GPS Tools in the GUI Inventory Search window.
 * Fixed Elevators playing a spurious "elevator stop" sound to any players who log in nearby, even when the Elevator is idle.
-### 0.8.3-299 (5 Nov 2018)
-#### Updates
+## 0.8.3-299 (5 Nov 2018)
+### Updates
 * Elevator Base now accepts up to 4 Charging Upgrades.  Each Charging Upgrade allows the elevator to reclaim some of the air spent to raise the elevator when the elevator descends again, up to a max of 60% of the air (15% per upgrade). This comes with the penalty of slower elevator descent (10% slower per upgrade).
 * GUI side tabs now have a more visually appealing beveled border instead of a hard black border.  If you prefer the old appearance, set the 'B:guiBevel' clientside option to false in pneumaticcraft.cfg.
 * Aerial Interface has a new informational GUI side tab making it clear whether it's currently interfacing items or food/xp.
@@ -474,7 +498,7 @@ Changes are in reverse chronological order; newest changes at the top.
   * Range display box now accurately shows the range.  It will appear for ~6 seconds when the module's range changes due to a pressure change.
   * The Module now plays occasional air particles towards entities that it's affecting.
 * Added config setting 'B:liquidHopperDispenser' to control whether the Liquid Hopper accepts a Dispenser Upgrade to pull or push fluids from/to the world.  Default is true.
-#### Fixes
+### Fixes
 * Fixed client crash when opening Amadron GUI, introduced in 0.8.2.
 * Fixed server crash in conjunction with Quark when a Drone breaks a tool/weapon (Quark auto item restock wasn't agreeing with the Drone's fakeplayer inventory).
 * Fixed some text information being omitted from GUI Redstone side tabs.
@@ -485,8 +509,8 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed player sometimes being left standing on top of an elevator frame and not being "collected" by a descending elevator platform.
 * Fixed Pressure Chamber Interface allowing items to be piped in/out without checking that the corresponding door was fully open.
 
-### 0.8.2-288 (30 Oct 2018)
-#### New
+## 0.8.2-288 (30 Oct 2018)
+### New
 * Added a SCUBA Upgrade for the Pneumatic Helmet for underwater breathing and better underwater vision. It's an alternative to using the Aerial Interface, which still works; the Aerial Interface is more efficient in terms of air usage, but doesn't provide the clear vision (best option is of course to use both!)
 * Added a Night Vision Upgrade for the Pneumatic Helmet. No prizes for guessing what that does.
 * Added armor GUI controls for Pneumatic Leggings speed and jump upgrades, to allow the boost magnitude to be throttled back (0-100%). Useful if you want to e.g. reduce your jump height without needing to find a Charging Station to swap out upgrades from your armor.
@@ -501,7 +525,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Added buttons to Air Cannon GUI allowing the force to be throttled between 0% and 100%.  Allows finer control over the cannon's range than just adding Range Upgrades.  The Air Cannon will now also aim lower if it can.
 * New fancier particle effects for air rendering (air leaks, pressure chamber, jet boots...)
 * Heat mechanics update: it is no longer possible to repeatedly break and replace a heat source block to stop it converting to stone/obsidian. That has always been considered an exploit. Using heat source blocks (lava/magma/pyrotheum...) is still a valid approach, but you will need to supply new materials to replaced the cooled ones.
-#### Updates
+### Updates
 * Default thermal resistance for all fluids is now 500.  Previously this only applied to flowing Lava and Water (all other fluids including static lava and water had a resistance of only 10).  This means that Lava (and fluids such as Blazing Pyrotheum) is now a more effective heat source for blocks like the Refinery since they won't solidify almost immediately. This may not work for existing worlds; in this case, you can set D:fluidThermalResistance=500.0 in pneumaticcraft.cfg.
 * The maximum number of Speed Upgrades in the Pneumatic Leggings has been raised from 3 to 4, for a 2x speed boost over default.
 * Client-side rendering performance improvement when highlighting camouflageable blocks (while holding the Camouflage Applicator).
@@ -524,7 +548,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Some IGW pages have had extra or clearer information added.
 * Charging Module is lighter on server CPU now (CPU usage was quite heavy when charging a player's Pneumatic Armor via an Aerial Interface).
 * Redid sound effect for Jet Boots a bit (lower-pitched, also modified to be lower & quieter when underwater)
-#### Fixes
+### Fixes
 * Fixed some configurable values (e.g. blocks per elevator base) not being adjustable from the default.
 * Fixed a deadlock issue with the Omnidirectional Hopper.  Under certain circumstances (all slots in the hopper partially full) it could fail to find suitable items in the input inventory.
 * Fixed an item dupe in the Pressure Chamber under some fairly specific circumstances (related to performance improvements in 0.8.1).
@@ -536,8 +560,8 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed cosmetic issue where Pneumatic Armor feature enable/disable message were shown even when the corresponding upgrade(s) weren't installed (the actual features were not enabled, though)
 * Fixed a few cosmetic "Format Error" strings in GUI info tabs.
 
-### 0.8.1-274 (8 Oct 2018)
-#### Updates
+## 0.8.1-274 (8 Oct 2018)
+### Updates
 * The Advancement tree has been greatly expanded.  Many many more advancements are now available, and some give XP rewards.
 * Significant performance improvement for the Refinery: now uses far less CPU when idle, and significantly less when processing.
 * Significant performance improvement for the Pressure Chamber, which was unnecessarily recalculating recipes every tick (when it only needed to recalculate when chamber contents changed).
@@ -551,14 +575,14 @@ Changes are in reverse chronological order; newest changes at the top.
   * Recipes which show a pressure gauge (Pressure Chamber, Thermopneumatic Processing Plant) now have a tooltip on the gauge graphic showing the exact pressure required.
   * Thermopneumatic Processing Plant recipes which don't care about pressure (Lubricant & Plastic by default) no longer show the pressure gauge at all.
   * JEI now shows Pressure Chamber enchanting & disenchanting recipes.
-#### Fixes
+### Fixes
 * Pressure Chamber GUI: "Pressure" side tab now shows correct Volume information for the chamber.
 * Fixed visual bug where Pressure Tubes would appear to disconnect after a Tube Module GUI was closed.
 * Fixed not being able to manually insert oil into a Refinery by right-clicking with a fluid container in hand.
 * Fixed side checkboxes in RF Import/Export puzzle pieces being ignored (drones would always try to access all sides until one side succeeded)
 
-### 0.8.0-267 (17 Sep 2018)
-#### New
+## 0.8.0-267 (17 Sep 2018)
+### New
 * Logistics frames now support fuzzy item meta and NBT matching, as well as whitelist/blacklist for filters. This can all be configured with a new side tab on the right of the logistics GUI. Default is whitelist, match meta, ignore NBT, as before.
 * Shulkers can be now be hacked (Pneumatic Helmet with Entity Tracker & Security Upgrades).  Disables Shulker missile attack and (usually) forces them open.
 * Some quality of life improvements to Drone Debugging (Pneumatic Helmet with Entity Tracker and Dispenser upgrades):
@@ -577,7 +601,7 @@ Changes are in reverse chronological order; newest changes at the top.
   * API docs will eventually be on https://crafttweaker.readthedocs.io/en/latest/#Mods/PneumaticCraft_Repressurized/PneumaticCraft_Repressurized/ but in the meantime see https://github.com/TeamPneumatic/pnc-repressurized/issues/108
   * The config setting I:configCompressedIngotLossRate still exists, but applies *only* to the default compressed iron ingot & block recipes added by the mod.  For general loss rate configuration, use CraftTweaker.
   * JEI display for explosion crafting has changed slightly due to the possibilty of multiple possible recipes for one output; the description text is now a tooltip shown by hovering over the little explosion icon.
-#### Updates
+### Updates
 * Speed Upgrades are now slightly less expensive to use in machines in terms of fuel usage and heat generation.  Default multiplier is now 1.65, down from 1.8.  Note that this is exponential: usage is multiplier_value^num_speed_upgrades.
 * The multipliers for Speed Upgrades are now configurable, in the "machine_properties" section of the config: D:speedUpgradeSpeedMultiplier and D:speedUpgradeUsageMultiplier.
 * Several crafting recipes now produce more output:
@@ -590,7 +614,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * The minimum temperature for fluids to be considered as fuels for Liquid Compressors has been raised to 373K (100C) and is now configurable (see I:minimumFluidFuelTemperature)
 * When using a Pneumatic Helmet with Entity Tracker installed, drones no longer automatically show redstone particles where they're working; you now also need to have the Entity Tracker enabled, and have a Dispenser Upgrade installed (which is also required for drone debugging).  You also need to be within 32 blocks of the drone.
 * Jet Boots flight is now a little more hazardous at Hard difficulty level; you will take more damage from horizontal collisions, and your boots won't absorb all the fall damage if you hit the ground while thrusting.
-#### Fixes
+### Fixes
 * Removing a drone or Network API from the programmable controller now resets its digging position, preventing a phantom digging laser being shown.
 * Fixed item loss bug with logistics drones and logistics modules when requesting a specific number of items from a Requester Frame with some (but not all) non-vanilla inventories.
 * Logistics Frames can now once more be configured when in item form by right clicking (this is an old 1.7.10 feature that stopped working in the port to 1.12.2).
@@ -599,12 +623,12 @@ Changes are in reverse chronological order; newest changes at the top.
 * Logistics Requester Frame now correctly requests fluids.
 * Fixed log spam for Aphorism tile (was wrongly sending sync packets from client side)
 
-### 0.7.8-259 (28 Aug 2018)
-#### Updates
+## 0.7.8-259 (28 Aug 2018)
+### Updates
 * Breaking any PneumaticCraft block by shift-clicking with any wrench will now keep any installed upgrades in the dropped block. Breaking the block with a pickaxe drops the upgrades, as before.
 * Info tab on the GUI for all Logistics frames (shown by right-clicking with Logistics Configurator) has better descriptions for each frame type.
 * Added client-side config setting (B:semiBlockLighting) to control if block lighting should be used on semiblocks like the logistics frames and heat frame. True by default, but can be set to false if lighting is glitchy.
-#### Fixes
+### Fixes
 * Hopefully fix item loss issues with Programmable Controller (this needs more testing before release!)
 * Fix problem with Programmable Controllers and tools like the Draconic Staff of Power which drop items at the player's location (fake player's location was wrong, causing items to be dropped in odd places)
 * Fix occasional caching problem where neighbouring tile entities were not detected by PneumaticCraft blocks
@@ -613,12 +637,12 @@ Changes are in reverse chronological order; newest changes at the top.
 * Drones now once more render their targeting laser while digging blocks like they did in 1.7.10 (actually they always did, but with an alpha value of 0...)
 * GUI redstone control tab: the redstone button no longer sometimes renders excessively wide.
 
-### 0.7.7-255 (16 Aug 2018)
-#### Fixes
+## 0.7.7-255 (16 Aug 2018)
+### Fixes
 * Fixed stupid bug I added in 0.7.4 which caused Amadron offers to sometimes go out of sync on client & server, breaking the whole Amadron system.
 
-### 0.7.6-254 (13 Aug 2018)
-#### Fixes
+## 0.7.6-254 (13 Aug 2018)
+### Fixes
 * Fixed items in pressure chamber not always syncing to client properly.
 * Fixed air amount showing negative in vacuum pump info tab: minimum is now floored at 0mL.
 * Fixed heat frames and logistics frames looking unnaturally bright when in dark areas.  Note heat frame still glows (but doesn't emit light) when hot.
@@ -631,14 +655,14 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed (hopefully) semiblocks rendering leaking across dimensions (semiblocks are logistics frames, heat frames, crop supports, spawner agitators & transfer gadgets)
 * Fixed visual issue with some JEI recipes (explosion crafting, UV light box, PCB etching) seen in newer JEI release
 
-### 0.7.5-248 (26 Jul 2018)
-#### Fixes
+## 0.7.5-248 (26 Jul 2018)
+### Fixes
 * Fixed NPE when using a newly-crafted GPS Area Tool
 * Fixed Amadron offers not syncing properly in 'Open to LAN' worlds
 * Fixed client kick when trying to add periodic Amadron offers on dedicated server
 
-### 0.7.4-244 (25 Jul 2018)
-#### Updates
+## 0.7.4-244 (25 Jul 2018)
+### Updates
 * Amadron Tablet has seen a lot of attention...
   * Recoloured GUI background to now match what the item looks like
   * Moved the lesser-used "Add Trade" button into its own "Custom Trades" side tab. This button often appeared to get confused with the "Place Order" button beside it, which is what most players more often want to do.
@@ -657,21 +681,21 @@ Changes are in reverse chronological order; newest changes at the top.
 * Added 3 methods to the Drone Interface computer peripheral: getDroneName(), getOwnerName(), getOwnerID()
 * Magma blocks are now treated as heat sources
 * Made the thermal resistance of non-vanilla fluids configurable - see D:fluidThermalResistance.  Default is 10; higher values make heat move from fluids to adjacent heat handlers more slowly.
-#### Fixes
+### Fixes
 * Fixed Amadron restocking/payout drones (for player-player trading) spawning twice
 * Fixed custom Amadron fluid trades not working
 * Fixed NPE when trying to extract items from bottom side of Aerial Interface
 * Fixed some armor features (magnet, charging) functioning even without the necessary upgrades installed
 * Fixed Minigun Ammo not being craftable
 
-### 0.7.3-239 (16 Jul 2018)
-#### Updates
+## 0.7.3-239 (16 Jul 2018)
+### Updates
 * Reworked 3rd party wrench support: many more wrenches are now supported
 * More performance work with fluid tank sync'ing, reducing the rate at which tanks sync to client
 * Charging Station now performs far better with many Speed Upgrades installed (was causing severe FPS drops)
 * A few IGW updates, in particular the new Pneumatic Armor pieces are now documented
 * Shift-left-clicking a GPS Tool in the Programmer GUI now creates a corresponding Area puzzle piece (this is an addition to the existing Left-Click to create a Coordinate puzzle piece)
-#### Fixes
+### Fixes
 * Toggling jet boots off while thrusting no longer causes a desync
 * Area GPS Tool now works on dedicated servers
 * Mechanic Villagers created in the Pressure Chamber now have the right set of trades
@@ -680,23 +704,23 @@ Changes are in reverse chronological order; newest changes at the top.
 * Breaking tile entities with empty fluid tanks no longer writes empty NBT data to the dropped item (so it will stack with other fresh items of the same type)
 * Partially fixed navigation in the Coordinate Tracker upgrade for the helmet.  This needs more work, though (pathfinding has changed significantly since the upgrade was first created back in MC 1.6/1.7)
 
-### 0.7.2-234 (11 Jul 2018)
-#### Updates
+## 0.7.2-234 (11 Jul 2018)
+### Updates
 * Pneumatic Door now plays a (suitably pneumatic) opening/closing sound effect.
 * Some performance improvement work, particularly around Omni and Liquid Hoppers.  In particular, extracting from the Refinery with Liquid Hoppers caused significant FPS drops.
 * Liquid Hoppers no longer accept input fluids on their output face, and will no longer output fluids from their input face.  (Related to performance improvements mentioned above)
 * Tile Entities with fluid tanks now send far fewer updates to the client (also related to aforementioned performance work).  Previously they sent an update whenever the tank's contents changed, which is overkill for just rendering fluids.  Now updates are only sent when the contents change by more than 1% of the tank's total capacity. Can be adjusted in config - see 'D:liquidTankUpdateThreshold'.
-#### Fixes
+### Fixes
 * Added back a missing texture for Aphorism Tile
 * Fixed a server crash caused by a null ItemStack reference in Amadron custom offer handling
 
-### 0.7.1-231 (9 Jul 2018)
-#### Fixes
+## 0.7.1-231 (9 Jul 2018)
+### Fixes
 * Fixed startup crash under some circumstances (most likely with Thaumcraft not installed) related to new Pneumatic Armor
 * No longer attempts to render armor initialisation progress bar if armor piece has no pressure
 
-### 0.7.0-228 (8 Jul 2018)
-#### New
+## 0.7.0-228 (8 Jul 2018)
+### New
 * Big new feature: a fully-fledged Pneumatic Armor suite!  Added in Pneumatic Chestplate, Leggings & Boots, each with their own upgrades and abilities (read on...)
 * To see all upgrades and abilities for each armor piece, put them in a Charging Station, and open the upgrade inventory from the Charging Station GUI (click the "Inv." button)
 * Charging Upgrades (1-5) in the Chestplate charge all pressurizable armor and items you're carrying from the Chestplate's air tank (the Chestplate has a very large tank by default, and all pieces can be further upgraded with Volume Upgrades)
@@ -712,7 +736,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Item Life Upgrades (1-6) in any armor piece allow auto-repair at a cost of pressure.  More upgrades cause faster, but less air-efficient, repair.
 * All Pneumatic Helmet functions remain available; just to note that Horses can now be tamed via helmet hacking.
 * All features can be toggled on/off using the familiar Pneumatic Helmet options GUI, and as before, keys can be bound to toggle any feature without opening the GUI.
-#### Updates
+### Updates
 * Quality of Life: shift-clicking a Pneumatic armor piece while in the Charging Station GUI will move it to the right place (armor slots -> charging slot, charging slot -> armor slot, player inv slots -> charging slot)
 * Aphorism Tiles are now considered passable by drones, like vanilla signs.  (Note Aphorism Tiles will not be washed away by water, so useful for an underwater base)
 * Performance: Aphorism Tiles are no longer ticking tile entities.
@@ -720,7 +744,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * Drones will now auto-equip the best (highest damage, taking enchantments into account) weapon in their inventory when entering combat (only applies with upgraded inventories, of course).
 * Handheld minigun now has a proper rotating model!
 * Minigun bullets cause a (cosmetic) particle effect on blocks they hit.  No block breaking, though.
-#### Fixes
+### Fixes
 * Drones have been taught how to melee 1.9 style.  They were still fighting 1.7.10 style, which made them hopeless at melee.
 * Hacked drones will no longer obnoxiously shove their owner around; instead they'll come to the owner and land in front of them.
 * Fix: better behaviour for drones when targeting entities they can't pathfind to (they were getting stuck in a about-to-teleport loop)
@@ -729,10 +753,10 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fix: right clicking a refinery block with a bucket or other fluid container will now extract the right fluid (previously it always tried to extract from the bottom block in the stack, regardless of which block was clicked)
 * Fix: the Light Condition puzzle piece was miscalculating light levels
 
-### 0.6.8-219 (27 Jun 2018)
-#### Updates
+## 0.6.8-219 (27 Jun 2018)
+### Updates
 * Change to Drones and Security Upgrades (liquid protection): 1 Security Upgrade will now allow drones to swim through liquids, 2 Security Upgrades will create a temporary 3x3x3 air bubble around drones which are in a liquid, and 3+ Security Upgrades will permanently remove any liquids a drone flies through.  Drones will still never pathfind through lava, though.
-#### Fixes
+### Fixes
 * Fixed Computer Control program piece not getting registered with Open Computers installed
 * Fixed drones having their AI overridden by carried entities (Entity Import program piece)
 * Fixed inability to place Heat Frames on inventories
@@ -740,18 +764,18 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed spurious "Drone has no UUID!" error messages on the client
 * Fixed occasional crashes when teleporting into areas with client-side (TESR) renderers
 
-### 0.6.7-210 (10 Jun 2018)
+## 0.6.7-210 (10 Jun 2018)
 
-#### New
+### New
 * Added support for Thaumcraft 6.  Thaumcraft Upgrade is now craftable and adds Goggles of Revealing functionality to the Pneumatic Helmet.  Aspects have been added to a few PneumaticCraft items (beyond any Thaumcraft auto-detection).
 * The Omnidirectional Hopper and Liquid Hopper now have comparator support to measure their fullness.
 
-#### Updates
+### Updates
 * Logistics Drones now grab as many of the requested item type as can fit in a single item stack, instead of taking simply the first stack from the inventory.
 * Upgrade descriptions for Pneumatic Helmet & Drones in the Charging Station GUI are now much more complete and accurate; all applicable upgrades are documented, and inapplicable upgrades are no longer shown and cannot be installed (e.g. Logistics Drones can't use Dispenser Upgrades).
 * Particles in the Pressure Chamber are slightly less dense now, and render higher inside the chamber.  Allows items in the chamber to actually be seen when the pressure is high; previously particle cloud obscured any items.
 * Any items crafted with Air Canisters now get any air in the canister(s)
-#### Fixes
+### Fixes
 * Fix: Sync issue with Pressure Gauge GUI toggling the '<' / '>' button.
 * Fix: crash with Ice & Fire Cyclops attacking Sentry Turrets
 * Fix: dedicated server crash with drones and the Magnet Upgrade
@@ -761,55 +785,55 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fix: items not always transferring in Logistics Network (using tubes & Logistics Modules)
 * Fix: it's now possible to place blocks against GUI-less blocks like Compressed Iron Block without needing to sneak-right-click
 
-### 0.6.6-192 (14 May 2018)
+## 0.6.6-192 (14 May 2018)
 
-#### Updates
+### Updates
 * The Universal Sensor no longer uses air in the "Constant" redstone emitter mode (still requires minimum pressure though)
-#### Fixes
+### Fixes
 * Fix: crash when right-clicking some PneumaticCraft blocks with other mods' wrenches
 * Fix: another fix to Speed Upgrade crafting with stacks of more than one item in the table
 
-### 0.6.5-189 (11 May 2018)
-#### Fixes
+## 0.6.5-189 (11 May 2018)
+### Fixes
 * Fix: crash when crafting Speed Upgrades in some situations.
 * Fix: Gas Lift now works with infinite fluid blocks such as Better With Addons Aqueducts.
 
-### 0.6.4-186 (3 May 2018)
+## 0.6.4-186 (3 May 2018)
 
-#### Updates
+### Updates
 * Compressed Iron Gear now added to Ore Dictionary as "gearIronCompressed".  This allows Thermal Expansion Compactor to craft Compressed Iron Gears when the Gearworking Die Augment is installed.
 * Plastic Mixer JEI page now uses Ore Dictionary to show the dyes instead of hard-coded vanilla dye items. (Mods and/or packs can remove vanilla dyes from the oredict so hardcoded items can be misleading)
-#### Fixes
+### Fixes
 * Fix: client crash when looking at RFTools Powercells with the Pneumatic Helmet Block Upgrade Tracker active (and RF scanning enabled).  The RF scanner still doesn't get the RF level; a more comprehensive data syncing framework for the Pneumatic Helmet is being considered.
 * Fix: Removed Upgrade Info tab from Refinery GUI (the block doesn't take any upgrades)
 * Fix: Nasty item-equip sound loop being played when Pneumatic Helmet equipped and Charging Station GUI open
 
-### 0.6.3-181 (25 Apr 2018)
-#### Fixes
+## 0.6.3-181 (25 Apr 2018)
+### Fixes
 * Fix: Shift-click dupe bug (introduced in 0.6.0) when clicking items into some PneumaticCraft inventories.
 * Fix: Dyeing a drone by right-clicking it now only uses one dye from the stack, not two.
 * Fix: Blocks can now be placed against the Charging Station & Elevator Caller with sneak-right-click.
 
-### 0.6.2-179 (24 Apr 2018)
-#### Fixes
+## 0.6.2-179 (24 Apr 2018)
+### Fixes
 * Fix: Server crash when Spawner Agitators are used in conjunction with the Despawning Spawners mod.
 * Fix: Omnidirectional Hoppers now respect the sidedness of the block they pull from (e.g. will no longer pull input items or fuel from the bottom side of a vanilla furnace).
 
-### 0.6.1-176 (22 Apr 2018)
-#### Fixes
+## 0.6.1-176 (22 Apr 2018)
+### Fixes
 * Fix: Crash with liquid lookup with JEI.
 * Fix: Drones being quirky sometimes when digging.
 
-### 0.6.0-174 (21 Apr 2018)
+## 0.6.0-174 (21 Apr 2018)
 
-#### New
+### New
 * Added Harvesting Drone, and Harvesting Piece.
 * QoL improvement: Speed Upgrades can now be crafted with fluid containers holding more than a bucket of lubricant.  The Liquid Hopper works for this, and the Thermal Expansion and EnderIO tanks can also be used.  Other mods' containers may also work.
-#### Updates
+### Updates
 * QoL improvement: adding extra Refinery blocks to an existing stack will now automatically redistribute any output fluids to the appropriate tanks, so the Refinery can continue to run.  E.g. adding a Refinery to a 2-block stack which already contains Diesel and LPG will auto-move the LPG from the second to the third (newly added) block.
 * Programmable Controller: all faces except the bottom face can be used to access the fake drone's inventory.  The bottom face can be used to insert or extract the programmable item (Drone or Network API).
 * QoL improvement: Thermopneumatic Processing Plant now only accepts items/fluids that can be used in recipes.
-#### Fixes
+### Fixes
 * Fix (cosmetic): Amadron no longer shows slot highlights where there isn't a trade widget (i.e. on the last page of trades).
 * Fix: Breaking any PneumaticCraft tile entity with an auto-smelt pick (e.g. from Tinker's Construct) no longer smelts the tile entity's contents.
 * Fix: MCMP2 support hard-disabled for now (switching it on in config would crash your game before)
@@ -820,27 +844,27 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fix: The Charging Station now only allows 1 item to be inserted, to prevent duping Machine Upgrades.
 * Performance: fluid tank rendering now uses a FastTESR, better for client FPS.
 
-### 0.5.1-163 (21 Mar 2018)
-#### Updates
+## 0.5.1-163 (21 Mar 2018)
+### Updates
 * Drones now also render held hoes upside down (just like other tools).
 * Inserting/extracting the top side of the Programmable Controller block inserts/extracts "drone" inventory.
-#### Fixes
+### Fixes
 * Fixed the Programmable Controller since the initial port (most notably a crash involving FTB Utilities).
 * Fix server crash with Mekanism cardboard box & spawner agitator
 
-### 0.5.0-159 (26 Feb 2018)
-#### New
+## 0.5.0-159 (26 Feb 2018)
+### New
 * Added GPS Area Tool, a way to make selecting areas with the Programmer easier.
 * You can 'paste' Coordinate puzzle pieces in the Programmer by taking a GPS Tool and left-clicking it on the programming area (the GPS Area Tool does the same for the Area piece).
 * Oil worldgen can now be blacklisted by dimension ID (e.g. disable oil generation in Twilight Forest) - see I:oilWorldGenBlacklist in pneumaticcraft.cfg
-#### Updates
+### Updates
 * Drones & Logistics Drones can now be spawned from a Dispenser
 * Altered camera orientations for some held items (wrenches & other tools - thanks Teamspen210)
 * Gas Lift air (pressure) usage when extending the tube is now dependent on the hardness of the block being broken (stone is the same, softer blocks are cheaper, and obsidian is much more expensive to break)
 * Advanced Pressure Tubes can now be used in the Gas Lift, and will reduce the pressure cost to break blocks to 50%
 * The Spawner Agitator is now found 10x less frequently in dungeon loot chests (it can still be crafted, though)
 * Reworked some event handling code which should provide a significant performance improvement in worlds with many loaded tile entities
-#### Fixes
+### Fixes
 * RF Import & RF Export programming pieces are now available (they were in, but registration was getting skipped due to a bug).  Also note that despite the name, these pieces work with Forge Energy, which is RF-compatible.
 * Fixed a crash with the Amadron Tablet when adding a trade when not having a item supply location bound to the tablet
 * Fixed Drones sometimes refusing to teleport while they should (most likely to notice with Place Block commands)
@@ -848,44 +872,44 @@ Changes are in reverse chronological order; newest changes at the top.
 * Hopefully fixed server-side NPE with Programmable Controller and FTB Utilities claim protection
 * Fixed Gas Lift being able to break unbreakable blocks (bedrock, ender portal frames...)
 
-### 0.4.1-141 (10 Feb 2018)
-#### New
+## 0.4.1-141 (10 Feb 2018)
+### New
 * Added config option 'B:explosionCrafting', true by default. Setting this to false disables explosion crafting of compressed iron. If you disable this, you'll need another way to get initial compressed iron (e.g. via a CraftTweaker recipe)
-#### Fixes
+### Fixes
 * Hopefully made PNC:R more robust with compatibility with other mods adding "oil" as a fluid.  PNC:R will now log an error and disable oil worldgen if it can't find oil as a block, rather than crashing the instance.
 * Picking up modded fluids with Ceramics Clay Bucket no longer converts the Clay Bucket to a vanilla iron Bucket.
 * Drone "Condition: Items" puzzle piece now works properly.
 * Fixed potential client-side NPE in Aphorism Tiles when drama text is unavailable.
 
-### 0.4.0-135 (1 Feb 2018)
-#### New
+## 0.4.0-135 (1 Feb 2018)
+### New
 * Programmer Area enhancements: Sphere, Cylinder and Pyramid types can now be configured as 'hollow', and the Area widget configuration GUI now has a much cleaner layout
 * Programmer enhancement: added a search textfield, shown when the full widget tray is expanded, allowing easy location of puzzle pieces by name
 * Programmer widget tray can now be toggled with the Tab hotkey (in addition to the existing Space hotkey), possibly useful when the new search field has focus
 * Aerial Interface: added support for CoFH "Essence of Knowledge" experience fluid
 * Aerial Interface: the Experience tab in the GUI now has a button to select the desired fluid type when you have multiple mods providing experience fluids (the old method of inserting some fluid to set the accepted type no longer works)
 * Added two ComputerCraft methods for Elevators: getCurrentHeight() and getTargetHeight()
-#### Updates
+### Updates
 * Drone death messages to the owner are now more informative (include reason why drone died)
 * Minigun tracers and Vortex entities no longer look so weird (bad X offset) when fired from the left hand
 * IGW updates to Aerial Interface and Programmer wiki pages
-#### Fixes
+### Fixes
 * Fixed client being kicked when trying to load very large drone programs from pastebin (exceeding 32K client->server packet limit; now sent in multiple packets - 1.7.10 had a higher packet size limit)
 * Fixed client crash when using variables to define areas (related to changes in 0.3.0 regarding size limit validation)
 * Fixed client crash in Programmer when zooming all the way out, exiting Programmer and then re-opening it
 * Fixed some XP calculation inaccuracies in the Aerial Interface; pumping XP in & out should not cause any unexpected XP loss or gain now
 * Fixed missing textures in the Area wiki page
 
-### 0.3.1-125 (18 Jan 2018)
-#### Fixes
+## 0.3.1-125 (18 Jan 2018)
+### Fixes
 * Fix AbstractMethodError crashes introduced in 0.3.0.
 
-### 0.3.0-124 (17 Jan 2018)
-#### New
+## 0.3.0-124 (17 Jan 2018)
+### New
 * Added Transfer Widget, an early game item/fluid transfer item that can be placed _between_ blocks.
 * Added Spawner Agitator, which keeps Mob Spawners active even if players are not around.
 * Added Crop Support, an item which when placed on a crop improves growth speed.
-#### Updates
+### Updates
 * Network Data Storage item now shows required puzzle pieces in its item tooltip when holding Shift
 * Big performance improvement when searching in the item search GUI
 * Better default orientation of the Omnidirection Hopper when it's placed: output now faces the clicked block, and input faces the player.
@@ -893,7 +917,7 @@ Changes are in reverse chronological order; newest changes at the top.
 * The size limit for programming puzzle piece areas is now validated in the Programmer before the drone is programmed, instead of forcing a drone with an over-large area to suicide after it's placed.
 * Performance improvement: the tile entities for Pressure Chamber Wall/Glass & Elevator Frames no longer tick. Pressure Chamber Glass should be fine to use in small-scale decorative builds, or for its excellent blast-resistant properties. 
 * Lots of work (mainly cleanup) on the In-Game-Wiki docs.
-#### Fixes
+### Fixes
 * Fixed (hopefully) reflection-based crashes on startup when running with certain ASM-using coremods
 * Fixed NPE's when breaking certain inventories or tanks with a Logistics Frame attached
 * Fixed item dupe when Logistics Drone imported from inventories under certain circumstances
@@ -901,19 +925,19 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed clientside crash when selecting the "Check For Air" option in "Condition: Block" programming widget
 * Fixed Elevator Callers not working above the level of Elevator Frames - frames can now stop two blocks below the top Elevator Caller (thanks TeamSpen210)
 
-### 0.2.2-102 (25 Dec 2017)
-#### Fixes
+## 0.2.2-102 (25 Dec 2017)
+### Fixes
 * Fixed crash when removing an opened Pneumatic Door in survival mode.
 
-### 0.2.1-101 (25 Dec 2017)
-#### New
+## 0.2.1-101 (25 Dec 2017)
+### New
 * Added CraftTweaker support for liquid fuels used in the Liquid Compressors and Kerosene Lamp.
-#### Updates
+### Updates
 * Vortex tube tube now briefly shows its hot and cold sides when placed or rotated
 * Zoom scrollbar in Programmer GUI can now be dragged with mouse (you can also zoom in/out with mouse wheel)
 * A sound effect now plays when writing a program to a Drone.
 * Changed default keybinding for opening the Pneumatic Helmet from 'F' to 'U' (as 'F' is the 'switch to offhand' button).
-#### Fixes
+### Fixes
 * Fixed the Heat Sink looking like it is facing up when actually facing down.
 * Fixed CraftTweaker 'RemoveAllRecipes' function not working for all recipe handlers.
 * Fixed item dupe when breaking charging stations holding items (helmet/drone...) with installed upgrades 
@@ -926,16 +950,16 @@ Changes are in reverse chronological order; newest changes at the top.
 * Fixed Drones causing a crash in very specific situations in combination with FTB Utiltities (having to do with authorization).
 * Bugfix: Forestry ethanol does not get registered as a fuel and posts a stacktrace in the log.
 
-### 0.2.0-85 (12 Dec 2017)
-#### New
+## 0.2.0-85 (12 Dec 2017)
+### New
 * IC2 machines are back: Pneumatic Generator and Electric Compressor (but lacking the pretty models they had in 1.7.10, sorry)
 * Build artifacts (including API) are now available at https://modmaven.k-4u.nl/me/desht/pneumaticcraft/pneumaticcraft-repressurized/
-#### Updates
+### Updates
 * Air Compressor & Advanced Air Compressor no longer take fuel buckets
 * Furnace burn time of fuel buckets is now configurable, and 10x shorter by default than before
 * Empty PCB's now stack
 * Recipes are now pretty much all done with JSON
-#### Fixes
+### Fixes
 * Fixed Pneumatic Helmet block tracker client crash with unopened loot chests
 * Fixed Pneumatic Helmet entity tracker client crash when targeting other players
 * Fixed Pressure Chamber Interface sometimes becoming an infinite source of items
@@ -945,11 +969,11 @@ Changes are in reverse chronological order; newest changes at the top.
 * Drones now render their held item (can be disabled in config)
 * Many, many, other minor bugfixes and overall polishing (see https://github.com/TeamPneumatic/pnc-repressurized/commits/master)
 
-### 0.1.0-47 (19 Nov 2017)
-#### Updates
+## 0.1.0-47 (19 Nov 2017)
+### Updates
 * Minor GUI tweaks for Programmer and Remote
-#### Fixes
+### Fixes
 * Hotfix: client crash when holding newly crafted GPS Tool or Amadron Tablet
 
-### 0.1.0-45 (18 Nov 2017)
+## 0.1.0-45 (18 Nov 2017)
 * Initial alpha1 release

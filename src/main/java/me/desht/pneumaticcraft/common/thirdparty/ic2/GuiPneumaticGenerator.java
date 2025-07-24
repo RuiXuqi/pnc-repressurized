@@ -32,12 +32,6 @@ public class GuiPneumaticGenerator extends GuiPneumaticContainerBase<TileEntityP
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer(int x, int y) {
-        super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 0xFF404040);
-    }
-
-    @Override
     public void updateScreen() {
         super.updateScreen();
         outputStat.setText(getOutputStat());

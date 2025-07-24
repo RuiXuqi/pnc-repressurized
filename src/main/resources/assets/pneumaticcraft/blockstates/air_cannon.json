@@ -1,45 +1,52 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "textures": {},
-    "custom": { "flip-v" : true},
-    "model": "pneumaticcraft:air_cannon.obj"
+    "model": "pneumaticcraft:air_cannon_base",
+    "textures": {
+      "particle": "pneumaticcraft:blocks/compressed_iron_block"
+    }
   },
   "variants": {
+    "normal": [
+      {}
+    ],
     "facing": {
-      "up": {"transform": {"rotation" : {"x" : 90}}},
-      "down": {"x" : -90},
       "east": {
-        "transform": {
-          "translation": [ 0, -0.0625, 0 ],
-          "scale" : [ 0.875, 0.875, 0.875 ],
-          "rotation": {"y" : 90}
+        "submodel": {
+          "connector": {
+            "model": "pneumaticcraft:assembly_connector_edge"
+          }
         }
       },
       "north": {
-        "transform": {
-          "translation": [ 0, -0.0625, 0 ],
-          "scale" : [ 0.875, 0.875, 0.875 ],
-          "rotation": {"y" : 180}
+        "y": 270,
+        "submodel": {
+          "connector": {
+            "model": "pneumaticcraft:assembly_connector_edge"
+          }
         }
       },
       "west": {
-        "transform": {
-          "translation": [ 0, -0.0625, 0 ],
-          "scale" : [ 0.875, 0.875, 0.875 ],
-          "rotation": {"y": 270}
+        "y": 180,
+        "submodel": {
+          "connector": {
+            "model": "pneumaticcraft:assembly_connector_edge"
+          }
         }
       },
       "south": {
-        "transform": {
-          "translation": [ 0, -0.0625, 0 ],
-          "scale" : [ 0.875, 0.875, 0.875 ]
+        "y": 90,
+        "submodel": {
+          "connector": {
+            "model": "pneumaticcraft:assembly_connector_edge"
+          }
         }
       }
     },
-    "inventory": [{
-      "model": "pneumaticcraft:air_cannon_inv.obj",
-      "transform": "forge:default-block"
-    }]
+    "inventory": [
+      {
+        "model": "pneumaticcraft:air_cannon_inv"
+      }
+    ]
   }
 }
