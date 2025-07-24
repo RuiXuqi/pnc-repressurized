@@ -1,5 +1,6 @@
 package me.desht.pneumaticcraft.api.tileentity;
 
+import me.desht.pneumaticcraft.api.item.IItemRegistry;
 import me.desht.pneumaticcraft.api.item.IUpgradeAcceptor;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -81,6 +82,7 @@ public interface IAirHandler extends IManoMeasurable, IUpgradeAcceptor {
     void setDefaultVolume(int defaultVolume);
 
     int getVolume();
+    int getUpgrades(IItemRegistry.EnumUpgrade upgrade);
 
     /**
      * Returns the actual pressure at which this TE will explode. This is a random value between the danger and critical

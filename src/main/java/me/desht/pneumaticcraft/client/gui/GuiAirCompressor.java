@@ -3,12 +3,15 @@ package me.desht.pneumaticcraft.client.gui;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandler;
 import me.desht.pneumaticcraft.common.inventory.ContainerAirCompressor;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityAirCompressor;
+import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
@@ -48,10 +51,8 @@ public class GuiAirCompressor extends GuiPneumaticContainerBase<TileEntityAirCom
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        if (te.getBurnTimeRemainingScaled(12) > 0 || TileEntityFurnace.isItemFuel(te.getPrimaryInventory().getStackInSlot(0)) && te.redstoneAllows()) {
-            pressureStatText.add("\u00a77Currently producing:");
-            pressureStatText.add("\u00a70" + (double) Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
-        }
+        pressureStatText.add(TextFormatting.BLACK + I18n.format("gui.tooltip.maxProduction",
+                PneumaticCraftUtils.roundNumberTo(Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100),2)));
     }
 
     @Override

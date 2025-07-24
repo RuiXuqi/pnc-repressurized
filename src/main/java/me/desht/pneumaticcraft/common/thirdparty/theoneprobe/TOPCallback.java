@@ -1,5 +1,6 @@
 package me.desht.pneumaticcraft.common.thirdparty.theoneprobe;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
 import mcjty.theoneprobe.api.*;
 import mcjty.theoneprobe.apiimpl.styles.LayoutStyle;
 import me.desht.pneumaticcraft.PneumaticCraftRepressurized;
@@ -82,16 +83,15 @@ public class TOPCallback implements Function<ITheOneProbe, Void> {
 
     public static void handlePneumatic(ProbeMode mode, IProbeInfo probeInfo, IPneumaticMachine pneumaticMachine) {
         IAirHandler airHandler = pneumaticMachine.getAirHandler(null);
-        String pressure = PneumaticCraftUtils.roundNumberTo(airHandler.getPressure(), 2) + "/" + PneumaticCraftUtils.roundNumberTo(airHandler.getDangerPressure(), 1) + " bar";
+        String pressure = PneumaticCraftUtils.roundNumberTo(airHandler.getPressure(), 2);
+        String dangerPressure = PneumaticCraftUtils.roundNumberTo(airHandler.getDangerPressure(), 2);
+        probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure") + " " + pressure + "/" + dangerPressure + " bar");
         if (mode == ProbeMode.EXTENDED) {
-            probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure"));
             probeInfo.horizontal()
                     .element(new ElementPressure(pneumaticMachine))
                     .vertical()
                     .text("")
-                    .text("  \u2b05 " + pressure);
-        } else {
-            probeInfo.text(PneumaticCraftUtils.xlate("waila.pressure") + " " + pressure);
+                    .text("  \u2b05 " + pressure + " bar");
         }
     }
 

@@ -4,11 +4,14 @@ import me.desht.pneumaticcraft.client.gui.widget.WidgetTank;
 import me.desht.pneumaticcraft.common.PneumaticCraftAPIHandler;
 import me.desht.pneumaticcraft.common.inventory.ContainerLiquidCompressor;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityLiquidCompressor;
+import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Textures;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,10 +43,8 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        if (te.isProducing) {
-            pressureStatText.add("\u00a77Currently producing:");
-            pressureStatText.add("\u00a70" + (double) Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
-        }
+        pressureStatText.add(TextFormatting.BLACK + I18n.format("gui.tooltip.maxProduction",
+                PneumaticCraftUtils.roundNumberTo(Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100),2)));
     }
 
     protected int getFluidOffset() {

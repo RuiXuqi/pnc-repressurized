@@ -149,10 +149,6 @@ public class AirHandler implements IAirHandler {
         return airListener != null ? airListener.getMaxDispersion(this, dir) : Integer.MAX_VALUE;
     }
 
-    private int getUpgrades(EnumUpgrade upgrade) {
-        return upgradeCache == null ? 0 : upgradeCache.getUpgrades(upgrade);
-    }
-
     private int getVolumeFromUpgrades() {
         return getUpgrades(EnumUpgrade.VOLUME) * PneumaticValues.VOLUME_VOLUME_UPGRADE;
     }
@@ -357,6 +353,11 @@ public class AirHandler implements IAirHandler {
     @Override
     public int getVolume() {
         return volume;
+    }
+
+    @Override
+    public int getUpgrades(EnumUpgrade upgrade) {
+        return upgradeCache == null ? 0 : upgradeCache.getUpgrades(upgrade);
     }
 
     @Override

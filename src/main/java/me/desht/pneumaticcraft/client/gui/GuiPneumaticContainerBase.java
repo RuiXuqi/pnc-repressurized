@@ -2,6 +2,7 @@ package me.desht.pneumaticcraft.client.gui;
 
 import me.desht.pneumaticcraft.PneumaticCraftRepressurized;
 import me.desht.pneumaticcraft.api.client.IGuiAnimatedStat;
+import me.desht.pneumaticcraft.api.item.IItemRegistry;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandler;
 import me.desht.pneumaticcraft.api.tileentity.IHeatExchanger;
 import me.desht.pneumaticcraft.client.gui.widget.*;
@@ -31,6 +32,7 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -135,7 +137,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
                 addRedstoneTab();
             }
             if (te instanceof IHeatExchanger) {
-                addAnimatedStat("gui.tab.info.heat.title", new ItemStack(Items.BLAZE_POWDER), 0xFFFF5500, false).setText("gui.tab.info.heat");
+                addAnimatedStat("gui.tab.info.heat.title", new ItemStack(Items.BLAZE_POWDER), 0xFFE05500, false).setText("gui.tab.info.heat");
             }
             if (shouldAddUpgradeTab()) {
                 addUpgradeTab();
@@ -174,7 +176,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
         addExtraUpgradeText(upgradeText);
 
         if (upgradeText.size() > 0)
-            addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF6060FF, true).setText(upgradeText);
+            addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF1C53A8, true).setText(upgradeText);
     }
 
     protected void addExtraUpgradeText(List<String> upgradeText) {
@@ -379,7 +381,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
         } else {
             problemTab.setTexture(Textures.GUI_NO_PROBLEMS_TEXTURE);
             problemTab.setTitle("gui.tab.problems.noProblems");
-            problemTab.setBackGroundColor(0xFFA0FFA0);
+            problemTab.setBackGroundColor(0xFF80E080);
         }
         if (problemText.isEmpty()) problemText.add("");
         problemTab.setText(problemText);
@@ -393,17 +395,19 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     protected void addPressureStatInfo(List<String> pressureStatText) {
         TileEntityPneumaticBase pneumaticTile = (TileEntityPneumaticBase) te;
         IAirHandler airHandler = pneumaticTile.getAirHandler(null);
-        pressureStatText.add("\u00a77Current Pressure:");
-        pressureStatText.add("\u00a70" + PneumaticCraftUtils.roundNumberTo(pneumaticTile.getPressure(), 1) + " bar.");
-        pressureStatText.add("\u00a77Current Air:");
-        pressureStatText.add("\u00a70" + (airHandler.getAir() + airHandler.getVolume()) + " mL.");
-        pressureStatText.add("\u00a77Volume:");
-        pressureStatText.add("\u00a70" + pneumaticTile.getDefaultVolume() + " mL.");
-        int volumeLeft = airHandler.getVolume() - pneumaticTile.getDefaultVolume();
-        if (volumeLeft > 0) {
-            pressureStatText.add("\u00a70" + volumeLeft + " mL. (Volume Upgrades)");
-            pressureStatText.add("\u00a70--------+");
-            pressureStatText.add("\u00a70" + airHandler.getVolume() + " mL.");
+        float curPressure = airHandler.getPressure();
+        int volume = airHandler.getVolume();
+        int upgrades = airHandler.getUpgrades(IItemRegistry.EnumUpgrade.VOLUME);
+        addPressureInfo(pressureStatText, curPressure, volume, pneumaticTile.getDefaultVolume(), upgrades);
+    }
+
+    public void addPressureInfo(List<String> text, float curPressure, int volume, int baseVolume, int upgrades) {
+        text.add(TextFormatting.BLACK + I18n.format("gui.tooltip.pressure", PneumaticCraftUtils.roundNumberTo(curPressure, 2)));
+        text.add(TextFormatting.BLACK + I18n.format("gui.tooltip.air", String.format("%,d", Math.round(curPressure * volume))));
+        text.add(TextFormatting.BLACK + I18n.format("gui.tooltip.baseVolume", String.format("%,d", baseVolume)));
+        if (volume > baseVolume) {
+            text.add(TextFormatting.BLACK + "\u25b6 " + I18n.format("gui.tooltip.volumeUpgrades", upgrades));
+            text.add(TextFormatting.BLACK + I18n.format("gui.tooltip.effectiveVolume", String.format("%,d",volume)));
         }
     }
 

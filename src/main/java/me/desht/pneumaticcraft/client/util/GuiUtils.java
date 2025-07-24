@@ -19,17 +19,19 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class GuiUtils {
-    private static final HashMap<String, ResourceLocation> resourceMap = new HashMap<>();
     private static final int CIRCLE_POINTS = 500;
     public static final double PRESSURE_GAUGE_RADIUS = 20D;
     private static final double START_ANGLE = 240D / 180D * Math.PI;
     private static final double STOP_ANGLE = -60D / 180D * Math.PI;
     private static final int GAUGE_POINTS = (int) ((START_ANGLE - STOP_ANGLE) / (2D * Math.PI) * CIRCLE_POINTS);
     private static final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
+
+    private static final float[] RED = {0.722f, 0.255f, 0.255f, 1f};
+    private static final float[] GREEN = {0.475f, 0.678f, 0.224f, 1f};
+    private static final float[] YELLOW = {0.922f, 0.635f, 0.239f, 1f};
 
     public static void drawPressureGauge(FontRenderer fontRenderer, float minPressure, float maxPressure, float dangerPressure, float minWorkingPressure, float currentPressure, int xPos, int yPos, float zLevel) {
         drawPressureGauge(fontRenderer, minPressure, maxPressure, dangerPressure, minWorkingPressure, currentPressure, xPos, yPos, zLevel, 0xFF000000);
@@ -38,24 +40,22 @@ public class GuiUtils {
     public static void drawPressureGauge(FontRenderer fontRenderer, float minPressure, float maxPressure, float dangerPressure, float minWorkingPressure, float currentPressure, int xPos, int yPos, float zLevel, int fgColor) {
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         GlStateManager.disableTexture2D();
-        GlStateManager.glLineWidth(2.0F);
+        GlStateManager.glLineWidth(0.5F);
+
         // Draw the green and red surface in the gauge.
-        GlStateManager.color(0.7F, 0, 0, 1);
+        float[] color = RED;
         wr.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION);
         wr.pos(xPos, yPos, zLevel).endVertex();
-        // System.out.println("gauge points: "+ GAUGE_POINTS);
+
         int explodeBoundary = GAUGE_POINTS - (int) ((dangerPressure - minPressure) / (maxPressure - minPressure) * GAUGE_POINTS);
         int workingBoundary = GAUGE_POINTS - (int) ((minWorkingPressure - minPressure) / (maxPressure - minPressure) * GAUGE_POINTS);
         boolean changedColorGreen = false;
         boolean changedColorYellow = false;
+
         for (int i = 0; i < GAUGE_POINTS; i++) {
             if (i == explodeBoundary && !changedColorGreen) {
                 Tessellator.getInstance().draw();
-                if (minWorkingPressure < 0 && minWorkingPressure >= -1) {
-                    GlStateManager.color(0.9F, 0.9F, 0, 1);
-                } else {
-                    GlStateManager.color(0, 0.7F, 0, 1);
-                }
+                color = (minWorkingPressure < 0 && minWorkingPressure >= -1) ? YELLOW : GREEN;
                 wr.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION);
                 wr.pos(xPos, yPos, zLevel).endVertex();
                 i--;
@@ -63,27 +63,23 @@ public class GuiUtils {
             }
             if (i == workingBoundary && !changedColorYellow) {
                 Tessellator.getInstance().draw();
-                if (minWorkingPressure < 0 && minWorkingPressure >= -1) {
-                    GlStateManager.color(0, 0.7F, 0, 1);
-                } else {
-                    GlStateManager.color(0.9F, 0.9F, 0, 1);
-                }
+                color = (minWorkingPressure < 0 && minWorkingPressure >= -1) ? GREEN : YELLOW;
                 wr.begin(GL11.GL_TRIANGLE_FAN, DefaultVertexFormats.POSITION);
                 wr.pos(xPos, yPos, zLevel).endVertex();
                 i--;
                 changedColorYellow = true;
             }
             double angle = (double) -i / (double) CIRCLE_POINTS * 2D * Math.PI - STOP_ANGLE;
+            GlStateManager.color(color[0], color[1], color[2], color[3]);
             wr.pos(Math.cos(angle) * PRESSURE_GAUGE_RADIUS + xPos, Math.sin(angle) * PRESSURE_GAUGE_RADIUS + yPos, zLevel).endVertex();
         }
         Tessellator.getInstance().draw();
 
-        float fgR = (float)(fgColor >> 16 & 255) / 255.0F;
-        float fgB = (float)(fgColor >> 8 & 255) / 255.0F;
-        float fgG = (float)(fgColor & 255) / 255.0F;
-        float fgA = (float)(fgColor >> 24 & 255) / 255.0F;
-
         // Draw the black surrounding circle
+        float fgR = (float)(fgColor >> 16 & 255) / 255.0F;
+        float fgG = (float)(fgColor >> 8 & 255) / 255.0F;
+        float fgB = (float)(fgColor & 255) / 255.0F;
+        float fgA = (float)(fgColor >> 24 & 255) / 255.0F;
         GlStateManager.color(fgR, fgG, fgB, fgA);
 
         wr.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
@@ -100,12 +96,12 @@ public class GuiUtils {
         for (int i = 0; i <= GAUGE_POINTS; i++) {
             double angle = (double) -i / (double) CIRCLE_POINTS * 2D * Math.PI - STOP_ANGLE;
             if (i == GAUGE_POINTS - (int) ((currentScale - minPressure) / (maxPressure - minPressure) * GAUGE_POINTS)) {
-                textScalers.add(new int[]{currentScale, (int) (Math.cos(angle) * PRESSURE_GAUGE_RADIUS * 1.3D), (int) (Math.sin(angle) * PRESSURE_GAUGE_RADIUS * 1.3D)});
+                textScalers.add(new int[]{currentScale, (int) (Math.cos(angle) * PRESSURE_GAUGE_RADIUS * 1.25D), (int) (Math.sin(angle) * PRESSURE_GAUGE_RADIUS * 1.25D)});
                 currentScale--;
-                // System.out.println("curr: "+ currentScale);
-                wr.pos(Math.cos(angle) * PRESSURE_GAUGE_RADIUS * 0.9D + xPos, Math.sin(angle) * PRESSURE_GAUGE_RADIUS * 0.9D + yPos, zLevel).endVertex();
-                wr.pos(Math.cos(angle) * PRESSURE_GAUGE_RADIUS * 1.1D + xPos, Math.sin(angle) * PRESSURE_GAUGE_RADIUS * 1.1D + yPos, zLevel).endVertex();
-
+                double r1 = maxPressure > 12 && textScalers.size() % 5 == 1 ? 0.8D : 0.92D;
+                double r2 = maxPressure > 12 && textScalers.size() % 5 == 1 ? 1.15D : 1.08D;
+                wr.pos(Math.cos(angle) * PRESSURE_GAUGE_RADIUS * r1 + xPos, Math.sin(angle) * PRESSURE_GAUGE_RADIUS * r1 + yPos, zLevel).endVertex();
+                wr.pos(Math.cos(angle) * PRESSURE_GAUGE_RADIUS * r2 + xPos, Math.sin(angle) * PRESSURE_GAUGE_RADIUS * r2 + yPos, zLevel).endVertex();
             }
         }
         Tessellator.getInstance().draw();
@@ -114,27 +110,31 @@ public class GuiUtils {
         GlStateManager.color(fgR, fgG, fgB, fgA);
         double angleIndicator = GAUGE_POINTS - (int) ((currentPressure - minPressure) / (maxPressure - minPressure) * GAUGE_POINTS);
         angleIndicator = -angleIndicator / CIRCLE_POINTS * 2D * Math.PI - STOP_ANGLE;
-        wr.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
+        wr.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
         wr.pos(Math.cos(angleIndicator + 0.89D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + xPos, Math.sin(angleIndicator + 0.89D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + yPos, zLevel).endVertex();
         wr.pos(Math.cos(angleIndicator + 1.11D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + xPos, Math.sin(angleIndicator + 1.11D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + yPos, zLevel).endVertex();
         wr.pos(Math.cos(angleIndicator) * PRESSURE_GAUGE_RADIUS * 0.8D + xPos, Math.sin(angleIndicator) * PRESSURE_GAUGE_RADIUS * 0.8D + yPos, zLevel).endVertex();
+        wr.pos(Math.cos(angleIndicator + 0.89D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + xPos, Math.sin(angleIndicator + 0.89D * Math.PI) * PRESSURE_GAUGE_RADIUS * 0.3D + yPos, zLevel).endVertex();
         Tessellator.getInstance().draw();
 
         GlStateManager.enableTexture2D();
 
         // draw the numbers next to the scaler.
-        while (textScalers.size() > 10) {
-            int divider = textScalers.size() / 5;
+        while (textScalers.size() > 14) {
+            int divider = textScalers.size() / 7;
             for (int i = textScalers.size() - 1; i >= 0; i--) {
                 if (i % divider != 0) textScalers.remove(i);
             }
         }
-        for (int[] scaler : textScalers) {
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(xPos + scaler[1] - 1.5, yPos + scaler[2] - 1.5, 0);
-            GlStateManager.scale(0.5, 0.5, 1);
-            fontRenderer.drawString("" + scaler[0], 0, 0, fgColor);
-            GlStateManager.popMatrix();
+        for (int i = 0; i < textScalers.size(); i++) {
+            if (textScalers.size() <= 14 || i % 5 == 0) {
+                int[] scaler = textScalers.get(i);
+                GlStateManager.pushMatrix();
+                GlStateManager.translate(xPos + scaler[1] - 1.5, yPos + scaler[2] - 1.5, 0);
+                GlStateManager.scale(0.5, 0.5, 1);
+                fontRenderer.drawString("" + scaler[0], 0, 0, fgColor);
+                GlStateManager.popMatrix();
+            }
         }
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
