@@ -1,7 +1,8 @@
 # PneumaticCraft: Repressurized ![1.12.2 build status](https://github.com/RuiXuqi/pnc-repressurized/actions/workflows/build.yml/badge.svg?branch=dev)
 
-This is a fork of a port to Minecraft 1.12.2 of MineMaarten's awesome PneumaticCraft mod: https://github.com/MineMaarten/PneumaticCraft.  It is fully functional at this point, and under active maintenance.
-It is mainly for porting modern features and textures to 1.12.2. With bugs because the lack of coding ability.
+This is a fork of PneumaticCraft mod: https://github.com/TeamPneumatic/pnc-repressurized.  It is fully unstable and buggy at this point, and under inactive maintenance.
+
+The fork is mainly for porting modern features and textures to 1.12.2. With bugs because the lack of coding ability.
 RuiXuqi just fork for fun and may stop updating at any time. PRs and forks are welcome.
 
 To build from source, clone the repository and load it into your IDE (e.g. for Intellij, *File* -> *New* -> *Project from Existing Source...* and select the `build.gradle` file). Then run any IDE-specific steps that you need (``genIntellijRuns`` etc.)
