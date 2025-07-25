@@ -1,5 +1,6 @@
 package me.desht.pneumaticcraft.client.gui;
 
+import me.desht.pneumaticcraft.api.recipe.TemperatureRange;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTank;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature;
 import me.desht.pneumaticcraft.common.heat.HeatUtil;
@@ -10,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -30,16 +30,7 @@ public class GuiRefinery extends GuiPneumaticContainerBase<TileEntityRefinery> {
     public void initGui() {
         super.initGui();
 
-        widgetTemperature = new WidgetTemperature(-1, guiLeft + 32, guiTop + 20, 273, 673, te.getHeatExchangerLogic(null)) {
-            @Override
-            public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
-                super.addTooltip(mouseX, mouseY, curTip, shift);
-                if (te.minTemp > 0) {
-                    TextFormatting tf = te.minTemp < te.getHeatExchangerLogic(null).getTemperatureAsInt() ? TextFormatting.GREEN : TextFormatting.GOLD;
-                    curTip.add(tf + "Required Temperature: " + (te.minTemp - 273) + "\u00b0C");
-                }
-            }
-        };
+        widgetTemperature = new WidgetTemperature(-1, guiLeft + 32, guiTop + 32, TemperatureRange.of(273, 673), 273, 50);
         addWidget(widgetTemperature);
 
         addWidget(new WidgetTank(-1, guiLeft + 8, guiTop + 13, te.getInputTank()));
@@ -71,11 +62,13 @@ public class GuiRefinery extends GuiPneumaticContainerBase<TileEntityRefinery> {
     public void updateScreen() {
         super.updateScreen();
 
-        if (te.minTemp > 0) {
-            widgetTemperature.setScales(te.minTemp);
+        if (te.maxTemp > te.minTemp) {
+            widgetTemperature.setOperatingRange(TemperatureRange.of(te.minTemp, te.maxTemp));
         } else {
-            widgetTemperature.setScales();
+            widgetTemperature.setOperatingRange(null);
         }
+        widgetTemperature.setTemperature(te.getHeatExchangerLogic(null).getTemperatureAsInt());
+        widgetTemperature.autoScaleForTemperature();
     }
 
     @Override

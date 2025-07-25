@@ -1,10 +1,12 @@
 package me.desht.pneumaticcraft.client.gui;
 
+import me.desht.pneumaticcraft.api.recipe.TemperatureRange;
 import me.desht.pneumaticcraft.client.gui.widget.GuiAnimatedStat;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetEnergy;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature;
 import me.desht.pneumaticcraft.common.inventory.ContainerEnergy;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityFluxCompressor;
+import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,11 +15,13 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxCompressor> {
     private GuiAnimatedStat inputStat;
+    private WidgetTemperature tempWidget;
 
     public GuiFluxCompressor(Container container, TileEntityFluxCompressor te) {
         super(container, te, Textures.GUI_4UPGRADE_SLOTS);
@@ -30,42 +34,50 @@ public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxC
     @Override
     public void initGui() {
         super.initGui();
-        inputStat = addAnimatedStat("Input", Textures.GUI_BUILDCRAFT_ENERGY, 0xFF555555, false);
-
+        inputStat = addAnimatedStat(PneumaticCraftUtils.xlate("gui.tab.input"), Textures.GUI_BUILDCRAFT_ENERGY, 0xFF555555, false);
         IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, null);
+
         addWidget(new WidgetEnergy(guiLeft + 20, guiTop + 20, storage));
-        addWidget(new WidgetTemperature(0, guiLeft + 87, guiTop + 20, 273, 675,
-                te.getHeatExchangerLogic(null), 325, 625));
+        addWidget(tempWidget = new WidgetTemperature(-1, guiLeft + 97, guiTop + 20, TemperatureRange.of(223, 673), 273, 50)
+                .setOperatingRange(TemperatureRange.of(323, 625)).setShowOperatingRange(false));
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
         inputStat.setText(getOutputStat());
+
+        tempWidget.setTemperature(te.getHeatExchangerLogic(null).getTemperatureAsInt());
+        tempWidget.autoScaleForTemperature();
     }
 
     private List<String> getOutputStat() {
         List<String> textList = new ArrayList<>();
-        textList.add(TextFormatting.GRAY + "Maximum RF usage:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() + " RF/tick");
-        textList.add(TextFormatting.GRAY + "Maximum input rate:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() * 2 + " RF/tick");
-        textList.add(TextFormatting.GRAY + "Current stored RF:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyStored() + " RF");
+        textList.add(TextFormatting.GRAY + PneumaticCraftUtils.xlate("gui.tab.status.fluxCompressor.maxEnergyUsage"));
+        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() + " FE/t");
+        textList.add(TextFormatting.GRAY + PneumaticCraftUtils.xlate("gui.tab.status.fluxCompressor.maxInputRate"));
+        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() * 2 + " FE/t");
+        textList.add(TextFormatting.GRAY + PneumaticCraftUtils.xlate("gui.tab.status.fluxCompressor.storedEnergy"));
+        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyStored() + " FE");
         return textList;
+    }
+
+    @Override
+    protected Point getGaugeLocation() {
+        return getGaugeLocation(10, 0);
     }
 
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        pressureStatText.add(TextFormatting.BLACK + I18n.format("gui.tooltip.maxProduction", te.getAirRate(),2));
+        pressureStatText.add(TextFormatting.BLACK + I18n.format("gui.tooltip.maxProduction", PneumaticCraftUtils.roundNumberTo(te.getAirRate(),2)));
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
         if (te.getInfoEnergyPerTick() > te.getInfoEnergyStored()) {
-            textList.add("gui.tab.problems.fluxCompressor.noRF");
+            textList.add(PneumaticCraftUtils.xlate("gui.tab.problems.fluxCompressor.noRF"));
         }
     }
 

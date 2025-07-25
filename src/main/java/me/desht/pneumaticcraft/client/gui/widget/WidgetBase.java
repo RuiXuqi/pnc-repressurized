@@ -12,8 +12,8 @@ public class WidgetBase implements IGuiWidget {
     private final int id;
     public int value; //just a generic value
     public int x, y;
-    private final int width;
-    private final int height;
+    protected final int width;
+    protected final int height;
     protected IWidgetListener listener;
     private final List<String> tooltipText = new ArrayList<>();
 

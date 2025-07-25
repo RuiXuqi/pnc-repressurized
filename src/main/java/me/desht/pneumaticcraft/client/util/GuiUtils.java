@@ -247,4 +247,20 @@ public class GuiUtils {
         }
         GlStateManager.translate(0, 0, -300);
     }
+
+    public static void drawScaledText(FontRenderer fr, String text, int x, int y, int color, float scale) {
+        if (scale != 1.0f) {
+            GlStateManager.pushMatrix();
+            GlStateManager.translate(x, y, 0);
+            GlStateManager.scale(scale, scale, scale);
+            fr.drawString(text, 0, 0, color);
+            GlStateManager.popMatrix();
+        } else {
+            fr.drawString(text, x, y, color);
+        }
+    }
+
+    public static void hLine(int x1, int x2, int y, int color) {
+        Gui.drawRect(x1, y, x2 + 1, y + 1, color);
+    }
 }

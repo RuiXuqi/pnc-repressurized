@@ -34,7 +34,7 @@ public class GuiPlasticMixer extends GuiPneumaticContainerBase<TileEntityPlastic
     private GuiCheckBox lockSelection;
     private WidgetLabel noItemsLabel;
     private WidgetLabel amountLabel;
-    private WidgetTemperature tempWidget;
+    private WidgetTemperature1 tempWidget;
     private int nExposedFaces;
     private GuiAnimatedStat selectionTab;
     private Fluid lastFluid;
@@ -48,8 +48,8 @@ public class GuiPlasticMixer extends GuiPneumaticContainerBase<TileEntityPlastic
     public void initGui() {
         super.initGui();
 
-        addWidget(new WidgetTemperature(0, guiLeft + 55, guiTop + 25, 273, 773, te.getLogic(0)));
-        addWidget(tempWidget = new WidgetTemperature(1, guiLeft + 82, guiTop + 25, 273, 773, te.getLogic(1), 273) {
+        addWidget(new WidgetTemperature1(-1, guiLeft + 55, guiTop + 25, 273, 773, te.getLogic(0)));
+        addWidget(tempWidget = new WidgetTemperature1(1, guiLeft + 82, guiTop + 25, 273, 773, te.getLogic(1), 273) {
             @Override
             public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
                 super.addTooltip(mouseX, mouseY, curTip, shift);
@@ -59,7 +59,7 @@ public class GuiPlasticMixer extends GuiPneumaticContainerBase<TileEntityPlastic
                 }
             }
         });
-        addWidget(new WidgetTank(3, guiLeft + 152, guiTop + 14, te.getTank()));
+        addWidget(new WidgetTank(-1, guiLeft + 152, guiTop + 14, te.getTank()));
 
         PlasticMixerRecipe recipe = PlasticMixerRegistry.INSTANCE.getRecipe(te.getTank().getFluid());
         Item targetItem = recipe == null ? Itemss.PLASTIC : recipe.getItemStack().getItem();

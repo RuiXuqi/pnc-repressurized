@@ -53,7 +53,6 @@ public class GuiProgrammableController extends GuiPneumaticContainerBase<TileEnt
 
     @Override
     protected Point getGaugeLocation() {
-        Point p = super.getGaugeLocation();
-        return new Point(p.x + 10, p.y);
+        return getGaugeLocation(10, 0);
     }
 }

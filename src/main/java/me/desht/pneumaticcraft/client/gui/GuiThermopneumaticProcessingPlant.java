@@ -1,7 +1,7 @@
 package me.desht.pneumaticcraft.client.gui;
 
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTank;
-import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature;
+import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature1;
 import me.desht.pneumaticcraft.common.heat.HeatUtil;
 import me.desht.pneumaticcraft.common.inventory.ContainerThermopneumaticProcessingPlant;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityThermopneumaticProcessingPlant;
@@ -21,7 +21,7 @@ public class GuiThermopneumaticProcessingPlant extends
         GuiPneumaticContainerBase<TileEntityThermopneumaticProcessingPlant> {
     private GuiButtonSpecial dumpButton;
     private GuiButtonSpecial moveButton;
-    private WidgetTemperature tempWidget;
+    private WidgetTemperature1 tempWidget;
     private int nExposedFaces;
 
     public GuiThermopneumaticProcessingPlant(InventoryPlayer player, TileEntityThermopneumaticProcessingPlant te) {
@@ -45,7 +45,7 @@ public class GuiThermopneumaticProcessingPlant extends
             min = 273;
             max = (int)te.requiredTemperature + 100;
         }
-        tempWidget = new WidgetTemperature(-1, guiLeft + 98, guiTop + 15, min, max, te.getHeatExchangerLogic(null), (int) te.requiredTemperature) {
+        tempWidget = new WidgetTemperature1(-1, guiLeft + 98, guiTop + 15, min, max, te.getHeatExchangerLogic(null), (int) te.requiredTemperature) {
             @Override
             public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
                 super.addTooltip(mouseX, mouseY, curTip, shift);
@@ -111,9 +111,7 @@ public class GuiThermopneumaticProcessingPlant extends
 
     @Override
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + xSize * 3 / 4 + 10, yStart + ySize / 4);
+        return getGaugeLocation(10, -4);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class JEIThermopneumaticProcessingPlantCategory extends PneumaticCraftCat
             addOutputLiquid(recipe.getOutputLiquid(), 74, 3);
             if (!recipe.getInputItem().isEmpty()) this.addIngredient(new PositionedStack(recipe.getInputItem(), 41, 3));
             if (recipe.getRequiredPressure(recipe.getInputLiquid(), recipe.getInputItem()) != 0) {
-                setUsedPressure(136, 42, recipe.getRequiredPressure(null, ItemStack.EMPTY), PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE);
+                setUsedPressure(141, 42, recipe.getRequiredPressure(null, ItemStack.EMPTY), PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE);
             }
             setUsedTemperature(92, 12, recipe.getRequiredTemperature(null, ItemStack.EMPTY));
         }

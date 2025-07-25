@@ -487,6 +487,10 @@ gui.tab.info.logistic_frame_active_provider=§0Active Provider frames can provid
 gui.tab.info.logistic_frame_storage=§0Storage frames can receive resources from Active Providers and supply resources to Requesters. \n \nBy default the framed inventory accepts any item from providing inventories. By adding items to this filter, only items specified can be inserted via the logistics network. Add items from your inventory or search for an item/fluid by right clicking an empty slot.
 gui.tab.info.logistic_frame_default_storage=§0Default Storage frames can receive resources from Active Providers and supply resources to Requesters and Storage Frames. They have a lower priority than Storage frames, which will be always be used first if possible. \n \nBy default the framed inventory will accept any resources from providing inventories. By adding items to this filter, only items specified can be inserted via the logistics network. Add items from your inventory or search for an item/fluid by right clicking an empty slot.
 
+# FE Energy
+gui.tab.input=Input
+gui.tab.output=Output
+
 # Pressure
 gui.tab.pressure=Pressure
 
@@ -503,6 +507,7 @@ gui.tab.problems.notEnoughHeat=§fNot enough heat. \n§0Apply more heat by addin
 gui.tab.problems.exposedFaces=§fMachine is poorly insulated. \n§0%d of %d block faces are exposed to the air, which wastes heat. Ensure no neighboring blocks are air blocks to insulate the machine for better performance.
 gui.tab.problems.aerialInterface.linked=§0Machine linked with %s.
 gui.tab.problems.fluxCompressor.noRF=§fThe machine is out of FE. \n§0Add more powah!
+gui.tab.problems.electricCompressor.noEU=§fThere is no EU input! \n§0Add a (bigger) EU supply to the network.
 gui.tab.problems.plasticMixer.noPlastic=§fNo items to melt down or fluid to solidify. \n§0Add items to the top §7Item§0 slot, or pump fluid into the Plastic Mixer.
 gui.tab.problems.plasticMixer.plasticOverflow=§fThere's no inventory space to allow the liquid to solidify. \n§0Remove items from the bottom §7Item§0 slot.
 gui.tab.problems.plasticMixer.noDye=§fNo dye left. \n§0Add %s.
@@ -610,6 +615,14 @@ gui.tab.hopperStatus.itemTransferPerSecond=§7Item Transfer Speed: \n§0%s items
 gui.tab.hopperStatus.liquidTransferPerTick=§7Liquid Transfer Speed: \n§0%s mB/tick
 gui.tab.hopperStatus.liquidTransferPerSecond=§7Liquid Transfer Speed: \n§0%s mB/s
 gui.tab.status=Status
+gui.tab.status.fluxCompressor.maxEnergyUsage=Maximum Energy Usage:
+gui.tab.status.fluxCompressor.maxInputRate=Maximum Input Rate:
+gui.tab.status.fluxCompressor.storedEnergy=Stored Energy:
+gui.tab.status.pneumaticDynamo.maxEnergyProduction=Maximum Energy Production:
+gui.tab.status.pneumaticDynamo.maxOutputRate=Maximum Output Rate:
+gui.tab.status.electricCompressor.maxInputRate=Maximum Input Rate:
+gui.tab.status.pneumaticGenerator.maxEnergyProduction=Maximum Energy Production:
+gui.tab.status.pneumaticGenerator.maxOutputRate=Maximum Output Rate:
 gui.tab.status.gasLift.action=§7Action
 gui.tab.status.gasLift.action.idling=§0Idling
 gui.tab.status.gasLift.action.pumping=§0Pumping %s
@@ -915,6 +928,7 @@ gui.keroseneLamp.timeLeft=Time left: %s
 gui.sentryTurret.ammo=Ammo
 gui.sentryTurret.targetFilter=Target Filter
 gui.liquid.empty=Empty
+gui.liquidCompressor.fuelsHeader=§nmL/mB | Fluid (x burn rate)
 gui.micromissile.topSpeed=Top Speed
 gui.micromissile.turnSpeed=Turn Speed
 gui.micromissile.damage=Damage
@@ -1025,6 +1039,9 @@ gui.tooltip.effectiveVolume=Effective Volume: %s mL
 gui.tooltip.maxPressure=Max pressure: %s bar
 gui.tooltip.pressure=Pressure: %s bar
 gui.tooltip.maxProduction=Max Production: %d mL/t
+gui.tooltip.maxUsage=Max Usage: %d mL/t
+gui.tooltip.temperature=Temperature: %s°C
+gui.tooltip.temperatureRequired=Required: %s
 gui.tooltip.amadronTablet.itemLocation=Item Providing Location: %s, %s, %s in dimension %s
 gui.tooltip.amadronTablet.fluidLocation=Fluid Providing Location: %s, %s, %s in dimension %s
 gui.tooltip.amadronTablet.selectItemLocation=Right click an inventory to allow it to provide items to vendors.

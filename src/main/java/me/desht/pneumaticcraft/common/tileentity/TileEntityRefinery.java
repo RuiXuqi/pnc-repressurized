@@ -46,7 +46,6 @@ public class TileEntityRefinery extends TileEntityTickableBase
     
     @GuiSynced
     private final IHeatExchangerLogic heatExchanger = PneumaticRegistry.getInstance().getHeatRegistry().getHeatExchangerLogic();
-    
     @SuppressWarnings("unused")
     @DescSynced
     private int inputAmountScaled, outputAmountScaled;
@@ -59,6 +58,10 @@ public class TileEntityRefinery extends TileEntityTickableBase
 
     @GuiSynced
     public int minTemp;
+
+    // WIP
+    @GuiSynced
+    public int maxTemp = 99999;
 
     @DescSynced
     private int refineryCount; // for particle spawning

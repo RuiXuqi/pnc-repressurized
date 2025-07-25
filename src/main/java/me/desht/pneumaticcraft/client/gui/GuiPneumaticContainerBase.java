@@ -280,9 +280,13 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     }
 
     protected Point getGaugeLocation() {
+        return getGaugeLocation(0, 0);
+    }
+
+    protected Point getGaugeLocation(int xAdd, int yAdd) {
         int xStart = (width - xSize) / 2;
         int yStart = (height - ySize) / 2;
-        return new Point(xStart + xSize * 3 / 4, yStart + ySize / 4 + 4);
+        return new Point(xStart + xSize * 3 / 4 + xAdd, yStart + ySize / 4 + 4 + yAdd);
     }
 
     @Override

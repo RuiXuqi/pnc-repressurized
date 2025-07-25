@@ -4,7 +4,7 @@ import me.desht.pneumaticcraft.api.PneumaticRegistry;
 import me.desht.pneumaticcraft.api.heat.IHeatExchangerLogic;
 import me.desht.pneumaticcraft.client.gui.widget.IGuiWidget;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTank;
-import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature;
+import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature1;
 import me.desht.pneumaticcraft.client.util.GuiUtils;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Names;
@@ -56,7 +56,7 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
         private float dangerPressure;
         private boolean drawPressureGauge;
         private int gaugeX, gaugeY;
-        private WidgetTemperature tempWidget;
+        private WidgetTemperature1 tempWidget;
         private IHeatExchangerLogic heatExchanger;
 
         @Override
@@ -137,7 +137,7 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
         }
 
         void setUsedTemperature(int x, int y, double temperature) {
-            tempWidget = new WidgetTemperature(0, x, y, 273, 673,
+            tempWidget = new WidgetTemperature1(0, x, y, 273, 673,
                     heatExchanger = PneumaticRegistry.getInstance().getHeatRegistry().getHeatExchangerLogic(), (int) temperature) {
                 @Override
                 public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {

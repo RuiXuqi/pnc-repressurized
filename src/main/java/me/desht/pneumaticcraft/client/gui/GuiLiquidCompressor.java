@@ -8,9 +8,7 @@ import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -22,6 +20,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
+
+import static me.desht.pneumaticcraft.common.fluid.Fluids.LPG;
+import static me.desht.pneumaticcraft.common.fluid.Fluids.getBucketStack;
 
 public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiquidCompressor> {
 
@@ -37,7 +38,7 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
     public void initGui() {
         super.initGui();
         addWidget(new WidgetTank(-1, guiLeft + getFluidOffset(), guiTop + 15, te.getTank()));
-        addAnimatedStat("gui.tab.liquidCompressor.fuel", new ItemStack(Items.LAVA_BUCKET), 0xFFFF6600, true).setTextWithoutCuttingString(getAllFuels());
+        addAnimatedStat("gui.tab.liquidCompressor.fuel", getBucketStack(LPG), 0xFFB04000, true).setTextWithoutCuttingString(getAllFuels());
     }
 
     @Override
@@ -58,14 +59,12 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
 
     @Override
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + xSize * 3 / 4 + 5, yStart + ySize / 4 + 4);
+        return getGaugeLocation(5, 0);
     }
 
     private List<String> getAllFuels() {
         List<String> fuels = new ArrayList<>();
-        fuels.add("L/Bucket | Fluid");
+        fuels.add(TextFormatting.AQUA + PneumaticCraftUtils.xlate("gui.liquidCompressor.fuelsHeader"));
         for (Map.Entry<String, Integer> map : sortByValue(PneumaticCraftAPIHandler.getInstance().liquidFuels).entrySet()) {
             String value = map.getValue() / 1000 + "";
             while (fontRenderer.getStringWidth(value) < 25) {
