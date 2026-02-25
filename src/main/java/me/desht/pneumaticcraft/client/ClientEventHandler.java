@@ -57,6 +57,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -375,8 +376,7 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void screenTilt(EntityViewRenderEvent.CameraSetup event) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            EntityPlayer player = (EntityPlayer) event.getEntity();
+        if (event.getEntity() instanceof EntityPlayer player) {
             if (ItemPneumaticArmor.isPneumaticArmorPiece(player, EntityEquipmentSlot.FEET) && !player.onGround) {
                 CommonArmorHandler handler = CommonArmorHandler.getHandlerForPlayer(player);
                 float targetRoll;
@@ -406,6 +406,7 @@ public class ClientEventHandler {
 
         for (Block block : Blockss.blocks) {
             Item item = Item.getItemFromBlock(block);
+            if (item == Items.AIR) continue;
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
         }
 
@@ -413,9 +414,8 @@ public class ClientEventHandler {
         ModelLoader.setCustomModelResourceLocation(assemblyIO, 1, new ModelResourceLocation(RL("assembly_io_unit_import"), "inventory"));
 
         for (Item item : Itemss.items) {
-            if (item instanceof ItemPneumaticSubtyped) {
+            if (item instanceof ItemPneumaticSubtyped subtyped) {
                 ModelBakery.registerItemVariants(item);
-                ItemPneumaticSubtyped subtyped = (ItemPneumaticSubtyped) item;
                 NonNullList<ItemStack> stacks = NonNullList.create();
                 item.getSubItems(PneumaticCraftRepressurized.tabPneumaticCraft, stacks);
                 for (ItemStack stack : stacks) {
@@ -583,11 +583,10 @@ public class ClientEventHandler {
     public void drawCustomDurabilityBars(GuiScreenEvent.DrawScreenEvent.Pre event) {
         // with thanks to V0idWa1k3r
         // https://github.com/V0idWa1k3r/ExPetrum/blob/master/src/main/java/v0id/exp/client/ExPHandlerClient.java#L235
-        if (event.getGui() instanceof GuiContainer) {
+        if (event.getGui() instanceof GuiContainer container) {
             GlStateManager.disableTexture2D();
             GlStateManager.color(1F, 1F, 1F, 1F);
             BufferBuilder bb = Tessellator.getInstance().getBuffer();
-            GuiContainer container = (GuiContainer) event.getGui();
             int i = container.getGuiLeft();
             int j = container.getGuiTop();
             bb.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
@@ -595,9 +594,8 @@ public class ClientEventHandler {
                 if (!s.getStack().isEmpty()) {
                     float x = s.xPos;
                     float y = s.yPos;
-                    if (s.getStack().getItem() instanceof ItemPneumaticArmor && ItemPressurizable.shouldShowPressureDurability(s.getStack())) {
+                    if (s.getStack().getItem() instanceof ItemPneumaticArmor a && ItemPressurizable.shouldShowPressureDurability(s.getStack())) {
                         // render secondary durability bar showing remaining air
-                        ItemPneumaticArmor a = (ItemPneumaticArmor) s.getStack().getItem();
                         float val = a.getPressure(s.getStack()) / a.maxPressure(s.getStack());
                         int c = ItemPressurizable.getDurabilityColor(s.getStack());
                         float r = ((c & 0xFF0000) >> 16) / 256f;
