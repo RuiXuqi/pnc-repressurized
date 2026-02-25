@@ -26,36 +26,36 @@ public class ItemPlastic extends ItemPneumaticSubtyped {
     public static final int MAGENTA = 13;
     public static final int ORANGE = 14;
     public static final int WHITE = 15;
-    
+
     //Names, as defined consistently with dyeX
     public static final String[] ORE_NAMES = new String[]{
-      "plasticBlack",
-      "plasticRed",
-      "plasticGreen",
-      "plasticBrown",
-      "plasticBlue",
-      "plasticPurple",
-      "plasticCyan",
-      "plasticLightGray",
-      "plasticGray",
-      "plasticPink",
-      "plasticLime",
-      "plasticYellow",
-      "plasticLightBlue",
-      "plasticMagenta",
-      "plasticOrange",
-      "plasticWhite"        
+            "plasticBlack",
+            "plasticRed",
+            "plasticGreen",
+            "plasticBrown",
+            "plasticBlue",
+            "plasticPurple",
+            "plasticCyan",
+            "plasticLightGray",
+            "plasticGray",
+            "plasticPink",
+            "plasticLime",
+            "plasticYellow",
+            "plasticLightBlue",
+            "plasticMagenta",
+            "plasticOrange",
+            "plasticWhite"
     };
 
     public ItemPlastic() {
         super("plastic");
-        setHasSubtypes(true);
+        this.setHasSubtypes(true);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             for (int i = 0; i < 16; i++) {
                 subItems.add(new ItemStack(this, 1, i));
             }

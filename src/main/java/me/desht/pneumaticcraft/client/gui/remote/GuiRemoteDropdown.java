@@ -23,24 +23,24 @@ public class GuiRemoteDropdown extends GuiRemoteVariable<ActionWidgetDropdown> {
 
         Keyboard.enableRepeatEvents(true);
 
-        addLabel(I18n.format("gui.remote.button.width"), guiLeft + 10, guiTop + 100);
-        addLabel(I18n.format("gui.remote.dropdown.dropDownElements"), guiLeft + 10, guiTop + 40);
+        this.addLabel(I18n.format("gui.remote.button.width"), this.guiLeft + 10, this.guiTop + 100);
+        this.addLabel(I18n.format("gui.remote.dropdown.dropDownElements"), this.guiLeft + 10, this.guiTop + 40);
 
-        dropDownElementsField = new WidgetTextField(fontRenderer, guiLeft + 10, guiTop + 50, 160, 10);
-        dropDownElementsField.setMaxStringLength(32768);
-        dropDownElementsField.setText(widget.getDropDownElements());
-        dropDownElementsField.setTooltip(I18n.format("gui.remote.dropdown.dropDownElements.tooltip"));
-        addWidget(dropDownElementsField);
+        this.dropDownElementsField = new WidgetTextField(this.fontRenderer, this.guiLeft + 10, this.guiTop + 50, 160, 10);
+        this.dropDownElementsField.setMaxStringLength(32768);
+        this.dropDownElementsField.setText(this.widget.getDropDownElements());
+        this.dropDownElementsField.setTooltip(I18n.format("gui.remote.dropdown.dropDownElements.tooltip"));
+        this.addWidget(this.dropDownElementsField);
 
-        widthField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 50, guiTop + 99, 30, 10);
-        widthField.setValue(widget.getWidth());
-        widthField.minValue = 10;
-        addWidget(widthField);
+        this.widthField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 50, this.guiTop + 99, 30, 10);
+        this.widthField.setValue(this.widget.getWidth());
+        this.widthField.minValue = 10;
+        this.addWidget(this.widthField);
 
-        sortCheckBox = new GuiCheckBox(1, guiLeft + 10, guiTop + 120, 0x404040, I18n.format("gui.remote.dropdown.sort"));
-        sortCheckBox.checked = widget.getSorted();
-        sortCheckBox.setTooltip(I18n.format("gui.remote.dropdown.sort.tooltip"));
-        addWidget(sortCheckBox);
+        this.sortCheckBox = new GuiCheckBox(1, this.guiLeft + 10, this.guiTop + 120, 0x404040, I18n.format("gui.remote.dropdown.sort"));
+        this.sortCheckBox.checked = this.widget.getSorted();
+        this.sortCheckBox.setTooltip(I18n.format("gui.remote.dropdown.sort.tooltip"));
+        this.addWidget(this.sortCheckBox);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class GuiRemoteDropdown extends GuiRemoteVariable<ActionWidgetDropdown> {
         super.onGuiClosed();
 
         Keyboard.enableRepeatEvents(false);
-        widget.setDropDownElements(dropDownElementsField.getText());
-        widget.setWidth(widthField.getValue());
-        widget.setSorted(sortCheckBox.checked);
+        this.widget.setDropDownElements(this.dropDownElementsField.getText());
+        this.widget.setWidth(this.widthField.getValue());
+        this.widget.setSorted(this.sortCheckBox.checked);
     }
 }

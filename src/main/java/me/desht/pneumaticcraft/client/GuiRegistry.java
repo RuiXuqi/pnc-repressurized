@@ -19,7 +19,8 @@ public class GuiRegistry implements IClientRegistry {
     private static final GuiRegistry INSTANCE = new GuiRegistry();
     public static final HashMap<ResourceLocation, IAssemblyRenderOverriding> renderOverrides = new HashMap<>();
 
-    private GuiRegistry() {}
+    private GuiRegistry() {
+    }
 
     public static GuiRegistry getInstance() {
         return INSTANCE;

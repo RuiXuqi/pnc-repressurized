@@ -16,7 +16,7 @@ public interface ISemiBlock {
     World getWorld();
 
     BlockPos getPos();
-    
+
     int getIndex();
 
     void writeToNBT(NBTTagCompound tag);
@@ -26,7 +26,7 @@ public interface ISemiBlock {
     void update();
 
     void initialize(World world, BlockPos pos);
-    
+
     void prePlacement(EntityPlayer player, ItemStack stack, EnumFacing facing);
 
     void invalidate();
@@ -40,10 +40,10 @@ public interface ISemiBlock {
     void onPlaced(EntityPlayer player, ItemStack stack, EnumFacing facing);
 
     boolean onRightClickWithConfigurator(EntityPlayer player, EnumFacing side);
-    
+
     void onSemiBlockRemovedFromThisPos(ISemiBlock semiBlock);
-    
-    default boolean canCoexistInSameBlock(ISemiBlock semiBlock){
+
+    default boolean canCoexistInSameBlock(ISemiBlock semiBlock) {
         return false;
     }
 

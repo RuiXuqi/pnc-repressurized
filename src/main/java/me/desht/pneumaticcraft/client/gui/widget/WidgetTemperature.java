@@ -28,7 +28,7 @@ public class WidgetTemperature extends WidgetBase {
     }
 
     public int[] getScales() {
-        return scales;
+        return this.scales;
     }
 
     @Override
@@ -36,21 +36,21 @@ public class WidgetTemperature extends WidgetBase {
         GlStateManager.disableLighting();
         Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGET_TEMPERATURE);
         GlStateManager.color(1, 1, 1, 1);
-        Gui.drawModalRectWithCustomSizedTexture(x + 6, y, 6, 0, 7, 50, 18, 50);
+        Gui.drawModalRectWithCustomSizedTexture(this.x + 6, this.y, 6, 0, 7, 50, 18, 50);
 
-        int barLength = (logic.getTemperatureAsInt() - minTemp) * 48 / maxTemp;
+        int barLength = (this.logic.getTemperatureAsInt() - this.minTemp) * 48 / this.maxTemp;
         barLength = MathHelper.clamp(barLength, 0, 48);
-        Gui.drawModalRectWithCustomSizedTexture(x + 7, y + 1 + 48 - barLength, 13, 48 - barLength, 5, barLength, 18, 50);
+        Gui.drawModalRectWithCustomSizedTexture(this.x + 7, this.y + 1 + 48 - barLength, 13, 48 - barLength, 5, barLength, 18, 50);
 
-        for (int scale : scales) {
-            int scaleY = 48 - (scale - minTemp) * 48 / maxTemp;
+        for (int scale : this.scales) {
+            int scaleY = 48 - (scale - this.minTemp) * 48 / this.maxTemp;
             int v = scaleY < 0 ? 6 : (scaleY > 48 ? 12 : 0);
-            Gui.drawModalRectWithCustomSizedTexture(x, y - 1 + MathHelper.clamp(scaleY, 0, 48), 0, v, 6, 6, 18, 50);
+            Gui.drawModalRectWithCustomSizedTexture(this.x, this.y - 1 + MathHelper.clamp(scaleY, 0, 48), 0, v, 6, 6, 18, 50);
         }
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
-        curTip.add("Temperature: " + (logic.getTemperatureAsInt() - 273) + "\u00b0C");
+        curTip.add("Temperature: " + (this.logic.getTemperatureAsInt() - 273) + "\u00b0C");
     }
 }

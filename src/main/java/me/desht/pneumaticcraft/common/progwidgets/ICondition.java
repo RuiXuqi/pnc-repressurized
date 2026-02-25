@@ -34,25 +34,31 @@ public interface ICondition {
 
         public boolean evaluate(int count1, int count2) {
             switch (this) {
-                case EQUALS: return count1 == count2;
-                case HIGHER_THAN_EQUALS: return count1 >= count2;
-                case LESS_THAN_EQUALS: return count1 <= count2;
+                case EQUALS:
+                    return count1 == count2;
+                case HIGHER_THAN_EQUALS:
+                    return count1 >= count2;
+                case LESS_THAN_EQUALS:
+                    return count1 <= count2;
             }
             return false;
         }
 
         public boolean evaluate(float count1, float count2) {
             switch (this) {
-                case EQUALS: return count1 == count2;
-                case HIGHER_THAN_EQUALS: return count1 >= count2;
-                case LESS_THAN_EQUALS: return count1 <= count2;
+                case EQUALS:
+                    return count1 == count2;
+                case HIGHER_THAN_EQUALS:
+                    return count1 >= count2;
+                case LESS_THAN_EQUALS:
+                    return count1 <= count2;
             }
             return false;
         }
 
         @Override
         public String toString() {
-            return symbol;
+            return this.symbol;
         }
     }
 }

@@ -17,19 +17,19 @@ public class PacketCoordTrackUpdate extends LocationIntPacket<PacketCoordTrackUp
 
     public PacketCoordTrackUpdate(World world, BlockPos pos) {
         super(pos);
-        dimensionID = world.provider.getDimension();
+        this.dimensionID = world.provider.getDimension();
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(dimensionID);
+        buffer.writeInt(this.dimensionID);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        dimensionID = buffer.readInt();
+        this.dimensionID = buffer.readInt();
     }
 
     @Override

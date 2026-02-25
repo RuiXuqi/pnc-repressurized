@@ -16,28 +16,30 @@ public interface IThermopneumaticProcessingPlantRecipe {
      * @return
      */
     boolean isValidRecipe(FluidStack inputFluid, ItemStack inputItem);
-    
+
     /**
      * If the given fluid stack is valid in any situation for this recipe.
      * This is used to check if a fluid may enter the input tank of the machine.
      * THIS SHOULD BE OVERRIDEN, IT IS ONLY MARKED DEFAULT FOR BACKWARDS API COMPAT.
      * TODO 1.13 remove default implementation.
+     *
      * @param inputFluid
      * @return
      */
-    default boolean isValidInput(@Nonnull FluidStack inputFluid){
+    default boolean isValidInput(@Nonnull FluidStack inputFluid) {
         return true;
     }
-    
+
     /**
      * If the given item stack is valid in any situation for this recipe.
      * This is used to check if an item may enter the input inventory of the machine.
      * THIS SHOULD BE OVERRIDEN, IT IS ONLY MARKED DEFAULT FOR BACKWARDS API COMPAT.
      * TODO 1.13 remove default implementation.
+     *
      * @param inputItem
      * @return
      */
-    default boolean isValidInput(@Nonnull ItemStack inputItem){
+    default boolean isValidInput(@Nonnull ItemStack inputItem) {
         return true;
     }
 
@@ -67,7 +69,7 @@ public interface IThermopneumaticProcessingPlantRecipe {
      * of the recipe.
      *
      * @param fluidHandler fluid handler
-     * @param itemHandler item handler
+     * @param itemHandler  item handler
      */
     void useResources(IFluidHandler fluidHandler, IItemHandler itemHandler);
 

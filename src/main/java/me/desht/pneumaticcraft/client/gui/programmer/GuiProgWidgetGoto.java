@@ -20,15 +20,15 @@ public class GuiProgWidgetGoto extends GuiProgWidgetAreaShow {
         super.initGui();
 
         List<GuiRadioButton> radioButtons = new ArrayList<>();
-        GuiRadioButton radioButton = new GuiRadioButton(0, guiLeft + 4, guiTop + 44, 0xFF404040, "Done when arrived");
-        radioButton.checked = !((ProgWidgetGoToLocation) widget).doneWhenDeparting;
-        addWidget(radioButton);
+        GuiRadioButton radioButton = new GuiRadioButton(0, this.guiLeft + 4, this.guiTop + 44, 0xFF404040, "Done when arrived");
+        radioButton.checked = !((ProgWidgetGoToLocation) this.widget).doneWhenDeparting;
+        this.addWidget(radioButton);
         radioButtons.add(radioButton);
         radioButton.otherChoices = radioButtons;
 
-        GuiRadioButton radioButton2 = new GuiRadioButton(1, guiLeft + 4, guiTop + 58, 0xFF404040, "Done when departing");
-        radioButton2.checked = ((ProgWidgetGoToLocation) widget).doneWhenDeparting;
-        addWidget(radioButton2);
+        GuiRadioButton radioButton2 = new GuiRadioButton(1, this.guiLeft + 4, this.guiTop + 58, 0xFF404040, "Done when departing");
+        radioButton2.checked = ((ProgWidgetGoToLocation) this.widget).doneWhenDeparting;
+        this.addWidget(radioButton2);
         radioButtons.add(radioButton2);
         radioButton2.otherChoices = radioButtons;
     }
@@ -36,7 +36,7 @@ public class GuiProgWidgetGoto extends GuiProgWidgetAreaShow {
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget.getID() == 0 || guiWidget.getID() == 1) {
-            ((ProgWidgetGoToLocation) widget).doneWhenDeparting = guiWidget.getID() == 1;
+            ((ProgWidgetGoToLocation) this.widget).doneWhenDeparting = guiWidget.getID() == 1;
         }
         super.actionPerformed(guiWidget);
     }
@@ -44,8 +44,8 @@ public class GuiProgWidgetGoto extends GuiProgWidgetAreaShow {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString("Move to the next puzzle piece", guiLeft + 8, guiTop + 20, 0xFF404060);
-        fontRenderer.drawString("when arrived or right away?", guiLeft + 8, guiTop + 30, 0xFF404060);
+        this.fontRenderer.drawString("Move to the next puzzle piece", this.guiLeft + 8, this.guiTop + 20, 0xFF404060);
+        this.fontRenderer.drawString("when arrived or right away?", this.guiLeft + 8, this.guiTop + 30, 0xFF404060);
     }
 
 }

@@ -57,15 +57,15 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void update(EntityPlayer player, int rangeUpgrades) {
-        ticksExisted++;
+        this.ticksExisted++;
 
-        if ((ticksExisted & 0xf) == 0) {
+        if ((this.ticksExisted & 0xf) == 0) {
             // count up all items in tracked inventories, and cull any inventories with no matching items
-            int blockSearchCount = trackInventoryCounts(rangeUpgrades);
+            int blockSearchCount = this.trackInventoryCounts(rangeUpgrades);
 
-            searchedItems.entrySet().removeIf(e -> !e.getKey().isEntityAlive());
+            this.searchedItems.entrySet().removeIf(e -> !e.getKey().isEntityAlive());
 
-            totalSearchedItemCount = itemSearchCount + blockSearchCount;
+            this.totalSearchedItemCount = this.itemSearchCount + blockSearchCount;
         }
     }
 
@@ -82,17 +82,17 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(Textures.GLOW_RESOURCE);
 
-        searchedItems.forEach((item, value) -> {
+        this.searchedItems.forEach((item, value) -> {
             float height = MathHelper.sin((item.getAge() + partialTicks) / 10.0F + item.hoverStart) * 0.1F + 0.2F;
             RenderSearchItemBlock.renderSearch(
                     item.lastTickPosX + (item.posX - item.lastTickPosX) * partialTicks,
                     item.lastTickPosY + (item.posY - item.lastTickPosY) * partialTicks + height,
                     item.lastTickPosZ + (item.posZ - item.lastTickPosZ) * partialTicks, value,
-                    totalSearchedItemCount, partialTicks
+                    this.totalSearchedItemCount, partialTicks
             );
         });
 
-        trackedInventories.values().forEach(entry -> entry.renderSearchBlock(totalSearchedItemCount, partialTicks));
+        this.trackedInventories.values().forEach(entry -> entry.renderSearchBlock(this.totalSearchedItemCount, partialTicks));
 
         GlStateManager.enableCull();
         GlStateManager.enableDepth();
@@ -110,9 +110,9 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
         if (searchStack.isEmpty()) {
             textList.add("press '" + Keyboard.getKeyName(KeyHandler.getInstance().keybindOpenOptions.getKeyCode()) + "' to configure");
         } else {
-            textList.add(searchStack.getDisplayName() + " (" + totalSearchedItemCount + " found)");
+            textList.add(searchStack.getDisplayName() + " (" + this.totalSearchedItemCount + " found)");
         }
-        searchInfo.setText(textList);
+        this.searchInfo.setText(textList);
     }
 
     @Override
@@ -128,7 +128,7 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
 
         EntityPlayer player = PneumaticCraftRepressurized.proxy.getClientPlayer();
         List<BlockPos> toRemove = new ArrayList<>();
-        for (Map.Entry<BlockPos,RenderSearchItemBlock> entry : trackedInventories.entrySet()) {
+        for (Map.Entry<BlockPos, RenderSearchItemBlock> entry : this.trackedInventories.entrySet()) {
             int nItems = entry.getKey().distanceSq(player.posX, player.posY, player.posZ) < blockTrackRangeSq ?
                     entry.getValue().getSearchedItemCount() : 0;
 
@@ -137,20 +137,21 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
             }
             blockSearchCount += nItems;
         }
-        toRemove.forEach(trackedInventories::remove);
+        toRemove.forEach(this.trackedInventories::remove);
 
         return blockSearchCount;
     }
 
     /**
      * Called by the EntityTrackerUpgradeHandler every 16 ticks to find items in item entities on the ground.
-     * @param player the player
-     * @param rangeUpgrades number of range upgrades installed in the helmet
+     *
+     * @param player         the player
+     * @param rangeUpgrades  number of range upgrades installed in the helmet
      * @param handlerEnabled true if the search handler is actually enabled, false otherwise
      */
     void trackItemEntities(EntityPlayer player, int rangeUpgrades, boolean handlerEnabled) {
-        searchedItems.clear();
-        itemSearchCount = 0;
+        this.searchedItems.clear();
+        this.itemSearchCount = 0;
 
         if (!handlerEnabled) return;
 
@@ -160,8 +161,8 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
         for (EntityItem item : items) {
             if (!item.getItem().isEmpty() && !searchStack.isEmpty()) {
                 if (item.getItem().isItemEqual(searchStack)) {
-                    searchedItems.put(item, item.getItem().getCount());
-                    itemSearchCount += item.getItem().getCount();
+                    this.searchedItems.put(item, item.getItem().getCount());
+                    this.itemSearchCount += item.getItem().getCount();
                 } else {
                     List<ItemStack> inventoryItems = PneumaticCraftUtils.getStacksInItem(item.getItem());
                     int itemCount = 0;
@@ -171,8 +172,8 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
                         }
                     }
                     if (itemCount > 0) {
-                        searchedItems.put(item, itemCount);
-                        itemSearchCount += itemCount;
+                        this.searchedItems.put(item, itemCount);
+                        this.itemSearchCount += itemCount;
                     }
                 }
             }
@@ -183,18 +184,18 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
      * Called by the BlockTrackUpgradeHandler when it finds inventories while scanning blocks.  If
      * the inventory contains any of the searched item, its position is added to a track list.
      *
-     * @param te TileEntity the tile entity, which is already known to support the item handler capability
+     * @param te             TileEntity the tile entity, which is already known to support the item handler capability
      * @param handlerEnabled true if the search handler is actually enabled, false otherwise
      */
     void checkInventoryForItems(TileEntity te, EnumFacing face, boolean handlerEnabled) {
         if (!handlerEnabled) {
-            trackedInventories.clear();
+            this.trackedInventories.clear();
         } else {
             ItemStack searchStack = ItemPneumaticArmor.getSearchedStack(ClientUtils.getWornArmor(EntityEquipmentSlot.HEAD));
             IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, face);
             if (!searchStack.isEmpty()) {
-                if (checkForItems(handler, searchStack)) {
-                    trackedInventories.put(te.getPos(), new RenderSearchItemBlock(te.getWorld(), te.getPos()));
+                if (this.checkForItems(handler, searchStack)) {
+                    this.trackedInventories.put(te.getPos(), new RenderSearchItemBlock(te.getWorld(), te.getPos()));
                 }
             }
         }
@@ -215,10 +216,10 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void reset() {
-        trackedInventories.clear();
-        searchedItems.clear();
-        ticksExisted = 0;
-        searchInfo = null;
+        this.trackedInventories.clear();
+        this.searchedItems.clear();
+        this.ticksExisted = 0;
+        this.searchInfo = null;
     }
 
     @Override
@@ -240,17 +241,17 @@ public class SearchUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public GuiAnimatedStat getAnimatedStat() {
-        if (searchInfo == null) {
+        if (this.searchInfo == null) {
             GuiAnimatedStat.StatIcon icon = GuiAnimatedStat.StatIcon.of(CraftingRegistrator.getUpgrade(EnumUpgrade.SEARCH));
-            searchInfo = new GuiAnimatedStat(null, "Currently searching for:", icon,
+            this.searchInfo = new GuiAnimatedStat(null, "Currently searching for:", icon,
                     0x3000AA00, null, ArmorHUDLayout.INSTANCE.itemSearchStat);
-            searchInfo.setMinDimensionsAndReset(0, 0);
+            this.searchInfo.setMinDimensionsAndReset(0, 0);
         }
-        return searchInfo;
+        return this.searchInfo;
     }
 
     @Override
     public void onResolutionChanged() {
-        searchInfo = null;
+        this.searchInfo = null;
     }
 }

@@ -25,11 +25,11 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
 
         EnumOperator(String name) {
             this.name = name;
-            texture = new ResourceLocation(Textures.PROG_WIDGET_LOCATION + "coordinate_operation_" + name + ".png");
+            this.texture = new ResourceLocation(Textures.PROG_WIDGET_LOCATION + "coordinate_operation_" + name + ".png");
         }
 
         public String getTranslationKey() {
-            return "gui.progWidget.coordinateOperator." + name;
+            return "gui.progWidget.coordinateOperator." + this.name;
         }
     }
 
@@ -70,15 +70,15 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (variable.equals("")) {
+        if (this.variable.equals("")) {
             curInfo.add("gui.progWidget.general.error.emptyVariable");
         }
-        if (operator == EnumOperator.MAX_MIN) {
-            if (getConnectedParameters()[0] == null && getConnectedParameters()[getParameters().length] == null) {
+        if (this.operator == EnumOperator.MAX_MIN) {
+            if (this.getConnectedParameters()[0] == null && this.getConnectedParameters()[this.getParameters().length] == null) {
                 curInfo.add("gui.progWidget.coordinateOperator.noParameter");
             }
-        } else if (operator == EnumOperator.MULIPLY_DIVIDE) {
-            IProgWidget w = getConnectedParameters()[1];
+        } else if (this.operator == EnumOperator.MULIPLY_DIVIDE) {
+            IProgWidget w = this.getConnectedParameters()[1];
             while (w instanceof ProgWidgetCoordinate) {
                 BlockPos pos = ((ProgWidgetCoordinate) w).getCoordinate();
                 if (pos.getX() == 0 || pos.getY() == 0 || pos.getZ() == 0) {
@@ -92,9 +92,9 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        if (!variable.equals("")) {
-            BlockPos curPos = calculateCoordinate(this, 0, operator);
-            aiManager.setCoordinate(variable, curPos);
+        if (!this.variable.equals("")) {
+            BlockPos curPos = calculateCoordinate(this, 0, this.operator);
+            this.aiManager.setCoordinate(this.variable, curPos);
         }
         return super.getOutputWidget(drone, allWidgets);
     }
@@ -156,26 +156,26 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
 
     @Override
     public ResourceLocation getTexture() {
-        return operator.texture;
+        return this.operator.texture;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setString("variable", variable);
-        tag.setByte("operator", (byte) operator.ordinal());
+        tag.setString("variable", this.variable);
+        tag.setByte("operator", (byte) this.operator.ordinal());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        variable = tag.getString("variable");
+        this.variable = tag.getString("variable");
         byte operatorValue = tag.hasKey("multiplyDivide") ? tag.getByte("multiplyDivide") : tag.getByte("operator");
-        operator = EnumOperator.values()[operatorValue];
+        this.operator = EnumOperator.values()[operatorValue];
     }
 
     public EnumOperator getOperator() {
-        return operator;
+        return this.operator;
     }
 
     public void setOperator(EnumOperator operator) {
@@ -184,7 +184,7 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
 
     @Override
     public String getVariable() {
-        return variable;
+        return this.variable;
     }
 
     @Override
@@ -206,16 +206,16 @@ public class ProgWidgetCoordinateOperator extends ProgWidget implements IVariabl
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Setting variable: \"" + variable + "\"");
+        curTooltip.add("Setting variable: \"" + this.variable + "\"");
     }
 
     @Override
     public String getExtraStringInfo() {
-        return "\"" + variable + "\"";
+        return "\"" + this.variable + "\"";
     }
 
     @Override
     public void addVariables(Set<String> variables) {
-        variables.add(variable);
+        variables.add(this.variable);
     }
 }

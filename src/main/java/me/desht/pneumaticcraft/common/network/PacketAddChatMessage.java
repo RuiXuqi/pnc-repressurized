@@ -8,7 +8,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * MineChess
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
@@ -27,10 +27,10 @@ public class PacketAddChatMessage extends AbstractPacket<PacketAddChatMessage> {
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        ByteBufUtils.writeUTF8String(buffer, message);
-        if (replacements != null) {
-            buffer.writeInt(replacements.length);
-            for (String replacement : replacements) {
+        ByteBufUtils.writeUTF8String(buffer, this.message);
+        if (this.replacements != null) {
+            buffer.writeInt(this.replacements.length);
+            for (String replacement : this.replacements) {
                 ByteBufUtils.writeUTF8String(buffer, replacement);
             }
         } else {
@@ -40,10 +40,10 @@ public class PacketAddChatMessage extends AbstractPacket<PacketAddChatMessage> {
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        message = ByteBufUtils.readUTF8String(buffer);
-        replacements = new String[buffer.readInt()];
-        for (int i = 0; i < replacements.length; i++) {
-            replacements[i] = ByteBufUtils.readUTF8String(buffer);
+        this.message = ByteBufUtils.readUTF8String(buffer);
+        this.replacements = new String[buffer.readInt()];
+        for (int i = 0; i < this.replacements.length; i++) {
+            this.replacements[i] = ByteBufUtils.readUTF8String(buffer);
         }
     }
 

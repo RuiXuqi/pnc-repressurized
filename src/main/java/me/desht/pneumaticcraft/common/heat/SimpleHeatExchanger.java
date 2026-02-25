@@ -13,7 +13,7 @@ public class SimpleHeatExchanger implements IHeatExchanger {
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return logic;
+        return this.logic;
     }
 
 }

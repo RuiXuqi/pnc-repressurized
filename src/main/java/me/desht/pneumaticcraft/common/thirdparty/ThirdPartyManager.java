@@ -41,7 +41,7 @@ public class ThirdPartyManager implements IGuiHandler {
     private final List<IThirdParty> thirdPartyMods = new ArrayList<>();
     public static boolean computerCraftLoaded;
     public IDocsProvider docsProvider = new IDocsProvider.NoDocsProvider();
-    private GenericIntegrationHandler generic = new GenericIntegrationHandler();
+    private final GenericIntegrationHandler generic = new GenericIntegrationHandler();
 
     public static ThirdPartyManager instance() {
         return INSTANCE;
@@ -86,7 +86,7 @@ public class ThirdPartyManager implements IGuiHandler {
         for (Map.Entry<String, Class<? extends IThirdParty>> entry : thirdPartyClasses.entrySet()) {
             if (enabledThirdParty.contains(entry.getKey()) && Loader.isModLoaded(entry.getKey())) {
                 try {
-                    thirdPartyMods.add(entry.getValue().newInstance());
+                    this.thirdPartyMods.add(entry.getValue().newInstance());
                 } catch (Throwable e) {
                     Log.error("Failed to instantiate third party handler!");
                     e.printStackTrace();
@@ -96,20 +96,20 @@ public class ThirdPartyManager implements IGuiHandler {
     }
 
     public void onItemRegistry(Item item) {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             if (thirdParty instanceof IRegistryListener) ((IRegistryListener) thirdParty).onItemRegistry(item);
         }
     }
 
     public void onBlockRegistry(Block block) {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             if (thirdParty instanceof IRegistryListener) ((IRegistryListener) thirdParty).onBlockRegistry(block);
         }
     }
 
     public void preInit() {
-        generic.preInit();
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        this.generic.preInit();
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             try {
                 thirdParty.preInit();
             } catch (Throwable e) {
@@ -120,8 +120,8 @@ public class ThirdPartyManager implements IGuiHandler {
     }
 
     public void init() {
-        generic.init();
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        this.generic.init();
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             try {
                 thirdParty.init();
             } catch (Throwable e) {
@@ -132,8 +132,8 @@ public class ThirdPartyManager implements IGuiHandler {
     }
 
     public void postInit() {
-        generic.postInit();
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        this.generic.postInit();
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             try {
                 thirdParty.postInit();
             } catch (Throwable e) {
@@ -145,11 +145,11 @@ public class ThirdPartyManager implements IGuiHandler {
     }
 
     public void clientPreInit() {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             try {
                 thirdParty.clientPreInit();
                 if (thirdParty instanceof IDocsProvider) {
-                    docsProvider = (IDocsProvider) thirdParty;
+                    this.docsProvider = (IDocsProvider) thirdParty;
                 }
             } catch (Throwable e) {
                 Log.error("PneumaticCraft wasn't able to load third party content from the third party class " + thirdParty.getClass() + " client side!");
@@ -159,7 +159,7 @@ public class ThirdPartyManager implements IGuiHandler {
     }
 
     public void clientInit() {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             try {
                 thirdParty.clientInit();
             } catch (Throwable e) {
@@ -192,7 +192,7 @@ public class ThirdPartyManager implements IGuiHandler {
 
     @Override
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             if (thirdParty instanceof IGuiHandler) {
                 Object obj = ((IGuiHandler) thirdParty).getServerGuiElement(ID, player, world, x, y, z);
                 if (obj != null) return obj;
@@ -203,7 +203,7 @@ public class ThirdPartyManager implements IGuiHandler {
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        for (IThirdParty thirdParty : thirdPartyMods) {
+        for (IThirdParty thirdParty : this.thirdPartyMods) {
             if (thirdParty instanceof IGuiHandler) {
                 Object obj = ((IGuiHandler) thirdParty).getClientGuiElement(ID, player, world, x, y, z);
                 if (obj != null) return obj;

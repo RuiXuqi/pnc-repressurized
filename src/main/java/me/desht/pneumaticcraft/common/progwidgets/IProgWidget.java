@@ -119,7 +119,7 @@ public interface IProgWidget {
         }
 
         public String getLocalizedName() {
-            return I18n.format("gui.progWidget.difficulty." + name);
+            return I18n.format("gui.progWidget.difficulty." + this.name);
         }
     }
 }

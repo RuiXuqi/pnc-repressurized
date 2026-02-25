@@ -15,15 +15,15 @@ public class GuiProgWidgetLiquidExport extends GuiProgWidgetImportExport<ProgWid
     public void initGui() {
         super.initGui();
 
-        GuiCheckBox checkbox = new GuiCheckBox(300, guiLeft + 70, guiTop + 70, 0xFF404040, "gui.progWidget.liquidExport.placeFluidInWorld");
-        checkbox.setChecked(widget.isPlacingFluidBlocks());
-        addWidget(checkbox);
+        GuiCheckBox checkbox = new GuiCheckBox(300, this.guiLeft + 70, this.guiTop + 70, 0xFF404040, "gui.progWidget.liquidExport.placeFluidInWorld");
+        checkbox.setChecked(this.widget.isPlacingFluidBlocks());
+        this.addWidget(checkbox);
     }
 
     @Override
     public void actionPerformed(IGuiWidget w) {
         if (w.getID() == 300) {
-            widget.setPlaceFluidBlocks(((GuiCheckBox) w).checked);
+            this.widget.setPlaceFluidBlocks(((GuiCheckBox) w).checked);
         }
         super.actionPerformed(w);
     }

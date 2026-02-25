@@ -39,19 +39,19 @@ public class ExplosionCraftingRecipe {
     }
 
     public ItemStack getInput() {
-        return input;
+        return this.input;
     }
 
     public String getOreDictKey() {
-        return oreDictKey;
+        return this.oreDictKey;
     }
 
     public ItemStack getOutput() {
-        return output;
+        return this.output;
     }
 
     public int getLossRate() {
-        return lossRate;
+        return this.lossRate;
     }
 
     public static ItemStack tryToCraft(ItemStack stack) {
@@ -65,10 +65,10 @@ public class ExplosionCraftingRecipe {
 
     private ItemStack createOutput(ItemStack stack) {
         Random rand = new Random();
-        if (stack.getCount() >= 3 || rand.nextDouble() >= lossRate / 100D) {
-            ItemStack newStack = new ItemStack(output.getItem(), stack.getCount(), output.getItemDamage());
+        if (stack.getCount() >= 3 || rand.nextDouble() >= this.lossRate / 100D) {
+            ItemStack newStack = new ItemStack(this.output.getItem(), stack.getCount(), this.output.getItemDamage());
             if (stack.getCount() >= 3) {
-                newStack.setCount((int) (stack.getCount() * (rand.nextDouble() * Math.min(lossRate * 0.02D, 0.2D) + (Math.max(0.9D, 1D - lossRate * 0.01D) - lossRate * 0.01D))));
+                newStack.setCount((int) (stack.getCount() * (rand.nextDouble() * Math.min(this.lossRate * 0.02D, 0.2D) + (Math.max(0.9D, 1D - this.lossRate * 0.01D) - this.lossRate * 0.01D))));
             }
             return newStack;
         }
@@ -76,7 +76,7 @@ public class ExplosionCraftingRecipe {
     }
 
     private boolean match(ItemStack ingredient) {
-        return !input.isEmpty() && ItemStack.areItemsEqual(input, ingredient)
-                || oreDictKey != null && OreDictionaryHelper.isItemEqual(oreDictKey, ingredient);
+        return !this.input.isEmpty() && ItemStack.areItemsEqual(this.input, ingredient)
+                || this.oreDictKey != null && OreDictionaryHelper.isItemEqual(this.oreDictKey, ingredient);
     }
 }

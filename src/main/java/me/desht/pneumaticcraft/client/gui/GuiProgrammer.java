@@ -44,8 +44,8 @@ import org.lwjgl.input.Mouse;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 @SideOnly(Side.CLIENT)
 public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgrammer> {
@@ -85,14 +85,14 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
 
     private static final int WIDGET_X_SPACING = 22; // x size of widgets in the widget tray
 
-    private boolean hiRes;
+    private final boolean hiRes;
 
     public GuiProgrammer(InventoryPlayer player, TileEntityProgrammer te) {
         super(new ContainerProgrammer(player, te, isScreenHiRes()), te, null);
 
-        hiRes = ((ContainerProgrammer) inventorySlots).isHiRes();
-        xSize = hiRes ? 700 : 350;
-        ySize = hiRes ? 512 : 256;
+        this.hiRes = ((ContainerProgrammer) this.inventorySlots).isHiRes();
+        this.xSize = this.hiRes ? 700 : 350;
+        this.ySize = this.hiRes ? 512 : 256;
 
         this.player = FMLClientHandler.instance().getClient().player;
     }
@@ -103,31 +103,31 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     }
 
     private Rectangle getProgrammerBounds() {
-        return hiRes ? PROGRAMMER_HI_RES : PROGRAMMER_STD_RES;
+        return this.hiRes ? PROGRAMMER_HI_RES : PROGRAMMER_STD_RES;
     }
 
     private int getWidgetTrayRight() {
-        return hiRes ? 672 : 322;
+        return this.hiRes ? 672 : 322;
     }
 
     @Override
     protected void bindGuiTexture() {
-        ResourceLocation res = new ResourceLocation(hiRes ? Textures.GUI_PROGRAMMER_LARGE : Textures.GUI_PROGRAMMER_STD);
-        mc.getTextureManager().bindTexture(res);
+        ResourceLocation res = new ResourceLocation(this.hiRes ? Textures.GUI_PROGRAMMER_LARGE : Textures.GUI_PROGRAMMER_STD);
+        this.mc.getTextureManager().bindTexture(res);
         GlStateManager.enableTexture2D();
     }
 
     private void updateVisibleProgWidgets() {
         int y = 0, page = 0;
-        int x = getWidgetTrayRight() - maxPage * WIDGET_X_SPACING;
-        boolean showAllWidgets = showingWidgetProgress == WIDGET_X_SPACING * maxPage && showingAllWidgets;
-        filterField.setVisible(showAllWidgets);
+        int x = this.getWidgetTrayRight() - this.maxPage * WIDGET_X_SPACING;
+        boolean showAllWidgets = this.showingWidgetProgress == WIDGET_X_SPACING * this.maxPage && this.showingAllWidgets;
+        this.filterField.setVisible(showAllWidgets);
 
-        maxPage = 0;
-        visibleSpawnWidgets.clear();
+        this.maxPage = 0;
+        this.visibleSpawnWidgets.clear();
         int difficulty = 0;
-        for (int i = 0; i < difficultyButtons.size(); i++) {
-            if (difficultyButtons.get(i).checked) {
+        for (int i = 0; i < this.difficultyButtons.size(); i++) {
+            if (this.difficultyButtons.get(i).checked) {
                 difficulty = i;
                 break;
             }
@@ -137,43 +137,43 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             IProgWidget widget = registeredWidgets.get(i);
             if (difficulty >= widget.getDifficulty().ordinal()) {
                 widget.setY(y + 40);
-                widget.setX(showAllWidgets ? x : getWidgetTrayRight());
+                widget.setX(showAllWidgets ? x : this.getWidgetTrayRight());
                 int widgetHeight = widget.getHeight() / 2 + (widget.hasStepOutput() ? 5 : 0) + 1;
                 y += widgetHeight;
 
-                if (showAllWidgets || page == widgetPage) {
-                    visibleSpawnWidgets.add(widget);
+                if (showAllWidgets || page == this.widgetPage) {
+                    this.visibleSpawnWidgets.add(widget);
                 }
-                if (y > ySize - (hiRes ? 260 : 160)) {
+                if (y > this.ySize - (this.hiRes ? 260 : 160)) {
                     y = 0;
                     x += WIDGET_X_SPACING;
                     page++;
-                    if (i < registeredWidgets.size() - 1) maxPage++;
+                    if (i < registeredWidgets.size() - 1) this.maxPage++;
                 }
             }
         }
-        maxPage++;
+        this.maxPage++;
 
-        filterField.x = Math.min(guiLeft + getWidgetTrayRight() - 25 - filterField.width, guiLeft + getWidgetTrayRight() - (maxPage * WIDGET_X_SPACING) - 2);
-        filterSpawnWidgets();
+        this.filterField.x = Math.min(this.guiLeft + this.getWidgetTrayRight() - 25 - this.filterField.width, this.guiLeft + this.getWidgetTrayRight() - (this.maxPage * WIDGET_X_SPACING) - 2);
+        this.filterSpawnWidgets();
 
-        if (widgetPage >= maxPage) {
-            widgetPage = maxPage - 1;
-            updateVisibleProgWidgets();
+        if (this.widgetPage >= this.maxPage) {
+            this.widgetPage = this.maxPage - 1;
+            this.updateVisibleProgWidgets();
         }
     }
 
     private void filterSpawnWidgets() {
-        String filterText = filterField.getText().trim();
-        if (!visibleSpawnWidgets.isEmpty() && !filterText.isEmpty()) {
-            filteredSpawnWidgets = new BitSet(visibleSpawnWidgets.size());
-            for (int i = 0; i < visibleSpawnWidgets.size(); i++) {
-                IProgWidget widget = visibleSpawnWidgets.get(i);
+        String filterText = this.filterField.getText().trim();
+        if (!this.visibleSpawnWidgets.isEmpty() && !filterText.isEmpty()) {
+            this.filteredSpawnWidgets = new BitSet(this.visibleSpawnWidgets.size());
+            for (int i = 0; i < this.visibleSpawnWidgets.size(); i++) {
+                IProgWidget widget = this.visibleSpawnWidgets.get(i);
                 String widgetName = I18n.format("programmingPuzzle." + widget.getWidgetString() + ".name");
-                filteredSpawnWidgets.set(i, widgetName.toLowerCase().contains(filterText.toLowerCase()));
+                this.filteredSpawnWidgets.set(i, widgetName.toLowerCase().contains(filterText.toLowerCase()));
             }
         } else {
-            filteredSpawnWidgets = null;
+            this.filteredSpawnWidgets = null;
         }
     }
 
@@ -186,110 +186,110 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     public void initGui() {
         boolean pastebinLoaded = false;
 
-        if (pastebinGui != null && pastebinGui.outputTag != null) {
-            te.readProgWidgetsFromNBT(pastebinGui.outputTag);
-            pastebinGui = null;
-            NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+        if (this.pastebinGui != null && this.pastebinGui.outputTag != null) {
+            this.te.readProgWidgetsFromNBT(this.pastebinGui.outputTag);
+            this.pastebinGui = null;
+            NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.te));
             pastebinLoaded = true;
         }
 
         super.initGui();
 
-        if (programmerUnit != null) {
-            te.translatedX = programmerUnit.getTranslatedX();
-            te.translatedY = programmerUnit.getTranslatedY();
-            te.zoomState = programmerUnit.getLastZoom();
+        if (this.programmerUnit != null) {
+            this.te.translatedX = this.programmerUnit.getTranslatedX();
+            this.te.translatedY = this.programmerUnit.getTranslatedY();
+            this.te.zoomState = this.programmerUnit.getLastZoom();
             if (pastebinLoaded) {
-                programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
+                this.programmerUnit.gotoPiece(findWidget(this.te.progWidgets, ProgWidgetStart.class));
             }
         }
 
-        Rectangle bounds = getProgrammerBounds();
-        programmerUnit = new GuiUnitProgrammer(te.progWidgets, fontRenderer, guiLeft, guiTop, xSize, width, height, bounds.x, bounds.y, bounds.width, bounds.height, te.translatedX, te.translatedY, te.zoomState);
-        addWidget(programmerUnit.getScrollBar());
+        Rectangle bounds = this.getProgrammerBounds();
+        this.programmerUnit = new GuiUnitProgrammer(this.te.progWidgets, this.fontRenderer, this.guiLeft, this.guiTop, this.xSize, this.width, this.height, bounds.x, bounds.y, bounds.width, bounds.height, this.te.translatedX, this.te.translatedY, this.te.zoomState);
+        this.addWidget(this.programmerUnit.getScrollBar());
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
         // right and bottom edges of the programming area
-        int xRight = getProgrammerBounds().x + getProgrammerBounds().width; // 299 or 649
-        int yBottom = getProgrammerBounds().y + getProgrammerBounds().height + 3; // 171 or 427
+        int xRight = this.getProgrammerBounds().x + this.getProgrammerBounds().width; // 299 or 649
+        int yBottom = this.getProgrammerBounds().y + this.getProgrammerBounds().height + 3; // 171 or 427
 
-        importButton = new GuiButtonSpecial(1, xStart + xRight + 2, yStart + 3, 20, 15, "\u27f5");
-        importButton.setTooltipText("Import program");
-        buttonList.add(importButton);
+        this.importButton = new GuiButtonSpecial(1, xStart + xRight + 2, yStart + 3, 20, 15, "\u27f5");
+        this.importButton.setTooltipText("Import program");
+        this.buttonList.add(this.importButton);
 
-        exportButton = new GuiButtonSpecial(2, xStart + xRight + 2, yStart + 20, 20, 15, "\u27f6");
-        buttonList.add(exportButton);
+        this.exportButton = new GuiButtonSpecial(2, xStart + xRight + 2, yStart + 20, 20, 15, "\u27f6");
+        this.buttonList.add(this.exportButton);
 
-        buttonList.add(new GuiButtonExt(3, xStart + xRight - 3, yStart + yBottom, 10, 10, "\u25c0"));
-        buttonList.add(new GuiButtonExt(4, xStart + xRight + 38, yStart + yBottom, 10, 10, "\u25b6"));
+        this.buttonList.add(new GuiButtonExt(3, xStart + xRight - 3, yStart + yBottom, 10, 10, "\u25c0"));
+        this.buttonList.add(new GuiButtonExt(4, xStart + xRight + 38, yStart + yBottom, 10, 10, "\u25b6"));
 
-        allWidgetsButton = new GuiButtonSpecial(8, xStart + xRight + 22, yStart + yBottom - 16, 10, 10, "\u25e4");
-        allWidgetsButton.setTooltipText(I18n.format("gui.programmer.button.openPanel.tooltip"));
-        addWidget(allWidgetsButton);
+        this.allWidgetsButton = new GuiButtonSpecial(8, xStart + xRight + 22, yStart + yBottom - 16, 10, 10, "\u25e4");
+        this.allWidgetsButton.setTooltipText(I18n.format("gui.programmer.button.openPanel.tooltip"));
+        this.addWidget(this.allWidgetsButton);
 
-        difficultyButtons = new ArrayList<>();
+        this.difficultyButtons = new ArrayList<>();
         for (int i = 0; i < IProgWidget.WidgetDifficulty.values().length; i++) {
             GuiRadioButton radioButton = new GuiRadioButton(i, xStart + xRight - 36, yStart + yBottom + 29 + i * 12, 0xFF404040, IProgWidget.WidgetDifficulty.values()[i].getLocalizedName());
             radioButton.checked = ConfigHandler.getProgrammerDifficulty() == i;
-            addWidget(radioButton);
-            difficultyButtons.add(radioButton);
-            radioButton.otherChoices = difficultyButtons;
+            this.addWidget(radioButton);
+            this.difficultyButtons.add(radioButton);
+            radioButton.otherChoices = this.difficultyButtons;
             if (i == 1) radioButton.setTooltip(I18n.format("gui.programmer.difficulty.medium.tooltip"));
             if (i == 2) radioButton.setTooltip(I18n.format("gui.programmer.difficulty.advanced.tooltip"));
         }
 
-        buttonList.add(new GuiButtonExt(5, xStart + 5, yStart + yBottom + 4, 87, 20, I18n.format("gui.programmer.button.showStart")));
-        buttonList.add(new GuiButtonExt(6, xStart + 5, yStart + yBottom + 26, 87, 20, I18n.format("gui.programmer.button.showLatest")));
-        addWidget(showInfo = new GuiCheckBox(-1, xStart + 5, yStart + yBottom + 49, 0xFF404040, "gui.programmer.checkbox.showInfo").setChecked(te.showInfo));
-        addWidget(showFlow = new GuiCheckBox(-1, xStart + 5, yStart + yBottom + 61, 0xFF404040, "gui.programmer.checkbox.showFlow").setChecked(te.showFlow));
+        this.buttonList.add(new GuiButtonExt(5, xStart + 5, yStart + yBottom + 4, 87, 20, I18n.format("gui.programmer.button.showStart")));
+        this.buttonList.add(new GuiButtonExt(6, xStart + 5, yStart + yBottom + 26, 87, 20, I18n.format("gui.programmer.button.showLatest")));
+        this.addWidget(this.showInfo = new GuiCheckBox(-1, xStart + 5, yStart + yBottom + 49, 0xFF404040, "gui.programmer.checkbox.showInfo").setChecked(this.te.showInfo));
+        this.addWidget(this.showFlow = new GuiCheckBox(-1, xStart + 5, yStart + yBottom + 61, 0xFF404040, "gui.programmer.checkbox.showFlow").setChecked(this.te.showFlow));
 
-        GuiButtonSpecial pastebinButton = new GuiButtonSpecial(7, guiLeft - 24, guiTop + 44, 20, 20, "");
+        GuiButtonSpecial pastebinButton = new GuiButtonSpecial(7, this.guiLeft - 24, this.guiTop + 44, 20, 20, "");
         pastebinButton.setTooltipText(I18n.format("gui.remote.button.pastebinButton"));
         pastebinButton.setRenderedIcon(Textures.GUI_PASTEBIN_ICON_LOCATION);
-        buttonList.add(pastebinButton);
+        this.buttonList.add(pastebinButton);
 
-        undoButton = new GuiButtonSpecial(9, guiLeft - 24, guiTop + 2, 20, 20, "");
-        redoButton = new GuiButtonSpecial(10, guiLeft - 24, guiTop + 23, 20, 20, "");
-        GuiButtonSpecial clearAllButton = new GuiButtonSpecial(11, guiLeft - 24, guiTop + 65, 20, 20, "");
-        convertToRelativeButton = new GuiButtonSpecial(12, guiLeft - 24, guiTop + 86, 20, 20, "Rel");
+        this.undoButton = new GuiButtonSpecial(9, this.guiLeft - 24, this.guiTop + 2, 20, 20, "");
+        this.redoButton = new GuiButtonSpecial(10, this.guiLeft - 24, this.guiTop + 23, 20, 20, "");
+        GuiButtonSpecial clearAllButton = new GuiButtonSpecial(11, this.guiLeft - 24, this.guiTop + 65, 20, 20, "");
+        this.convertToRelativeButton = new GuiButtonSpecial(12, this.guiLeft - 24, this.guiTop + 86, 20, 20, "Rel");
 
-        undoButton.setRenderedIcon(Textures.GUI_UNDO_ICON_LOCATION);
-        redoButton.setRenderedIcon(Textures.GUI_REDO_ICON_LOCATION);
+        this.undoButton.setRenderedIcon(Textures.GUI_UNDO_ICON_LOCATION);
+        this.redoButton.setRenderedIcon(Textures.GUI_REDO_ICON_LOCATION);
         clearAllButton.setRenderedIcon(Textures.GUI_DELETE_ICON_LOCATION);
 
-        undoButton.setTooltipText(I18n.format("gui.programmer.button.undoButton.tooltip"));
-        redoButton.setTooltipText(I18n.format("gui.programmer.button.redoButton.tooltip"));
+        this.undoButton.setTooltipText(I18n.format("gui.programmer.button.undoButton.tooltip"));
+        this.redoButton.setTooltipText(I18n.format("gui.programmer.button.redoButton.tooltip"));
         clearAllButton.setTooltipText(I18n.format("gui.programmer.button.clearAllButton.tooltip"));
 
-        buttonList.add(undoButton);
-        buttonList.add(redoButton);
-        buttonList.add(clearAllButton);
-        buttonList.add(convertToRelativeButton);
+        this.buttonList.add(this.undoButton);
+        this.buttonList.add(this.redoButton);
+        this.buttonList.add(clearAllButton);
+        this.buttonList.add(this.convertToRelativeButton);
 
-        String containerName = I18n.format(te.getName() + ".name");
-        addLabel(containerName, guiLeft + 7, guiTop + 5, 0xFF404040);
+        String containerName = I18n.format(this.te.getName() + ".name");
+        this.addLabel(containerName, this.guiLeft + 7, this.guiTop + 5, 0xFF404040);
 
-        nameField = new WidgetTextField(fontRenderer, guiLeft + xRight - 99, guiTop + 5, 98, fontRenderer.FONT_HEIGHT);
-        addWidget(nameField);
+        this.nameField = new WidgetTextField(this.fontRenderer, this.guiLeft + xRight - 99, this.guiTop + 5, 98, this.fontRenderer.FONT_HEIGHT);
+        this.addWidget(this.nameField);
 
-        filterField = new FilterTextField(fontRenderer, guiLeft + 78, guiTop + 26, 100, fontRenderer.FONT_HEIGHT);
-        filterField.setListener(this);
+        this.filterField = new FilterTextField(this.fontRenderer, this.guiLeft + 78, this.guiTop + 26, 100, this.fontRenderer.FONT_HEIGHT);
+        this.filterField.setListener(this);
 
-        addWidget(filterField);
+        this.addWidget(this.filterField);
 
         String name = I18n.format("gui.programmer.name");
-        addLabel(name, guiLeft + xRight - 102 - fontRenderer.getStringWidth(name), guiTop + 5, 0xFF404040);
+        this.addLabel(name, this.guiLeft + xRight - 102 - this.fontRenderer.getStringWidth(name), this.guiTop + 5, 0xFF404040);
 
-        updateVisibleProgWidgets();
+        this.updateVisibleProgWidgets();
 
-        for (IProgWidget widget : te.progWidgets) {
-            if (!programmerUnit.isOutsideProgrammingArea(widget)) {
+        for (IProgWidget widget : this.te.progWidgets) {
+            if (!this.programmerUnit.isOutsideProgrammingArea(widget)) {
                 return;
             }
         }
-        programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
+        this.programmerUnit.gotoPiece(findWidget(this.te.progWidgets, ProgWidgetStart.class));
     }
 
     @Override
@@ -311,28 +311,28 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        int xRight = getProgrammerBounds().x + getProgrammerBounds().width; // 299 or 649
-        int yBottom = getProgrammerBounds().y + getProgrammerBounds().height; // 171 or 427
+        int xRight = this.getProgrammerBounds().x + this.getProgrammerBounds().width; // 299 or 649
+        int yBottom = this.getProgrammerBounds().y + this.getProgrammerBounds().height; // 171 or 427
 
-        String str = widgetPage + 1 + "/" + maxPage;
-        fontRenderer.drawString(str, xRight + (22 - fontRenderer.getStringWidth(str) / 2), yBottom + 4, 0xFF404040);
-        fontRenderer.drawString(I18n.format("gui.programmer.difficulty"), xRight - 36, yBottom + 20, 0xFF404040);
+        String str = this.widgetPage + 1 + "/" + this.maxPage;
+        this.fontRenderer.drawString(str, xRight + (22 - this.fontRenderer.getStringWidth(str) / 2), yBottom + 4, 0xFF404040);
+        this.fontRenderer.drawString(I18n.format("gui.programmer.difficulty"), xRight - 36, yBottom + 20, 0xFF404040);
 
-        if (showingWidgetProgress == 0) {
-            programmerUnit.renderForeground(x, y, draggingWidget);
+        if (this.showingWidgetProgress == 0) {
+            this.programmerUnit.renderForeground(x, y, this.draggingWidget);
         }
 
-        for (int i = 0; i < visibleSpawnWidgets.size(); i++) {
-            IProgWidget widget = visibleSpawnWidgets.get(i);
-            if (widget != draggingWidget && x - guiLeft >= widget.getX()
-                    && y - guiTop >= widget.getY() && x - guiLeft <= widget.getX() + widget.getWidth() / 2
-                    && y - guiTop <= widget.getY() + widget.getHeight() / 2
-                    && (!showingAllWidgets || filteredSpawnWidgets == null || filteredSpawnWidgets.get(i))) {
+        for (int i = 0; i < this.visibleSpawnWidgets.size(); i++) {
+            IProgWidget widget = this.visibleSpawnWidgets.get(i);
+            if (widget != this.draggingWidget && x - this.guiLeft >= widget.getX()
+                    && y - this.guiTop >= widget.getY() && x - this.guiLeft <= widget.getX() + widget.getWidth() / 2
+                    && y - this.guiTop <= widget.getY() + widget.getHeight() / 2
+                    && (!this.showingAllWidgets || this.filteredSpawnWidgets == null || this.filteredSpawnWidgets.get(i))) {
                 List<String> tooltip = new ArrayList<>();
                 widget.getTooltip(tooltip);
-                ThirdPartyManager.instance().docsProvider.addTooltip(tooltip, showingAllWidgets);
+                ThirdPartyManager.instance().docsProvider.addTooltip(tooltip, this.showingAllWidgets);
                 if (!tooltip.isEmpty()) {
-                    drawHoveringString(tooltip, x - guiLeft, y - guiTop, fontRenderer);
+                    this.drawHoveringString(tooltip, x - this.guiLeft, y - this.guiTop, this.fontRenderer);
                 }
             }
         }
@@ -343,45 +343,45 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     protected void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
 
-        if (nameField.isFocused() || filterField.isFocused() && keyCode != Keyboard.KEY_TAB) {
+        if (this.nameField.isFocused() || this.filterField.isFocused() && keyCode != Keyboard.KEY_TAB) {
             return;
         }
 
         if (Keyboard.KEY_I == keyCode) {
-            showWidgetDocs();
+            this.showWidgetDocs();
         }
         if (Keyboard.KEY_R == keyCode) {
-            if (exportButton.getBounds().contains(lastMouseX, lastMouseY)) {
+            if (this.exportButton.getBounds().contains(this.lastMouseX, this.lastMouseY)) {
                 NetworkHandler.sendToServer(new PacketGuiButton(0));
             }
         }
         if (Keyboard.KEY_SPACE == keyCode || Keyboard.KEY_TAB == keyCode) {
-            toggleShowWidgets();
+            this.toggleShowWidgets();
         }
         if (Keyboard.KEY_DELETE == keyCode) {
-            IProgWidget widget = programmerUnit.getHoveredWidget(lastMouseX, lastMouseY);
+            IProgWidget widget = this.programmerUnit.getHoveredWidget(this.lastMouseX, this.lastMouseY);
             if (widget != null) {
-                te.progWidgets.remove(widget);
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+                this.te.progWidgets.remove(widget);
+                NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.te));
             }
         }
         if (Keyboard.KEY_Z == keyCode) {
-            NetworkHandler.sendToServer(new PacketGuiButton(undoButton.id));
+            NetworkHandler.sendToServer(new PacketGuiButton(this.undoButton.id));
         }
         if (Keyboard.KEY_Y == keyCode) {
-            NetworkHandler.sendToServer(new PacketGuiButton(redoButton.id));
+            NetworkHandler.sendToServer(new PacketGuiButton(this.redoButton.id));
         }
     }
 
     private void showWidgetDocs() {
-        int x = lastMouseX;
-        int y = lastMouseY;
+        int x = this.lastMouseX;
+        int y = this.lastMouseY;
 
-        IProgWidget hoveredWidget = programmerUnit.getHoveredWidget(x, y);
-        ThirdPartyManager.instance().docsProvider.showWidgetDocs(getWidgetId(hoveredWidget));
-        for (IProgWidget widget : visibleSpawnWidgets) {
-            if (widget != draggingWidget && x - guiLeft >= widget.getX() && y - guiTop >= widget.getY() && x - guiLeft <= widget.getX() + widget.getWidth() / 2 && y - guiTop <= widget.getY() + widget.getHeight() / 2) {
-                ThirdPartyManager.instance().docsProvider.showWidgetDocs(getWidgetId(widget));
+        IProgWidget hoveredWidget = this.programmerUnit.getHoveredWidget(x, y);
+        ThirdPartyManager.instance().docsProvider.showWidgetDocs(this.getWidgetId(hoveredWidget));
+        for (IProgWidget widget : this.visibleSpawnWidgets) {
+            if (widget != this.draggingWidget && x - this.guiLeft >= widget.getX() && y - this.guiTop >= widget.getY() && x - this.guiLeft <= widget.getX() + widget.getWidth() / 2 && y - this.guiTop <= widget.getY() + widget.getHeight() / 2) {
+                ThirdPartyManager.instance().docsProvider.showWidgetDocs(this.getWidgetId(widget));
                 break;
             }
         }
@@ -400,49 +400,49 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int x, int y) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        drawDefaultBackground();
-        bindGuiTexture();
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        drawModalRectWithCustomSizedTexture(xStart, yStart, 0, 0, xSize, ySize, xSize, ySize);
+        this.drawDefaultBackground();
+        this.bindGuiTexture();
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        drawModalRectWithCustomSizedTexture(xStart, yStart, 0, 0, this.xSize, this.ySize, this.xSize, this.ySize);
 
-        programmerUnit.getScrollBar().setEnabled(showingWidgetProgress == 0);
+        this.programmerUnit.getScrollBar().setEnabled(this.showingWidgetProgress == 0);
         super.drawGuiContainerBackgroundLayer(partialTicks, x, y);
-        if (showingWidgetProgress > 0) programmerUnit.getScrollBar().setCurrentState(programmerUnit.getLastZoom());
+        if (this.showingWidgetProgress > 0) this.programmerUnit.getScrollBar().setCurrentState(this.programmerUnit.getLastZoom());
 
-        programmerUnit.render(x, y, showFlow.checked, showInfo.checked && showingWidgetProgress == 0, draggingWidget == null);
+        this.programmerUnit.render(x, y, this.showFlow.checked, this.showInfo.checked && this.showingWidgetProgress == 0, this.draggingWidget == null);
 
         int origX = x;
         int origY = y;
-        x -= programmerUnit.getTranslatedX();
-        y -= programmerUnit.getTranslatedY();
-        float scale = programmerUnit.getScale();
+        x -= this.programmerUnit.getTranslatedX();
+        y -= this.programmerUnit.getTranslatedY();
+        float scale = this.programmerUnit.getScale();
         x = (int) (x / scale);
         y = (int) (y / scale);
 
-        if (showingWidgetProgress > 0) {
-            int xRight = getProgrammerBounds().x + getProgrammerBounds().width; // 299 or 649
-            int yBottom = getProgrammerBounds().y + getProgrammerBounds().height; // 171 or 427
+        if (this.showingWidgetProgress > 0) {
+            int xRight = this.getProgrammerBounds().x + this.getProgrammerBounds().width; // 299 or 649
+            int yBottom = this.getProgrammerBounds().y + this.getProgrammerBounds().height; // 171 or 427
 
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            bindGuiTexture();
-            int width = oldShowingWidgetProgress + (int) ((showingWidgetProgress - oldShowingWidgetProgress) * partialTicks);
+            this.bindGuiTexture();
+            int width = this.oldShowingWidgetProgress + (int) ((this.showingWidgetProgress - this.oldShowingWidgetProgress) * partialTicks);
             for (int i = 0; i < width; i++) {
-                drawModalRectWithCustomSizedTexture(xStart + xRight + 21 - i, yStart + 36, xRight + 24, 36, 1, yBottom - 35, xSize, ySize);
+                drawModalRectWithCustomSizedTexture(xStart + xRight + 21 - i, yStart + 36, xRight + 24, 36, 1, yBottom - 35, this.xSize, this.ySize);
             }
-            drawModalRectWithCustomSizedTexture(xStart + xRight + 20 - width, yStart + 36, xRight + 20, 36, 2, yBottom - 35, xSize, ySize);
+            drawModalRectWithCustomSizedTexture(xStart + xRight + 20 - width, yStart + 36, xRight + 20, 36, 2, yBottom - 35, this.xSize, this.ySize);
 
-            if (showingAllWidgets && draggingWidget != null) toggleShowWidgets();
+            if (this.showingAllWidgets && this.draggingWidget != null) this.toggleShowWidgets();
         }
         GlStateManager.enableTexture2D();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        for (int i = 0; i < visibleSpawnWidgets.size(); i++) {
-            IProgWidget widget = visibleSpawnWidgets.get(i);
+        for (int i = 0; i < this.visibleSpawnWidgets.size(); i++) {
+            IProgWidget widget = this.visibleSpawnWidgets.get(i);
             GlStateManager.pushMatrix();
-            GlStateManager.translate(widget.getX() + guiLeft, widget.getY() + guiTop, 0);
+            GlStateManager.translate(widget.getX() + this.guiLeft, widget.getY() + this.guiTop, 0);
             GlStateManager.scale(0.5, 0.5, 1);
-            if (showingAllWidgets && filteredSpawnWidgets != null && !filteredSpawnWidgets.get(i)) {
+            if (this.showingAllWidgets && this.filteredSpawnWidgets != null && !this.filteredSpawnWidgets.get(i)) {
                 GlStateManager.color(1, 1, 1, 0.2f);
             } else {
                 GlStateManager.color(1, 1, 1, 1);
@@ -453,13 +453,13 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         GlStateManager.disableBlend();
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(programmerUnit.getTranslatedX(), programmerUnit.getTranslatedY(), 0);
+        GlStateManager.translate(this.programmerUnit.getTranslatedX(), this.programmerUnit.getTranslatedY(), 0);
         GlStateManager.scale(scale, scale, 1);
-        if (draggingWidget != null) {
+        if (this.draggingWidget != null) {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(draggingWidget.getX() + guiLeft, draggingWidget.getY() + guiTop, 0);
+            GlStateManager.translate(this.draggingWidget.getX() + this.guiLeft, this.draggingWidget.getY() + this.guiTop, 0);
             GlStateManager.scale(0.5, 0.5, 1);
-            draggingWidget.render();
+            this.draggingWidget.render();
             GlStateManager.popMatrix();
         }
         GlStateManager.popMatrix();
@@ -467,36 +467,36 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         boolean isLeftClicking = Mouse.isButtonDown(0);
         boolean isMiddleClicking = GameSettings.isKeyDown(Minecraft.getMinecraft().gameSettings.keyBindPickBlock);
 
-        if (draggingWidget != null) {
-            setConnectingWidgetsToXY(draggingWidget, x - dragMouseStartX + dragWidgetStartX - guiLeft, y - dragMouseStartY + dragWidgetStartY - guiTop);
+        if (this.draggingWidget != null) {
+            this.setConnectingWidgetsToXY(this.draggingWidget, x - this.dragMouseStartX + this.dragWidgetStartX - this.guiLeft, y - this.dragMouseStartY + this.dragWidgetStartY - this.guiTop);
         }
 
-        if (isLeftClicking && !wasClicking) {
-            for (IProgWidget widget : visibleSpawnWidgets) {
-                if (origX >= widget.getX() + guiLeft && origY >= widget.getY() + guiTop && origX <= widget.getX() + guiLeft + widget.getWidth() / 2 && origY <= widget.getY() + guiTop + widget.getHeight() / 2) {
-                    draggingWidget = widget.copy();
-                    te.progWidgets.add(draggingWidget);
-                    dragMouseStartX = x - (int) (guiLeft / scale);
-                    dragMouseStartY = y - (int) (guiTop / scale);
-                    dragWidgetStartX = (int) ((widget.getX() - programmerUnit.getTranslatedX()) / scale);
-                    dragWidgetStartY = (int) ((widget.getY() - programmerUnit.getTranslatedY()) / scale);
+        if (isLeftClicking && !this.wasClicking) {
+            for (IProgWidget widget : this.visibleSpawnWidgets) {
+                if (origX >= widget.getX() + this.guiLeft && origY >= widget.getY() + this.guiTop && origX <= widget.getX() + this.guiLeft + widget.getWidth() / 2 && origY <= widget.getY() + this.guiTop + widget.getHeight() / 2) {
+                    this.draggingWidget = widget.copy();
+                    this.te.progWidgets.add(this.draggingWidget);
+                    this.dragMouseStartX = x - (int) (this.guiLeft / scale);
+                    this.dragMouseStartY = y - (int) (this.guiTop / scale);
+                    this.dragWidgetStartX = (int) ((widget.getX() - this.programmerUnit.getTranslatedX()) / scale);
+                    this.dragWidgetStartY = (int) ((widget.getY() - this.programmerUnit.getTranslatedY()) / scale);
                     break;
                 }
             }
-            
+
             // create area widgets straight from GPS Area Tools
-            ItemStack heldItem = mc.player.inventory.getItemStack();
+            ItemStack heldItem = this.mc.player.inventory.getItemStack();
             ProgWidgetArea areaToolWidget = heldItem.getItem() instanceof ItemGPSAreaTool ? ItemGPSAreaTool.getArea(heldItem) : null;
 
-            if (draggingWidget == null && showingWidgetProgress == 0) {
-                IProgWidget widget = programmerUnit.getHoveredWidget(origX, origY);
+            if (this.draggingWidget == null && this.showingWidgetProgress == 0) {
+                IProgWidget widget = this.programmerUnit.getHoveredWidget(origX, origY);
                 if (widget != null) {
-                    draggingWidget = widget;
-                    dragMouseStartX = x - guiLeft;
-                    dragMouseStartY = y - guiTop;
-                    dragWidgetStartX = widget.getX();
-                    dragWidgetStartY = widget.getY();
-                    
+                    this.draggingWidget = widget;
+                    this.dragMouseStartX = x - this.guiLeft;
+                    this.dragMouseStartY = y - this.guiTop;
+                    this.dragWidgetStartX = widget.getX();
+                    this.dragWidgetStartY = widget.getY();
+
                     if (areaToolWidget != null && widget instanceof ProgWidgetArea) {
                         NBTTagCompound tag = new NBTTagCompound();
                         areaToolWidget.writeToNBT(tag);
@@ -517,72 +517,73 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             }
 
             // Create a new widget from a GPS Area tool when nothing was selected
-            if (draggingWidget == null) {
+            if (this.draggingWidget == null) {
                 if (areaToolWidget != null) {
-                    draggingWidget = areaToolWidget;
+                    this.draggingWidget = areaToolWidget;
                 } else if (heldItem.getItem() == Itemss.GPS_TOOL) {
                     if (PneumaticCraftRepressurized.proxy.isSneakingInGui()) {
                         BlockPos pos = ItemGPSTool.getGPSLocation(heldItem);
                         ProgWidgetArea areaWidget = ProgWidgetArea.fromPositions(pos, BlockPos.ORIGIN);
                         String var = ItemGPSTool.getVariable(heldItem);
                         if (!var.isEmpty()) areaWidget.setCoord1Variable(var);
-                        draggingWidget = areaWidget;
+                        this.draggingWidget = areaWidget;
                     } else {
                         ProgWidgetCoordinate coordWidget = new ProgWidgetCoordinate();
-                        draggingWidget = coordWidget;
+                        this.draggingWidget = coordWidget;
                         coordWidget.loadFromGPSTool(heldItem);
                     }
                 }
 
-                if (draggingWidget != null) {
-                    draggingWidget.setX(Integer.MAX_VALUE);
-                    draggingWidget.setY(Integer.MAX_VALUE);
-                    te.progWidgets.add(draggingWidget);
-                    dragMouseStartX = draggingWidget.getWidth() / 3;
-                    dragMouseStartY = draggingWidget.getHeight() / 4;
-                    dragWidgetStartX = 0;
-                    dragWidgetStartY = 0;
+                if (this.draggingWidget != null) {
+                    this.draggingWidget.setX(Integer.MAX_VALUE);
+                    this.draggingWidget.setY(Integer.MAX_VALUE);
+                    this.te.progWidgets.add(this.draggingWidget);
+                    this.dragMouseStartX = this.draggingWidget.getWidth() / 3;
+                    this.dragMouseStartY = this.draggingWidget.getHeight() / 4;
+                    this.dragWidgetStartX = 0;
+                    this.dragWidgetStartY = 0;
                 }
             }
-        } else if (isMiddleClicking && !wasClicking && showingWidgetProgress == 0) {
-            IProgWidget widget = programmerUnit.getHoveredWidget(origX, origY);
+        } else if (isMiddleClicking && !this.wasClicking && this.showingWidgetProgress == 0) {
+            IProgWidget widget = this.programmerUnit.getHoveredWidget(origX, origY);
             if (widget != null) {
-                draggingWidget = widget.copy();
-                te.progWidgets.add(draggingWidget);
-                dragMouseStartX = 0;
-                dragMouseStartY = 0;
-                dragWidgetStartX = widget.getX() - (x - guiLeft);
-                dragWidgetStartY = widget.getY() - (y - guiTop);
-                if (PneumaticCraftRepressurized.proxy.isSneakingInGui()) copyAndConnectConnectingWidgets(widget, draggingWidget);
+                this.draggingWidget = widget.copy();
+                this.te.progWidgets.add(this.draggingWidget);
+                this.dragMouseStartX = 0;
+                this.dragMouseStartY = 0;
+                this.dragWidgetStartX = widget.getX() - (x - this.guiLeft);
+                this.dragWidgetStartY = widget.getY() - (y - this.guiTop);
+                if (PneumaticCraftRepressurized.proxy.isSneakingInGui())
+                    this.copyAndConnectConnectingWidgets(widget, this.draggingWidget);
             }
-        } else if (isMiddleClicking && showingAllWidgets) {
-            showWidgetDocs();
+        } else if (isMiddleClicking && this.showingAllWidgets) {
+            this.showWidgetDocs();
         }
 
-        if (!isLeftClicking && !isMiddleClicking && draggingWidget != null) {
-            if (programmerUnit.isOutsideProgrammingArea(draggingWidget)) {
-                deleteConnectingWidgets(draggingWidget);
+        if (!isLeftClicking && !isMiddleClicking && this.draggingWidget != null) {
+            if (this.programmerUnit.isOutsideProgrammingArea(this.draggingWidget)) {
+                this.deleteConnectingWidgets(this.draggingWidget);
             } else {
-                handlePuzzleMargins();
-                if (!isValidPlaced(draggingWidget)) {
-                    setConnectingWidgetsToXY(draggingWidget, dragWidgetStartX, dragWidgetStartY);
-                    if (programmerUnit.isOutsideProgrammingArea(draggingWidget))
-                        deleteConnectingWidgets(draggingWidget);
+                this.handlePuzzleMargins();
+                if (!this.isValidPlaced(this.draggingWidget)) {
+                    this.setConnectingWidgetsToXY(this.draggingWidget, this.dragWidgetStartX, this.dragWidgetStartY);
+                    if (this.programmerUnit.isOutsideProgrammingArea(this.draggingWidget))
+                        this.deleteConnectingWidgets(this.draggingWidget);
                 }
             }
-            NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
-            TileEntityProgrammer.updatePuzzleConnections(te.progWidgets);
+            NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.te));
+            TileEntityProgrammer.updatePuzzleConnections(this.te.progWidgets);
 
-            draggingWidget = null;
+            this.draggingWidget = null;
         }
-        wasClicking = isLeftClicking || isMiddleClicking;
-        lastMouseX = origX;
-        lastMouseY = origY;
+        this.wasClicking = isLeftClicking || isMiddleClicking;
+        this.lastMouseX = origX;
+        this.lastMouseY = origY;
     }
 
     private boolean isValidPlaced(IProgWidget widget1) {
         Rectangle draggingRect = new Rectangle(widget1.getX(), widget1.getY(), widget1.getWidth() / 2, widget1.getHeight() / 2);
-        for (IProgWidget widget : te.progWidgets) {
+        for (IProgWidget widget : this.te.progWidgets) {
             if (widget != widget1) {
                 if (draggingRect.intersects(widget.getX(), widget.getY(), widget.getWidth() / 2.0, widget.getHeight() / 2.0)) {
                     return false;
@@ -592,24 +593,24 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         IProgWidget[] parameters = widget1.getConnectedParameters();
         if (parameters != null) {
             for (IProgWidget widget : parameters) {
-                if (widget != null && !isValidPlaced(widget)) return false;
+                if (widget != null && !this.isValidPlaced(widget)) return false;
             }
         }
         IProgWidget outputWidget = widget1.getOutputWidget();
-        return !(outputWidget != null && !isValidPlaced(outputWidget));
+        return !(outputWidget != null && !this.isValidPlaced(outputWidget));
     }
 
     private void handlePuzzleMargins() {
         //Check for connection to the left of the dragged widget.
-        Class<? extends IProgWidget> returnValue = draggingWidget.returnType();
+        Class<? extends IProgWidget> returnValue = this.draggingWidget.returnType();
         if (returnValue != null) {
-            for (IProgWidget widget : te.progWidgets) {
-                if (widget != draggingWidget && Math.abs(widget.getX() + widget.getWidth() / 2 - draggingWidget.getX()) <= FAULT_MARGIN) {
+            for (IProgWidget widget : this.te.progWidgets) {
+                if (widget != this.draggingWidget && Math.abs(widget.getX() + widget.getWidth() / 2 - this.draggingWidget.getX()) <= FAULT_MARGIN) {
                     Class<? extends IProgWidget>[] parameters = widget.getParameters();
                     if (parameters != null) {
                         for (int i = 0; i < parameters.length; i++) {
-                            if (widget.canSetParameter(i) && parameters[i] == returnValue && Math.abs(widget.getY() + i * 11 - draggingWidget.getY()) <= FAULT_MARGIN) {
-                                setConnectingWidgetsToXY(draggingWidget, widget.getX() + widget.getWidth() / 2, widget.getY() + i * 11);
+                            if (widget.canSetParameter(i) && parameters[i] == returnValue && Math.abs(widget.getY() + i * 11 - this.draggingWidget.getY()) <= FAULT_MARGIN) {
+                                this.setConnectingWidgetsToXY(this.draggingWidget, widget.getX() + widget.getWidth() / 2, widget.getY() + i * 11);
                                 return;
                             }
                         }
@@ -619,28 +620,28 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         }
 
         //check for connection to the right of the dragged widget.
-        Class<? extends IProgWidget>[] parameters = draggingWidget.getParameters();
+        Class<? extends IProgWidget>[] parameters = this.draggingWidget.getParameters();
         if (parameters != null) {
-            for (IProgWidget widget : te.progWidgets) {
-                IProgWidget outerPiece = draggingWidget;
+            for (IProgWidget widget : this.te.progWidgets) {
+                IProgWidget outerPiece = this.draggingWidget;
                 if (outerPiece.returnType() != null) {//When the piece is a parameter pice (area, item filter, text).
                     while (outerPiece.getConnectedParameters()[0] != null) {
                         outerPiece = outerPiece.getConnectedParameters()[0];
                     }
                 }
-                if (widget != draggingWidget && Math.abs(outerPiece.getX() + outerPiece.getWidth() / 2 - widget.getX()) <= FAULT_MARGIN) {
+                if (widget != this.draggingWidget && Math.abs(outerPiece.getX() + outerPiece.getWidth() / 2 - widget.getX()) <= FAULT_MARGIN) {
                     if (widget.returnType() != null) {
                         for (int i = 0; i < parameters.length; i++) {
-                            if (draggingWidget.canSetParameter(i) && parameters[i] == widget.returnType() && Math.abs(draggingWidget.getY() + i * 11 - widget.getY()) <= FAULT_MARGIN) {
-                                setConnectingWidgetsToXY(draggingWidget, widget.getX() - draggingWidget.getWidth() / 2 - (outerPiece.getX() - draggingWidget.getX()), widget.getY() - i * 11);
+                            if (this.draggingWidget.canSetParameter(i) && parameters[i] == widget.returnType() && Math.abs(this.draggingWidget.getY() + i * 11 - widget.getY()) <= FAULT_MARGIN) {
+                                this.setConnectingWidgetsToXY(this.draggingWidget, widget.getX() - this.draggingWidget.getWidth() / 2 - (outerPiece.getX() - this.draggingWidget.getX()), widget.getY() - i * 11);
                             }
                         }
                     } else {
                         Class<? extends IProgWidget>[] checkingPieceParms = widget.getParameters();
                         if (checkingPieceParms != null) {
                             for (int i = 0; i < checkingPieceParms.length; i++) {
-                                if (widget.canSetParameter(i + parameters.length) && checkingPieceParms[i] == parameters[0] && Math.abs(widget.getY() + i * 11 - draggingWidget.getY()) <= FAULT_MARGIN) {
-                                    setConnectingWidgetsToXY(draggingWidget, widget.getX() - draggingWidget.getWidth() / 2 - (outerPiece.getX() - draggingWidget.getX()), widget.getY() + i * 11);
+                                if (widget.canSetParameter(i + parameters.length) && checkingPieceParms[i] == parameters[0] && Math.abs(widget.getY() + i * 11 - this.draggingWidget.getY()) <= FAULT_MARGIN) {
+                                    this.setConnectingWidgetsToXY(this.draggingWidget, widget.getX() - this.draggingWidget.getWidth() / 2 - (outerPiece.getX() - this.draggingWidget.getX()), widget.getY() + i * 11);
                                 }
                             }
                         }
@@ -650,19 +651,19 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         }
 
         //check for connection to the top of the dragged widget.
-        if (draggingWidget.hasStepInput()) {
-            for (IProgWidget widget : te.progWidgets) {
-                if (widget.hasStepOutput() && Math.abs(widget.getX() - draggingWidget.getX()) <= FAULT_MARGIN && Math.abs(widget.getY() + widget.getHeight() / 2 - draggingWidget.getY()) <= FAULT_MARGIN) {
-                    setConnectingWidgetsToXY(draggingWidget, widget.getX(), widget.getY() + widget.getHeight() / 2);
+        if (this.draggingWidget.hasStepInput()) {
+            for (IProgWidget widget : this.te.progWidgets) {
+                if (widget.hasStepOutput() && Math.abs(widget.getX() - this.draggingWidget.getX()) <= FAULT_MARGIN && Math.abs(widget.getY() + widget.getHeight() / 2 - this.draggingWidget.getY()) <= FAULT_MARGIN) {
+                    this.setConnectingWidgetsToXY(this.draggingWidget, widget.getX(), widget.getY() + widget.getHeight() / 2);
                 }
             }
         }
 
         //check for connection to the bottom of the dragged widget.
-        if (draggingWidget.hasStepOutput()) {
-            for (IProgWidget widget : te.progWidgets) {
-                if (widget.hasStepInput() && Math.abs(widget.getX() - draggingWidget.getX()) <= FAULT_MARGIN && Math.abs(widget.getY() - draggingWidget.getY() - draggingWidget.getHeight() / 2) <= FAULT_MARGIN) {
-                    setConnectingWidgetsToXY(draggingWidget, widget.getX(), widget.getY() - draggingWidget.getHeight() / 2);
+        if (this.draggingWidget.hasStepOutput()) {
+            for (IProgWidget widget : this.te.progWidgets) {
+                if (widget.hasStepInput() && Math.abs(widget.getX() - this.draggingWidget.getX()) <= FAULT_MARGIN && Math.abs(widget.getY() - this.draggingWidget.getY() - this.draggingWidget.getHeight() / 2) <= FAULT_MARGIN) {
+                    this.setConnectingWidgetsToXY(this.draggingWidget, widget.getX(), widget.getY() - this.draggingWidget.getHeight() / 2);
                 }
             }
         }
@@ -676,7 +677,7 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             for (int i = 0; i < connectingWidgets.length; i++) {
                 if (connectingWidgets[i] != null) {
                     if (i < connectingWidgets.length / 2) {
-                        setConnectingWidgetsToXY(connectingWidgets[i], x + widget.getWidth() / 2, y + i * 11);
+                        this.setConnectingWidgetsToXY(connectingWidgets[i], x + widget.getWidth() / 2, y + i * 11);
                     } else {
                         int totalWidth = 0;
                         IProgWidget branch = connectingWidgets[i];
@@ -684,13 +685,13 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                             totalWidth += branch.getWidth() / 2;
                             branch = branch.getConnectedParameters()[0];
                         }
-                        setConnectingWidgetsToXY(connectingWidgets[i], x - totalWidth, y + (i - connectingWidgets.length / 2) * 11);
+                        this.setConnectingWidgetsToXY(connectingWidgets[i], x - totalWidth, y + (i - connectingWidgets.length / 2) * 11);
                     }
                 }
             }
         }
         IProgWidget outputWidget = widget.getOutputWidget();
-        if (outputWidget != null) setConnectingWidgetsToXY(outputWidget, x, y + widget.getHeight() / 2);
+        if (outputWidget != null) this.setConnectingWidgetsToXY(outputWidget, x, y + widget.getHeight() / 2);
     }
 
     private void copyAndConnectConnectingWidgets(IProgWidget original, IProgWidget copy) {
@@ -699,31 +700,31 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             for (int i = 0; i < connectingWidgets.length; i++) {
                 if (connectingWidgets[i] != null) {
                     IProgWidget c = connectingWidgets[i].copy();
-                    te.progWidgets.add(c);
+                    this.te.progWidgets.add(c);
                     copy.setParameter(i, c);
-                    copyAndConnectConnectingWidgets(connectingWidgets[i], c);
+                    this.copyAndConnectConnectingWidgets(connectingWidgets[i], c);
                 }
             }
         }
         IProgWidget outputWidget = original.getOutputWidget();
         if (outputWidget != null) {
             IProgWidget c = outputWidget.copy();
-            te.progWidgets.add(c);
+            this.te.progWidgets.add(c);
             copy.setOutputWidget(c);
-            copyAndConnectConnectingWidgets(outputWidget, c);
+            this.copyAndConnectConnectingWidgets(outputWidget, c);
         }
     }
 
     private void deleteConnectingWidgets(IProgWidget widget) {
-        te.progWidgets.remove(widget);
+        this.te.progWidgets.remove(widget);
         IProgWidget[] connectingWidgets = widget.getConnectedParameters();
         if (connectingWidgets != null) {
             for (IProgWidget widg : connectingWidgets) {
-                if (widg != null) deleteConnectingWidgets(widg);
+                if (widg != null) this.deleteConnectingWidgets(widg);
             }
         }
         IProgWidget outputWidget = widget.getOutputWidget();
-        if (outputWidget != null) deleteConnectingWidgets(outputWidget);
+        if (outputWidget != null) this.deleteConnectingWidgets(outputWidget);
     }
 
     /**
@@ -737,34 +738,34 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                 //          redstoneBehaviourStat.closeWindow();
                 break;
             case 3:
-                if (--widgetPage < 0) widgetPage = maxPage - 1;
-                updateVisibleProgWidgets();
+                if (--this.widgetPage < 0) this.widgetPage = this.maxPage - 1;
+                this.updateVisibleProgWidgets();
                 return;
             case 4:
-                if (++widgetPage >= maxPage) widgetPage = 0;
-                updateVisibleProgWidgets();
+                if (++this.widgetPage >= this.maxPage) this.widgetPage = 0;
+                this.updateVisibleProgWidgets();
                 return;
             case 5:
-                programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
+                this.programmerUnit.gotoPiece(findWidget(this.te.progWidgets, ProgWidgetStart.class));
                 return;
             case 6:
-                if (te.progWidgets.size() > 0) {
-                    programmerUnit.gotoPiece(te.progWidgets.get(te.progWidgets.size() - 1));
+                if (this.te.progWidgets.size() > 0) {
+                    this.programmerUnit.gotoPiece(this.te.progWidgets.get(this.te.progWidgets.size() - 1));
                 }
                 return;
             case 7:
                 NBTTagCompound mainTag = new NBTTagCompound();
-                te.writeProgWidgetsToNBT(mainTag);
-                FMLClientHandler.instance().showGuiScreen(pastebinGui = new GuiPastebin(this, mainTag));
+                this.te.writeProgWidgetsToNBT(mainTag);
+                FMLClientHandler.instance().showGuiScreen(this.pastebinGui = new GuiPastebin(this, mainTag));
                 break;
             case 11:
-                te.progWidgets.clear();
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
+                this.te.progWidgets.clear();
+                NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.te));
                 break;
             case 12:
-                for (IProgWidget widget : te.progWidgets) {
+                for (IProgWidget widget : this.te.progWidgets) {
                     if (widget instanceof ProgWidgetStart) {
-                        generateRelativeOperators((ProgWidgetCoordinateOperator) widget.getOutputWidget(), null, false);
+                        this.generateRelativeOperators((ProgWidgetCoordinateOperator) widget.getOutputWidget(), null, false);
                         break;
                     }
                 }
@@ -775,28 +776,28 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     }
 
     private void toggleShowWidgets() {
-        showingAllWidgets = !showingAllWidgets;
-        allWidgetsButton.displayString = showingAllWidgets ? "\u25e2" : "\u25e4";
-        updateVisibleProgWidgets();
-        filterField.setFocused(showingAllWidgets);
+        this.showingAllWidgets = !this.showingAllWidgets;
+        this.allWidgetsButton.displayString = this.showingAllWidgets ? "\u25e2" : "\u25e4";
+        this.updateVisibleProgWidgets();
+        this.filterField.setFocused(this.showingAllWidgets);
     }
 
     @Override
     public void actionPerformed(IGuiWidget button) {
-        if (button == allWidgetsButton) {
-            toggleShowWidgets();
+        if (button == this.allWidgetsButton) {
+            this.toggleShowWidgets();
         } else {
-            for (int i = 0; i < difficultyButtons.size(); i++) {
-                if (difficultyButtons.get(i).checked) {
+            for (int i = 0; i < this.difficultyButtons.size(); i++) {
+                if (this.difficultyButtons.get(i).checked) {
                     ConfigHandler.setProgrammerDifficulty(i);
                     break;
                 }
             }
-            if (showingAllWidgets && button != programmerUnit.getScrollBar()) {
+            if (this.showingAllWidgets && button != this.programmerUnit.getScrollBar()) {
                 // scrollbar is under the widget area when showingAllWidgets is true...
-                toggleShowWidgets();
+                this.toggleShowWidgets();
             }
-            updateVisibleProgWidgets();
+            this.updateVisibleProgWidgets();
         }
     }
 
@@ -804,69 +805,69 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     public void updateScreen() {
         super.updateScreen();
 
-        if (te.recentreStartPiece) {
-            programmerUnit.gotoPiece(findWidget(te.progWidgets, ProgWidgetStart.class));
-            te.recentreStartPiece = false;
+        if (this.te.recentreStartPiece) {
+            this.programmerUnit.gotoPiece(findWidget(this.te.progWidgets, ProgWidgetStart.class));
+            this.te.recentreStartPiece = false;
         }
 
-        undoButton.enabled = te.canUndo;
-        redoButton.enabled = te.canRedo;
+        this.undoButton.enabled = this.te.canUndo;
+        this.redoButton.enabled = this.te.canRedo;
 
-        updateConvertRelativeState();
+        this.updateConvertRelativeState();
 
-        ItemStack programmedItem = te.getIteminProgrammingSlot();
-        oldShowingWidgetProgress = showingWidgetProgress;
-        if (showingAllWidgets) {
-            int maxProgress = maxPage * WIDGET_X_SPACING;
-            if (showingWidgetProgress < maxProgress) {
-                showingWidgetProgress += 60;
-                if (showingWidgetProgress >= maxProgress) {
-                    showingWidgetProgress = maxProgress;
-                    updateVisibleProgWidgets();
+        ItemStack programmedItem = this.te.getIteminProgrammingSlot();
+        this.oldShowingWidgetProgress = this.showingWidgetProgress;
+        if (this.showingAllWidgets) {
+            int maxProgress = this.maxPage * WIDGET_X_SPACING;
+            if (this.showingWidgetProgress < maxProgress) {
+                this.showingWidgetProgress += 60;
+                if (this.showingWidgetProgress >= maxProgress) {
+                    this.showingWidgetProgress = maxProgress;
+                    this.updateVisibleProgWidgets();
                 }
             }
         } else {
-            showingWidgetProgress -= 60;
-            if (showingWidgetProgress < 0) showingWidgetProgress = 0;
+            this.showingWidgetProgress -= 60;
+            if (this.showingWidgetProgress < 0) this.showingWidgetProgress = 0;
         }
 
         List<String> errors = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
-        for (IProgWidget w : te.progWidgets) {
-            w.addErrors(errors, te.progWidgets);
-            w.addWarnings(warnings, te.progWidgets);
+        for (IProgWidget w : this.te.progWidgets) {
+            w.addErrors(errors, this.te.progWidgets);
+            w.addWarnings(warnings, this.te.progWidgets);
         }
 
         boolean isDeviceInserted = !programmedItem.isEmpty();
-        importButton.enabled = isDeviceInserted;
-        exportButton.enabled = isDeviceInserted && errors.size() == 0;
+        this.importButton.enabled = isDeviceInserted;
+        this.exportButton.enabled = isDeviceInserted && errors.size() == 0;
 
         List<String> exportButtonTooltip = new ArrayList<>();
         exportButtonTooltip.add("Export program");
-        exportButtonTooltip.add(I18n.format("gui.programmer.button.export.programmingWhen", I18n.format("gui.programmer.button.export." + (te.redstoneMode == 0 ? "pressingButton" : "onItemInsert"))));
+        exportButtonTooltip.add(I18n.format("gui.programmer.button.export.programmingWhen", I18n.format("gui.programmer.button.export." + (this.te.redstoneMode == 0 ? "pressingButton" : "onItemInsert"))));
         exportButtonTooltip.add(I18n.format("gui.programmer.button.export.pressRToChange"));
         if (!programmedItem.isEmpty()) {
-            List<ItemStack> requiredPieces = te.getRequiredPuzzleStacks();
-            List<ItemStack> returnedPieces = te.getReturnedPuzzleStacks();
+            List<ItemStack> requiredPieces = this.te.getRequiredPuzzleStacks();
+            List<ItemStack> returnedPieces = this.te.getReturnedPuzzleStacks();
             if (!requiredPieces.isEmpty() || !returnedPieces.isEmpty()) exportButtonTooltip.add("");
             if (!requiredPieces.isEmpty()) {
                 exportButtonTooltip.add(I18n.format("gui.tooltip.programmable.requiredPieces"));
-                if (player.capabilities.isCreativeMode)
+                if (this.player.capabilities.isCreativeMode)
                     exportButtonTooltip.add("(Creative mode, so the following is free)");
                 for (ItemStack stack : requiredPieces) {
                     String prefix;
-                    if (te.hasEnoughPuzzleStacks(player, stack)) {
+                    if (this.te.hasEnoughPuzzleStacks(this.player, stack)) {
                         prefix = TextFormatting.GREEN.toString();
                     } else {
                         prefix = TextFormatting.RED.toString();
-                        exportButton.enabled = player.capabilities.isCreativeMode && errors.size() == 0;
+                        this.exportButton.enabled = this.player.capabilities.isCreativeMode && errors.size() == 0;
                     }
                     exportButtonTooltip.add(prefix + "-" + stack.getCount() + "x " + stack.getDisplayName());
                 }
             }
             if (!returnedPieces.isEmpty()) {
                 exportButtonTooltip.add("Returned Programming Puzzles:");
-                if (player.capabilities.isCreativeMode) exportButtonTooltip.add("(Creative mode, nothing's given)");
+                if (this.player.capabilities.isCreativeMode) exportButtonTooltip.add("(Creative mode, nothing's given)");
                 for (ItemStack stack : returnedPieces) {
                     exportButtonTooltip.add("-" + stack.getCount() + "x " + stack.getDisplayName());
                 }
@@ -880,33 +881,33 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         if (warnings.size() > 0)
             exportButtonTooltip.add(TextFormatting.YELLOW + I18n.format("gui.programmer.warningCount", warnings.size()));
 
-        exportButton.setTooltipText(exportButtonTooltip);
+        this.exportButton.setTooltipText(exportButtonTooltip);
         if (!programmedItem.isEmpty()) {
-            nameField.setEnabled(true);
-            if (!nameField.isFocused()) {
-                if (wasFocused) {
-                    programmedItem.setStackDisplayName(nameField.getText());
-                    NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+            this.nameField.setEnabled(true);
+            if (!this.nameField.isFocused()) {
+                if (this.wasFocused) {
+                    programmedItem.setStackDisplayName(this.nameField.getText());
+                    NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
                 }
-                nameField.setText(programmedItem.getDisplayName());
-                wasFocused = false;
+                this.nameField.setText(programmedItem.getDisplayName());
+                this.wasFocused = false;
             } else {
-                wasFocused = true;
+                this.wasFocused = true;
             }
         } else {
-            nameField.setEnabled(false);
-            nameField.setText("");
-            wasFocused = false;
+            this.nameField.setEnabled(false);
+            this.nameField.setText("");
+            this.wasFocused = false;
         }
     }
 
     private void updateConvertRelativeState() {
-        convertToRelativeButton.enabled = false;
+        this.convertToRelativeButton.enabled = false;
         List<String> tooltip = new ArrayList<>();
         tooltip.add("gui.programmer.button.convertToRelative.desc");
 
         boolean startFound = false;
-        for (IProgWidget startWidget : te.progWidgets) {
+        for (IProgWidget startWidget : this.te.progWidgets) {
             if (startWidget instanceof ProgWidgetStart) {
                 startFound = true;
                 IProgWidget widget = startWidget.getOutputWidget();
@@ -914,8 +915,8 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                     ProgWidgetCoordinateOperator operatorWidget = (ProgWidgetCoordinateOperator) widget;
                     if (!operatorWidget.getVariable().equals("")) {
                         try {
-                            if (generateRelativeOperators(operatorWidget, tooltip, true)) {
-                                convertToRelativeButton.enabled = true;
+                            if (this.generateRelativeOperators(operatorWidget, tooltip, true)) {
+                                this.convertToRelativeButton.enabled = true;
                             } else {
                                 tooltip.add("gui.programmer.button.convertToRelative.notEnoughRoom");
                             }
@@ -936,7 +937,7 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
         for (String s : tooltip) {
             localizedTooltip.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(s), 40));
         }
-        convertToRelativeButton.setTooltipText(localizedTooltip);
+        this.convertToRelativeButton.setTooltipText(localizedTooltip);
     }
 
     /**
@@ -947,17 +948,17 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
     private boolean generateRelativeOperators(ProgWidgetCoordinateOperator baseWidget, List<String> tooltip, boolean simulate) {
         BlockPos baseCoord = ProgWidgetCoordinateOperator.calculateCoordinate(baseWidget, 0, baseWidget.getOperator());
         Map<BlockPos, String> offsetToVariableNames = new HashMap<>();
-        for (IProgWidget widget : te.progWidgets) {
+        for (IProgWidget widget : this.te.progWidgets) {
             if (widget instanceof ProgWidgetArea) {
                 ProgWidgetArea area = (ProgWidgetArea) widget;
                 if (area.getCoord1Variable().equals("") && (area.x1 != 0 || area.y1 != 0 || area.z1 != 0)) {
                     BlockPos offset = new BlockPos(area.x1 - baseCoord.getX(), area.y1 - baseCoord.getY(), area.z1 - baseCoord.getZ());
-                    String var = getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
+                    String var = this.getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
                     if (!simulate) area.setCoord1Variable(var);
                 }
                 if (area.getCoord2Variable().equals("") && (area.x2 != 0 || area.y2 != 0 || area.z2 != 0)) {
                     BlockPos offset = new BlockPos(area.x2 - baseCoord.getX(), area.y2 - baseCoord.getY(), area.z2 - baseCoord.getZ());
-                    String var = getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
+                    String var = this.getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
                     if (!simulate) area.setCoord2Variable(var);
                 }
             } else if (widget instanceof ProgWidgetCoordinate && baseWidget.getConnectedParameters()[0] != widget) {
@@ -974,7 +975,7 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                             tooltip.add(I18n.format("gui.programmer.button.convertToRelative.coordIsChangedWarning", chunkString));
                         if (!simulate) {
                             BlockPos offset = new BlockPos(c.getX() - baseCoord.getX(), c.getY() - baseCoord.getY(), c.getZ() - baseCoord.getZ());
-                            String var = getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
+                            String var = this.getOffsetVariable(offsetToVariableNames, baseWidget.getVariable(), offset);
                             coordinate.setVariable(var);
                             coordinate.setUsingVariable(true);
                         }
@@ -993,32 +994,32 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
                 int y = prevOperator.getY() + prevOperator.getHeight() / 2;
                 operator.setX(x);
                 operator.setY(y);
-                if (!isValidPlaced(operator)) return false;
+                if (!this.isValidPlaced(operator)) return false;
 
                 ProgWidgetCoordinate coordinatePiece1 = new ProgWidgetCoordinate();
                 coordinatePiece1.setX(x + prevOperator.getWidth() / 2);
                 coordinatePiece1.setY(y);
                 coordinatePiece1.setVariable(baseWidget.getVariable());
                 coordinatePiece1.setUsingVariable(true);
-                if (!isValidPlaced(coordinatePiece1)) return false;
+                if (!this.isValidPlaced(coordinatePiece1)) return false;
 
                 ProgWidgetCoordinate coordinatePiece2 = new ProgWidgetCoordinate();
                 coordinatePiece2.setX(x + prevOperator.getWidth() / 2 + coordinatePiece1.getWidth() / 2);
                 coordinatePiece2.setY(y);
                 coordinatePiece2.setCoordinate(entry.getKey());
-                if (!isValidPlaced(coordinatePiece2)) return false;
+                if (!this.isValidPlaced(coordinatePiece2)) return false;
 
                 if (!simulate) {
-                    te.progWidgets.add(operator);
-                    te.progWidgets.add(coordinatePiece1);
-                    te.progWidgets.add(coordinatePiece2);
+                    this.te.progWidgets.add(operator);
+                    this.te.progWidgets.add(coordinatePiece1);
+                    this.te.progWidgets.add(coordinatePiece2);
                 }
                 if (firstOperator == null) firstOperator = operator;
                 prevOperator = operator;
             }
             if (!simulate) {
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(te));
-                TileEntityProgrammer.updatePuzzleConnections(te.progWidgets);
+                NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.te));
+                TileEntityProgrammer.updatePuzzleConnections(this.te.progWidgets);
             }
             return true;
         } else {
@@ -1034,36 +1035,36 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        ItemStack programmedItem = te.getIteminProgrammingSlot();
-        if (nameField.isFocused() && !programmedItem.isEmpty()) {
-            programmedItem.setStackDisplayName(nameField.getText());
-            NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        ItemStack programmedItem = this.te.getIteminProgrammingSlot();
+        if (this.nameField.isFocused() && !programmedItem.isEmpty()) {
+            programmedItem.setStackDisplayName(this.nameField.getText());
+            NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
         }
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (mouseButton == 1 && showingWidgetProgress == 0) {
-            IProgWidget widget = programmerUnit.getHoveredWidget(mouseX, mouseY);
+        if (mouseButton == 1 && this.showingWidgetProgress == 0) {
+            IProgWidget widget = this.programmerUnit.getHoveredWidget(mouseX, mouseY);
             if (widget != null) {
                 GuiScreen screen = widget.getOptionWindow(this);
-                if (screen != null) mc.displayGuiScreen(screen);
+                if (screen != null) this.mc.displayGuiScreen(screen);
             }
         }
     }
 
     @Override
     public void onGuiClosed() {
-        te.translatedX = programmerUnit.getTranslatedX();
-        te.translatedY = programmerUnit.getTranslatedY();
-        te.zoomState = programmerUnit.getLastZoom();
-        te.showFlow = showFlow.checked;
-        te.showInfo = showInfo.checked;
+        this.te.translatedX = this.programmerUnit.getTranslatedX();
+        this.te.translatedY = this.programmerUnit.getTranslatedY();
+        this.te.zoomState = this.programmerUnit.getLastZoom();
+        this.te.showFlow = this.showFlow.checked;
+        this.te.showInfo = this.showInfo.checked;
         super.onGuiClosed();
     }
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        if (widget.getID() == filterField.getID()) {
-            filterSpawnWidgets();
+        if (widget.getID() == this.filterField.getID()) {
+            this.filterSpawnWidgets();
         }
     }
 

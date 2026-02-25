@@ -20,18 +20,18 @@ public class GuiProgWidgetOptionBase<Widget extends IProgWidget> extends GuiPneu
     public GuiProgWidgetOptionBase(Widget widget, GuiProgrammer guiProgrammer) {
         this.widget = widget;
         this.guiProgrammer = guiProgrammer;
-        xSize = 183;
-        ySize = 202;
+        this.xSize = 183;
+        this.ySize = 202;
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == Keyboard.KEY_ESCAPE) {
-            onGuiClosed();
-            if (guiProgrammer != null) {
-                NetworkHandler.sendToServer(new PacketProgrammerUpdate(guiProgrammer.te));
-                mc.displayGuiScreen(guiProgrammer);
+            this.onGuiClosed();
+            if (this.guiProgrammer != null) {
+                NetworkHandler.sendToServer(new PacketProgrammerUpdate(this.guiProgrammer.te));
+                this.mc.displayGuiScreen(this.guiProgrammer);
             }
         }
     }
@@ -39,13 +39,13 @@ public class GuiProgWidgetOptionBase<Widget extends IProgWidget> extends GuiPneu
     @Override
     public void initGui() {
         super.initGui();
-        String title = TextFormatting.UNDERLINE + I18n.format("programmingPuzzle." + widget.getWidgetString() + ".name");
-        addLabel(title, width / 2 - fontRenderer.getStringWidth(title) / 2, guiTop + 5);
+        String title = TextFormatting.UNDERLINE + I18n.format("programmingPuzzle." + this.widget.getWidgetString() + ".name");
+        this.addLabel(title, this.width / 2 - this.fontRenderer.getStringWidth(title) / 2, this.guiTop + 5);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

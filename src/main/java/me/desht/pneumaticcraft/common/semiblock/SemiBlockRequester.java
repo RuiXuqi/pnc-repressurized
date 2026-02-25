@@ -87,18 +87,18 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     @Override
     public int amountRequested(ItemStack stack) {
-        int totalRequestingAmount = getTotalRequestedAmount(stack);
+        int totalRequestingAmount = this.getTotalRequestedAmount(stack);
         if (totalRequestingAmount > 0) {
-            IItemHandler inv = IOHelper.getInventoryForTE(getTileEntity(), getSide());
+            IItemHandler inv = IOHelper.getInventoryForTE(this.getTileEntity(), this.getSide());
             if (inv != null) {
                 int count = 0;
                 for (int i = 0; i < inv.getSlots(); i++) {
                     ItemStack s = inv.getStackInSlot(i);
-                    if (!s.isEmpty() && tryMatch(s, stack)) {
+                    if (!s.isEmpty() && this.tryMatch(s, stack)) {
                         count += s.getCount();
                     }
                 }
-                count += getIncomingItems(stack);
+                count += this.getIncomingItems(stack);
                 return Math.max(0, Math.min(stack.getCount(), totalRequestingAmount - count));
             }
         }
@@ -107,9 +107,9 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     private int getTotalRequestedAmount(ItemStack stack) {
         int requesting = 0;
-        for (int i = 0; i < getFilters().getSlots(); i++) {
-            ItemStack requestingStack = getFilters().getStackInSlot(i);
-            if (!requestingStack.isEmpty() && tryMatch(stack, requestingStack)) {
+        for (int i = 0; i < this.getFilters().getSlots(); i++) {
+            ItemStack requestingStack = this.getFilters().getStackInSlot(i);
+            if (!requestingStack.isEmpty() && this.tryMatch(stack, requestingStack)) {
                 requesting += requestingStack.getCount();
             }
         }
@@ -118,18 +118,18 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     @Override
     public int amountRequested(FluidStack stack) {
-        int totalRequestingAmount = getTotalRequestedAmount(stack);
+        int totalRequestingAmount = this.getTotalRequestedAmount(stack);
         if (totalRequestingAmount > 0) {
-            TileEntity te = getTileEntity();
+            TileEntity te = this.getTileEntity();
             int count = 0;
-            IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, getSide());
+            IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, this.getSide());
             for (IFluidTankProperties properties : handler.getTankProperties()) {
                 FluidStack contents = properties.getContents();
                 if (contents != null && contents.getFluid() == stack.getFluid()) {
                     count += contents.amount;
                 }
             }
-            count += getIncomingFluid(stack.getFluid());
+            count += this.getIncomingFluid(stack.getFluid());
             return Math.max(0, Math.min(stack.amount, totalRequestingAmount - count));
         }
         return 0;
@@ -138,7 +138,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     private int getTotalRequestedAmount(FluidStack stack) {
         int requesting = 0;
         for (int i = 0; i < 9; i++) {
-            FluidStack requestingStack = getTankFilter(i).getFluid();
+            FluidStack requestingStack = this.getTankFilter(i).getFluid();
             if (requestingStack != null && requestingStack.getFluid() == stack.getFluid()) {
                 requesting += requestingStack.amount;
             }
@@ -175,35 +175,37 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     }
 
     public int getMinItemOrderSize() {
-        return minItemOrderSize;
+        return this.minItemOrderSize;
     }
 
     public int getMinFluidOrderSize() {
-        return minFluidOrderSize;
+        return this.minFluidOrderSize;
     }
 
     @Override
     protected boolean shouldSaveNBT() {
-        return aeMode || shouldWriteOrderSizeNBT() || super.shouldSaveNBT();
+        return this.aeMode || this.shouldWriteOrderSizeNBT() || super.shouldSaveNBT();
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("aeMode", aeMode);
-        tag.setInteger(NBT_MIN_ITEMS, getMinItemOrderSize());
-        tag.setInteger(NBT_MIN_FLUID, getMinFluidOrderSize());
+        tag.setBoolean("aeMode", this.aeMode);
+        tag.setInteger(NBT_MIN_ITEMS, this.getMinItemOrderSize());
+        tag.setInteger(NBT_MIN_FLUID, this.getMinFluidOrderSize());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        aeMode = tag.getBoolean("aeMode");
-        setMinItemOrderSize(tag.getInteger(NBT_MIN_ITEMS));
-        setMinFluidOrderSize(tag.getInteger(NBT_MIN_FLUID));
+        this.aeMode = tag.getBoolean("aeMode");
+        this.setMinItemOrderSize(tag.getInteger(NBT_MIN_ITEMS));
+        this.setMinFluidOrderSize(tag.getInteger(NBT_MIN_FLUID));
     }
 
-    private boolean shouldWriteOrderSizeNBT() { return getMinFluidOrderSize() != 1 || getMinItemOrderSize() != 1; }
+    private boolean shouldWriteOrderSizeNBT() {
+        return this.getMinFluidOrderSize() != 1 || this.getMinItemOrderSize() != 1;
+    }
 
     /*
      ************* Applied Energistics 2 Integration **********************
@@ -214,12 +216,12 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     public void update() {
         super.update();
 
-        if (!world.isRemote) {
-            if (needToCheckForInterface) {
-                if (Loader.isModLoaded(ModIds.AE2) && aeMode && gridNode == null) {
-                    needToCheckForInterface = checkForInterface();
+        if (!this.world.isRemote) {
+            if (this.needToCheckForInterface) {
+                if (Loader.isModLoaded(ModIds.AE2) && this.aeMode && this.gridNode == null) {
+                    this.needToCheckForInterface = this.checkForInterface();
                 } else {
-                    needToCheckForInterface = false;
+                    this.needToCheckForInterface = false;
                 }
             }
         }
@@ -229,42 +231,42 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Optional.Method(modid = ModIds.AE2)
     public void handleGUIButtonPress(int guiID, EntityPlayer player) {
         if (guiID == 1) {
-            aeMode = !aeMode;
-            needToCheckForInterface = aeMode;
-            if (!aeMode && gridNode != null) {
-                disconnectFromInterface();
+            this.aeMode = !this.aeMode;
+            this.needToCheckForInterface = this.aeMode;
+            if (!this.aeMode && this.gridNode != null) {
+                this.disconnectFromInterface();
             }
         }
         super.handleGUIButtonPress(guiID, player);
     }
 
     public boolean isIntegrationEnabled() {
-        return aeMode;
+        return this.aeMode;
     }
 
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void invalidate() {
         super.invalidate();
-        if (gridNode != null) {
-            disconnectFromInterface();
+        if (this.gridNode != null) {
+            this.disconnectFromInterface();
         }
     }
 
     @Optional.Method(modid = ModIds.AE2)
     public boolean isPlacedOnInterface() {
-        return AEApi.instance().definitions().blocks().iface().maybeEntity().map(e -> e.isInstance(getTileEntity())).orElse(false);
+        return AEApi.instance().definitions().blocks().iface().maybeEntity().map(e -> e.isInstance(this.getTileEntity())).orElse(false);
     }
 
     @Optional.Method(modid = ModIds.AE2)
     private boolean checkForInterface() {
-        if (isPlacedOnInterface()) {
-            TileEntity te = getTileEntity();
+        if (this.isPlacedOnInterface()) {
+            TileEntity te = this.getTileEntity();
             if (te instanceof IGridHost) {
                 if (((IGridHost) te).getGridNode(null) == null) return true;
-                if (getGridNode(null) == null) return true;
+                if (this.getGridNode(null) == null) return true;
                 try {
-                    AEApi.instance().grid().createGridConnection(((IGridHost) te).getGridNode(null), getGridNode(null));
+                    AEApi.instance().grid().createGridConnection(((IGridHost) te).getGridNode(null), this.getGridNode(null));
                 } catch (FailedConnectionException e) {
                     Log.error("Couldn't connect to an ME Interface!");
                     e.printStackTrace();
@@ -276,8 +278,8 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     @Optional.Method(modid = ModIds.AE2)
     private void disconnectFromInterface() {
-        ((IGridNode) gridNode).destroy();
-        gridNode = null;
+        ((IGridNode) this.gridNode).destroy();
+        this.gridNode = null;
     }
 
     //IGridHost
@@ -290,16 +292,16 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public IGridNode getGridNode(AEPartLocation d) {
-        if (gridNode == null) {
-            gridNode = AEApi.instance().grid().createGridNode(this);
+        if (this.gridNode == null) {
+            this.gridNode = AEApi.instance().grid().createGridNode(this);
         }
-        return (IGridNode) gridNode;
+        return (IGridNode) this.gridNode;
     }
 
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void securityBreak() {
-        drop();
+        this.drop();
     }
 
     //IGridBlock
@@ -330,7 +332,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public DimensionalCoord getLocation() {
-        return new DimensionalCoord(world, getPos());
+        return new DimensionalCoord(this.world, this.getPos());
     }
 
     @Override
@@ -383,7 +385,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void provideCrafting(ICraftingProviderHelper helper) {
-        updateProvidingItems(helper);
+        this.updateProvidingItems(helper);
     }
 
     //ICraftingWatcherHost
@@ -391,10 +393,10 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void onRequestChange(ICraftingGrid grid, IAEItemStack aeStack) {
-        craftingGrid = grid;
+        this.craftingGrid = grid;
         int freeSlot = -1;
-        for (int i = 0; i < getFilters().getSlots(); i++) {
-            ItemStack filterStack = getFilters().getStackInSlot(i);
+        for (int i = 0; i < this.getFilters().getSlots(); i++) {
+            ItemStack filterStack = this.getFilters().getStackInSlot(i);
             if (!filterStack.isEmpty()) {
                 if (aeStack.isSameType(filterStack)) {
                     filterStack.setCount((int) grid.requesting(aeStack));
@@ -406,29 +408,29 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
         }
         if (freeSlot >= 0) {
             // no item in the requester frame's filter: add it!
-            getFilters().setStackInSlot(freeSlot, aeStack.createItemStack());
+            this.getFilters().setStackInSlot(freeSlot, aeStack.createItemStack());
         }
     }
 
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void updateWatcher(ICraftingWatcher watcher) {
-        craftingWatcher = watcher;
-        updateProvidingItems();
+        this.craftingWatcher = watcher;
+        this.updateProvidingItems();
     }
 
     //IStackWatcherHost
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void onStackChange(IItemList arg0, IAEStack arg1, IAEStack arg2, IActionSource arg3, IStorageChannel arg4) {
-        if (craftingGrid != null) {
-            ICraftingGrid grid = (ICraftingGrid) craftingGrid;
-            for (int i = 0; i < getFilters().getSlots(); i++) {
-                ItemStack s = getFilters().getStackInSlot(i);
+        if (this.craftingGrid != null) {
+            ICraftingGrid grid = (ICraftingGrid) this.craftingGrid;
+            for (int i = 0; i < this.getFilters().getSlots(); i++) {
+                ItemStack s = this.getFilters().getStackInSlot(i);
                 if (!s.isEmpty()) {
                     if (!grid.isRequesting(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(s))) {
-                        getFilters().setStackInSlot(i, ItemStack.EMPTY);
-                        notifyNetworkOfCraftingChange();
+                        this.getFilters().setStackInSlot(i, ItemStack.EMPTY);
+                        this.notifyNetworkOfCraftingChange();
                     }
                 }
             }
@@ -438,38 +440,38 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public void updateWatcher(IStackWatcher watcher) {
-        stackWatcher = watcher;
-        updateProvidingItems();
+        this.stackWatcher = watcher;
+        this.updateProvidingItems();
     }
 
     @Optional.Method(modid = ModIds.AE2)
     private void updateProvidingItems() {
-        updateProvidingItems(null);
+        this.updateProvidingItems(null);
     }
 
     @Optional.Method(modid = ModIds.AE2)
     private void notifyNetworkOfCraftingChange() {
-        if (gridNode != null) {
-            IGrid grid = ((IGridNode) gridNode).getGrid();
-            if (grid != null) grid.postEvent(new MENetworkCraftingPatternChange(this, (IGridNode) gridNode));
+        if (this.gridNode != null) {
+            IGrid grid = ((IGridNode) this.gridNode).getGrid();
+            if (grid != null) grid.postEvent(new MENetworkCraftingPatternChange(this, (IGridNode) this.gridNode));
         }
     }
 
     @Optional.Method(modid = ModIds.AE2)
     private void updateProvidingItems(ICraftingProviderHelper cHelper) {
-        IStackWatcher sWatcher = (IStackWatcher) stackWatcher;
-        ICraftingWatcher cWatcher = (ICraftingWatcher) craftingWatcher;
+        IStackWatcher sWatcher = (IStackWatcher) this.stackWatcher;
+        ICraftingWatcher cWatcher = (ICraftingWatcher) this.craftingWatcher;
         if (sWatcher != null) sWatcher.reset();
         if (cWatcher != null) cWatcher.reset();
         // watch any items that are in providing inventories
-        for (IAEItemStack stack : getProvidingItems()) {
+        for (IAEItemStack stack : this.getProvidingItems()) {
             if (sWatcher != null) sWatcher.add(stack);
             if (cWatcher != null) cWatcher.add(stack);
             if (cHelper != null) cHelper.setEmitable(stack);
         }
         // and also watch any items that are in this requester's filter
-        for (int i = 0; i < getFilters().getSlots(); i++) {
-            ItemStack stack = getFilters().getStackInSlot(i);
+        for (int i = 0; i < this.getFilters().getSlots(); i++) {
+            ItemStack stack = this.getFilters().getStackInSlot(i);
             if (!stack.isEmpty()) {
                 IAEItemStack iaeStack = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(stack);
                 if (sWatcher != null) sWatcher.add(iaeStack);
@@ -481,16 +483,16 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     @Override
     public void notify(TileEntityAndFace teAndFace) {
-        if (gridNode != null) providingInventories.add(teAndFace);
+        if (this.gridNode != null) this.providingInventories.add(teAndFace);
     }
 
     @Optional.Method(modid = ModIds.AE2)
     private List<IAEItemStack> getProvidingItems() {
         List<IAEItemStack> stacks = new ArrayList<>();
-        Iterator<TileEntityAndFace> iter = providingInventories.iterator();
+        Iterator<TileEntityAndFace> iter = this.providingInventories.iterator();
         while (iter.hasNext()) {
             TileEntityAndFace teFace = iter.next();
-            if (isLogisticsTEInvalid(teFace.getTileEntity())) {
+            if (this.isLogisticsTEInvalid(teFace.getTileEntity())) {
                 iter.remove();
             } else {
                 IItemHandler inv = IOHelper.getInventoryForTE(teFace.getTileEntity(), teFace.getFace());
@@ -511,7 +513,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
 
     private boolean isLogisticsTEInvalid(TileEntity te) {
         if (te.isInvalid()) return true;
-        SemiBlockLogistics sb = SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockLogistics.class, world, te.getPos());
+        SemiBlockLogistics sb = SemiBlockManager.getInstance(this.world).getSemiBlock(SemiBlockLogistics.class, this.world, te.getPos());
         return sb == null || !sb.shouldProvideTo(this.getPriority());
     }
 
@@ -520,7 +522,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public IGridNode getActionableNode() {
-        return getGridNode(null);
+        return this.getGridNode(null);
     }
 
     @Override
@@ -554,10 +556,10 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public TickRateModulation tickingRequest(IGridNode arg0, int arg1) {
-        notifyNetworkOfCraftingChange();
-        if (gridNode != null) {
+        this.notifyNetworkOfCraftingChange();
+        if (this.gridNode != null) {
             // Doing it on interval, as doing it right after  AEApi.instance().createGridConnection doesn't seem to work..
-            getGridNode(null).getGrid().postEvent(new MENetworkCellArrayUpdate());
+            this.getGridNode(null).getGrid().postEvent(new MENetworkCellArrayUpdate());
         }
         return TickRateModulation.SAME;
     }
@@ -573,7 +575,7 @@ public class SemiBlockRequester extends SemiBlockLogistics implements ISpecificR
     @Override
     @Optional.Method(modid = ModIds.AE2)
     public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> arg0) {
-        for (IAEItemStack stack : getProvidingItems()) {
+        for (IAEItemStack stack : this.getProvidingItems()) {
             stack.setCountRequestable(stack.getStackSize());
             arg0.addRequestable(stack);
         }

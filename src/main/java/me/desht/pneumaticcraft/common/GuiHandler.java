@@ -207,9 +207,9 @@ public class GuiHandler implements IGuiHandler {
             case LOGISTICS_REQUESTER:
                 return new GuiLogisticsRequester(player.inventory, SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockRequester.class, world, pos));
             case LOGISTICS_STORAGE:
-                return new GuiLogisticsStorage(player.inventory, SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockStorage.class,world, pos));
+                return new GuiLogisticsStorage(player.inventory, SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockStorage.class, world, pos));
             case LOGISTICS_PASSIVE_PROVIDER:
-                return new GuiLogisticsProvider(player.inventory, SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockActiveProvider.class,world, pos));
+                return new GuiLogisticsProvider(player.inventory, SemiBlockManager.getInstance(world).getSemiBlock(SemiBlockActiveProvider.class, world, pos));
             case AMADRON:
                 return new GuiAmadron(player.inventory);
             case AMADRON_ADD_PLAYER_TRADE:

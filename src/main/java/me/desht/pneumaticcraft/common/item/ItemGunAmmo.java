@@ -30,8 +30,8 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
 
     public ItemGunAmmo(String name) {
         super(name);
-        setMaxStackSize(1);
-        setMaxDamage(getCartridgeSize());
+        this.setMaxStackSize(1);
+        this.setMaxDamage(this.getCartridgeSize());
     }
 
     /**
@@ -54,8 +54,7 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
     /**
      * Get the air usage multiplier.
      *
-     *
-     * @param minigun the minigun being used
+     * @param minigun   the minigun being used
      * @param ammoStack this ammo
      * @return the usage multiplier; base minigun air usage is multiplied by this value
      */
@@ -66,8 +65,7 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
     /**
      * Get the damage multiplier.
      *
-     *
-     * @param target the current target
+     * @param target    the current target
      * @param ammoStack this ammo
      * @return the damage multiplier; standard physical minigun bullet damage is multiplied by this value
      */
@@ -111,8 +109,8 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
      * other possible effects to the entity.
      *
      * @param minigun the minigun being used
-     * @param ammo the ammo cartridge stack used
-     * @param target the entity which has been hit
+     * @param ammo    the ammo cartridge stack used
+     * @param target  the entity which has been hit
      * @return the number of rounds fired
      */
     public int onTargetHit(Minigun minigun, ItemStack ammo, Entity target) {
@@ -122,12 +120,12 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
             if (minigun.getWorld().rand.nextInt(100) < 20) times++;
         }
 
-        float dmgMult = getDamageMultiplier(target, ammo);
+        float dmgMult = this.getDamageMultiplier(target, ammo);
         if (dmgMult > 0) {
             if (target instanceof MultiPartEntityPart) {
-                ((MultiPartEntityPart) target).parent.attackEntityFromPart((MultiPartEntityPart) target, getDamageSource(minigun), ConfigHandler.minigun.baseDamage * dmgMult * times);
+                ((MultiPartEntityPart) target).parent.attackEntityFromPart((MultiPartEntityPart) target, this.getDamageSource(minigun), ConfigHandler.minigun.baseDamage * dmgMult * times);
             } else if (target instanceof EntityLivingBase || target instanceof EntityEnderCrystal) {
-                target.attackEntityFrom(getDamageSource(minigun), ConfigHandler.minigun.baseDamage * dmgMult * times);
+                target.attackEntityFrom(this.getDamageSource(minigun), ConfigHandler.minigun.baseDamage * dmgMult * times);
             } else if (target instanceof EntityShulkerBullet || target instanceof EntityFireball) {
                 target.setDead();
             }
@@ -139,10 +137,10 @@ public abstract class ItemGunAmmo extends ItemPneumatic {
      * Called when a block is shot by the minigun's wielder.
      *
      * @param minigun the minigun being used
-     * @param ammo the ammo cartridge stack used
-     * @param pos the block that was hit
-     * @param face the side of the block that was hit
-     * @param hitVec the precise position at which the ammo struck
+     * @param ammo    the ammo cartridge stack used
+     * @param pos     the block that was hit
+     * @param face    the side of the block that was hit
+     * @param hitVec  the precise position at which the ammo struck
      * @return the number of rounds fired
      */
     public int onBlockHit(Minigun minigun, ItemStack ammo, BlockPos pos, EnumFacing face, Vec3d hitVec) {

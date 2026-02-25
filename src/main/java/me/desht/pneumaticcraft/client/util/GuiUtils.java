@@ -78,10 +78,10 @@ public class GuiUtils {
         }
         Tessellator.getInstance().draw();
 
-        float fgR = (float)(fgColor >> 16 & 255) / 255.0F;
-        float fgB = (float)(fgColor >> 8 & 255) / 255.0F;
-        float fgG = (float)(fgColor & 255) / 255.0F;
-        float fgA = (float)(fgColor >> 24 & 255) / 255.0F;
+        float fgR = (float) (fgColor >> 16 & 255) / 255.0F;
+        float fgB = (float) (fgColor >> 8 & 255) / 255.0F;
+        float fgG = (float) (fgColor & 255) / 255.0F;
+        float fgA = (float) (fgColor >> 24 & 255) / 255.0F;
 
         // Draw the black surrounding circle
         GlStateManager.color(fgR, fgG, fgB, fgA);

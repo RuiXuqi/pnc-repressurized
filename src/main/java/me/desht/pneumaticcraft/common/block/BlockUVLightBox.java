@@ -54,14 +54,14 @@ public class BlockUVLightBox extends BlockPneumaticCraftModeled {
             // block is actually placed; handle this, or we'll crash with an IllegalArgumentException
             return BLOCK_BOUNDS_EW;
         }
-        EnumFacing facing = getRotation(source, pos);
+        EnumFacing facing = this.getRotation(source, pos);
         return facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH ? BLOCK_BOUNDS_NS : BLOCK_BOUNDS_EW;
     }
 
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        return getBoundingBox(blockState, worldIn, pos);
+        return this.getBoundingBox(blockState, worldIn, pos);
     }
 
     @Override

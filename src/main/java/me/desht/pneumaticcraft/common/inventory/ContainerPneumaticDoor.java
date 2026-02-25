@@ -8,8 +8,8 @@ public class ContainerPneumaticDoor extends ContainerPneumaticBase<TileEntityPne
     public ContainerPneumaticDoor(InventoryPlayer inventoryPlayer, TileEntityPneumaticDoorBase te) {
         super(te);
 
-        addUpgradeSlots(23, 29);
+        this.addUpgradeSlots(23, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

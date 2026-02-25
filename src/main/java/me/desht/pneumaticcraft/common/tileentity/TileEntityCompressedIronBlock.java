@@ -15,29 +15,29 @@ public class TileEntityCompressedIronBlock extends TileEntityTickableBase implem
     private int oldComparatorOutput = 0;
 
     public TileEntityCompressedIronBlock() {
-        heatExchanger.setThermalResistance(0.01);
+        this.heatExchanger.setThermalResistance(0.01);
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
     public int getHeatLevel() {
-        return heatLevel;
+        return this.heatLevel;
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote) {
-            heatLevel = HeatUtil.getHeatLevelForTemperature(heatExchanger.getTemperature());
+        if (!this.getWorld().isRemote) {
+            this.heatLevel = HeatUtil.getHeatLevelForTemperature(this.heatExchanger.getTemperature());
 
-            int comparatorOutput = HeatUtil.getComparatorOutput((int) heatExchanger.getTemperature());
-            if (oldComparatorOutput != comparatorOutput) {
-                oldComparatorOutput = comparatorOutput;
-                updateNeighbours();
+            int comparatorOutput = HeatUtil.getComparatorOutput((int) this.heatExchanger.getTemperature());
+            if (this.oldComparatorOutput != comparatorOutput) {
+                this.oldComparatorOutput = comparatorOutput;
+                this.updateNeighbours();
             }
         }
     }
@@ -49,11 +49,11 @@ public class TileEntityCompressedIronBlock extends TileEntityTickableBase implem
 
     @Override
     public int getComparatorValue() {
-        return HeatUtil.getComparatorOutput((int) heatExchanger.getTemperature());
+        return HeatUtil.getComparatorOutput((int) this.heatExchanger.getTemperature());
     }
 
     @Override
     public int getHeatLevelForTintIndex(int tintIndex) {
-        return heatLevel;
+        return this.heatLevel;
     }
 }

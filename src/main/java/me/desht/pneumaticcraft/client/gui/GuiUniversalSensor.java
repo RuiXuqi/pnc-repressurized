@@ -44,23 +44,23 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
 
     public GuiUniversalSensor(InventoryPlayer player, TileEntityUniversalSensor te) {
         super(new ContainerUniversalSensor(player, te), te, Textures.GUI_UNIVERSAL_SENSOR);
-        ySize = 239;
+        this.ySize = 239;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        sensorInfoStat = addAnimatedStat("Sensor Info", new ItemStack(Blockss.UNIVERSAL_SENSOR), 0xFFFFAA00, false);
-        addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF0000FF, true).setText(getUpgradeText());
+        this.sensorInfoStat = this.addAnimatedStat("Sensor Info", new ItemStack(Blockss.UNIVERSAL_SENSOR), 0xFFFFAA00, false);
+        this.addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF0000FF, true).setText(this.getUpgradeText());
 
-        nameFilterField = new GuiTextField(-1, fontRenderer, xStart + 70, yStart + 58, 100, 10);
-        nameFilterField.setText(te.getText(0));
+        this.nameFilterField = new GuiTextField(-1, this.fontRenderer, xStart + 70, yStart + 58, 100, 10);
+        this.nameFilterField.setText(this.te.getText(0));
 
-        updateButtons();//also adds the redstoneButton.
+        this.updateButtons();//also adds the redstoneButton.
     }
 
     @Override
@@ -72,12 +72,12 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        if (maxPage > 1) {
-            fontRenderer.drawString(page + "/" + maxPage, 110, 46 + 22 * MAX_SENSORS_PER_PAGE, 0x404040);
+        if (this.maxPage > 1) {
+            this.fontRenderer.drawString(this.page + "/" + this.maxPage, 110, 46 + 22 * MAX_SENSORS_PER_PAGE, 0x404040);
         }
-        fontRenderer.drawString("Upgr.", 23, 98, 0x404040);
+        this.fontRenderer.drawString("Upgr.", 23, 98, 0x404040);
 
-        String[] folders = te.getSensorSetting().split("/");
+        String[] folders = this.te.getSensorSetting().split("/");
         if (folders.length == 1 && !folders[0].isEmpty()) {
             Set<Item> requiredItems = SensorHandler.getInstance().getRequiredStacksFromText(folders[0]);
             int curX = 92;
@@ -86,19 +86,19 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
                 curX += 18;
             }
         } else {
-            int xSpace = xSize - 96;
-            int size = fontRenderer.getStringWidth(folders[folders.length - 1]);
+            int xSpace = this.xSize - 96;
+            int size = this.fontRenderer.getStringWidth(folders[folders.length - 1]);
             GlStateManager.pushMatrix();
             GlStateManager.translate(92, 24, 0);
             if (size > xSpace) {
-                GlStateManager.scale((float)xSpace / (float)size, 1, 1);
+                GlStateManager.scale((float) xSpace / (float) size, 1, 1);
             }
-            fontRenderer.drawString(folders[folders.length - 1], 0, 0, 0x4040A0);
+            this.fontRenderer.drawString(folders[folders.length - 1], 0, 0, 0x4040A0);
             GlStateManager.popMatrix();
         }
 
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-            GuiUtils.showPopupHelpScreen(this, fontRenderer,
+            GuiUtils.showPopupHelpScreen(this, this.fontRenderer,
                     PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.entityFilter.helpText"), 60));
         }
     }
@@ -112,73 +112,73 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
 
-        if (nameFilterField != null) nameFilterField.drawTextBox();
+        if (this.nameFilterField != null) this.nameFilterField.drawTextBox();
 
-        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(te.getSensorSetting());
+        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.te.getSensorSetting());
         if (sensor != null) {
-            GlStateManager.translate(guiLeft, guiTop, 0);
-            sensor.drawAdditionalInfo(fontRenderer);
-            GlStateManager.translate(-guiLeft, -guiTop, 0);
+            GlStateManager.translate(this.guiLeft, this.guiTop, 0);
+            sensor.drawAdditionalInfo(this.fontRenderer);
+            GlStateManager.translate(-this.guiLeft, -this.guiTop, 0);
         }
     }
 
     @Override
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + 34, yStart + ySize / 4);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        return new Point(xStart + 34, yStart + this.ySize / 4);
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        nameFilterField.mouseClicked(mouseX, mouseY, mouseButton);
+        this.nameFilterField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
     protected void keyTyped(char par1, int par2) throws IOException {
-        if (nameFilterField.isFocused() && par2 != 1) {
-            nameFilterField.textboxKeyTyped(par1, par2);
-            te.setText(0, nameFilterField.getText());
-            NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        if (this.nameFilterField.isFocused() && par2 != 1) {
+            this.nameFilterField.textboxKeyTyped(par1, par2);
+            this.te.setText(0, this.nameFilterField.getText());
+            NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
         } else {
             super.keyTyped(par1, par2);
         }
     }
 
     public void updateButtons() {
-        buttonList.clear();
-        buttonList.add(redstoneButton);
-        if (!te.getSensorSetting().equals("")) {
-            buttonList.add(new GuiButton(1, guiLeft + 70, guiTop + 18, 20, 20, "\u2b05"));
+        this.buttonList.clear();
+        this.buttonList.add(this.redstoneButton);
+        if (!this.te.getSensorSetting().equals("")) {
+            this.buttonList.add(new GuiButton(1, this.guiLeft + 70, this.guiTop + 18, 20, 20, "\u2b05"));
         } else {
-            buttonList.add(new GuiButton(-1, guiLeft + 70, guiTop + 125, 98, 20, I18n.format("gui.universalSensor.button.showRange")));
+            this.buttonList.add(new GuiButton(-1, this.guiLeft + 70, this.guiTop + 125, 98, 20, I18n.format("gui.universalSensor.button.showRange")));
         }
-        String[] directories = SensorHandler.getInstance().getDirectoriesAtLocation(te.getSensorSetting());
-        maxPage = (directories.length - 1) / MAX_SENSORS_PER_PAGE + 1;
-        if (page > maxPage) page = maxPage;
-        if (page < 1) page = 1;
-        if (maxPage > 1) {
-            buttonList.add(new GuiButton(2, guiLeft + 70, guiTop + 40 + 22 * MAX_SENSORS_PER_PAGE, 30, 20, "\u27f5"));
-            buttonList.add(new GuiButton(3, guiLeft + 138, guiTop + 40 + 22 * MAX_SENSORS_PER_PAGE, 30, 20, "\u27f6"));
+        String[] directories = SensorHandler.getInstance().getDirectoriesAtLocation(this.te.getSensorSetting());
+        this.maxPage = (directories.length - 1) / MAX_SENSORS_PER_PAGE + 1;
+        if (this.page > this.maxPage) this.page = this.maxPage;
+        if (this.page < 1) this.page = 1;
+        if (this.maxPage > 1) {
+            this.buttonList.add(new GuiButton(2, this.guiLeft + 70, this.guiTop + 40 + 22 * MAX_SENSORS_PER_PAGE, 30, 20, "\u27f5"));
+            this.buttonList.add(new GuiButton(3, this.guiLeft + 138, this.guiTop + 40 + 22 * MAX_SENSORS_PER_PAGE, 30, 20, "\u27f6"));
         }
 
         int buttonsOnPage = MAX_SENSORS_PER_PAGE;
-        if (page == maxPage && (directories.length % MAX_SENSORS_PER_PAGE > 0 || directories.length == 0)) {
+        if (this.page == this.maxPage && (directories.length % MAX_SENSORS_PER_PAGE > 0 || directories.length == 0)) {
             buttonsOnPage = directories.length % MAX_SENSORS_PER_PAGE;
         }
         for (int i = 0; i < buttonsOnPage; i++) {
-            String buttonText = directories[i + (page - 1) * MAX_SENSORS_PER_PAGE];
-            if (SensorHandler.getInstance().getSensorFromPath(te.getSensorSetting() + "/" + buttonText) != null) {
+            String buttonText = directories[i + (this.page - 1) * MAX_SENSORS_PER_PAGE];
+            if (SensorHandler.getInstance().getSensorFromPath(this.te.getSensorSetting() + "/" + buttonText) != null) {
                 buttonText = TextFormatting.YELLOW + buttonText;
             }
-            int buttonID = i * 10 + 10 + (page - 1) * MAX_SENSORS_PER_PAGE * 10;
-            int buttonX = guiLeft + 70;
-            int buttonY = guiTop + 40 + i * 22;
+            int buttonID = i * 10 + 10 + (this.page - 1) * MAX_SENSORS_PER_PAGE * 10;
+            int buttonX = this.guiLeft + 70;
+            int buttonY = this.guiTop + 40 + i * 22;
             int buttonWidth = 98;
             int buttonHeight = 20;
-            if (te.getSensorSetting().equals("")) {
+            if (this.te.getSensorSetting().equals("")) {
                 Set<Item> requiredItems = SensorHandler.getInstance().getRequiredStacksFromText(buttonText);
                 GuiButtonSpecial button = new GuiButtonSpecial(buttonID, buttonX, buttonY, buttonWidth, buttonHeight, "");
                 ItemStack[] requiredStacks = new ItemStack[requiredItems.size()];
@@ -187,29 +187,29 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
                     requiredStacks[j] = new ItemStack(iterator.next());
                 }
                 button.setRenderStacks(requiredStacks);
-                button.enabled = te.areGivenUpgradesInserted(requiredItems);
-                buttonList.add(button);
+                button.enabled = this.te.areGivenUpgradesInserted(requiredItems);
+                this.buttonList.add(button);
             } else {
-                buttonList.add(new GuiButton(buttonID, buttonX, buttonY, buttonWidth, buttonHeight, buttonText));
+                this.buttonList.add(new GuiButton(buttonID, buttonX, buttonY, buttonWidth, buttonHeight, buttonText));
             }
         }
-        sensorInfoStat.setText(getSensorInfo());
-        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(te.getSensorSetting());
+        this.sensorInfoStat.setText(this.getSensorInfo());
+        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.te.getSensorSetting());
         boolean textboxEnabled = sensor != null && sensor.needsTextBox();
-        nameFilterField.setVisible(textboxEnabled);
-        if (!textboxEnabled) nameFilterField.setFocused(false);
+        this.nameFilterField.setVisible(textboxEnabled);
+        if (!textboxEnabled) this.nameFilterField.setFocused(false);
 
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (te.getSensorSetting().equals("") && ticksExisted++ > 5) {
-            ticksExisted = 0;
-            updateButtons();
+        if (this.te.getSensorSetting().equals("") && this.ticksExisted++ > 5) {
+            this.ticksExisted = 0;
+            this.updateButtons();
         }
-        if (!nameFilterField.isFocused()) {
-            nameFilterField.setText(te.getText(0));
+        if (!this.nameFilterField.isFocused()) {
+            this.nameFilterField.setText(this.te.getText(0));
         }
     }
 
@@ -223,9 +223,9 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
 
     private List<String> getSensorInfo() {
         List<String> text = new ArrayList<>();
-        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(te.getSensorSetting());
+        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.te.getSensorSetting());
         if (sensor != null) {
-            String[] folders = te.getSensorSetting().split("/");
+            String[] folders = this.te.getSensorSetting().split("/");
             text.add(TextFormatting.WHITE + folders[folders.length - 1]);
             text.addAll(sensor.getDescription());
         } else {
@@ -237,7 +237,7 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        if (te.isSensorActive) {
+        if (this.te.isSensorActive) {
             pressureStatText.add(TextFormatting.GRAY + "Usage:");
             pressureStatText.add(TextFormatting.BLACK.toString() + PneumaticValues.USAGE_UNIVERSAL_SENSOR + "mL/tick");
         }
@@ -246,19 +246,19 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (SensorHandler.getInstance().getSensorFromPath(te.getSensorSetting()) == null) {
+        if (SensorHandler.getInstance().getSensorFromPath(this.te.getSensorSetting()) == null) {
             textList.add(TextFormatting.GRAY + "No sensor selected!");
             textList.add(TextFormatting.BLACK + "Insert upgrades and select the desired sensor.");
         }
-        if (!te.lastSensorError.isEmpty()) {
+        if (!this.te.lastSensorError.isEmpty()) {
             textList.add(TextFormatting.GRAY + "Sensor error reported!");
-            textList.add(TextFormatting.BLACK + te.lastSensorError);
+            textList.add(TextFormatting.BLACK + this.te.lastSensorError);
         }
 
         // upgrades are in slots 0..3
         // get upgrades from the container, not the tile entity (te upgrade handler isn't sync'd)
-        for (int i = 0; i < te.getUpgradesInventory().getSlots(); i++) {
-            ItemStack stack = inventorySlots.inventorySlots.get(i).getStack();
+        for (int i = 0; i < this.te.getUpgradesInventory().getSlots(); i++) {
+            ItemStack stack = this.inventorySlots.inventorySlots.get(i).getStack();
             if (stack.getItem() instanceof IPositionProvider) {
                 BlockPos pos = ((IPositionProvider) stack.getItem()).getStoredPositions(stack).get(0);
                 if (pos == null) {
@@ -266,8 +266,8 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
                     textList.add(TextFormatting.BLACK + "Insert a GPS Tool with a stored coordinate.");
                     break;
                 }
-                int sensorRange = te.getRange();
-                if (Math.abs(pos.getX() - te.getPos().getX()) > sensorRange || Math.abs(pos.getY() - te.getPos().getY()) > sensorRange || Math.abs(pos.getZ() - te.getPos().getZ()) > sensorRange) {
+                int sensorRange = this.te.getRange();
+                if (Math.abs(pos.getX() - this.te.getPos().getX()) > sensorRange || Math.abs(pos.getY() - this.te.getPos().getY()) > sensorRange || Math.abs(pos.getZ() - this.te.getPos().getZ()) > sensorRange) {
                     textList.add(TextFormatting.GRAY + "The stored coordinate in the GPS Tool is out of the Sensor's range!");
                     textList.add(TextFormatting.BLACK + "Move the sensor closer, select a closer coordinate or insert Range Upgrades.");
                 }
@@ -282,15 +282,15 @@ public class GuiUniversalSensor extends GuiPneumaticContainerBase<TileEntityUniv
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 2) {
-            page--;
-            if (page <= 0) page = maxPage;
-            updateButtons();
+            this.page--;
+            if (this.page <= 0) this.page = this.maxPage;
+            this.updateButtons();
         } else if (button.id == 3) {
-            page++;
-            if (page > maxPage) page = 1;
-            updateButtons();
+            this.page++;
+            if (this.page > this.maxPage) this.page = 1;
+            this.updateButtons();
         } else if (button.id == -1) {
-            te.showRangeLines();
+            this.te.showRangeLines();
         } else {
             super.actionPerformed(button);
         }

@@ -59,7 +59,7 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
                 if (hudHandler.isUpgradeRendererInserted(slot, i) && hudHandler.isUpgradeRendererEnabled(slot, i)) {
                     IGuiAnimatedStat stat = upgradeRenderHandler.getAnimatedStat();
                     if (stat != null && stat != movedStat) {
-                        otherStats.add(stat);
+                        this.otherStats.add(stat);
                     }
                 }
             }
@@ -70,7 +70,7 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
             mainOptions.testMessageStat = new GuiAnimatedStat(null, "Test Message, keep in mind messages can be long!",
                     GuiAnimatedStat.StatIcon.NONE, 0x7000AA00, null, ArmorHUDLayout.INSTANCE.messageStat);
             mainOptions.testMessageStat.openWindow();
-            otherStats.add(mainOptions.testMessageStat);
+            this.otherStats.add(mainOptions.testMessageStat);
         }
     }
 
@@ -78,13 +78,13 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
     public void initGui() {
         super.initGui();
 
-        snapToGrid = new GuiCheckBox(1, 10, (height * 3) / 5, 0xC0C0C0, "Snap To Grid");
-        snapToGrid.x = (width - snapToGrid.getBounds().width) / 2;
-        snapToGrid.checked = snap;
-        addWidget(snapToGrid);
+        this.snapToGrid = new GuiCheckBox(1, 10, (this.height * 3) / 5, 0xC0C0C0, "Snap To Grid");
+        this.snapToGrid.x = (this.width - this.snapToGrid.getBounds().width) / 2;
+        this.snapToGrid.checked = snap;
+        this.addWidget(this.snapToGrid);
 
-        gridSlider = new GuiSlider(2, snapToGrid.x, snapToGrid.y + 12, snapToGrid.getBounds().width, 10, "", "", 1, 12, gridSize, false, true);
-        addButton(gridSlider);
+        this.gridSlider = new GuiSlider(2, this.snapToGrid.x, this.snapToGrid.y + 12, this.snapToGrid.getBounds().width, 10, "", "", 1, 12, gridSize, false, true);
+        this.addButton(this.gridSlider);
     }
 
     @Override
@@ -94,20 +94,20 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
 
     @Override
     protected void mouseClickMove(int x, int y, int lastButtonClicked, long timeSinceMouseClick) {
-        if (clicked) {
-            reposition(movedStat, x, y);
+        if (this.clicked) {
+            this.reposition(this.movedStat, x, y);
         }
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if (movedStat.getBounds().contains(mouseX, mouseY)) {
+        if (this.movedStat.getBounds().contains(mouseX, mouseY)) {
             if (mouseButton == 2) {
-                movedStat.setLeftSided(!movedStat.isLeftSided());
-                save();
+                this.movedStat.setLeftSided(!this.movedStat.isLeftSided());
+                this.save();
             } else if (mouseButton < 2) {
-                clicked = true;
-                reposition(movedStat, mouseX, mouseY);
+                this.clicked = true;
+                this.reposition(this.movedStat, mouseX, mouseY);
             }
         } else {
             super.mouseClicked(mouseX, mouseY, mouseButton);
@@ -116,12 +116,12 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int mouseButton) {
-        if (clicked) {
+        if (this.clicked) {
             if (mouseButton == 0 || mouseButton == 1) {
-                reposition(movedStat, mouseX, mouseY);
+                this.reposition(this.movedStat, mouseX, mouseY);
             }
-            save();
-            clicked = false;
+            this.save();
+            this.clicked = false;
         }
         super.mouseReleased(mouseX, mouseY, mouseButton);
     }
@@ -146,15 +146,15 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
 
-        GuiUtils.showPopupHelpScreen(this, fontRenderer, helpText);
+        GuiUtils.showPopupHelpScreen(this, this.fontRenderer, this.helpText);
 
         super.drawScreen(x, y, partialTicks);
 
-        movedStat.render(-1, -1, partialTicks);
+        this.movedStat.render(-1, -1, partialTicks);
 
-        otherStats.forEach(stat -> {
+        this.otherStats.forEach(stat -> {
             int c = stat.getBackgroundColor();
             stat.setBackGroundColor(0x30606060);
             stat.render(-1, -1, partialTicks);
@@ -166,21 +166,21 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
     public void updateScreen() {
         super.updateScreen();
 
-        snap = snapToGrid.checked;
-        gridSize = gridSlider.getValueInt();
-        gridSlider.visible = snap;
+        snap = this.snapToGrid.checked;
+        gridSize = this.gridSlider.getValueInt();
+        this.gridSlider.visible = snap;
 
-        movedStat.update();
-        otherStats.forEach(IGuiAnimatedStat::update);
+        this.movedStat.update();
+        this.otherStats.forEach(IGuiAnimatedStat::update);
 
-        if (helpText.isEmpty()) {
-            helpText.add(TextFormatting.GREEN + "" + TextFormatting.UNDERLINE + "Moving: "
-                    + I18n.format(GuiKeybindCheckBox.UPGRADE_PREFIX + renderHandler.getUpgradeName()));
-            helpText.add("");
-            helpText.add("Left- or Right-Click: move the highlighted stat");
-            helpText.add("...");
+        if (this.helpText.isEmpty()) {
+            this.helpText.add(TextFormatting.GREEN + "" + TextFormatting.UNDERLINE + "Moving: "
+                    + I18n.format(GuiKeybindCheckBox.UPGRADE_PREFIX + this.renderHandler.getUpgradeName()));
+            this.helpText.add("");
+            this.helpText.add("Left- or Right-Click: move the highlighted stat");
+            this.helpText.add("...");
         }
-        helpText.set(3, "Stat expands " + getDir(movedStat.isLeftSided()) + ". Middle-click: expand " + getDir(!movedStat.isLeftSided()));
+        this.helpText.set(3, "Stat expands " + this.getDir(this.movedStat.isLeftSided()) + ". Middle-click: expand " + this.getDir(!this.movedStat.isLeftSided()));
     }
 
     private String getDir(boolean left) {
@@ -189,9 +189,9 @@ public class GuiMoveStat extends GuiPneumaticScreenBase {
 
     private void save() {
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
-        ArmorHUDLayout.INSTANCE.updateLayout(layoutItem,
-                (float)(movedStat.getBaseX() / sr.getScaledWidth_double()),
-                (float)(movedStat.getBaseY() / sr.getScaledHeight_double()),
-                movedStat.isLeftSided());
+        ArmorHUDLayout.INSTANCE.updateLayout(this.layoutItem,
+                (float) (this.movedStat.getBaseX() / sr.getScaledWidth_double()),
+                (float) (this.movedStat.getBaseY() / sr.getScaledHeight_double()),
+                this.movedStat.isLeftSided());
     }
 }

@@ -24,20 +24,22 @@ public interface IUpgradeRenderHandler {
      * This is called from PneumaticCraft's config handler in the pre-init phase. You can use this method to read
      * settings such as stat positions.
      */
-    default void initConfig() {}
+    default void initConfig() {
+    }
 
     /**
      * When called this should save the settings to the config file. Called when changed a setting. When you want to use
      * PneumaticCraft's config file, save a reference of it somewhere in this class when the config gets passed in the
      * initConfig() method (this always will be called first).
      */
-    default void saveToConfig() {}
+    default void saveToConfig() {
+    }
 
     /**
      * This method will be called every client tick, and should be used to update logic like the tracking and velocities
      * of stuff.
      *
-     * @param player the player wearing the pneumatic helmet
+     * @param player        the player wearing the pneumatic helmet
      * @param rangeUpgrades number of range upgrades installed in the armor piece
      */
     void update(EntityPlayer player, int rangeUpgrades);
@@ -52,7 +54,7 @@ public interface IUpgradeRenderHandler {
     /**
      * Called in the 2D render stage (called from {@link net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent})
      *
-     * @param partialTicks partial ticks since last world tick
+     * @param partialTicks  partial ticks since last world tick
      * @param helmetEnabled true when isEnabled() returned true earlier. Can be used to close AnimatedStats for instance.
      *                      However this is already handled if you return an AnimatedStat in getAnimatedStat().
      */
@@ -78,7 +80,7 @@ public interface IUpgradeRenderHandler {
      * Returns the usage in mL/tick when this upgrade handler is enabled.
      *
      * @param rangeUpgrades number of range upgrades installed in the armor piece
-     * @param player the player wearing the armor
+     * @param player        the player wearing the armor
      * @return usage in mL/tick
      */
     float getEnergyUsage(int rangeUpgrades, EntityPlayer player);

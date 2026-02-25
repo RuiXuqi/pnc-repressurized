@@ -27,7 +27,7 @@ public interface ISideConfigurable {
      * Check if the given handler is OK for the given face
      *
      * @param face relative face of the block
-     * @param cap the capability to check, may be null to indicate no connectivity on this face
+     * @param cap  the capability to check, may be null to indicate no connectivity on this face
      * @return true if this handler is allowed on this side, false otherwise
      */
     default boolean isValid(RelativeFace face, @Nullable Capability<?> cap) {

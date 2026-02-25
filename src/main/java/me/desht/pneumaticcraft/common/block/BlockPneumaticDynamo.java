@@ -24,7 +24,7 @@ public class BlockPneumaticDynamo extends BlockPneumaticCraftModeled {
     }
 
     @Override
-    public EnumGuiId getGuiID(){
+    public EnumGuiId getGuiID() {
         return EnumGuiId.PNEUMATIC_DYNAMO;
     }
 
@@ -43,12 +43,12 @@ public class BlockPneumaticDynamo extends BlockPneumaticCraftModeled {
     }
 
     @Override
-    public boolean isRotatable(){
+    public boolean isRotatable() {
         return true;
     }
 
     @Override
-    protected boolean canRotateToTopOrBottom(){
+    protected boolean canRotateToTopOrBottom() {
         return true;
     }
 }

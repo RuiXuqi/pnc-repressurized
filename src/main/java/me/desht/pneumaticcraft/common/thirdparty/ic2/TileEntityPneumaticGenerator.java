@@ -39,22 +39,22 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
 
     public TileEntityPneumaticGenerator() {
         super(PneumaticValues.DANGER_PRESSURE_PNEUMATIC_GENERATOR, PneumaticValues.MAX_PRESSURE_PNEUMATIC_GENERATOR, PneumaticValues.VOLUME_PNEUMATIC_GENERATOR, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
-        heatExchanger.setThermalCapacity(100);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.heatExchanger.setThermalCapacity(100);
     }
 
     public int getEfficiency() {
-        return HeatUtil.getEfficiency(heatExchanger.getTemperatureAsInt());
+        return HeatUtil.getEfficiency(this.heatExchanger.getTemperatureAsInt());
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            if (outputting) {
-                outputting = false;
+        if (!this.getWorld().isRemote) {
+            if (this.outputting) {
+                this.outputting = false;
             } else {
-                curEnergyProduction = 0;
+                this.curEnergyProduction = 0;
             }
         }
     }
@@ -67,7 +67,7 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
 
     @Override
     public void invalidate() {
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         }
         super.invalidate();
@@ -75,7 +75,7 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
 
     @Override
     public void onChunkUnload() {
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         }
         super.onChunkUnload();
@@ -83,27 +83,27 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
 
     @Override
     public boolean redstoneAllows() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return true;
             case 1:
-                return getWorld().getRedstonePowerFromNeighbors(getPos()) > 0;
+                return this.getWorld().getRedstonePowerFromNeighbors(this.getPos()) > 0;
             case 2:
-                return getWorld().getRedstonePowerFromNeighbors(getPos()) == 0;
+                return this.getWorld().getRedstonePowerFromNeighbors(this.getPos()) == 0;
         }
         return false;
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return getRotation() == side.getOpposite();
+        return this.getRotation() == side.getOpposite();
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
@@ -116,36 +116,36 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
 
-        redstoneMode = nbtTagCompound.getInteger("redstoneMode");
-        outputting = nbtTagCompound.getBoolean("outputting");
-        curEnergyProduction = nbtTagCompound.getInteger("energyProduction");
+        this.redstoneMode = nbtTagCompound.getInteger("redstoneMode");
+        this.outputting = nbtTagCompound.getBoolean("outputting");
+        this.curEnergyProduction = nbtTagCompound.getInteger("energyProduction");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
 
-        nbtTagCompound.setInteger("redstoneMode", redstoneMode);
-        nbtTagCompound.setBoolean("outputting", outputting);
-        nbtTagCompound.setInteger("energyProduction", curEnergyProduction);
+        nbtTagCompound.setInteger("redstoneMode", this.redstoneMode);
+        nbtTagCompound.setBoolean("outputting", this.outputting);
+        nbtTagCompound.setInteger("energyProduction", this.curEnergyProduction);
 
         return nbtTagCompound;
     }
 
     @Override
     public boolean emitsEnergyTo(IEnergyAcceptor iEnergyAcceptor, EnumFacing enumFacing) {
-        return enumFacing == getRotation();
+        return enumFacing == this.getRotation();
     }
 
     @Override
     public double getOfferedEnergy() {
-        return getPressure() > PneumaticValues.MIN_PRESSURE_PNEUMATIC_GENERATOR && redstoneAllows() ? getEnergyPacketSize() : 0;
+        return this.getPressure() > PneumaticValues.MIN_PRESSURE_PNEUMATIC_GENERATOR && this.redstoneAllows() ? this.getEnergyPacketSize() : 0;
     }
 
     public int getEnergyPacketSize() {
-        int upgradesInserted = getUpgrades(EnumUpgrade.SPEED);
+        int upgradesInserted = this.getUpgrades(EnumUpgrade.SPEED);
         int energyAmount = 32 * (int) Math.pow(4, Math.min(3, upgradesInserted));
-        return energyAmount * getEfficiency() / 100;
+        return energyAmount * this.getEfficiency() / 100;
     }
 
     @Override
@@ -153,20 +153,20 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
         int efficiency = ConfigHandler.machineProperties.pneumaticGeneratorEfficiency;
         if (efficiency < 1) efficiency = 1;
         int airUsage = (int) (amount / 0.25F * 100F / efficiency);
-        addAir(-airUsage);
-        heatExchanger.addHeat(airUsage / 40.0);
-        outputting = true;
-        curEnergyProduction = (int) amount;
+        this.addAir(-airUsage);
+        this.heatExchanger.addHeat(airUsage / 40.0);
+        this.outputting = true;
+        this.curEnergyProduction = (int) amount;
     }
 
     @Override
     public int getSourceTier() {
-        return 1 + getUpgrades(EnumUpgrade.SPEED);
+        return 1 + this.getUpgrades(EnumUpgrade.SPEED);
     }
 
     @Override
     public EnumFacing getFacing(World world, BlockPos blockPos) {
-        return getRotation();
+        return this.getRotation();
     }
 
     @Override
@@ -186,11 +186,11 @@ public class TileEntityPneumaticGenerator extends TileEntityPneumaticBase implem
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 }

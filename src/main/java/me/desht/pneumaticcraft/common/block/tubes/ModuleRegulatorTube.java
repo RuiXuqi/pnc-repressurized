@@ -30,12 +30,12 @@ public class ModuleRegulatorTube extends TubeModuleRedstoneReceiving implements 
     @SideOnly(Side.CLIENT)
     private void renderPreview() {
         if (!hasTicked) {
-            TileEntityPneumaticBase tile = (TileEntityPneumaticBase) getTube();
+            TileEntityPneumaticBase tile = (TileEntityPneumaticBase) this.getTube();
             NetworkHandler.sendToServer(new PacketDescriptionPacketRequest(tile.getPos()));
-            TileEntity neighbor = tile.getWorld().getTileEntity(tile.getPos().offset(dir));
+            TileEntity neighbor = tile.getWorld().getTileEntity(tile.getPos().offset(this.dir));
             inLine = neighbor instanceof IPneumaticMachine;
             if (inLine) {
-                IAirHandler neighborHandler = ((IPneumaticMachine) neighbor).getAirHandler(dir);
+                IAirHandler neighborHandler = ((IPneumaticMachine) neighbor).getAirHandler(this.dir);
                 inverted = neighborHandler != null && neighborHandler.getPressure() > tile.getAirHandler(null).getPressure();
                 NetworkHandler.sendToServer(new PacketDescriptionPacketRequest(neighbor.getPos()));
             }
@@ -67,14 +67,14 @@ public class ModuleRegulatorTube extends TubeModuleRedstoneReceiving implements 
     @Override
     public int getMaxDispersion() {
         IAirHandler connectedHandler = null;
-        for (Pair<EnumFacing, IAirHandler> entry : pressureTube.getAirHandler(null).getConnectedPneumatics()) {
-            if (entry.getKey().equals(dir)) {
+        for (Pair<EnumFacing, IAirHandler> entry : this.pressureTube.getAirHandler(null).getConnectedPneumatics()) {
+            if (entry.getKey().equals(this.dir)) {
                 connectedHandler = entry.getValue();
                 break;
             }
         }
         if (connectedHandler == null) return 0;
-        int maxDispersion = (int) ((getThreshold() - connectedHandler.getPressure()) * connectedHandler.getVolume());
+        int maxDispersion = (int) ((this.getThreshold() - connectedHandler.getPressure()) * connectedHandler.getVolume());
         if (maxDispersion < 0) return 0;
         return maxDispersion;
     }
@@ -86,7 +86,7 @@ public class ModuleRegulatorTube extends TubeModuleRedstoneReceiving implements 
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Threshold: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(getThreshold(), 1) + " bar");
+        curInfo.add("Threshold: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(this.getThreshold(), 1) + " bar");
     }
 
     @Override

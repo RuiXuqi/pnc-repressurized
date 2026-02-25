@@ -25,8 +25,8 @@ public class PacketShowArea extends LocationIntPacket<PacketShowArea> {
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(area.length);
-        for (BlockPos pos : area) {
+        buffer.writeInt(this.area.length);
+        for (BlockPos pos : this.area) {
             buffer.writeInt(pos.getX());
             buffer.writeInt(pos.getY());
             buffer.writeInt(pos.getZ());
@@ -36,9 +36,9 @@ public class PacketShowArea extends LocationIntPacket<PacketShowArea> {
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        area = new BlockPos[buffer.readInt()];
-        for (int i = 0; i < area.length; i++) {
-            area[i] = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+        this.area = new BlockPos[buffer.readInt()];
+        for (int i = 0; i < this.area.length; i++) {
+            this.area[i] = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }
     }
 

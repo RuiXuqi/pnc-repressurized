@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * With credit to Vazkii for showing me how this can be made to work with connected textures (trick being
  * to pass IBlockAccess/BlockPos via extended state).
- *
+ * <p>
  * https://github.com/Vazkii/Botania/blob/master/src/main/java/vazkii/botania/client/model/PlatformModel.java
  */
 public class CamoModel implements IBakedModel {
@@ -42,7 +42,7 @@ public class CamoModel implements IBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
         if (state == null || !(state.getBlock() instanceof BlockPneumaticCraftCamo)) {
-            return originalModel.getQuads(state, side, rand);
+            return this.originalModel.getQuads(state, side, rand);
         }
 
         IExtendedBlockState ext = (IExtendedBlockState) state;
@@ -50,7 +50,7 @@ public class CamoModel implements IBakedModel {
         IBlockAccess blockAccess = ext.getValue(BlockPneumaticCraftCamo.BLOCK_ACCESS);
         BlockPos pos = ext.getValue(BlockPneumaticCraftCamo.BLOCK_POS);
         if (blockAccess == null || pos == null) {
-            return originalModel.getQuads(state, side, rand);
+            return this.originalModel.getQuads(state, side, rand);
         }
 
         BlockRenderLayer layer = MinecraftForgeClient.getRenderLayer();
@@ -59,7 +59,7 @@ public class CamoModel implements IBakedModel {
         }
         if (camoState == null && layer == BlockRenderLayer.SOLID) {
             // No camo
-            return originalModel.getQuads(state, side, rand);
+            return this.originalModel.getQuads(state, side, rand);
         } else if (camoState != null && camoState.getBlock().canRenderInLayer(camoState, layer)) {
             IBlockState actual = camoState.getActualState(new FakeBlockAccess(blockAccess), pos);
 
@@ -77,32 +77,32 @@ public class CamoModel implements IBakedModel {
 
     @Override
     public boolean isAmbientOcclusion() {
-        return originalModel.isAmbientOcclusion();
+        return this.originalModel.isAmbientOcclusion();
     }
 
     @Override
     public boolean isGui3d() {
-        return originalModel.isGui3d();
+        return this.originalModel.isGui3d();
     }
 
     @Override
     public boolean isBuiltInRenderer() {
-        return originalModel.isBuiltInRenderer();
+        return this.originalModel.isBuiltInRenderer();
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return originalModel.getParticleTexture();
+        return this.originalModel.getParticleTexture();
     }
 
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
-        return originalModel.getItemCameraTransforms();
+        return this.originalModel.getItemCameraTransforms();
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return originalModel.getOverrides();
+        return this.originalModel.getOverrides();
     }
 
     private static class FakeBlockAccess implements IBlockAccess {
@@ -116,7 +116,7 @@ public class CamoModel implements IBakedModel {
         @Nullable
         @Override
         public TileEntity getTileEntity(BlockPos pos) {
-            return compose.getTileEntity(pos);
+            return this.compose.getTileEntity(pos);
         }
 
         @Override
@@ -127,9 +127,9 @@ public class CamoModel implements IBakedModel {
         @Nonnull
         @Override
         public IBlockState getBlockState(@Nonnull BlockPos pos) {
-            IBlockState state = compose.getBlockState(pos);
+            IBlockState state = this.compose.getBlockState(pos);
             if (state.getBlock() instanceof BlockPneumaticCraftCamo) {
-                TileEntity te = compose.getTileEntity(pos);
+                TileEntity te = this.compose.getTileEntity(pos);
                 if (te instanceof ICamouflageableTE) {
                     state = ((ICamouflageableTE) te).getCamouflage();
                 }
@@ -139,28 +139,28 @@ public class CamoModel implements IBakedModel {
 
         @Override
         public boolean isAirBlock(@Nonnull BlockPos pos) {
-            return compose.isAirBlock(pos);
+            return this.compose.isAirBlock(pos);
         }
 
         @Nonnull
         @Override
         public Biome getBiome(@Nonnull BlockPos pos) {
-            return compose.getBiome(pos);
+            return this.compose.getBiome(pos);
         }
 
         @Override
         public int getStrongPower(@Nonnull BlockPos pos, @Nonnull EnumFacing direction) {
-            return compose.getStrongPower(pos, direction);
+            return this.compose.getStrongPower(pos, direction);
         }
 
         @Override
         public WorldType getWorldType() {
-            return compose.getWorldType();
+            return this.compose.getWorldType();
         }
 
         @Override
         public boolean isSideSolid(@Nonnull BlockPos pos, @Nonnull EnumFacing side, boolean _default) {
-            return compose.isSideSolid(pos, side, _default);
+            return this.compose.isSideSolid(pos, side, _default);
         }
     }
 }

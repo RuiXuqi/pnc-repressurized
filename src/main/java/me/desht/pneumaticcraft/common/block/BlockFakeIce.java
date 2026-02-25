@@ -25,9 +25,9 @@ import javax.annotation.Nullable;
 public class BlockFakeIce extends BlockBreakable {
     public BlockFakeIce() {
         super(Material.ICE, false);
-        setRegistryName("fake_ice");
-        setTranslationKey("fake_ice");
-        setSoundType(SoundType.GLASS);
+        this.setRegistryName("fake_ice");
+        this.setTranslationKey("fake_ice");
+        this.setSoundType(SoundType.GLASS);
     }
 
     @Override

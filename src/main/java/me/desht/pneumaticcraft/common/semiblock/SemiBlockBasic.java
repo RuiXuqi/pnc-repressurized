@@ -27,28 +27,28 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
     private List<SyncedField> descriptionFields;
     private boolean descriptionPacketScheduled;
 
-    public SemiBlockBasic(Class<TTileEntity> tileClass){
+    public SemiBlockBasic(Class<TTileEntity> tileClass) {
         this.tileClass = tileClass;
     }
-    
+
     @Override
     public void initialize(World world, BlockPos pos) {
         this.world = world;
         this.pos = pos;
     }
-    
+
     @Override
-    public int getIndex(){
-        if(index == -1){
-            index = SemiBlockManager.getInstance(world).getSemiBlocksAsList(world, getPos()).indexOf(this);
-            if(index == -1) throw new IllegalStateException("Semi block is not part of the world! " + this);
+    public int getIndex() {
+        if (this.index == -1) {
+            this.index = SemiBlockManager.getInstance(this.world).getSemiBlocksAsList(this.world, this.getPos()).indexOf(this);
+            if (this.index == -1) throw new IllegalStateException("Semi block is not part of the world! " + this);
         }
-        return index;
+        return this.index;
     }
-    
+
     @Override
-    public void onSemiBlockRemovedFromThisPos(ISemiBlock semiBlock){
-        index = -1; //Invalidate cache, only update on removing, because added semiblocks are appended to the back, not influencing the index.
+    public void onSemiBlockRemovedFromThisPos(ISemiBlock semiBlock) {
+        this.index = -1; //Invalidate cache, only update on removing, because added semiblocks are appended to the back, not influencing the index.
     }
 
     @Override
@@ -63,24 +63,24 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
 
     @Override
     public void update() {
-        if (!world.isRemote && !canStay()) drop();
-        if (!world.isRemote && !isInvalid()) {
-            if (descriptionFields == null) descriptionPacketScheduled = true;
-            for (SyncedField field : getDescriptionFields()) {
+        if (!this.world.isRemote && !this.canStay()) this.drop();
+        if (!this.world.isRemote && !this.isInvalid()) {
+            if (this.descriptionFields == null) this.descriptionPacketScheduled = true;
+            for (SyncedField field : this.getDescriptionFields()) {
                 if (field.update()) {
-                    descriptionPacketScheduled = true;
+                    this.descriptionPacketScheduled = true;
                 }
             }
 
-            if (descriptionPacketScheduled) {
-                descriptionPacketScheduled = false;
-                sendDescriptionPacket();
+            if (this.descriptionPacketScheduled) {
+                this.descriptionPacketScheduled = false;
+                this.sendDescriptionPacket();
             }
         }
     }
 
     private void sendDescriptionPacket() {
-        NetworkHandler.sendToAllAround(getDescriptionPacket(), world);
+        NetworkHandler.sendToAllAround(this.getDescriptionPacket(), this.world);
     }
 
     @Override
@@ -90,57 +90,57 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
 
     @Override
     public BlockPos getPosition() {
-        return getPos();
+        return this.getPos();
     }
 
     protected void drop() {
-        SemiBlockManager.getInstance(world).breakSemiBlock(this);
+        SemiBlockManager.getInstance(this.world).breakSemiBlock(this);
     }
 
     protected boolean isAirBlock() {
-        return world.isAirBlock(pos);
+        return this.world.isAirBlock(this.pos);
     }
 
     public IBlockState getBlockState() {
-        return world.getBlockState(pos);
+        return this.world.getBlockState(this.pos);
     }
-    
-    public boolean isAir(){
-        IBlockState state = getBlockState();
-        return state.getBlock().isAir(state, world, pos);
+
+    public boolean isAir() {
+        IBlockState state = this.getBlockState();
+        return state.getBlock().isAir(state, this.world, this.pos);
     }
 
     @SuppressWarnings("unchecked")
     public TTileEntity getTileEntity() {
-        if (cachedTE == null || cachedTE.isInvalid()) {
-            TileEntity te = world.getTileEntity(pos);
-            if(te != null && tileClass.isAssignableFrom(te.getClass())){
-                cachedTE = (TTileEntity)te;
-            }else{
-                cachedTE = null;
+        if (this.cachedTE == null || this.cachedTE.isInvalid()) {
+            TileEntity te = this.world.getTileEntity(this.pos);
+            if (te != null && this.tileClass.isAssignableFrom(te.getClass())) {
+                this.cachedTE = (TTileEntity) te;
+            } else {
+                this.cachedTE = null;
             }
         }
-        return cachedTE;
+        return this.cachedTE;
     }
 
     @Override
     public void invalidate() {
-        isInvalid = true;
+        this.isInvalid = true;
     }
 
     @Override
     public boolean isInvalid() {
-        return isInvalid;
+        return this.isInvalid;
     }
 
     @Override
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     @Override
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     @Override
@@ -153,10 +153,10 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
     public boolean canPlace(EnumFacing facing) {
         return true;
     }
-    
+
     @Override
-    public void prePlacement(EntityPlayer player, ItemStack stack, EnumFacing facing){
-        
+    public void prePlacement(EntityPlayer player, ItemStack stack, EnumFacing facing) {
+
     }
 
     @Override
@@ -165,7 +165,7 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
     }
 
     public boolean canStay() {
-        return canPlace(null);
+        return this.canPlace(null);
     }
 
     @Override
@@ -182,8 +182,8 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
      * Adds nothing by default; subclasses will override this. Note: the semiblock name is expected to be added by
      * the caller. NOTE: this can be called on the server too (TOP) so don't use any client-only methods (I18n.format)
      *
-     * @param curInfo list to add info to
-     * @param tag NBT data from the semiblock in question containing extra info
+     * @param curInfo  list to add info to
+     * @param tag      NBT data from the semiblock in question containing extra info
      * @param extended show extended data?
      */
     public void addTooltip(List<String> curInfo, NBTTagCompound tag, boolean extended) {
@@ -200,20 +200,19 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
 
     @Override
     public List<SyncedField> getDescriptionFields() {
-        if (descriptionFields == null) {
-            descriptionFields = NetworkUtils.getSyncedFields(this, DescSynced.class);
-            for (SyncedField field : descriptionFields) {
+        if (this.descriptionFields == null) {
+            this.descriptionFields = NetworkUtils.getSyncedFields(this, DescSynced.class);
+            for (SyncedField field : this.descriptionFields) {
                 field.update();
             }
         }
-        return descriptionFields;
+        return this.descriptionFields;
     }
-    
-    
+
 
     @Override
     public void writeToPacket(NBTTagCompound tag) {
-        tag.setByte("index", (byte)getIndex()); //Used in packet decoding to figure out which semiblock updated.
+        tag.setByte("index", (byte) this.getIndex()); //Used in packet decoding to figure out which semiblock updated.
     }
 
     @Override
@@ -229,9 +228,9 @@ public abstract class SemiBlockBasic<TTileEntity extends TileEntity> implements 
     public void handleGUIButtonPress(int guiID, EntityPlayer player) {
 
     }
-    
+
     @Override
-    public String toString(){
-        return String.format("Pos: %s, %s", getPos(), getClass());
+    public String toString() {
+        return String.format("Pos: %s, %s", this.getPos(), this.getClass());
     }
 }

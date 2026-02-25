@@ -36,26 +36,26 @@ public class PacketRotateBlock extends LocationIntPacket<PacketRotateBlock> {
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeByte(hand.ordinal());
-        if (entityID >= 0) {
+        buf.writeByte(this.hand.ordinal());
+        if (this.entityID >= 0) {
             buf.writeBoolean(true);
-            buf.writeInt(entityID);
+            buf.writeInt(this.entityID);
         } else {
             buf.writeBoolean(false);
-            buf.writeByte(side.ordinal());
+            buf.writeByte(this.side.ordinal());
         }
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        hand = EnumHand.values()[buf.readByte()];
+        this.hand = EnumHand.values()[buf.readByte()];
         if (buf.readBoolean()) {
-            entityID = buf.readInt();
-            side = null;
+            this.entityID = buf.readInt();
+            this.side = null;
         } else {
-            side = EnumFacing.values()[buf.readByte()];
-            entityID = -1;
+            this.side = EnumFacing.values()[buf.readByte()];
+            this.entityID = -1;
         }
 
     }

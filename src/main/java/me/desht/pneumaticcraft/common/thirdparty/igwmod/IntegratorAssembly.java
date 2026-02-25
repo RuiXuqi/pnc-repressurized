@@ -47,15 +47,15 @@ public class IntegratorAssembly implements IRecipeIntegrator {
 
         int[] hits = new int[]{recipeIndex};
         int program = ItemAssemblyProgram.DRILL_LASER_DAMAGE;
-        AssemblyRecipe foundRecipe = findRecipe(hits, AssemblyRecipe.drillRecipes, arguments[2]);
+        AssemblyRecipe foundRecipe = this.findRecipe(hits, AssemblyRecipe.drillRecipes, arguments[2]);
         if (foundRecipe == null) {
-            foundRecipe = findRecipe(hits, AssemblyRecipe.laserRecipes, arguments[2]);
+            foundRecipe = this.findRecipe(hits, AssemblyRecipe.laserRecipes, arguments[2]);
         } else {
             program = ItemAssemblyProgram.DRILL_DAMAGE;
         }
 
         if (foundRecipe == null) {
-            foundRecipe = findRecipe(hits, AssemblyRecipe.drillLaserRecipes, arguments[2]);
+            foundRecipe = this.findRecipe(hits, AssemblyRecipe.drillLaserRecipes, arguments[2]);
         } else {
             program = ItemAssemblyProgram.LASER_DAMAGE;
         }

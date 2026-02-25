@@ -25,20 +25,20 @@ public class GuiVacuumPump extends GuiPneumaticContainerBase<TileEntityVacuumPum
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 76, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 76, 19, 4210752);
 
-        fontRenderer.drawString("+", 32, 47, 0xFF00AA00);
-        fontRenderer.drawString("-", 138, 47, 0xFFFF0000);
+        this.fontRenderer.drawString("+", 32, 47, 0xFF00AA00);
+        this.fontRenderer.drawString("-", 138, 47, 0xFFFF0000);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        GuiUtils.drawPressureGauge(fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, PneumaticValues.MIN_PRESSURE_VACUUM_PUMP, te.getAirHandler(te.getInputSide()).getPressure(), xStart + xSize / 5, yStart + ySize / 5 + 4, zLevel);
-        GuiUtils.drawPressureGauge(fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, -1, te.getAirHandler(te.getVacuumSide()).getPressure(), xStart + xSize * 4 / 5, yStart + ySize / 5 + 4, zLevel);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        GuiUtils.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, PneumaticValues.MIN_PRESSURE_VACUUM_PUMP, this.te.getAirHandler(this.te.getInputSide()).getPressure(), xStart + this.xSize / 5, yStart + this.ySize / 5 + 4, this.zLevel);
+        GuiUtils.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, -1, this.te.getAirHandler(this.te.getVacuumSide()).getPressure(), xStart + this.xSize * 4 / 5, yStart + this.ySize / 5 + 4, this.zLevel);
     }
 
     @Override
@@ -48,8 +48,8 @@ public class GuiVacuumPump extends GuiPneumaticContainerBase<TileEntityVacuumPum
 
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
-        IAirHandler inputHandler = te.getAirHandler(te.getInputSide());
-        IAirHandler vacuumHandler = te.getAirHandler(te.getVacuumSide());
+        IAirHandler inputHandler = this.te.getAirHandler(this.te.getInputSide());
+        IAirHandler vacuumHandler = this.te.getAirHandler(this.te.getVacuumSide());
         pressureStatText.add("\u00a77Current Input Pressure:");
         pressureStatText.add("\u00a70" + PneumaticCraftUtils.roundNumberTo(inputHandler.getPressure(), 1) + " bar.");
         pressureStatText.add("\u00a77Current Input Air:");
@@ -67,16 +67,16 @@ public class GuiVacuumPump extends GuiPneumaticContainerBase<TileEntityVacuumPum
             pressureStatText.add("\u00a70" + inputHandler.getVolume() + " mL.");
         }
 
-        if (te.turning) {
+        if (this.te.turning) {
             pressureStatText.add("\u00a77Currently sucking at:");
-            pressureStatText.add("\u00a70" + (double) Math.round(PneumaticValues.PRODUCTION_VACUUM_PUMP * te.getSpeedMultiplierFromUpgrades()) + " mL/tick.");
+            pressureStatText.add("\u00a70" + (double) Math.round(PneumaticValues.PRODUCTION_VACUUM_PUMP * this.te.getSpeedMultiplierFromUpgrades()) + " mL/tick.");
         }
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (te.getAirHandler(te.getInputSide()).getPressure() < PneumaticValues.MIN_PRESSURE_VACUUM_PUMP) {
+        if (this.te.getAirHandler(this.te.getInputSide()).getPressure() < PneumaticValues.MIN_PRESSURE_VACUUM_PUMP) {
             textList.add("gui.tab.problems.notEnoughPressure");
             textList.add(I18n.format("gui.tab.problems.applyPressure", PneumaticValues.MIN_PRESSURE_VACUUM_PUMP));
         }

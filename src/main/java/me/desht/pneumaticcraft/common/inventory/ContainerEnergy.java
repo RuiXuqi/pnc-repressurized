@@ -16,7 +16,7 @@ public class ContainerEnergy extends Container4UpgradeSlots<TileEntityPneumaticB
         }
         try {
             IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY, null);
-            addSyncedField(new SyncedField.SyncedInt(energyStorage, EnergyStorage.class.getDeclaredField("energy")));
+            this.addSyncedField(new SyncedField.SyncedInt(energyStorage, EnergyStorage.class.getDeclaredField("energy")));
         } catch (Throwable e) {
             e.printStackTrace();
         }

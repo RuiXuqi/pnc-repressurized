@@ -11,7 +11,7 @@ public class DroneAITeleport extends DroneEntityAIGoToLocation {
 
     @Override
     public boolean shouldExecute() {
-        EntityPathNavigateDrone navigator = (EntityPathNavigateDrone) drone.getPathNavigator();
+        EntityPathNavigateDrone navigator = (EntityPathNavigateDrone) this.drone.getPathNavigator();
         navigator.setForceTeleport(true);
         boolean result = super.shouldExecute();
         navigator.setForceTeleport(false);

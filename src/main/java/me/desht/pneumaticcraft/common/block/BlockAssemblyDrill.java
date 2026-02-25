@@ -23,7 +23,7 @@ public class BlockAssemblyDrill extends BlockPneumaticCraftModeled {
 
     BlockAssemblyDrill() {
         super(Material.IRON, "assembly_drill");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Nullable

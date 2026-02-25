@@ -66,6 +66,7 @@ public interface IBlockTrackEntry {
      * @param infoList The list of lines to display.
      */
     void addInformation(World world, BlockPos pos, TileEntity te, EnumFacing face, List<String> infoList);
+
     /**
      * This method is called when displaying the currently tracked blocks.
      * Will be tried to be mapped to the localization file first.
@@ -78,7 +79,7 @@ public interface IBlockTrackEntry {
      * Convenience method: check if the given capability provider provides the given capability.
      *
      * @param provider the capability provider
-     * @param cap the capability
+     * @param cap      the capability
      * @return true the provider provides the capability on any face, including the null "face"
      */
     static boolean hasCapabilityOnAnyFace(ICapabilityProvider provider, Capability<?> cap) {

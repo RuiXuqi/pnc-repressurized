@@ -72,7 +72,7 @@ public class CommonArmorHandler {
     private final boolean[][] upgradeRenderersEnabled = new boolean[4][];
     private final int[] ticksSinceEquip = new int[4];
     public final float[] armorPressure = new float[4];
-    private final int[][] upgradeMatrix = new int [4][];
+    private final int[][] upgradeMatrix = new int[4][];
     private final int[] startupTimes = new int[4];
 
     private boolean isValid; // true if the handler is valid; gets invalidated if player disconnects
@@ -104,12 +104,12 @@ public class CommonArmorHandler {
         this.player = player;
         for (EntityEquipmentSlot slot : UpgradeRenderHandlerList.ARMOR_SLOTS) {
             List<IUpgradeRenderHandler> renderHandlers = UpgradeRenderHandlerList.instance().getHandlersForSlot(slot);
-            upgradeRenderersInserted[slot.getIndex()] = new boolean[renderHandlers.size()];
-            upgradeRenderersEnabled[slot.getIndex()] = new boolean[renderHandlers.size()];
-            upgradeMatrix[slot.getIndex()] = new int[EnumUpgrade.values().length];
+            this.upgradeRenderersInserted[slot.getIndex()] = new boolean[renderHandlers.size()];
+            this.upgradeRenderersEnabled[slot.getIndex()] = new boolean[renderHandlers.size()];
+            this.upgradeMatrix[slot.getIndex()] = new int[EnumUpgrade.values().length];
         }
-        Arrays.fill(startupTimes, 200);
-        isValid = true;
+        Arrays.fill(this.startupTimes, 200);
+        this.isValid = true;
     }
 
     private static CommonArmorHandler getManagerInstance(EntityPlayer player) {
@@ -158,7 +158,10 @@ public class CommonArmorHandler {
 
     private static void clearHUDHandlerForPlayer(EntityPlayer player) {
         CommonArmorHandler h = getManagerInstance(player);
-        h.playerHudHandlers.computeIfPresent(player.getName(), (name, val) -> { val.invalidate(); return null; } );
+        h.playerHudHandlers.computeIfPresent(player.getName(), (name, val) -> {
+            val.invalidate();
+            return null;
+        });
     }
 
     private static Potion getNightVisionPotion() {
@@ -168,45 +171,45 @@ public class CommonArmorHandler {
 
     private void tick() {
         for (EntityEquipmentSlot slot : UpgradeRenderHandlerList.ARMOR_SLOTS) {
-            tickArmorPiece(slot);
+            this.tickArmorPiece(slot);
         }
-        if (!player.world.isRemote) {
-            handleHacking();
+        if (!this.player.world.isRemote) {
+            this.handleHacking();
         }
     }
 
     private void tickArmorPiece(EntityEquipmentSlot slot) {
-        ItemStack armorStack = player.getItemStackFromSlot(slot);
+        ItemStack armorStack = this.player.getItemStackFromSlot(slot);
         boolean armorActive = false;
         if (armorStack.getItem() instanceof ItemPneumaticArmor) {
-            armorPressure[slot.getIndex()] = ((IPressurizable) armorStack.getItem()).getPressure(armorStack);
-            if (ticksSinceEquip[slot.getIndex()] == 0) {
-                initArmorInventory(slot);
+            this.armorPressure[slot.getIndex()] = ((IPressurizable) armorStack.getItem()).getPressure(armorStack);
+            if (this.ticksSinceEquip[slot.getIndex()] == 0) {
+                this.initArmorInventory(slot);
             }
-            ticksSinceEquip[slot.getIndex()]++;
-            if (armorEnabled && armorPressure[slot.getIndex()] > 0F) {
+            this.ticksSinceEquip[slot.getIndex()]++;
+            if (this.armorEnabled && this.armorPressure[slot.getIndex()] > 0F) {
                 armorActive = true;
-                if (!player.world.isRemote) {
-                    if (isArmorReady(slot) && !player.capabilities.isCreativeMode) {
+                if (!this.player.world.isRemote) {
+                    if (this.isArmorReady(slot) && !this.player.capabilities.isCreativeMode) {
                         // use up air in the armor piece
-                        float airUsage = UpgradeRenderHandlerList.instance().getAirUsage(player, slot, false);
+                        float airUsage = UpgradeRenderHandlerList.instance().getAirUsage(this.player, slot, false);
                         if (airUsage != 0) {
-                            float oldPressure = addAir(slot, (int) -airUsage);
-                            if (oldPressure > 0F && armorPressure[slot.getIndex()] == 0F) {
+                            float oldPressure = this.addAir(slot, (int) -airUsage);
+                            if (oldPressure > 0F && this.armorPressure[slot.getIndex()] == 0F) {
                                 // out of air!
-                                NetworkHandler.sendTo(new PacketPlaySound(Sounds.MINIGUN_STOP, SoundCategory.PLAYERS, player.posX, player.posY, player.posZ, 1.0f, 2.0f, false), (EntityPlayerMP) player);
+                                NetworkHandler.sendTo(new PacketPlaySound(Sounds.MINIGUN_STOP, SoundCategory.PLAYERS, this.player.posX, this.player.posY, this.player.posZ, 1.0f, 2.0f, false), (EntityPlayerMP) this.player);
                             }
                         }
                     }
                 }
-                doArmorActions(slot);
+                this.doArmorActions(slot);
             }
         }
         if (!armorActive) {
-            if (ticksSinceEquip[slot.getIndex()] > 0) {
-                onArmorRemoved(slot);
+            if (this.ticksSinceEquip[slot.getIndex()] > 0) {
+                this.onArmorRemoved(slot);
             }
-            ticksSinceEquip[slot.getIndex()] = 0;
+            this.ticksSinceEquip[slot.getIndex()] = 0;
         }
     }
 
@@ -216,206 +219,206 @@ public class CommonArmorHandler {
     private void onArmorRemoved(EntityEquipmentSlot slot) {
         switch (slot) {
             case HEAD:
-                if (nightVisionEnabled) player.removeActivePotionEffect(getNightVisionPotion());
+                if (this.nightVisionEnabled) this.player.removeActivePotionEffect(getNightVisionPotion());
                 break;
             case FEET:
-                player.stepHeight = 0.6F;
+                this.player.stepHeight = 0.6F;
                 break;
         }
     }
 
     public float addAir(EntityEquipmentSlot slot, int air) {
-        ItemStack armorStack = player.getItemStackFromSlot(slot);
-        float oldPressure = armorPressure[slot.getIndex()];
+        ItemStack armorStack = this.player.getItemStackFromSlot(slot);
+        float oldPressure = this.armorPressure[slot.getIndex()];
         if (armorStack.getItem() instanceof IPressurizable) {
             ((IPressurizable) armorStack.getItem()).addAir(armorStack, air);
-            armorPressure[slot.getIndex()] = ((IPressurizable) armorStack.getItem()).getPressure(armorStack);
+            this.armorPressure[slot.getIndex()] = ((IPressurizable) armorStack.getItem()).getPressure(armorStack);
         }
         return oldPressure;
     }
 
     private void doArmorActions(EntityEquipmentSlot slot) {
-        if (!isArmorReady(slot)) return;
+        if (!this.isArmorReady(slot)) return;
 
         switch (slot) {
             case HEAD:
-                handleNightVision();
-                handleScuba();
+                this.handleNightVision();
+                this.handleScuba();
                 break;
             case CHEST:
-                handleChestplateMagnet();
-                handleChestplateCharging();
+                this.handleChestplateMagnet();
+                this.handleChestplateCharging();
                 break;
             case LEGS:
-                handleLeggingsSpeedBoost();
+                this.handleLeggingsSpeedBoost();
                 break;
             case FEET:
-                if (getArmorPressure(EntityEquipmentSlot.FEET) > 0.0F && isStepAssistEnabled()) {
-                    player.stepHeight = player.isSneaking() ? 0.6001F : 1.25F;
+                if (this.getArmorPressure(EntityEquipmentSlot.FEET) > 0.0F && this.isStepAssistEnabled()) {
+                    this.player.stepHeight = this.player.isSneaking() ? 0.6001F : 1.25F;
                 } else {
-                    player.stepHeight = 0.6F;
+                    this.player.stepHeight = 0.6F;
                 }
-                handleJetBoots();
+                this.handleJetBoots();
                 break;
         }
 
-        if (!player.world.isRemote && getUpgradeCount(slot, EnumUpgrade.ITEM_LIFE) > 0) {
-            handleItemRepair(slot);
+        if (!this.player.world.isRemote && this.getUpgradeCount(slot, EnumUpgrade.ITEM_LIFE) > 0) {
+            this.handleItemRepair(slot);
         }
     }
 
     private void handleNightVision() {
         // checking every 8 ticks should be enough
-        if (!player.world.isRemote && (getTicksSinceEquipped(EntityEquipmentSlot.HEAD) & 0x7) == 0) {
-            boolean shouldEnable = getArmorPressure(EntityEquipmentSlot.HEAD) > 0.0f
-                    && getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.NIGHT_VISION) > 0
-                    && nightVisionEnabled;
+        if (!this.player.world.isRemote && (this.getTicksSinceEquipped(EntityEquipmentSlot.HEAD) & 0x7) == 0) {
+            boolean shouldEnable = this.getArmorPressure(EntityEquipmentSlot.HEAD) > 0.0f
+                    && this.getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.NIGHT_VISION) > 0
+                    && this.nightVisionEnabled;
             if (shouldEnable) {
-                ItemStack helmetStack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
-                player.addPotionEffect(new PotionEffect(getNightVisionPotion(), 500, 0, false, false));
-                addAir(EntityEquipmentSlot.HEAD, -PneumaticValues.PNEUMATIC_NIGHT_VISION_USAGE * 8);
-            } else if (!shouldEnable && wasNightVisionEnabled) {
-                player.removePotionEffect(getNightVisionPotion());
+                ItemStack helmetStack = this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+                this.player.addPotionEffect(new PotionEffect(getNightVisionPotion(), 500, 0, false, false));
+                this.addAir(EntityEquipmentSlot.HEAD, -PneumaticValues.PNEUMATIC_NIGHT_VISION_USAGE * 8);
+            } else if (!shouldEnable && this.wasNightVisionEnabled) {
+                this.player.removePotionEffect(getNightVisionPotion());
             }
-            wasNightVisionEnabled = shouldEnable;
+            this.wasNightVisionEnabled = shouldEnable;
         }
     }
 
     private void handleScuba() {
         // checking every 16 ticks
-        if (!player.world.isRemote
-                && scubaEnabled && getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.SCUBA) > 0
-                && getArmorPressure(EntityEquipmentSlot.HEAD) > 0.1f
-                && player.getAir() < 200) {
+        if (!this.player.world.isRemote
+                && this.scubaEnabled && this.getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.SCUBA) > 0
+                && this.getArmorPressure(EntityEquipmentSlot.HEAD) > 0.1f
+                && this.player.getAir() < 200) {
 
-            ItemStack helmetStack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
+            ItemStack helmetStack = this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
 
-            int vol = ((ItemPneumaticArmor) helmetStack.getItem()).getBaseVolume() + PneumaticValues.VOLUME_VOLUME_UPGRADE * getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.VOLUME);
-            float airInHelmet = getArmorPressure(EntityEquipmentSlot.HEAD) * vol;
-            int playerAir = (int) Math.min(300 - player.getAir(), airInHelmet / PneumaticValues.PNEUMATIC_HELMET_SCUBA_MULTIPLIER);
-            player.setAir(player.getAir() + playerAir);
+            int vol = ((ItemPneumaticArmor) helmetStack.getItem()).getBaseVolume() + PneumaticValues.VOLUME_VOLUME_UPGRADE * this.getUpgradeCount(EntityEquipmentSlot.HEAD, EnumUpgrade.VOLUME);
+            float airInHelmet = this.getArmorPressure(EntityEquipmentSlot.HEAD) * vol;
+            int playerAir = (int) Math.min(300 - this.player.getAir(), airInHelmet / PneumaticValues.PNEUMATIC_HELMET_SCUBA_MULTIPLIER);
+            this.player.setAir(this.player.getAir() + playerAir);
 
             int airUsed = playerAir * PneumaticValues.PNEUMATIC_HELMET_SCUBA_MULTIPLIER;
-            addAir(EntityEquipmentSlot.HEAD, -airUsed);
-            NetworkHandler.sendTo(new PacketPlaySound(Sounds.SCUBA, SoundCategory.PLAYERS, player.getPosition(), 1.5f, 1.0f, false), (EntityPlayerMP) player);
-            Vec3d eyes = player.getPositionEyes(1.0f).add(player.getLookVec().scale(0.5));
-            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumParticleTypes.WATER_BUBBLE, eyes.x - 0.5, eyes.y, eyes.z -0.5, 0.0, 0.2, 0.0, 10, 1.0, 1.0, 1.0), player.world);
+            this.addAir(EntityEquipmentSlot.HEAD, -airUsed);
+            NetworkHandler.sendTo(new PacketPlaySound(Sounds.SCUBA, SoundCategory.PLAYERS, this.player.getPosition(), 1.5f, 1.0f, false), (EntityPlayerMP) this.player);
+            Vec3d eyes = this.player.getPositionEyes(1.0f).add(this.player.getLookVec().scale(0.5));
+            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumParticleTypes.WATER_BUBBLE, eyes.x - 0.5, eyes.y, eyes.z - 0.5, 0.0, 0.2, 0.0, 10, 1.0, 1.0, 1.0), this.player.world);
         }
     }
 
     // track player movement across ticks on the server - very transient, a capability would be overkill here
-    private static final Map<String,Vec3d> moveMap = new HashMap<>();
+    private static final Map<String, Vec3d> moveMap = new HashMap<>();
 
     private void handleLeggingsSpeedBoost() {
-        double speedBoost = getSpeedBoostFromLegs();
-        if (player.world.isRemote) {
+        double speedBoost = this.getSpeedBoostFromLegs();
+        if (this.player.world.isRemote) {
             // doing this client-side only appears to be effective
-            if (player.moveForward > 0) {
-                if (!player.onGround && isJetBootsEnabled() && jetBootsBuilderMode) {
-                    player.moveRelative(0, 0, 1, getUpgradeCount(EntityEquipmentSlot.FEET, EnumUpgrade.JET_BOOTS) / 400f);
+            if (this.player.moveForward > 0) {
+                if (!this.player.onGround && this.isJetBootsEnabled() && this.jetBootsBuilderMode) {
+                    this.player.moveRelative(0, 0, 1, this.getUpgradeCount(EntityEquipmentSlot.FEET, EnumUpgrade.JET_BOOTS) / 400f);
                 }
-                if (player.onGround && !player.isInsideOfMaterial(Material.WATER)) {
-                    player.moveRelative(0, 0, 1, (float) speedBoost);
+                if (this.player.onGround && !this.player.isInsideOfMaterial(Material.WATER)) {
+                    this.player.moveRelative(0, 0, 1, (float) speedBoost);
                 }
             }
         }
-        if (!player.world.isRemote && speedBoost > 0) {
-            Vec3d prev = moveMap.get(player.getName());
-            boolean moved = prev != null && (Math.abs(player.posX - prev.x) > 0.0001 || Math.abs(player.posZ - prev.z) > 0.0001);
-            if (moved && player.onGround && !player.isInsideOfMaterial(Material.WATER)) {
+        if (!this.player.world.isRemote && speedBoost > 0) {
+            Vec3d prev = moveMap.get(this.player.getName());
+            boolean moved = prev != null && (Math.abs(this.player.posX - prev.x) > 0.0001 || Math.abs(this.player.posZ - prev.z) > 0.0001);
+            if (moved && this.player.onGround && !this.player.isInsideOfMaterial(Material.WATER)) {
                 int airUsage = (int) Math.ceil(PneumaticValues.PNEUMATIC_LEGS_SPEED_USAGE * speedBoost * 4);
-                ItemStack legsStack = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
-                addAir(EntityEquipmentSlot.LEGS, -airUsage);
+                ItemStack legsStack = this.player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
+                this.addAir(EntityEquipmentSlot.LEGS, -airUsage);
             }
-            moveMap.put(player.getName(), new Vec3d(player.posX, player.posY, player.posZ));
+            moveMap.put(this.player.getName(), new Vec3d(this.player.posX, this.player.posY, this.player.posZ));
         }
     }
 
     public double getSpeedBoostFromLegs() {
-        int speedUpgrades = getUpgradeCount(EntityEquipmentSlot.LEGS, EnumUpgrade.SPEED, PneumaticValues.PNEUMATIC_LEGS_MAX_SPEED);
-        if (isArmorReady(EntityEquipmentSlot.LEGS) && speedUpgrades > 0 && isRunSpeedEnabled() && getArmorPressure(EntityEquipmentSlot.LEGS) > 0.0F) {
-            return PneumaticValues.PNEUMATIC_LEGS_BOOST_PER_UPGRADE * speedUpgrades * speedBoostMult;
+        int speedUpgrades = this.getUpgradeCount(EntityEquipmentSlot.LEGS, EnumUpgrade.SPEED, PneumaticValues.PNEUMATIC_LEGS_MAX_SPEED);
+        if (this.isArmorReady(EntityEquipmentSlot.LEGS) && speedUpgrades > 0 && this.isRunSpeedEnabled() && this.getArmorPressure(EntityEquipmentSlot.LEGS) > 0.0F) {
+            return PneumaticValues.PNEUMATIC_LEGS_BOOST_PER_UPGRADE * speedUpgrades * this.speedBoostMult;
         } else {
             return 0.0;
         }
     }
 
     private void handleJetBoots() {
-        int jetbootsCount = getUpgradeCount(EntityEquipmentSlot.FEET, EnumUpgrade.JET_BOOTS, PneumaticValues.PNEUMATIC_JET_BOOTS_MAX_UPGRADES);
+        int jetbootsCount = this.getUpgradeCount(EntityEquipmentSlot.FEET, EnumUpgrade.JET_BOOTS, PneumaticValues.PNEUMATIC_JET_BOOTS_MAX_UPGRADES);
         if (jetbootsCount == 0) return;
 
         int jetbootsAirUsage = 0;
-        if (getArmorPressure(EntityEquipmentSlot.FEET) > 0.0F) {
-            if (isJetBootsActive()) {
-                if (jetBootsBuilderMode && jetbootsCount >= 8) {
+        if (this.getArmorPressure(EntityEquipmentSlot.FEET) > 0.0F) {
+            if (this.isJetBootsActive()) {
+                if (this.jetBootsBuilderMode && jetbootsCount >= 8) {
                     // builder mode - rise vertically (or hover if sneaking and firing)
-                    player.motionY = player.isSneaking() ? 0 : 0.15 + 0.15 * (jetbootsCount - 8);
+                    this.player.motionY = this.player.isSneaking() ? 0 : 0.15 + 0.15 * (jetbootsCount - 8);
                     jetbootsAirUsage = (int) (ConfigHandler.pneumaticArmor.jetbootsAirUsage * jetbootsCount / 5F);
                 } else {
                     // jetboots firing - move in direction of looking
-                    Vec3d lookVec = player.getLookVec().scale(0.15 * jetbootsCount);
-                    flightAccel += lookVec.y / -20.0;
-                    flightAccel = MathHelper.clamp(flightAccel, 0.8F, 4.0F);
-                    lookVec = lookVec.scale(flightAccel);
-                    if (jetBootsActiveTicks < 10) lookVec = lookVec.scale(jetBootsActiveTicks * 0.1);
-                    player.motionX = lookVec.x;
-                    player.motionY = player.onGround ? 0 : lookVec.y;
-                    player.motionZ = lookVec.z;
+                    Vec3d lookVec = this.player.getLookVec().scale(0.15 * jetbootsCount);
+                    this.flightAccel += lookVec.y / -20.0;
+                    this.flightAccel = MathHelper.clamp(this.flightAccel, 0.8F, 4.0F);
+                    lookVec = lookVec.scale(this.flightAccel);
+                    if (this.jetBootsActiveTicks < 10) lookVec = lookVec.scale(this.jetBootsActiveTicks * 0.1);
+                    this.player.motionX = lookVec.x;
+                    this.player.motionY = this.player.onGround ? 0 : lookVec.y;
+                    this.player.motionZ = lookVec.z;
                     jetbootsAirUsage = ConfigHandler.pneumaticArmor.jetbootsAirUsage * jetbootsCount;
                 }
-                jetBootsActiveTicks++;
-            } else if (isJetBootsEnabled() && !player.onGround) {
+                this.jetBootsActiveTicks++;
+            } else if (this.isJetBootsEnabled() && !this.player.onGround) {
                 // jetboots not firing, but enabled - slowly descend (or hover if enough upgrades)
-                if (jetbootsCount > 6 && !player.isSneaking()) player.motionY = 0;
-                else player.motionY = player.isSneaking() ? -0.45 : -0.15 + 0.015 * jetbootsCount;
-                player.fallDistance = 0;
-                jetbootsAirUsage = (int) (ConfigHandler.pneumaticArmor.jetbootsAirUsage * (player.isSneaking() ? 0.25F : 0.5F));
-                flightAccel = 1.0F;
+                if (jetbootsCount > 6 && !this.player.isSneaking()) this.player.motionY = 0;
+                else this.player.motionY = this.player.isSneaking() ? -0.45 : -0.15 + 0.015 * jetbootsCount;
+                this.player.fallDistance = 0;
+                jetbootsAirUsage = (int) (ConfigHandler.pneumaticArmor.jetbootsAirUsage * (this.player.isSneaking() ? 0.25F : 0.5F));
+                this.flightAccel = 1.0F;
             } else {
-                flightAccel = 1.0F;
+                this.flightAccel = 1.0F;
             }
         }
-        if (jetbootsAirUsage != 0 && !player.world.isRemote) {
-            if (prevJetBootsAirUsage == 0) {
-                NetworkHandler.sendToDimension(new PacketPlayMovingSound(MovingSounds.Sound.JET_BOOTS, player), player.world.provider.getDimension());
-                AdvancementTriggers.FLIGHT.trigger((EntityPlayerMP) player);
+        if (jetbootsAirUsage != 0 && !this.player.world.isRemote) {
+            if (this.prevJetBootsAirUsage == 0) {
+                NetworkHandler.sendToDimension(new PacketPlayMovingSound(MovingSounds.Sound.JET_BOOTS, this.player), this.player.world.provider.getDimension());
+                AdvancementTriggers.FLIGHT.trigger((EntityPlayerMP) this.player);
             }
-            if (player.collidedHorizontally) {
-                double vel = Math.sqrt(player.motionZ * player.motionZ + player.motionX * player.motionX);
-                if (player.world.getDifficulty() == EnumDifficulty.HARD) {
+            if (this.player.collidedHorizontally) {
+                double vel = Math.sqrt(this.player.motionZ * this.player.motionZ + this.player.motionX * this.player.motionX);
+                if (this.player.world.getDifficulty() == EnumDifficulty.HARD) {
                     vel *= 2;
-                } else if (player.world.getDifficulty() == EnumDifficulty.NORMAL) {
+                } else if (this.player.world.getDifficulty() == EnumDifficulty.NORMAL) {
                     vel *= 1.5;
                 }
                 if (vel > 2) {
-                    player.playSound(vel > 2.5 ? SoundEvents.ENTITY_GENERIC_BIG_FALL : SoundEvents.ENTITY_GENERIC_SMALL_FALL, 1.0F, 1.0F);
-                    player.attackEntityFrom(DamageSource.FLY_INTO_WALL, (float) vel);
-                    AdvancementTriggers.FLY_INTO_WALL.trigger((EntityPlayerMP) player);
+                    this.player.playSound(vel > 2.5 ? SoundEvents.ENTITY_GENERIC_BIG_FALL : SoundEvents.ENTITY_GENERIC_SMALL_FALL, 1.0F, 1.0F);
+                    this.player.attackEntityFrom(DamageSource.FLY_INTO_WALL, (float) vel);
+                    AdvancementTriggers.FLY_INTO_WALL.trigger((EntityPlayerMP) this.player);
                 }
             }
-            addAir(EntityEquipmentSlot.FEET, -jetbootsAirUsage);
+            this.addAir(EntityEquipmentSlot.FEET, -jetbootsAirUsage);
         }
-        prevJetBootsAirUsage = jetbootsAirUsage;
+        this.prevJetBootsAirUsage = jetbootsAirUsage;
     }
 
     private void handleChestplateCharging() {
-        if (player.world.isRemote || !chargingEnabled
-                || getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.CHARGING) == 0
-                || getTicksSinceEquipped(EntityEquipmentSlot.CHEST) % PneumaticValues.ARMOR_CHARGER_INTERVAL != 5)
+        if (this.player.world.isRemote || !this.chargingEnabled
+                || this.getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.CHARGING) == 0
+                || this.getTicksSinceEquipped(EntityEquipmentSlot.CHEST) % PneumaticValues.ARMOR_CHARGER_INTERVAL != 5)
             return;
 
-        int upgrades = getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.CHARGING, PneumaticValues.ARMOR_CHARGING_MAX_UPGRADES);
+        int upgrades = this.getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.CHARGING, PneumaticValues.ARMOR_CHARGING_MAX_UPGRADES);
         int airAmount = upgrades * 100 + 100;
 
         for (EntityEquipmentSlot slot : EntityEquipmentSlot.values()) {
             if (slot == EntityEquipmentSlot.CHEST) continue;
-            if (armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) return;
-            ItemStack stack = player.getItemStackFromSlot(slot);
-            tryPressurize(airAmount, stack);
+            if (this.armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) return;
+            ItemStack stack = this.player.getItemStackFromSlot(slot);
+            this.tryPressurize(airAmount, stack);
         }
-        for (ItemStack stack : player.inventory.mainInventory) {
-            if (armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) return;
-            tryPressurize(airAmount, stack);
+        for (ItemStack stack : this.player.inventory.mainInventory) {
+            if (this.armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) return;
+            this.tryPressurize(airAmount, stack);
         }
     }
 
@@ -423,87 +426,87 @@ public class CommonArmorHandler {
         if (destStack.getItem() instanceof IPressurizable) {
             IPressurizable p = (IPressurizable) destStack.getItem();
             float pressure = p.getPressure(destStack);
-            if (pressure < p.maxPressure(destStack) && pressure < armorPressure[EntityEquipmentSlot.CHEST.getIndex()]) {
+            if (pressure < p.maxPressure(destStack) && pressure < this.armorPressure[EntityEquipmentSlot.CHEST.getIndex()]) {
                 float currentAir = pressure * p.getVolume(destStack);
-                float targetAir = armorPressure[EntityEquipmentSlot.CHEST.getIndex()] * p.getVolume(destStack);
-                int amountToMove = Math.min((int)(targetAir - currentAir), airAmount);
+                float targetAir = this.armorPressure[EntityEquipmentSlot.CHEST.getIndex()] * p.getVolume(destStack);
+                int amountToMove = Math.min((int) (targetAir - currentAir), airAmount);
                 p.addAir(destStack, amountToMove);
-                addAir(EntityEquipmentSlot.CHEST, -amountToMove);
+                this.addAir(EntityEquipmentSlot.CHEST, -amountToMove);
             }
         }
     }
 
     private void handleItemRepair(EntityEquipmentSlot slot) {
-        int upgrades = getUpgradeCount(slot, EnumUpgrade.ITEM_LIFE, PneumaticValues.ARMOR_REPAIR_MAX_UPGRADES);
+        int upgrades = this.getUpgradeCount(slot, EnumUpgrade.ITEM_LIFE, PneumaticValues.ARMOR_REPAIR_MAX_UPGRADES);
         int interval = 120 - (20 * upgrades);
         int airUsage = PneumaticValues.PNEUMATIC_ARMOR_REPAIR_USAGE * upgrades;
 
-        ItemStack armorStack = player.getItemStackFromSlot(slot);
+        ItemStack armorStack = this.player.getItemStackFromSlot(slot);
         if (armorStack.getItemDamage() > 0
-                && armorPressure[slot.getIndex()] > 0.1F
-                && ticksSinceEquip[slot.getIndex()] % interval == 0) {
-            addAir(slot, -airUsage);
+                && this.armorPressure[slot.getIndex()] > 0.1F
+                && this.ticksSinceEquip[slot.getIndex()] % interval == 0) {
+            this.addAir(slot, -airUsage);
             armorStack.setItemDamage(armorStack.getItemDamage() - 1);
         }
     }
 
     private void handleChestplateMagnet() {
-        if (player.world.isRemote || !magnetEnabled || (getTicksSinceEquipped(EntityEquipmentSlot.CHEST) & 0x3) != 0
-                || getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.MAGNET) == 0)
+        if (this.player.world.isRemote || !this.magnetEnabled || (this.getTicksSinceEquipped(EntityEquipmentSlot.CHEST) & 0x3) != 0
+                || this.getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.MAGNET) == 0)
             return;
 
-        AxisAlignedBB box = new AxisAlignedBB(player.getPosition()).grow(magnetRadius);
-        List<Entity> itemList = player.getEntityWorld().getEntitiesWithinAABB(Entity.class, box,
+        AxisAlignedBB box = new AxisAlignedBB(this.player.getPosition()).grow(this.magnetRadius);
+        List<Entity> itemList = this.player.getEntityWorld().getEntitiesWithinAABB(Entity.class, box,
                 e -> (e instanceof EntityXPOrb || e instanceof EntityItem) && e.isEntityAlive());
 
-        Vec3d playerVec = player.getPositionVector();
+        Vec3d playerVec = this.player.getPositionVector();
         for (Entity item : itemList) {
             if (item instanceof EntityItem && ((EntityItem) item).cannotPickup()) continue;
 
-            if (item.getPositionVector().squareDistanceTo(playerVec) <= magnetRadiusSq
+            if (item.getPositionVector().squareDistanceTo(playerVec) <= this.magnetRadiusSq
                     && !ItemRegistry.getInstance().shouldSuppressMagnet(item)
                     && !item.getEntityData().getBoolean(Names.PREVENT_REMOTE_MOVEMENT)) {
-                if (armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) break;
-                item.setPosition(player.posX, player.posY, player.posZ);
+                if (this.armorPressure[EntityEquipmentSlot.CHEST.getIndex()] < 0.1F) break;
+                item.setPosition(this.player.posX, this.player.posY, this.player.posZ);
                 if (item instanceof EntityItem) ((EntityItem) item).setPickupDelay(0);
-                addAir(EntityEquipmentSlot.CHEST, -PneumaticValues.MAGNET_AIR_USAGE);
+                this.addAir(EntityEquipmentSlot.CHEST, -PneumaticValues.MAGNET_AIR_USAGE);
             }
         }
     }
 
     private void handleHacking() {
-        if (hackedBlock != null) {
-            IHackableBlock hackableBlock = HackableHandler.getHackableForCoord(hackedBlock, player);
+        if (this.hackedBlock != null) {
+            IHackableBlock hackableBlock = HackableHandler.getHackableForCoord(this.hackedBlock, this.player);
             if (hackableBlock != null) {
-                if (++hackTime >= hackableBlock.getHackTime(hackedBlock.world, hackedBlock.pos, player)) {
-                    hackableBlock.onHackFinished(player.world, hackedBlock.pos, player);
-                    PneumaticCraftRepressurized.proxy.getHackTickHandler().trackBlock(hackedBlock, hackableBlock);
-                    NetworkHandler.sendToAllAround(new PacketHackingBlockFinish(hackedBlock), player.world);
-                    setHackedBlock(null);
-                    AdvancementTriggers.BLOCK_HACK.trigger((EntityPlayerMP) player);  // safe to cast, this is server-side
+                if (++this.hackTime >= hackableBlock.getHackTime(this.hackedBlock.world, this.hackedBlock.pos, this.player)) {
+                    hackableBlock.onHackFinished(this.player.world, this.hackedBlock.pos, this.player);
+                    PneumaticCraftRepressurized.proxy.getHackTickHandler().trackBlock(this.hackedBlock, hackableBlock);
+                    NetworkHandler.sendToAllAround(new PacketHackingBlockFinish(this.hackedBlock), this.player.world);
+                    this.setHackedBlock(null);
+                    AdvancementTriggers.BLOCK_HACK.trigger((EntityPlayerMP) this.player);  // safe to cast, this is server-side
                 }
             } else {
-                setHackedBlock(null);
+                this.setHackedBlock(null);
             }
-        } else if (hackedEntity != null) {
-            IHackableEntity hackableEntity = HackableHandler.getHackableForEntity(hackedEntity, player);
+        } else if (this.hackedEntity != null) {
+            IHackableEntity hackableEntity = HackableHandler.getHackableForEntity(this.hackedEntity, this.player);
             if (hackableEntity != null) {
-                if (++hackTime >= hackableEntity.getHackTime(hackedEntity, player)) {
-                    hackableEntity.onHackFinished(hackedEntity, player);
-                    PneumaticCraftRepressurized.proxy.getHackTickHandler().trackEntity(hackedEntity, hackableEntity);
-                    NetworkHandler.sendToAllAround(new PacketHackingEntityFinish(hackedEntity), new TargetPoint(hackedEntity.world.provider.getDimension(), hackedEntity.posX, hackedEntity.posY, hackedEntity.posZ, 64));
-                    setHackedEntity(null);
-                    AdvancementTriggers.ENTITY_HACK.trigger((EntityPlayerMP) player);  // safe to cast, this is server-side
+                if (++this.hackTime >= hackableEntity.getHackTime(this.hackedEntity, this.player)) {
+                    hackableEntity.onHackFinished(this.hackedEntity, this.player);
+                    PneumaticCraftRepressurized.proxy.getHackTickHandler().trackEntity(this.hackedEntity, hackableEntity);
+                    NetworkHandler.sendToAllAround(new PacketHackingEntityFinish(this.hackedEntity), new TargetPoint(this.hackedEntity.world.provider.getDimension(), this.hackedEntity.posX, this.hackedEntity.posY, this.hackedEntity.posZ, 64));
+                    this.setHackedEntity(null);
+                    AdvancementTriggers.ENTITY_HACK.trigger((EntityPlayerMP) this.player);  // safe to cast, this is server-side
                 }
             } else {
-                setHackedEntity(null);
+                this.setHackedEntity(null);
             }
         }
     }
 
     /**
      * Called on the first tick after the armor piece is equipped.
-     *
+     * <p>
      * Scan the armor piece in the given slot, and record all installed upgrades for fast access later on.  Upgrades
      * can't be changed without removing and re-equipping the piece, so we can cache quite a lot of useful info.
      *
@@ -511,89 +514,89 @@ public class CommonArmorHandler {
      */
     public void initArmorInventory(EntityEquipmentSlot slot) {
         // armorStack has already been validated as a pneumatic armor piece at this point
-        ItemStack armorStack = player.getItemStackFromSlot(slot);
+        ItemStack armorStack = this.player.getItemStackFromSlot(slot);
 
         // record which upgrades / render-handlers are inserted
         ItemStack[] upgradeStacks = UpgradableItemUtils.getUpgradeStacks(armorStack);
-        Arrays.fill(upgradeRenderersInserted[slot.getIndex()], false);
-        for (int i = 0; i < upgradeRenderersInserted[slot.getIndex()].length; i++) {
-            upgradeRenderersInserted[slot.getIndex()][i] = isModuleEnabled(upgradeStacks, UpgradeRenderHandlerList.instance().getHandlersForSlot(slot).get(i));
+        Arrays.fill(this.upgradeRenderersInserted[slot.getIndex()], false);
+        for (int i = 0; i < this.upgradeRenderersInserted[slot.getIndex()].length; i++) {
+            this.upgradeRenderersInserted[slot.getIndex()][i] = this.isModuleEnabled(upgradeStacks, UpgradeRenderHandlerList.instance().getHandlersForSlot(slot).get(i));
         }
 
         // record the number of upgrades of every type
-        Arrays.fill(upgradeMatrix[slot.getIndex()], 0);
+        Arrays.fill(this.upgradeMatrix[slot.getIndex()], 0);
         for (ItemStack stack : upgradeStacks) {
             if (stack.getItem() instanceof ItemMachineUpgrade) {
-                upgradeMatrix[slot.getIndex()][((ItemMachineUpgrade) stack.getItem()).getUpgradeType().ordinal()] += stack.getCount();
+                this.upgradeMatrix[slot.getIndex()][((ItemMachineUpgrade) stack.getItem()).getUpgradeType().ordinal()] += stack.getCount();
             }
         }
-        startupTimes[slot.getIndex()] = (int) (ConfigHandler.pneumaticArmor.armorStartupTime * Math.pow(0.8, getSpeedFromUpgrades(slot) - 1));
+        this.startupTimes[slot.getIndex()] = (int) (ConfigHandler.pneumaticArmor.armorStartupTime * Math.pow(0.8, this.getSpeedFromUpgrades(slot) - 1));
 
         // some slot-specific setup
         switch (slot) {
             case CHEST:
-                magnetRadius = PneumaticValues.MAGNET_BASE_RANGE
-                        + Math.min(getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.MAGNET), PneumaticValues.MAGNET_MAX_UPGRADES);
-                magnetRadiusSq = magnetRadius * magnetRadius;
+                this.magnetRadius = PneumaticValues.MAGNET_BASE_RANGE
+                        + Math.min(this.getUpgradeCount(EntityEquipmentSlot.CHEST, EnumUpgrade.MAGNET), PneumaticValues.MAGNET_MAX_UPGRADES);
+                this.magnetRadiusSq = this.magnetRadius * this.magnetRadius;
                 break;
             case LEGS:
-                speedBoostMult = ItemPneumaticArmor.getIntData(armorStack, ItemPneumaticArmor.NBT_SPEED_BOOST, 100) / 100f;
+                this.speedBoostMult = ItemPneumaticArmor.getIntData(armorStack, ItemPneumaticArmor.NBT_SPEED_BOOST, 100) / 100f;
                 break;
             case FEET:
-                jetBootsBuilderMode = ItemPneumaticArmor.getBooleanData(armorStack, ItemPneumaticArmor.NBT_BUILDER_MODE, false);
-                JetBootsStateTracker.getTracker(player).setJetBootsState(player, isJetBootsEnabled(), isJetBootsActive(), jetBootsBuilderMode);
+                this.jetBootsBuilderMode = ItemPneumaticArmor.getBooleanData(armorStack, ItemPneumaticArmor.NBT_BUILDER_MODE, false);
+                JetBootsStateTracker.getTracker(this.player).setJetBootsState(this.player, this.isJetBootsEnabled(), this.isJetBootsActive(), this.jetBootsBuilderMode);
                 break;
         }
     }
 
     public int getUpgradeCount(EntityEquipmentSlot slot, EnumUpgrade upgrade) {
-        return upgradeMatrix[slot.getIndex()][upgrade.ordinal()];
+        return this.upgradeMatrix[slot.getIndex()][upgrade.ordinal()];
     }
 
     public int getUpgradeCount(EntityEquipmentSlot slot, EnumUpgrade upgrade, int max) {
-        return Math.min(max, upgradeMatrix[slot.getIndex()][upgrade.ordinal()]);
+        return Math.min(max, this.upgradeMatrix[slot.getIndex()][upgrade.ordinal()]);
     }
 
     public boolean isUpgradeRendererInserted(EntityEquipmentSlot slot, int i) {
-        return upgradeRenderersInserted[slot.getIndex()][i];
+        return this.upgradeRenderersInserted[slot.getIndex()][i];
     }
 
     public boolean isUpgradeRendererEnabled(EntityEquipmentSlot slot, int i) {
-        return upgradeRenderersEnabled[slot.getIndex()][i];
+        return this.upgradeRenderersEnabled[slot.getIndex()][i];
     }
 
     public void setUpgradeRenderEnabled(EntityEquipmentSlot slot, byte featureIndex, boolean state) {
-        upgradeRenderersEnabled[slot.getIndex()][featureIndex] = state;
+        this.upgradeRenderersEnabled[slot.getIndex()][featureIndex] = state;
         IUpgradeRenderHandler handler = UpgradeRenderHandlerList.instance().getHandlersForSlot(slot).get(featureIndex);
         // bit of a code smell here, but caching the enablement of various features is important for performance
         if (handler instanceof MagnetUpgradeHandler) {
-            magnetEnabled = state;
+            this.magnetEnabled = state;
         } else if (handler instanceof ChargingUpgradeHandler) {
-            chargingEnabled = state;
+            this.chargingEnabled = state;
         } else if (handler instanceof StepAssistUpgradeHandler) {
-            stepAssistEnabled = state;
+            this.stepAssistEnabled = state;
         } else if (handler instanceof RunSpeedUpgradeHandler) {
-            runSpeedEnabled = state;
+            this.runSpeedEnabled = state;
         } else if (handler instanceof JumpBoostUpgradeHandler) {
-            jumpBoostEnabled = state;
+            this.jumpBoostEnabled = state;
         } else if (handler instanceof JetBootsUpgradeHandler) {
-            jetBootsEnabled = state;
-            JetBootsStateTracker.getTracker(player).setJetBootsState(player, jetBootsEnabled, isJetBootsActive(), isJetBootsBuilderMode());
+            this.jetBootsEnabled = state;
+            JetBootsStateTracker.getTracker(this.player).setJetBootsState(this.player, this.jetBootsEnabled, this.isJetBootsActive(), this.isJetBootsBuilderMode());
         } else if (handler instanceof MainHelmetHandler) {
-            armorEnabled = state;
+            this.armorEnabled = state;
         } else if (handler instanceof EntityTrackUpgradeHandler) {
-            entityTrackerEnabled = state;
+            this.entityTrackerEnabled = state;
         } else if (handler instanceof NightVisionUpgradeHandler) {
-            nightVisionEnabled = state;
+            this.nightVisionEnabled = state;
         } else if (handler instanceof ScubaUpgradeHandler) {
-            scubaEnabled = state;
+            this.scubaEnabled = state;
         } else if (handler instanceof AirConUpgradeHandler) {
-            airConEnabled = state;
+            this.airConEnabled = state;
         }
     }
 
     public int getTicksSinceEquipped(EntityEquipmentSlot slot) {
-        return ticksSinceEquip[slot.getIndex()];
+        return this.ticksSinceEquip[slot.getIndex()];
     }
 
     private boolean isModuleEnabled(ItemStack[] helmetStacks, IUpgradeRenderHandler handler) {
@@ -611,105 +614,105 @@ public class CommonArmorHandler {
     }
 
     public int getSpeedFromUpgrades(EntityEquipmentSlot slot) {
-        return 1 + getUpgradeCount(slot, EnumUpgrade.SPEED);
+        return 1 + this.getUpgradeCount(slot, EnumUpgrade.SPEED);
     }
 
     public int getStartupTime(EntityEquipmentSlot slot) {
-        return startupTimes[slot.getIndex()];
+        return this.startupTimes[slot.getIndex()];
     }
 
     public void setHackedBlock(WorldAndCoord blockPos) {
-        hackedBlock = blockPos;
-        hackedEntity = null;
-        hackTime = 0;
+        this.hackedBlock = blockPos;
+        this.hackedEntity = null;
+        this.hackTime = 0;
     }
 
     public void setHackedEntity(Entity entity) {
-        hackedEntity = entity;
-        hackedBlock = null;
-        hackTime = 0;
+        this.hackedEntity = entity;
+        this.hackedBlock = null;
+        this.hackTime = 0;
     }
 
     public boolean isArmorReady(EntityEquipmentSlot slot) {
-        return getTicksSinceEquipped(slot) > getStartupTime(slot);
+        return this.getTicksSinceEquipped(slot) > this.getStartupTime(slot);
     }
 
     public boolean isStepAssistEnabled() {
-        return stepAssistEnabled;
+        return this.stepAssistEnabled;
     }
 
     public boolean isRunSpeedEnabled() {
-        return runSpeedEnabled;
+        return this.runSpeedEnabled;
     }
 
     public boolean isJumpBoostEnabled() {
-        return jumpBoostEnabled;
+        return this.jumpBoostEnabled;
     }
 
     public boolean isAirConEnabled() {
-        return airConEnabled;
+        return this.airConEnabled;
     }
 
     public float getArmorPressure(EntityEquipmentSlot slot) {
-        return armorPressure[slot.getIndex()];
+        return this.armorPressure[slot.getIndex()];
     }
 
     public void setJetBootsActive(boolean jetBootsActive) {
         if (!jetBootsActive) {
-            jetBootsActiveTicks = 0;
+            this.jetBootsActiveTicks = 0;
         }
         this.jetBootsActive = jetBootsActive;
-        JetBootsStateTracker.getTracker(player).setJetBootsState(player, isJetBootsEnabled(), jetBootsActive, isJetBootsBuilderMode());
+        JetBootsStateTracker.getTracker(this.player).setJetBootsState(this.player, this.isJetBootsEnabled(), jetBootsActive, this.isJetBootsBuilderMode());
     }
 
     public boolean isJetBootsActive() {
-        return jetBootsActive;
+        return this.jetBootsActive;
     }
 
     public boolean isJetBootsEnabled() {
-        return jetBootsEnabled;
+        return this.jetBootsEnabled;
     }
 
     public boolean isArmorEnabled() {
-        return armorEnabled;
+        return this.armorEnabled;
     }
 
     public boolean isEntityTrackerEnabled() {
-        return entityTrackerEnabled;
+        return this.entityTrackerEnabled;
     }
 
     public boolean isScubaEnabled() {
-        return scubaEnabled;
+        return this.scubaEnabled;
     }
 
     public boolean isValid() {
-        return isValid;
+        return this.isValid;
     }
 
     public void invalidate() {
-        isValid = false;
+        this.isValid = false;
     }
 
     public boolean isJetBootsBuilderMode() {
-        return jetBootsBuilderMode;
+        return this.jetBootsBuilderMode;
     }
 
     /**
      * Called both client- and server-side when a custom NBT field in an armor item has been updated.  Used to
      * cache data (e.g. legs speed boost %) for performance reasons.
      *
-     * @param slot the armor slot
-     * @param key the data key
+     * @param slot    the armor slot
+     * @param key     the data key
      * @param dataTag the data item, to be interpreted depending on the key
      */
     public void onDataFieldUpdated(EntityEquipmentSlot slot, String key, NBTBase dataTag) {
         switch (key) {
             case ItemPneumaticArmor.NBT_SPEED_BOOST:
-                speedBoostMult = MathHelper.clamp(((NBTTagInt) dataTag).getInt() / 100f, 0.0f, 1.0f);
+                this.speedBoostMult = MathHelper.clamp(((NBTTagInt) dataTag).getInt() / 100f, 0.0f, 1.0f);
                 break;
             case ItemPneumaticArmor.NBT_BUILDER_MODE:
-                jetBootsBuilderMode = ((NBTTagByte) dataTag).getByte() == 1;
-                JetBootsStateTracker.getTracker(player).getJetBootsState(player).setBuilderMode(jetBootsBuilderMode);
+                this.jetBootsBuilderMode = ((NBTTagByte) dataTag).getByte() == 1;
+                JetBootsStateTracker.getTracker(this.player).getJetBootsState(this.player).setBuilderMode(this.jetBootsBuilderMode);
                 break;
         }
     }

@@ -154,7 +154,7 @@ public class Itemss {
     public static final Item MICROMISSILES = null;
 
     public static List<Item> items = new ArrayList<>();
-    private static List<ItemBlock> all_itemblocks = new ArrayList<>();
+    private static final List<ItemBlock> all_itemblocks = new ArrayList<>();
     public static UpgradeList upgrades = new UpgradeList();
 
     @SubscribeEvent
@@ -216,7 +216,7 @@ public class Itemss {
         ItemPneumaticArmor.initApplicableUpgrades();
 
         for (Block b : Blockss.blocks) {
-            if(!(b instanceof BlockAir)){
+            if (!(b instanceof BlockAir)) {
                 ItemBlock itemBlock = b instanceof ICustomItemBlock ? ((ICustomItemBlock) b).getCustomItemBlock() : new ItemBlock(b);
                 registerItem(registry, itemBlock.setRegistryName(b.getRegistryName()));
             }
@@ -248,7 +248,7 @@ public class Itemss {
 
     public static class UpgradeList extends ArrayList<Item> {
         public Item get(EnumUpgrade upgrade) {
-            return get(upgrade.ordinal());
+            return this.get(upgrade.ordinal());
         }
     }
 
@@ -268,7 +268,7 @@ public class Itemss {
         }, Itemss.PLASTIC);
 
         event.getItemColors().registerItemColorHandler((stack, tintIndex) ->
-                NBTUtil.hasTag(stack, UpgradableItemUtils.NBT_CREATIVE) ? 0xFFFF60FF : 0xFFFFFFFF,
+                        NBTUtil.hasTag(stack, UpgradableItemUtils.NBT_CREATIVE) ? 0xFFFF60FF : 0xFFFFFFFF,
                 Item.getItemFromBlock(Blockss.OMNIDIRECTIONAL_HOPPER), Item.getItemFromBlock(Blockss.LIQUID_HOPPER));
 
         event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {

@@ -19,47 +19,47 @@ public class GuiPressureModuleSimple extends GuiTubeModule {
 
     public GuiPressureModuleSimple(EntityPlayer player, int x, int y, int z) {
         super(player, x, y, z);
-        ySize = 57;
+        this.ySize = 57;
     }
 
     public GuiPressureModuleSimple(TubeModule module) {
         super(module);
-        ySize = 57;
+        this.ySize = 57;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        String title = I18n.format("item." + module.getType() + ".name");
-        addLabel(title, width / 2 - fontRenderer.getStringWidth(title) / 2, guiTop + 5);
+        String title = I18n.format("item." + this.module.getType() + ".name");
+        this.addLabel(title, this.width / 2 - this.fontRenderer.getStringWidth(title) / 2, this.guiTop + 5);
 
-        GuiCheckBox advancedMode = new GuiCheckBox(0, guiLeft + 6, guiTop + 15, 0xFF404040, "gui.tubeModule.advancedConfig").setTooltip(I18n.format("gui.tubeModule.advancedConfig.tooltip"));
+        GuiCheckBox advancedMode = new GuiCheckBox(0, this.guiLeft + 6, this.guiTop + 15, 0xFF404040, "gui.tubeModule.advancedConfig").setTooltip(I18n.format("gui.tubeModule.advancedConfig.tooltip"));
         advancedMode.checked = false;
-        addWidget(advancedMode);
+        this.addWidget(advancedMode);
 
-        thresholdField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 110, guiTop + 33, 30, fontRenderer.FONT_HEIGHT).setDecimals(1);
-        addWidget(thresholdField);
+        this.thresholdField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 110, this.guiTop + 33, 30, this.fontRenderer.FONT_HEIGHT).setDecimals(1);
+        this.addWidget(this.thresholdField);
 
-        if (module instanceof TubeModuleRedstoneReceiving) {
-            thresholdField.setValue(((TubeModuleRedstoneReceiving) module).getThreshold());
-            addLabel(I18n.format("gui.tubeModule.simpleConfig.threshold"), guiLeft + 6, guiTop + 33);
+        if (this.module instanceof TubeModuleRedstoneReceiving) {
+            this.thresholdField.setValue(((TubeModuleRedstoneReceiving) this.module).getThreshold());
+            this.addLabel(I18n.format("gui.tubeModule.simpleConfig.threshold"), this.guiLeft + 6, this.guiTop + 33);
         } else {
-            thresholdField.setValue(module.lowerBound);
-            addLabel(I18n.format("gui.tubeModule.simpleConfig.turn"), guiLeft + 6, guiTop + 33);
-            moreOrLessButton = new GuiButtonSpecial(1, guiLeft + 85, guiTop + 28, 20, 20, module.lowerBound < module.higherBound ? ">" : "<");
-            moreOrLessButton.setTooltipText(I18n.format(module.lowerBound < module.higherBound ? "gui.tubeModule.simpleConfig.higherThan" : "gui.tubeModule.simpleConfig.lowerThan"));
-            addWidget(moreOrLessButton);
+            this.thresholdField.setValue(this.module.lowerBound);
+            this.addLabel(I18n.format("gui.tubeModule.simpleConfig.turn"), this.guiLeft + 6, this.guiTop + 33);
+            this.moreOrLessButton = new GuiButtonSpecial(1, this.guiLeft + 85, this.guiTop + 28, 20, 20, this.module.lowerBound < this.module.higherBound ? ">" : "<");
+            this.moreOrLessButton.setTooltipText(I18n.format(this.module.lowerBound < this.module.higherBound ? "gui.tubeModule.simpleConfig.higherThan" : "gui.tubeModule.simpleConfig.lowerThan"));
+            this.addWidget(this.moreOrLessButton);
         }
-        addLabel(I18n.format("gui.general.bar"), guiLeft + 145, guiTop + 34);
+        this.addLabel(I18n.format("gui.general.bar"), this.guiLeft + 145, this.guiTop + 34);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (module.advancedConfig) {
-            module.lowerBound = (float) thresholdField.getDoubleValue();
-            mc.displayGuiScreen(new GuiPressureModule(module));
+        if (this.module.advancedConfig) {
+            this.module.lowerBound = (float) this.thresholdField.getDoubleValue();
+            this.mc.displayGuiScreen(new GuiPressureModule(this.module));
         }
     }
 
@@ -73,38 +73,38 @@ public class GuiPressureModuleSimple extends GuiTubeModule {
         super.actionPerformed(widget);
         switch (widget.getID()) {
             case 0:
-                module.advancedConfig = true;
-                NetworkHandler.sendToServer(new PacketUpdatePressureModule(module, 2, 1));
+                this.module.advancedConfig = true;
+                NetworkHandler.sendToServer(new PacketUpdatePressureModule(this.module, 2, 1));
                 break;
             case 1:
                 //Toggle
-                float temp = module.higherBound;
-                module.higherBound = module.lowerBound;
-                module.lowerBound = temp;
-                
-                updateThreshold();
-                moreOrLessButton.displayString = module.lowerBound < module.higherBound ? ">" : "<";
-                moreOrLessButton.setTooltipText(I18n.format(module.lowerBound < module.higherBound ? "gui.tubeModule.simpleConfig.higherThan" : "gui.tubeModule.simpleConfig.lowerThan"));
-                NetworkHandler.sendToServer(new PacketUpdatePressureModule(module, 1, module.higherBound));
+                float temp = this.module.higherBound;
+                this.module.higherBound = this.module.lowerBound;
+                this.module.lowerBound = temp;
+
+                this.updateThreshold();
+                this.moreOrLessButton.displayString = this.module.lowerBound < this.module.higherBound ? ">" : "<";
+                this.moreOrLessButton.setTooltipText(I18n.format(this.module.lowerBound < this.module.higherBound ? "gui.tubeModule.simpleConfig.higherThan" : "gui.tubeModule.simpleConfig.lowerThan"));
+                NetworkHandler.sendToServer(new PacketUpdatePressureModule(this.module, 1, this.module.higherBound));
                 break;
         }
     }
-    
-    private void updateThreshold(){
-        boolean moreThanMode = module.lowerBound > module.higherBound;
-        module.lowerBound = (float) thresholdField.getDoubleValue();
+
+    private void updateThreshold() {
+        boolean moreThanMode = this.module.lowerBound > this.module.higherBound;
+        this.module.lowerBound = (float) this.thresholdField.getDoubleValue();
         if (moreThanMode) {
-            module.higherBound = module.lowerBound - 0.1F;
+            this.module.higherBound = this.module.lowerBound - 0.1F;
         } else {
-            module.higherBound = module.lowerBound + 0.1F;
+            this.module.higherBound = this.module.lowerBound + 0.1F;
         }
     }
 
     @Override
     public void onGuiClosed() {
-        updateThreshold();
-        NetworkHandler.sendToServer(new PacketUpdatePressureModule(module, 0, module.lowerBound));
-        NetworkHandler.sendToServer(new PacketUpdatePressureModule(module, 1, module.higherBound));
+        this.updateThreshold();
+        NetworkHandler.sendToServer(new PacketUpdatePressureModule(this.module, 0, this.module.lowerBound));
+        NetworkHandler.sendToServer(new PacketUpdatePressureModule(this.module, 1, this.module.higherBound));
         super.onGuiClosed();
     }
 }

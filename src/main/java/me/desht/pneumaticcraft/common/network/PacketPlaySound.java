@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * MineChess
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
@@ -44,21 +44,21 @@ public class PacketPlaySound extends LocationDoublePacket<PacketPlaySound> {
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        ByteBufUtils.writeUTF8String(buffer, soundName.toString());
-        buffer.writeInt(category.ordinal());
-        buffer.writeFloat(volume);
-        buffer.writeFloat(pitch);
-        buffer.writeBoolean(distanceDelay);
+        ByteBufUtils.writeUTF8String(buffer, this.soundName.toString());
+        buffer.writeInt(this.category.ordinal());
+        buffer.writeFloat(this.volume);
+        buffer.writeFloat(this.pitch);
+        buffer.writeBoolean(this.distanceDelay);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        soundEvent = new SoundEvent(new ResourceLocation(ByteBufUtils.readUTF8String(buffer)));
-        category = SoundCategory.values()[buffer.readInt()];
-        volume = buffer.readFloat();
-        pitch = buffer.readFloat();
-        distanceDelay = buffer.readBoolean();
+        this.soundEvent = new SoundEvent(new ResourceLocation(ByteBufUtils.readUTF8String(buffer)));
+        this.category = SoundCategory.values()[buffer.readInt()];
+        this.volume = buffer.readFloat();
+        this.pitch = buffer.readFloat();
+        this.distanceDelay = buffer.readBoolean();
     }
 
     @Override

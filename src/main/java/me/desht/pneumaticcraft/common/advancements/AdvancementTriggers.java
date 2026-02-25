@@ -20,7 +20,7 @@ public class AdvancementTriggers {
     public static final CustomTrigger FLY_INTO_WALL = new CustomTrigger("fly_into_wall");
     public static final CustomTrigger LOGISTICS_DRONE_DEPLOYED = new CustomTrigger("logistics_drone_deployed");
 
-    private static final CustomTrigger[] ALL_TRIGGERS = new CustomTrigger[] {
+    private static final CustomTrigger[] ALL_TRIGGERS = new CustomTrigger[]{
             EXPLODE_IRON,
             OIL_BUCKET,
             NINEBYNINE,

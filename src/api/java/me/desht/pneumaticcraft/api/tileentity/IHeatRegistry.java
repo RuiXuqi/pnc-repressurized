@@ -22,8 +22,8 @@ public interface IHeatRegistry {
      * <p>
      * Note: the preferred way to do this is via the BlockHeatProperties.cfg config file.
      *
-     * @param block the block
-     * @param temperature the block's temperature
+     * @param block             the block
+     * @param temperature       the block's temperature
      * @param thermalResistance the thermal resistance, i.e. how quickly heat will be transferred
      */
     void registerBlockExchanger(Block block, double temperature, double thermalResistance);
@@ -34,8 +34,8 @@ public interface IHeatRegistry {
      * <p>
      * Note: the preferred way to do this is via the BlockHeatProperties.cfg config file.
      *
-     * @param state the blockstate
-     * @param temperature the block variant's temperature
+     * @param state             the blockstate
+     * @param temperature       the block variant's temperature
      * @param thermalResistance the thermal resistance, i.e. how quickly heat will be transferred
      */
     void registerBlockExchanger(IBlockState state, double temperature, double thermalResistance);

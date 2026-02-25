@@ -11,7 +11,7 @@ public class RenderPneumaticDoor extends AbstractModelRenderer<TileEntityPneumat
     private final ModelDoor modelDoor;
 
     public RenderPneumaticDoor() {
-        modelDoor = new ModelDoor();
+        this.modelDoor = new ModelDoor();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class RenderPneumaticDoor extends AbstractModelRenderer<TileEntityPneumat
         GlStateManager.rotate(rotation, 0, rightGoing ? -1 : 1, 0);
         GlStateManager.translate((rightGoing ? -1 : 1) * -6.5F / 16F, 0, 6.5F / 16F);
         if (te.getBlockMetadata() < 6) {
-            modelDoor.renderModel(0.0625f);
+            this.modelDoor.renderModel(0.0625f);
         }
     }
 }

@@ -20,7 +20,7 @@ public class ProgramLaser extends AssemblyProgram {
         boolean useAir = true;
 
         if (!system.getPlatform().getHeldStack().isEmpty()) {
-            if (canItemBeLasered(system.getPlatform().getHeldStack())) {
+            if (this.canItemBeLasered(system.getPlatform().getHeldStack())) {
                 system.getLaser().startLasering();
             } else {
                 if (system.getLaser().isIdle()) {
@@ -31,7 +31,7 @@ public class ProgramLaser extends AssemblyProgram {
             if (!system.getExportUnit().isIdle()) {
                 useAir = system.getExportUnit().pickupItem(null);
             } else {
-                useAir = system.getImportUnit().pickupItem(getRecipeList());
+                useAir = system.getImportUnit().pickupItem(this.getRecipeList());
             }
         }
 
@@ -39,7 +39,7 @@ public class ProgramLaser extends AssemblyProgram {
     }
 
     private boolean canItemBeLasered(ItemStack item) {
-        for (AssemblyRecipe recipe : getRecipeList()) {
+        for (AssemblyRecipe recipe : this.getRecipeList()) {
             if (isValidInput(recipe, item)) return true;
         }
         return false;

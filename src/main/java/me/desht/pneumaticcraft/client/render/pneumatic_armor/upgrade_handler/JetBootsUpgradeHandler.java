@@ -22,7 +22,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class JetBootsUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleableRenderHandler {
 
-    private static final String[] HEADINGS = new String[] { "S", "SW", "W", "NW", "N", "NE", "E", "SE" };
+    private static final String[] HEADINGS = new String[]{"S", "SW", "W", "NW", "N", "NE", "E", "SE"};
 
     private String l1, l2, l3, r1, r2, r3;
     private int widestR;
@@ -37,7 +37,7 @@ public class JetBootsUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleab
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(IItemRegistry.EnumUpgrade.JET_BOOTS) };
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.JET_BOOTS)};
     }
 
     @Override
@@ -57,30 +57,30 @@ public class JetBootsUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleab
         String g1 = TextFormatting.WHITE.toString();
         String g2 = TextFormatting.GREEN.toString();
 
-        if (jbStat.isClicked()) {
+        if (this.jbStat.isClicked()) {
             double mx = player.posX - player.lastTickPosX;
             double my = player.posY - player.lastTickPosY;
             double mz = player.posZ - player.lastTickPosZ;
             double v = Math.sqrt(mx * mx + my * my + mz * mz);
             double vg = Math.sqrt(mx * mx + mz * mz);
-            int heading = MathHelper.floor((double)(player.rotationYaw * 8.0F / 360.0F) + 0.5D) & 0x7;
-            int yaw = ((int)player.rotationYaw + 180) % 360;
+            int heading = MathHelper.floor((double) (player.rotationYaw * 8.0F / 360.0F) + 0.5D) & 0x7;
+            int yaw = ((int) player.rotationYaw + 180) % 360;
             if (yaw < 0) yaw += 360;
             BlockPos pos = player.getPosition();
 
-            l1 = String.format(" %sSpd: %s%05.2fm/s", g1, g2, v * 20);
-            l2 = String.format("  %sAlt: %s%03dm", g1, g2, pos.getY());
-            l3 = String.format("%sHead: %s%d° (%s)", g1, g2, yaw, HEADINGS[heading]);
-            r1 = String.format("%sGnd: %s%05.2f", g1, g2, vg * 20);
-            r2 = String.format("%sGnd: %s%dm", g1, g2, pos.getY() - player.world.getHeight(pos.getX(), pos.getZ()));
-            r3 = String.format("%sPch: %s%d°", g1, g2, (int)-player.rotationPitch);
+            this.l1 = String.format(" %sSpd: %s%05.2fm/s", g1, g2, v * 20);
+            this.l2 = String.format("  %sAlt: %s%03dm", g1, g2, pos.getY());
+            this.l3 = String.format("%sHead: %s%d° (%s)", g1, g2, yaw, HEADINGS[heading]);
+            this.r1 = String.format("%sGnd: %s%05.2f", g1, g2, vg * 20);
+            this.r2 = String.format("%sGnd: %s%dm", g1, g2, pos.getY() - player.world.getHeight(pos.getX(), pos.getZ()));
+            this.r3 = String.format("%sPch: %s%d°", g1, g2, (int) -player.rotationPitch);
             FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-            int wl = Math.max(fr.getStringWidth(l1), Math.max(fr.getStringWidth(l2), fr.getStringWidth(l3)));
-            int wr = Math.max(fr.getStringWidth(r1), Math.max(fr.getStringWidth(r2), fr.getStringWidth(r3)));
-            if (wl + wr + 16 > jbStat.getWidth()) {
-                jbStat.setForcedDimensions(wl + wr + 16, 5 * fr.FONT_HEIGHT);
+            int wl = Math.max(fr.getStringWidth(this.l1), Math.max(fr.getStringWidth(this.l2), fr.getStringWidth(this.l3)));
+            int wr = Math.max(fr.getStringWidth(this.r1), Math.max(fr.getStringWidth(this.r2), fr.getStringWidth(this.r3)));
+            if (wl + wr + 16 > this.jbStat.getWidth()) {
+                this.jbStat.setForcedDimensions(wl + wr + 16, 5 * fr.FONT_HEIGHT);
             }
-            widestR = Math.max(wr, widestR);
+            this.widestR = Math.max(wr, this.widestR);
         }
     }
 
@@ -88,40 +88,40 @@ public class JetBootsUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleab
     public void render2D(float partialTicks, boolean helmetEnabled) {
         super.render2D(partialTicks, helmetEnabled);
 
-        if (helmetEnabled && jbStat.isClicked()) {
+        if (helmetEnabled && this.jbStat.isClicked()) {
             FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-            int xl = jbStat.getBaseX() + 5;
-            int y = jbStat.getBaseY() + fr.FONT_HEIGHT + 8;
-            int xr = jbStat.getBaseX() + jbStat.getWidth() - 5;
-            if (jbStat.isLeftSided()) {
-                xl -= jbStat.getWidth();
-                xr -= jbStat.getWidth();
+            int xl = this.jbStat.getBaseX() + 5;
+            int y = this.jbStat.getBaseY() + fr.FONT_HEIGHT + 8;
+            int xr = this.jbStat.getBaseX() + this.jbStat.getWidth() - 5;
+            if (this.jbStat.isLeftSided()) {
+                xl -= this.jbStat.getWidth();
+                xr -= this.jbStat.getWidth();
             }
-            fr.drawStringWithShadow(l1, xl, y, 0x404040);
-            fr.drawStringWithShadow(l2, xl, y + fr.FONT_HEIGHT, 0x404040);
-            fr.drawStringWithShadow(l3, xl, y + fr.FONT_HEIGHT * 2, 0x404040);
-            fr.drawStringWithShadow(r1, xr - widestR, y, 0x404040);
-            fr.drawStringWithShadow(r2, xr - widestR, y + fr.FONT_HEIGHT, 0x404040);
-            fr.drawStringWithShadow(r3, xr - widestR, y + fr.FONT_HEIGHT * 2, 0x404040);
+            fr.drawStringWithShadow(this.l1, xl, y, 0x404040);
+            fr.drawStringWithShadow(this.l2, xl, y + fr.FONT_HEIGHT, 0x404040);
+            fr.drawStringWithShadow(this.l3, xl, y + fr.FONT_HEIGHT * 2, 0x404040);
+            fr.drawStringWithShadow(this.r1, xr - this.widestR, y, 0x404040);
+            fr.drawStringWithShadow(this.r2, xr - this.widestR, y + fr.FONT_HEIGHT, 0x404040);
+            fr.drawStringWithShadow(this.r3, xr - this.widestR, y + fr.FONT_HEIGHT * 2, 0x404040);
         }
     }
 
     @Override
     public IGuiAnimatedStat getAnimatedStat() {
-        if (jbStat == null) {
-            jbStat = new GuiAnimatedStat(null, "Jet Boots",
+        if (this.jbStat == null) {
+            this.jbStat = new GuiAnimatedStat(null, "Jet Boots",
                     GuiAnimatedStat.StatIcon.of(CraftingRegistrator.getUpgrade(IItemRegistry.EnumUpgrade.JET_BOOTS)),
                     0x3000AA00, null, ArmorHUDLayout.INSTANCE.jetBootsStat);
-            jbStat.setMinDimensionsAndReset(0, 0);
+            this.jbStat.setMinDimensionsAndReset(0, 0);
             FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
             int n = fr.getStringWidth("  Spd: 00.00m/s   Gnd: 00.00");
-            jbStat.addPadding(3, n / fr.getStringWidth(" "));
+            this.jbStat.addPadding(3, n / fr.getStringWidth(" "));
         }
-        return jbStat;
+        return this.jbStat;
     }
 
     @Override
     public void onResolutionChanged() {
-        jbStat = null;
+        this.jbStat = null;
     }
 }

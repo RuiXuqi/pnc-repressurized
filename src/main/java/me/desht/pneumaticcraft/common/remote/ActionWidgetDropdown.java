@@ -27,8 +27,8 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
 
     public ActionWidgetDropdown(WidgetComboBox widget) {
         super(widget);
-        width = widget.width;
-        height = widget.height;
+        this.width = widget.width;
+        this.height = widget.height;
         widget.setText(I18n.format("remote.dropdown.name"));
         widget.setTooltip(WordUtils.wrap(I18n.format("remote.dropdown.tooltip"), 50).split(System.getProperty("line.separator")));
     }
@@ -36,24 +36,24 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
     @Override
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
         super.readFromNBT(tag, guiLeft, guiTop);
-        x = tag.getInteger("x") + guiLeft;
-        y = tag.getInteger("y") + guiTop;
-        width = tag.getInteger("width");
-        height = tag.getInteger("height");
-        dropDownElements = tag.getString("dropDownElements");
-        sorted = tag.getBoolean("sorted");
-        updateWidget();
+        this.x = tag.getInteger("x") + guiLeft;
+        this.y = tag.getInteger("y") + guiTop;
+        this.width = tag.getInteger("width");
+        this.height = tag.getInteger("height");
+        this.dropDownElements = tag.getString("dropDownElements");
+        this.sorted = tag.getBoolean("sorted");
+        this.updateWidget();
     }
 
     @Override
     public NBTTagCompound toNBT(int guiLeft, int guiTop) {
         NBTTagCompound tag = super.toNBT(guiLeft, guiTop);
-        tag.setInteger("x", x - guiLeft);
-        tag.setInteger("y", y - guiTop);
-        tag.setInteger("width", width);
-        tag.setInteger("height", height);
-        tag.setString("dropDownElements", dropDownElements);
-        tag.setBoolean("sorted", sorted);
+        tag.setInteger("x", this.x - guiLeft);
+        tag.setInteger("y", this.y - guiTop);
+        tag.setInteger("width", this.width);
+        tag.setInteger("height", this.height);
+        tag.setString("dropDownElements", this.dropDownElements);
+        tag.setBoolean("sorted", this.sorted);
 
         return tag;
     }
@@ -65,11 +65,11 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
 
     @Override
     public void onKeyTyped() {
-        String[] elements = getDropdownElements();
-        selectedElement = getWidget().getText();
+        String[] elements = this.getDropdownElements();
+        this.selectedElement = this.getWidget().getText();
         for (int i = 0; i < elements.length; i++) {
-            if (elements[i].equals(selectedElement)) {
-                NetworkHandler.sendToServer(new PacketSetGlobalVariable(getVariableName(), i));
+            if (elements[i].equals(this.selectedElement)) {
+                NetworkHandler.sendToServer(new PacketSetGlobalVariable(this.getVariableName(), i));
                 break;
             }
         }
@@ -77,44 +77,44 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
 
     @Override
     public void onVariableChange() {
-        updateWidget();
+        this.updateWidget();
     }
 
     @Override
     public void setWidgetPos(int x, int y) {
         this.x = x;
         this.y = y;
-        updateWidget();
+        this.updateWidget();
     }
 
     @Override
     public WidgetComboBox getWidget() {
-        if (widget == null) {
-            widget = new WidgetComboBox(Minecraft.getMinecraft().fontRenderer, x, y, width, height);
-            widget.setElements(getDropdownElements());
-            widget.setFixedOptions();
-            widget.setShouldSort(sorted);
-            updateWidget();
+        if (this.widget == null) {
+            this.widget = new WidgetComboBox(Minecraft.getMinecraft().fontRenderer, this.x, this.y, this.width, this.height);
+            this.widget.setElements(this.getDropdownElements());
+            this.widget.setFixedOptions();
+            this.widget.setShouldSort(this.sorted);
+            this.updateWidget();
         }
-        return widget;
+        return this.widget;
     }
 
     private String[] getDropdownElements() {
-        return dropDownElements.split(",");
+        return this.dropDownElements.split(",");
     }
 
     private void updateWidget() {
-        String[] elements = getDropdownElements();
-        selectedElement = elements[MathHelper.clamp(GlobalVariableManager.getInstance().getInteger(getVariableName()), 0, elements.length - 1)];
+        String[] elements = this.getDropdownElements();
+        this.selectedElement = elements[MathHelper.clamp(GlobalVariableManager.getInstance().getInteger(this.getVariableName()), 0, elements.length - 1)];
 
-        if (widget != null) {
-            widget.x = x;
-            widget.y = y;
-            widget.width = width;
-            widget.height = height;
-            widget.setElements(getDropdownElements());
-            widget.setText(selectedElement);
-            widget.setShouldSort(sorted);
+        if (this.widget != null) {
+            this.widget.x = this.x;
+            this.widget.y = this.y;
+            this.widget.width = this.width;
+            this.widget.height = this.height;
+            this.widget.setElements(this.getDropdownElements());
+            this.widget.setText(this.selectedElement);
+            this.widget.setShouldSort(this.sorted);
         }
     }
 
@@ -124,15 +124,15 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
 
     public void setDropDownElements(String dropDownElements) {
         this.dropDownElements = dropDownElements;
-        updateWidget();
+        this.updateWidget();
     }
 
     public String getDropDownElements() {
-        return dropDownElements;
+        return this.dropDownElements;
     }
 
     public boolean getSorted() {
-        return sorted;
+        return this.sorted;
     }
 
     public void setSorted(boolean sorted) {
@@ -141,11 +141,11 @@ public class ActionWidgetDropdown extends ActionWidgetVariable<WidgetComboBox> {
 
     public void setWidth(int width) {
         this.width = width;
-        updateWidget();
+        this.updateWidget();
     }
 
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     @Override

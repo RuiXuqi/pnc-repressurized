@@ -98,7 +98,7 @@ public class EventHandlerPneumaticCraft {
         FluidStack fluidStack = FluidUtil.getFluidContained(event.getItemStack());
         if (fluidStack != null && Names.MOD_ID.equals(FluidRegistry.getModId(fluidStack))) {
             int value = PneumaticCraftAPIHandler.getInstance().liquidFuels.getOrDefault(fluidStack.getFluid().getName(), -1);
-            event.setBurnTime(value > 0 ? (int)(value * ConfigHandler.general.fuelBucketEfficiencyMultiplier) : -1);
+            event.setBurnTime(value > 0 ? (int) (value * ConfigHandler.general.fuelBucketEfficiencyMultiplier) : -1);
         }
     }
 
@@ -118,7 +118,7 @@ public class EventHandlerPneumaticCraft {
                     if (!result.isEmpty()) {
                         ((EntityItem) entity).setItem(result);
                         iterator.remove();
-                        checkForAdvancement(event, result);
+                        this.checkForAdvancement(event, result);
                     }
                 }
             }
@@ -141,7 +141,7 @@ public class EventHandlerPneumaticCraft {
             MinecraftForge.EVENT_BUS.post(new DroneConstructingEvent((IDroneBase) event.getEntity()));
         }
     }
-    
+
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (!event.getWorld().isRemote) {
@@ -375,7 +375,7 @@ public class EventHandlerPneumaticCraft {
                     case "spawn_bonus_chest":
                     case "stronghold_corridor":
                     case "village_blacksmith":
-                        LootEntry entry = new LootEntryTable(RL("inject/simple_dungeon_loot"), 1, 0,  new LootCondition[0], "pneumaticcraft_inject_entry");
+                        LootEntry entry = new LootEntryTable(RL("inject/simple_dungeon_loot"), 1, 0, new LootCondition[0], "pneumaticcraft_inject_entry");
                         LootPool pool = new LootPool(new LootEntry[]{entry}, new LootCondition[0], new RandomValueRange(1), new RandomValueRange(0, 1), "pneumaticcraft_inject_pool");
                         event.getTable().addPool(pool);
                         break;

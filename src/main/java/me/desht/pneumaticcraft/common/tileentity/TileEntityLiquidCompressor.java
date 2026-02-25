@@ -54,20 +54,20 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
 
     public TileEntityLiquidCompressor(float dangerPressure, float criticalPressure, int volume) {
         super(dangerPressure, criticalPressure, volume, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
     }
 
     public FluidTank getTank() {
-        return tank;
+        return this.tank;
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     private int getFuelValue(FluidStack fluid) {
-        return fluid == null ? 0 : getFuelValue(fluid.getFluid());
+        return fluid == null ? 0 : this.getFuelValue(fluid.getFluid());
     }
 
     private int getFuelValue(Fluid fluid) {
@@ -79,30 +79,30 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote) {
-            processFluidItem(INPUT_SLOT, OUTPUT_SLOT);
+        if (!this.getWorld().isRemote) {
+            this.processFluidItem(INPUT_SLOT, OUTPUT_SLOT);
 
-            isProducing = false;
-            if (redstoneAllows()) {
-                int usageRate = (int) (getBaseProduction() * this.getSpeedUsageMultiplierFromUpgrades());
-                if (internalFuelBuffer < usageRate) {
-                    double fuelValue = getFuelValue(tank.getFluid()) / 1000D;
+            this.isProducing = false;
+            if (this.redstoneAllows()) {
+                int usageRate = (int) (this.getBaseProduction() * this.getSpeedUsageMultiplierFromUpgrades());
+                if (this.internalFuelBuffer < usageRate) {
+                    double fuelValue = this.getFuelValue(this.tank.getFluid()) / 1000D;
                     if (fuelValue > 0) {
-                        int usedFuel = Math.min(tank.getFluidAmount(), (int) (usageRate / fuelValue) + 1);
-                        tank.drain(usedFuel, true);
-                        internalFuelBuffer += usedFuel * fuelValue;
+                        int usedFuel = Math.min(this.tank.getFluidAmount(), (int) (usageRate / fuelValue) + 1);
+                        this.tank.drain(usedFuel, true);
+                        this.internalFuelBuffer += usedFuel * fuelValue;
                     }
                 }
-                if (internalFuelBuffer >= usageRate) {
-                    isProducing = true;
-                    internalFuelBuffer -= usageRate;
-                    onFuelBurn(usageRate);
-                    addAir((int) (getBaseProduction() * this.getSpeedMultiplierFromUpgrades() * getEfficiency() / 100));
+                if (this.internalFuelBuffer >= usageRate) {
+                    this.isProducing = true;
+                    this.internalFuelBuffer -= usageRate;
+                    this.onFuelBurn(usageRate);
+                    this.addAir((int) (this.getBaseProduction() * this.getSpeedMultiplierFromUpgrades() * this.getEfficiency() / 100));
                 }
             }
         } else {
-            if (isProducing && world.rand.nextInt(5) == 0) {
-                ClientUtils.emitParticles(getWorld(), getPos(), EnumParticleTypes.SMOKE_NORMAL);
+            if (this.isProducing && this.world.rand.nextInt(5) == 0) {
+                ClientUtils.emitParticles(this.getWorld(), this.getPos(), EnumParticleTypes.SMOKE_NORMAL);
             }
         }
     }
@@ -120,32 +120,32 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
 
     @Override
     public boolean isConnectedTo(EnumFacing dir) {
-        EnumFacing orientation = getRotation();
+        EnumFacing orientation = this.getRotation();
         return orientation == dir || orientation == dir.getOpposite() || dir == EnumFacing.UP;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag("Items", inventory.serializeNBT());
-        tag.setByte("redstoneMode", (byte) redstoneMode);
+        tag.setTag("Items", this.inventory.serializeNBT());
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        tank.writeToNBT(tankTag);
+        this.tank.writeToNBT(tankTag);
         tag.setTag("tank", tankTag);
 
-        tag.setDouble("internalFuelBuffer", internalFuelBuffer);
+        tag.setDouble("internalFuelBuffer", this.internalFuelBuffer);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        redstoneMode = tag.getByte("redstoneMode");
-        tank.readFromNBT(tag.getCompoundTag("tank"));
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.redstoneMode = tag.getByte("redstoneMode");
+        this.tank.readFromNBT(tag.getCompoundTag("tank"));
 
-        internalFuelBuffer = tag.getDouble("internalFuelBuffer");
+        this.internalFuelBuffer = tag.getDouble("internalFuelBuffer");
     }
 
     @Override
@@ -156,14 +156,14 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
 
@@ -176,7 +176,7 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.tank);
         } else {
             return super.getCapability(capability, facing);
         }
@@ -185,6 +185,6 @@ public class TileEntityLiquidCompressor extends TileEntityPneumaticBase implemen
     @Nonnull
     @Override
     public Map<String, FluidTank> getSerializableTanks() {
-        return ImmutableMap.of("Tank", tank);
+        return ImmutableMap.of("Tank", this.tank);
     }
 }

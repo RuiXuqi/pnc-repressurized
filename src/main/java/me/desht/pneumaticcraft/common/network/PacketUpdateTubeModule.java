@@ -15,24 +15,24 @@ public abstract class PacketUpdateTubeModule<REQ extends PacketUpdateTubeModule<
 
     public PacketUpdateTubeModule(TubeModule module) {
         super(module.getTube().pos());
-        moduleSide = module.getDirection();
+        this.moduleSide = module.getDirection();
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeByte((byte) moduleSide.ordinal());
+        buffer.writeByte((byte) this.moduleSide.ordinal());
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        moduleSide = EnumFacing.byIndex(buffer.readByte());
+        this.moduleSide = EnumFacing.byIndex(buffer.readByte());
     }
 
     @Override
     public void handleClientSide(REQ message, EntityPlayer player) {
-        handleServerSide(message, player);
+        this.handleServerSide(message, player);
     }
 
     @Override
@@ -41,7 +41,7 @@ public abstract class PacketUpdateTubeModule<REQ extends PacketUpdateTubeModule<
         if (te != null) {
             TubeModule module = te.modules[message.moduleSide.ordinal()];
             if (module != null) {
-                onModuleUpdate(module, message, player);
+                this.onModuleUpdate(module, message, player);
                 if (!player.world.isRemote) NetworkHandler.sendToAllAround(message, player.world);
             }
         }

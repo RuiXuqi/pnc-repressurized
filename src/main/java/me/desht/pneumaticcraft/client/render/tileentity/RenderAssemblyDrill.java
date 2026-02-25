@@ -9,7 +9,7 @@ public class RenderAssemblyDrill extends AbstractModelRenderer<TileEntityAssembl
     private final ModelAssemblyDrill model;
 
     public RenderAssemblyDrill() {
-        model = new ModelAssemblyDrill();
+        this.model = new ModelAssemblyDrill();
     }
 
     @Override
@@ -25,9 +25,9 @@ public class RenderAssemblyDrill extends AbstractModelRenderer<TileEntityAssembl
                 renderAngles[i] = te.oldAngles[i] + (te.angles[i] - te.oldAngles[i]) * partialTicks;
             }
             renderAngles[4] = te.oldDrillRotation + (te.drillRotation - te.oldDrillRotation) * partialTicks;
-            model.renderModel(0.0625f, renderAngles);
+            this.model.renderModel(0.0625f, renderAngles);
         } else {
-            model.renderModel(0.0625f, new float[]{0, 0, 35, 55, 0});
+            this.model.renderModel(0.0625f, new float[]{0, 0, 35, 55, 0});
         }
     }
 }

@@ -35,35 +35,35 @@ public class HeatExtractionTracker extends WorldSavedData {
     }
 
     public double getHeatExtracted(BlockPos pos) {
-        return extracted.getOrDefault(pos, 0.0);
+        return this.extracted.getOrDefault(pos, 0.0);
     }
 
     public void extractHeat(BlockPos pos, double heat) {
-        double newAmount = getHeatExtracted(pos) + heat;
+        double newAmount = this.getHeatExtracted(pos) + heat;
         if (Math.abs(newAmount) < 0.000001) {
-            extracted.remove(pos);
+            this.extracted.remove(pos);
         } else {
-            extracted.put(pos, newAmount);
+            this.extracted.put(pos, newAmount);
         }
-        markDirty();
+        this.markDirty();
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        extracted.clear();
+        this.extracted.clear();
 
         NBTTagList list = nbt.getTagList("extracted", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound sub = list.getCompoundTagAt(i);
             BlockPos pos = new BlockPos(sub.getInteger("x"), sub.getInteger("y"), sub.getInteger("z"));
-            extracted.put(pos, sub.getDouble("heat"));
+            this.extracted.put(pos, sub.getDouble("heat"));
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagList list = new NBTTagList();
-        for (Map.Entry<BlockPos, Double> entry : extracted.entrySet()) {
+        for (Map.Entry<BlockPos, Double> entry : this.extracted.entrySet()) {
             NBTTagCompound sub = new NBTTagCompound();
             sub.setInteger("x", entry.getKey().getX());
             sub.setInteger("y", entry.getKey().getY());

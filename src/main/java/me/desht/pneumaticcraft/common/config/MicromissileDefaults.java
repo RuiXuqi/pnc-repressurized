@@ -40,7 +40,7 @@ public class MicromissileDefaults extends JsonConfig {
             if (entry.getValue().isJsonObject()) {
                 defaults.put(UUID.fromString(entry.getKey()), MicromissileDefaults.Entry.fromJson(entry.getValue().getAsJsonObject()));
             } else {
-                Log.warning("Invalid JSON? entry '" + entry.getKey() + "' in " + getConfigFilename());
+                Log.warning("Invalid JSON? entry '" + entry.getKey() + "' in " + this.getConfigFilename());
             }
         }
     }
@@ -93,26 +93,26 @@ public class MicromissileDefaults extends JsonConfig {
 
         JsonObject toJson() {
             JsonObject obj = new JsonObject();
-            obj.addProperty("topSpeed", topSpeed);
-            obj.addProperty("turnSpeed", turnSpeed);
-            obj.addProperty("damage", damage);
-            obj.addProperty("px", p.x);
-            obj.addProperty("py", p.y);
-            obj.addProperty("entityFilter", entityFilter);
-            obj.addProperty("playerName", playerName);
-            obj.addProperty("fireMode", fireMode.toString());
+            obj.addProperty("topSpeed", this.topSpeed);
+            obj.addProperty("turnSpeed", this.turnSpeed);
+            obj.addProperty("damage", this.damage);
+            obj.addProperty("px", this.p.x);
+            obj.addProperty("py", this.p.y);
+            obj.addProperty("entityFilter", this.entityFilter);
+            obj.addProperty("playerName", this.playerName);
+            obj.addProperty("fireMode", this.fireMode.toString());
             return obj;
         }
 
         public NBTTagCompound toNBT() {
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setFloat(ItemMicromissiles.NBT_TOP_SPEED, topSpeed);
-            tag.setFloat(ItemMicromissiles.NBT_TURN_SPEED, turnSpeed);
-            tag.setFloat(ItemMicromissiles.NBT_DAMAGE, damage);
-            tag.setString(ItemMicromissiles.NBT_FILTER, entityFilter);
-            tag.setInteger(ItemMicromissiles.NBT_PX, p.x);
-            tag.setInteger(ItemMicromissiles.NBT_PY, p.y);
-            tag.setString(ItemMicromissiles.NBT_FIRE_MODE, fireMode.toString());
+            tag.setFloat(ItemMicromissiles.NBT_TOP_SPEED, this.topSpeed);
+            tag.setFloat(ItemMicromissiles.NBT_TURN_SPEED, this.turnSpeed);
+            tag.setFloat(ItemMicromissiles.NBT_DAMAGE, this.damage);
+            tag.setString(ItemMicromissiles.NBT_FILTER, this.entityFilter);
+            tag.setInteger(ItemMicromissiles.NBT_PX, this.p.x);
+            tag.setInteger(ItemMicromissiles.NBT_PY, this.p.y);
+            tag.setString(ItemMicromissiles.NBT_FIRE_MODE, this.fireMode.toString());
             return tag;
         }
     }

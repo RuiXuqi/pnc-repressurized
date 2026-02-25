@@ -13,7 +13,7 @@ import java.util.Calendar;
 import java.util.Random;
 
 public class DateEventHandler {
-    private static Random rand = new Random();
+    private static final Random rand = new Random();
     private static boolean initialized;
     private static boolean isIronManEvent;
 
@@ -23,12 +23,10 @@ public class DateEventHandler {
             return true;
         } else if (calendar.get(2) + 1 == 12 && calendar.get(5) == 31) {//New Years eve
             return true;
-        } else if (calendar.get(2) + 1 == 6 && calendar.get(5) == 9) {//PneumaticCraft's birthday
+        } else //MineMaarten released his first mod
+            if (calendar.get(2) + 1 == 6 && calendar.get(5) == 9) {//PneumaticCraft's birthday
             return true;
-        } else if (calendar.get(2) + 1 == 2 && calendar.get(5) == 19) {//MineMaarten released his first mod
-            return true;
-        }
-        return false;
+        } else return calendar.get(2) + 1 == 2 && calendar.get(5) == 19;
     }
 
     public static boolean isIronManEvent() {

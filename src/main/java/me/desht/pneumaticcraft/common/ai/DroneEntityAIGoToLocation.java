@@ -20,12 +20,12 @@ public class DroneEntityAIGoToLocation extends EntityAIBase {
 
     public DroneEntityAIGoToLocation(IDroneBase drone, ProgWidget gotoWidget) {
         this.drone = drone;
-        setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
+        this.setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
         this.gotoWidget = gotoWidget;
         Set<BlockPos> set = new HashSet<>();
         ((IAreaProvider) gotoWidget).getArea(set);
-        validArea = new ArrayList<>(set);
-        positionSorter = new ChunkPositionSorter(drone);
+        this.validArea = new ArrayList<>(set);
+        this.positionSorter = new ChunkPositionSorter(drone);
     }
 
     /**
@@ -33,21 +33,21 @@ public class DroneEntityAIGoToLocation extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        validArea.sort(positionSorter);
-        for (BlockPos c : validArea) {
+        this.validArea.sort(this.positionSorter);
+        for (BlockPos c : this.validArea) {
             // 0.75 is the squared dist from a block corner to its center (0.5^2 + 0.5^2 + 0.5^2)
-            if (drone.getDronePos().squareDistanceTo(new Vec3d(c.getX() + 0.5, c.getY() + 0.5, c.getZ() + 0.5)) < 0.75)
+            if (this.drone.getDronePos().squareDistanceTo(new Vec3d(c.getX() + 0.5, c.getY() + 0.5, c.getZ() + 0.5)) < 0.75)
                 return false;
-            if (drone.getPathNavigator().moveToXYZ(c.getX(), c.getY(), c.getZ())) {
-                return !((IGotoWidget) gotoWidget).doneWhenDeparting();
+            if (this.drone.getPathNavigator().moveToXYZ(c.getX(), c.getY(), c.getZ())) {
+                return !((IGotoWidget) this.gotoWidget).doneWhenDeparting();
             }
         }
-        boolean teleport = drone.getPathNavigator().isGoingToTeleport();
+        boolean teleport = this.drone.getPathNavigator().isGoingToTeleport();
         if (teleport) {
             return true;
         } else {
-            for (BlockPos c : validArea) {
-                drone.addDebugEntry("gui.progWidget.goto.debug.cantNavigate", c);
+            for (BlockPos c : this.validArea) {
+                this.drone.addDebugEntry("gui.progWidget.goto.debug.cantNavigate", c);
             }
             return false;
         }
@@ -58,6 +58,6 @@ public class DroneEntityAIGoToLocation extends EntityAIBase {
      */
     @Override
     public boolean shouldContinueExecuting() {
-        return !drone.getPathNavigator().hasNoPath();
+        return !this.drone.getPathNavigator().hasNoPath();
     }
 }

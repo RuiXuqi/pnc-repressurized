@@ -24,7 +24,7 @@ public class BlockVacuumPump extends BlockPneumaticCraftModeled {
 
     BlockVacuumPump() {
         super(Material.IRON, "vacuum_pump");
-        setBlockBounds(BASE_BOUNDS);
+        this.setBlockBounds(BASE_BOUNDS);
     }
 
     @Nullable

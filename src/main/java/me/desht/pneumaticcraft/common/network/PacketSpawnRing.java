@@ -15,16 +15,16 @@ public class PacketSpawnRing extends LocationDoublePacket<PacketSpawnRing> {
 
     public PacketSpawnRing(double x, double y, double z, Entity targetEntity, int... colors) {
         super(x, y, z);
-        targetEntityId = targetEntity.getEntityId();
+        this.targetEntityId = targetEntity.getEntityId();
         this.colors = colors;
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(targetEntityId);
-        buffer.writeInt(colors.length);
-        for (int i : colors) {
+        buffer.writeInt(this.targetEntityId);
+        buffer.writeInt(this.colors.length);
+        for (int i : this.colors) {
             buffer.writeInt(i);
         }
     }
@@ -32,10 +32,10 @@ public class PacketSpawnRing extends LocationDoublePacket<PacketSpawnRing> {
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        targetEntityId = buffer.readInt();
-        colors = new int[buffer.readInt()];
-        for (int i = 0; i < colors.length; i++) {
-            colors[i] = buffer.readInt();
+        this.targetEntityId = buffer.readInt();
+        this.colors = new int[buffer.readInt()];
+        for (int i = 0; i < this.colors.length; i++) {
+            this.colors[i] = buffer.readInt();
         }
     }
 

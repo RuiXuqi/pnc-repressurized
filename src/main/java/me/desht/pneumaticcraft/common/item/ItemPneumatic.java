@@ -21,9 +21,9 @@ import java.util.List;
 public class ItemPneumatic extends Item {
     public ItemPneumatic(String registryName) {
         super();
-        setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
-        setRegistryName(registryName);
-        setTranslationKey(registryName);
+        this.setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
+        this.setRegistryName(registryName);
+        this.setTranslationKey(registryName);
     }
 
     @Override

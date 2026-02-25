@@ -7,21 +7,26 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 public interface IThirdParty {
 
-    default void preInit() {}
+    default void preInit() {
+    }
 
-    default void init() {}
+    default void init() {
+    }
 
-    default void postInit() {}
+    default void postInit() {
+    }
 
     /**
      * Gets called from the ClientProxy in the preInit.
      */
-    default void clientPreInit() {}
+    default void clientPreInit() {
+    }
 
     /**
      * Gets called from the ClientProxy in the Init.
      */
-    default void clientInit() {}
+    default void clientInit() {
+    }
 
     static void registerFuel(String fuelName, String modName, int mLperBucket) {
         Fluid f = FluidRegistry.getFluid(fuelName);

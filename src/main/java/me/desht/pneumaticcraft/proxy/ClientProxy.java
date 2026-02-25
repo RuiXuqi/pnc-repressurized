@@ -62,7 +62,7 @@ import java.util.Map;
 public class ClientProxy implements IProxy {
 
     private final HackTickHandler clientHackTickHandler = new HackTickHandler();
-    public final Map<String, Pair<Integer,KeyModifier>> keybindToKeyCodes = new HashMap<>();
+    public final Map<String, Pair<Integer, KeyModifier>> keybindToKeyCodes = new HashMap<>();
 
     @Override
     public void preInit() {
@@ -71,12 +71,12 @@ public class ClientProxy implements IProxy {
         ModelLoaderRegistry.registerLoader(LoaderProgrammingPuzzle.INSTANCE);
         ModelLoaderRegistry.registerLoader(PressureGlassModelLoader.INSTANCE);
 
-        initTESRs();
+        this.initTESRs();
 
         MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
         MinecraftForge.EVENT_BUS.register(HUDHandler.instance());
         MinecraftForge.EVENT_BUS.register(ClientTickHandler.instance());
-        MinecraftForge.EVENT_BUS.register(getHackTickHandler());
+        MinecraftForge.EVENT_BUS.register(this.getHackTickHandler());
         MinecraftForge.EVENT_BUS.register(new ClientSemiBlockManager());
         MinecraftForge.EVENT_BUS.register(HUDHandler.instance().getSpecificRenderer(CoordTrackUpgradeHandler.class));
         MinecraftForge.EVENT_BUS.register(AreaShowManager.getInstance());
@@ -86,7 +86,7 @@ public class ClientProxy implements IProxy {
 
         EntityTrackHandler.registerDefaultEntries();
 
-        getAllKeybindsFromOptionsFile();
+        this.getAllKeybindsFromOptionsFile();
 
         RenderingRegistry.registerEntityRenderingHandler(EntityVortex.class, RenderEntityVortex.FACTORY);
         RenderingRegistry.registerEntityRenderingHandler(EntityDrone.class, RenderDrone.REGULAR_FACTORY);
@@ -195,7 +195,7 @@ public class ClientProxy implements IProxy {
 
     @Override
     public HackTickHandler getHackTickHandler() {
-        return clientHackTickHandler;
+        return this.clientHackTickHandler;
     }
 
     @Override
@@ -216,7 +216,7 @@ public class ClientProxy implements IProxy {
                     String[] str = s.split(":");
                     if (str[0].startsWith("key_")) {
                         KeyModifier mod = str.length > 2 ? KeyModifier.valueFromString(str[2]) : KeyModifier.NONE;
-                        keybindToKeyCodes.put(str[0].substring(4), Pair.of(Integer.parseInt(str[1]), mod));
+                        this.keybindToKeyCodes.put(str[0].substring(4), Pair.of(Integer.parseInt(str[1]), mod));
                     }
                 }
             } catch (Exception exception1) {

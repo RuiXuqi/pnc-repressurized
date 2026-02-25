@@ -12,13 +12,13 @@ public class ContainerSecurityStationInventory extends ContainerPneumaticBase<Ti
         //add the network slots
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
-                addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.NETWORK_COMPONENT, j + i * 5, 17 + j * 18, 22 + i * 18));
+                this.addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.NETWORK_COMPONENT, j + i * 5, 17 + j * 18, 22 + i * 18));
             }
         }
 
-        addUpgradeSlots(128, 62);
+        this.addUpgradeSlots(128, 62);
 
-        addPlayerSlots(inventoryPlayer, 157);
+        this.addPlayerSlots(inventoryPlayer, 157);
     }
 
 }

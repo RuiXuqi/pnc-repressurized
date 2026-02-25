@@ -85,20 +85,20 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         double width = (BBConstants.PRESSURE_PIPE_MAX_POS - BBConstants.PRESSURE_PIPE_MIN_POS) / 2;
         double height = BBConstants.PRESSURE_PIPE_MIN_POS;
 
-        boundingBoxes[0] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width);
-        boundingBoxes[1] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
-        boundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS);
-        boundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height);
-        boundingBoxes[4] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
-        boundingBoxes[5] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
+        this.boundingBoxes[0] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width);
+        this.boundingBoxes[1] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
+        this.boundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS);
+        this.boundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height);
+        this.boundingBoxes[4] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
+        this.boundingBoxes[5] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
 
         height = 2.5 / 16f;  // size of "plug"
-        closedBoundingBoxes[0] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width);
-        closedBoundingBoxes[1] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
-        closedBoundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS);
-        closedBoundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height);
-        closedBoundingBoxes[4] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
-        closedBoundingBoxes[5] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
+        this.closedBoundingBoxes[0] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width);
+        this.closedBoundingBoxes[1] = new AxisAlignedBB(0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
+        this.closedBoundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MIN_POS);
+        this.closedBoundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, BBConstants.PRESSURE_PIPE_MAX_POS + height);
+        this.closedBoundingBoxes[4] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
+        this.closedBoundingBoxes[5] = new AxisAlignedBB(BBConstants.PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, BBConstants.PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
 
         this.tier = tier;
     }
@@ -110,9 +110,11 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
 
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
-        switch (tier) {
-            case ONE: return new TileEntityPressureTube();
-            case TWO: return new TileEntityAdvancedPressureTube();
+        switch (this.tier) {
+            case ONE:
+                return new TileEntityPressureTube();
+            case TWO:
+                return new TileEntityAdvancedPressureTube();
         }
         return null;
     }
@@ -153,7 +155,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float par7, float par8, float par9) {
-        if (tryPlaceModule(player, world, pos, side, hand, false)) {
+        if (this.tryPlaceModule(player, world, pos, side, hand, false)) {
             return true;
         }
         TubeModule module = getLookedModule(world, pos, player);
@@ -164,7 +166,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
     }
 
     public int getTier() {
-        return tier.tier;
+        return this.tier.tier;
     }
 
     private static TileEntityPressureTube getTE(IBlockAccess world, BlockPos pos) {
@@ -196,7 +198,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
                 if (simulate) module.markFake();
                 tePT.setModule(module, side);
                 if (!simulate && !world.isRemote) {
-                    neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
+                    this.neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
                     world.notifyNeighborsOfStateChange(pos, this, true);
                     if (!player.capabilities.isCreativeMode) heldStack.shrink(1);
                     NetworkHandler.sendToAllAround(
@@ -236,12 +238,12 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
     /**
      * Get the part of the tube being looked at.
      *
-     * @param world the world
-     * @param pos the blockpos
+     * @param world  the world
+     * @param pos    the blockpos
      * @param player the player
      * @return (true, side) if it's the side of the tube core, or (false, side) if it's a tube arm
      */
-    private static Pair<Boolean,EnumFacing> getLookedTube(World world, BlockPos pos, EntityPlayer player) {
+    private static Pair<Boolean, EnumFacing> getLookedTube(World world, BlockPos pos, EntityPlayer player) {
         Pair<Vec3d, Vec3d> vecs = PneumaticCraftUtils.getStartAndEndLookVec(player);
         IBlockState state = world.getBlockState(pos);
         RayTraceResult rayTraceResult = state.collisionRayTrace(world, pos, vecs.getLeft(), vecs.getRight());
@@ -258,24 +260,24 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         RayTraceResult bestRTR = null;
         AxisAlignedBB bestAABB = null;
 
-        setBlockBounds(BASE_BOUNDS);
+        this.setBlockBounds(BASE_BOUNDS);
         RayTraceResult rtr = super.collisionRayTrace(state, world, pos, origin, direction);
         if (rtr != null) {
             rtr.hitInfo = TubeHitInfo.CENTER;
             bestRTR = rtr;
-            bestAABB = getBoundingBox(state, world, pos);
+            bestAABB = this.getBoundingBox(state, world, pos);
         }
 
         TileEntityPressureTube tube = getTE(world, pos);
         if (tube == null) return null;
         for (int i = 0; i < 6; i++) {
             if (tube.sidesConnected[i] || tube.sidesClosed[i]) {
-                setBlockBounds(tube.sidesClosed[i] ? closedBoundingBoxes[i] : boundingBoxes[i]);
+                this.setBlockBounds(tube.sidesClosed[i] ? this.closedBoundingBoxes[i] : this.boundingBoxes[i]);
                 rtr = super.collisionRayTrace(state, world, pos, origin, direction);
-                if (isCloserMOP(origin, bestRTR, rtr)) {
+                if (this.isCloserMOP(origin, bestRTR, rtr)) {
                     rtr.hitInfo = new TubeHitInfo(EnumFacing.byIndex(i), TubeHitInfo.PartType.TUBE);  // tube connection arm
                     bestRTR = rtr;
-                    bestAABB = getBoundingBox(state, world, pos);
+                    bestAABB = this.getBoundingBox(state, world, pos);
                 }
             }
         }
@@ -283,16 +285,16 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         TubeModule[] modules = tube.modules;
         for (EnumFacing dir : EnumFacing.VALUES) {
             if (modules[dir.ordinal()] != null) {
-                setBlockBounds(modules[dir.ordinal()].boundingBoxes[dir.ordinal()]);
+                this.setBlockBounds(modules[dir.ordinal()].boundingBoxes[dir.ordinal()]);
                 rtr = super.collisionRayTrace(state, world, pos, origin, direction);
-                if (isCloserMOP(origin, bestRTR, rtr)) {
+                if (this.isCloserMOP(origin, bestRTR, rtr)) {
                     rtr.hitInfo = new TubeHitInfo(dir, TubeHitInfo.PartType.MODULE);  // tube module
                     bestRTR = rtr;
-                    bestAABB = getBoundingBox(state, world, pos);
+                    bestAABB = this.getBoundingBox(state, world, pos);
                 }
             }
         }
-        if (bestAABB != null) setBlockBounds(bestAABB);
+        if (bestAABB != null) this.setBlockBounds(bestAABB);
         return bestRTR;
     }
 
@@ -336,11 +338,11 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
                     }
                 }
                 tube.setModule(null, module.getDirection());
-                neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
+                this.neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
                 world.notifyNeighborsOfStateChange(pos, this, true);
             } else {
                 // drop the pipe as an item
-                if (!player.capabilities.isCreativeMode) dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
+                if (!player.capabilities.isCreativeMode) this.dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
                 world.setBlockToAir(pos);
             }
         } else {
@@ -352,7 +354,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
                 if (lookData != null) {
                     EnumFacing sideHit = lookData.getRight();
                     tube.sidesClosed[sideHit.ordinal()] = !tube.sidesClosed[sideHit.ordinal()];
-                    neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
+                    this.neighborChanged(world.getBlockState(pos), world, pos, this, pos.offset(side));
                     world.notifyNeighborsOfStateChange(pos, this, true);
                 }
             }
@@ -386,7 +388,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
 
     @Override
     public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
-        if (getCamoState(worldIn, pos) != null) {
+        if (this.getCamoState(worldIn, pos) != null) {
             super.addCollisionBoxToList(state, worldIn, pos, entityBox, collidingBoxes, entityIn, isActualState);
             return;
         }
@@ -397,7 +399,7 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         if (tePt != null) {
             for (int i = 0; i < 6; i++) {
                 if (tePt.sidesConnected[i]) {
-                    addCollisionBoxToList(pos, entityBox, collidingBoxes, boundingBoxes[i]);
+                    addCollisionBoxToList(pos, entityBox, collidingBoxes, this.boundingBoxes[i]);
                 }
                 if (tePt.modules[i] != null) {
                     addCollisionBoxToList(pos, entityBox, collidingBoxes, tePt.modules[i].boundingBoxes[i]);
@@ -409,7 +411,8 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
     @Override
     @SideOnly(Side.CLIENT)
     public void randomDisplayTick(IBlockState state, World par1World, BlockPos pos, Random par5Random) {
-        if (!ConfigHandler.client.tubeModuleRedstoneParticles || PneumaticCraftRepressurized.proxy.particleLevel() == 2) return;
+        if (!ConfigHandler.client.tubeModuleRedstoneParticles || PneumaticCraftRepressurized.proxy.particleLevel() == 2)
+            return;
 
         TileEntityPressureTube tePt = getTE(par1World, pos);
         if (tePt != null) {
@@ -469,7 +472,8 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         static final TubeHitInfo NO_HIT = new TubeHitInfo(null, null);
         static final TubeHitInfo CENTER = new TubeHitInfo(null, PartType.TUBE);
 
-        enum PartType { TUBE, MODULE }
+        enum PartType {TUBE, MODULE}
+
         final EnumFacing dir;
         final PartType type;
 
@@ -488,13 +492,14 @@ public class BlockPressureTube extends BlockPneumaticCraftCamo {
         CLOSED("closed");
 
         private final String name;
+
         ConnectionType(String name) {
             this.name = name;
         }
 
         @Override
         public String getName() {
-            return name;
+            return this.name;
         }
     }
 }

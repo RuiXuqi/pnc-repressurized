@@ -10,10 +10,10 @@ public class ContainerAirCompressor extends ContainerPneumaticBase<TileEntityAir
         super(te);
 
         // Add the burn slot.
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, getFuelSlotXOffset(), 54));
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, this.getFuelSlotXOffset(), 54));
 
-        addUpgradeSlots(23, 29);
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addUpgradeSlots(23, 29);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
     protected int getFuelSlotXOffset() {

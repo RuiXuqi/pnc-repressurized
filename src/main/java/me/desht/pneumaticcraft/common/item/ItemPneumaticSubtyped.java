@@ -3,7 +3,7 @@ package me.desht.pneumaticcraft.common.item;
 public abstract class ItemPneumaticSubtyped extends ItemPneumatic {
     public ItemPneumaticSubtyped(String registryName) {
         super(registryName);
-        setHasSubtypes(true);
+        this.setHasSubtypes(true);
     }
 
     /**

@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
 
 public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implements IRecipeCategory<T> {
     private final IGuiHelper guiHelper;
-    private final ResourceDrawable background = getGuiTexture();
+    private final ResourceDrawable background = this.getGuiTexture();
     private static ITickTimer tickTimer;
 
     public PneumaticCraftCategory(IJeiHelpers jeiHelpers) {
         this.guiHelper = jeiHelpers.getGuiHelper();
-        tickTimer = guiHelper.createTickTimer(60, 60, false);
+        tickTimer = this.guiHelper.createTickTimer(60, 60, false);
     }
 
     @Nonnull
@@ -61,48 +61,48 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
 
         @Override
         public void getIngredients(@Nonnull IIngredients ingredients) {
-            ingredients.setInputLists(VanillaTypes.ITEM, input.stream().map(PositionedStack::getStacks).collect(Collectors.toList()));
-            ingredients.setInputs(VanillaTypes.FLUID, inputLiquids.stream().map(WidgetTank::getFluid).collect(Collectors.toList()));
-            ingredients.setOutputLists(VanillaTypes.ITEM, output.stream().map(PositionedStack::getStacks).collect(Collectors.toList()));
-            ingredients.setOutputs(VanillaTypes.FLUID, outputLiquids.stream().map(WidgetTank::getFluid).collect(Collectors.toList()));
+            ingredients.setInputLists(VanillaTypes.ITEM, this.input.stream().map(PositionedStack::getStacks).collect(Collectors.toList()));
+            ingredients.setInputs(VanillaTypes.FLUID, this.inputLiquids.stream().map(WidgetTank::getFluid).collect(Collectors.toList()));
+            ingredients.setOutputLists(VanillaTypes.ITEM, this.output.stream().map(PositionedStack::getStacks).collect(Collectors.toList()));
+            ingredients.setOutputs(VanillaTypes.FLUID, this.outputLiquids.stream().map(WidgetTank::getFluid).collect(Collectors.toList()));
         }
 
         void addIngredient(PositionedStack stack) {
-            input.add(stack);
+            this.input.add(stack);
         }
 
         public void addIngredient(PositionedStack[] stacks) {
-            Collections.addAll(input, stacks);
+            Collections.addAll(this.input, stacks);
         }
 
         void addOutput(PositionedStack stack) {
-            output.add(stack);
+            this.output.add(stack);
         }
 
         void addInputLiquid(FluidStack liquid, int x, int y) {
-            addInputLiquid(new WidgetTank(x, y, liquid));
+            this.addInputLiquid(new WidgetTank(x, y, liquid));
         }
 
         void addInputLiquid(WidgetTank tank) {
-            inputLiquids.add(tank);
-            recalculateTankSizes();
+            this.inputLiquids.add(tank);
+            this.recalculateTankSizes();
         }
 
         void addOutputLiquid(FluidStack liquid, int x, int y) {
-            addOutputLiquid(new WidgetTank(x, y, liquid));
+            this.addOutputLiquid(new WidgetTank(x, y, liquid));
         }
 
         void addOutputLiquid(WidgetTank tank) {
-            outputLiquids.add(tank);
-            recalculateTankSizes();
+            this.outputLiquids.add(tank);
+            this.recalculateTankSizes();
         }
 
         private void recalculateTankSizes() {
             int maxFluid = 0;
-            for (WidgetTank w : inputLiquids) {
+            for (WidgetTank w : this.inputLiquids) {
                 maxFluid = Math.max(maxFluid, w.getTank().getFluidAmount());
             }
-            for (WidgetTank w : outputLiquids) {
+            for (WidgetTank w : this.outputLiquids) {
                 maxFluid = Math.max(maxFluid, w.getTank().getFluidAmount());
             }
 
@@ -115,16 +115,16 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
 //            } else {
 //                maxFluid = 16000;
 //            }
-            for (WidgetTank w : inputLiquids) {
+            for (WidgetTank w : this.inputLiquids) {
                 w.getTank().setCapacity(maxFluid);
             }
-            for (WidgetTank w : outputLiquids) {
+            for (WidgetTank w : this.outputLiquids) {
                 w.getTank().setCapacity(maxFluid);
             }
         }
 
         protected void addWidget(IGuiWidget widget) {
-            tooltipWidgets.add(widget);
+            this.tooltipWidgets.add(widget);
         }
 
         void setUsedPressure(int x, int y, float pressure, float maxPressure, float dangerPressure) {
@@ -137,26 +137,26 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
         }
 
         void setUsedTemperature(int x, int y, double temperature) {
-            tempWidget = new WidgetTemperature(0, x, y, 273, 673,
-                    heatExchanger = PneumaticRegistry.getInstance().getHeatRegistry().getHeatExchangerLogic(), (int) temperature) {
+            this.tempWidget = new WidgetTemperature(0, x, y, 273, 673,
+                    this.heatExchanger = PneumaticRegistry.getInstance().getHeatRegistry().getHeatExchangerLogic(), (int) temperature) {
                 @Override
                 public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
-                    curTip.add("Required Temperature: " + (logic.getTemperatureAsInt() - 273) + "\u00b0C");
+                    curTip.add("Required Temperature: " + (this.logic.getTemperatureAsInt() - 273) + "\u00b0C");
                 }
             };
         }
 
         @Override
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
-            for (IGuiWidget widget : tooltipWidgets) {
+            for (IGuiWidget widget : this.tooltipWidgets) {
                 widget.render(0, 0, 0);
             }
-            if (drawPressureGauge) {
-                drawAnimatedPressureGauge(gaugeX, gaugeY, -1, pressure, 5, 7);
+            if (this.drawPressureGauge) {
+                drawAnimatedPressureGauge(this.gaugeX, this.gaugeY, -1, this.pressure, 5, 7);
             }
-            if (tempWidget != null) {
-                heatExchanger.setTemperature(tickTimer.getValue() * (tempWidget.getScales()[0] - 273.0) / tickTimer.getMaxValue() + 273.0);
-                tempWidget.render(0, 0, 0);
+            if (this.tempWidget != null) {
+                this.heatExchanger.setTemperature(tickTimer.getValue() * (this.tempWidget.getScales()[0] - 273.0) / tickTimer.getMaxValue() + 273.0);
+                this.tempWidget.render(0, 0, 0);
             }
         }
 
@@ -166,21 +166,21 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
             List<String> currenttip = new ArrayList<>();
 
             Point mouse = new Point(mouseX, mouseY);
-            for (IGuiWidget widget : tooltipWidgets) {
+            for (IGuiWidget widget : this.tooltipWidgets) {
                 if (widget.getBounds().contains(mouse)) {
                     widget.addTooltip(mouse.x, mouse.y, currenttip, false);
                 }
             }
-            if (tempWidget != null) {
-                if (tempWidget.getBounds().contains(mouse)) {
-                    heatExchanger.setTemperature(tempWidget.getScales()[0]);
-                    tempWidget.addTooltip(mouse.x, mouse.y, currenttip, false);
+            if (this.tempWidget != null) {
+                if (this.tempWidget.getBounds().contains(mouse)) {
+                    this.heatExchanger.setTemperature(this.tempWidget.getScales()[0]);
+                    this.tempWidget.addTooltip(mouse.x, mouse.y, currenttip, false);
                 }
             }
 
-            if (drawPressureGauge
-                    && mouseX >= gaugeX - GuiUtils.PRESSURE_GAUGE_RADIUS && mouseX <= gaugeX + GuiUtils.PRESSURE_GAUGE_RADIUS
-                    && mouseY >= gaugeY - GuiUtils.PRESSURE_GAUGE_RADIUS && mouseY <= gaugeY + GuiUtils.PRESSURE_GAUGE_RADIUS) {
+            if (this.drawPressureGauge
+                    && mouseX >= this.gaugeX - GuiUtils.PRESSURE_GAUGE_RADIUS && mouseX <= this.gaugeX + GuiUtils.PRESSURE_GAUGE_RADIUS
+                    && mouseY >= this.gaugeY - GuiUtils.PRESSURE_GAUGE_RADIUS && mouseY <= this.gaugeY + GuiUtils.PRESSURE_GAUGE_RADIUS) {
                 currenttip.add(this.pressure + " bar");
             }
 
@@ -204,12 +204,12 @@ public abstract class PneumaticCraftCategory<T extends IRecipeWrapper> implement
     @Nonnull
     @Override
     public IDrawable getBackground() {
-        return background;
+        return this.background;
     }
 
     void drawProgressBar(int x, int y, int u, int v, int width, int height, IDrawableAnimated.StartDirection startDirection) {
-        IDrawableStatic drawable = guiHelper.createDrawable(background.getResource(), u, v, width, height);
-        IDrawableAnimated animation = guiHelper.createAnimatedDrawable(drawable, 60, startDirection, false);
+        IDrawableStatic drawable = this.guiHelper.createDrawable(this.background.getResource(), u, v, width, height);
+        IDrawableAnimated animation = this.guiHelper.createAnimatedDrawable(drawable, 60, startDirection, false);
         animation.draw(Minecraft.getMinecraft(), x, y);
     }
 

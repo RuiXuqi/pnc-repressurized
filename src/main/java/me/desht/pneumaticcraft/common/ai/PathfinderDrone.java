@@ -10,41 +10,41 @@ import javax.annotation.Nullable;
 
 /**
  * A complete copy of the super class PathFinder, just to remove the constraint of path points
+ *
  * @author MineMaarten
  *
  */
-public class PathfinderDrone extends PathFinder
-{
-    /** The path being generated */
+public class PathfinderDrone extends PathFinder {
+    /**
+     * The path being generated
+     */
     private final PathHeap path = new PathHeap();
 //    private final Set<PathPoint> closedSet = Sets.newHashSet();
-    /** Selection of path points to add to the path */
+    /**
+     * Selection of path points to add to the path
+     */
     private final PathPoint[] pathOptions = new PathPoint[32];
     private final NodeProcessor nodeProcessor;
 
-    public PathfinderDrone(NodeProcessor processor)
-    {
+    public PathfinderDrone(NodeProcessor processor) {
         super(processor);
         this.nodeProcessor = processor;
     }
 
     @Override
     @Nullable
-    public Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, Entity targetEntity, float maxDistance)
-    {
+    public Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, Entity targetEntity, float maxDistance) {
         return this.findPath(worldIn, entitylivingIn, targetEntity.posX, targetEntity.getEntityBoundingBox().minY, targetEntity.posZ, maxDistance);
     }
 
     @Override
     @Nullable
-    public Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, BlockPos targetPos, float maxDistance)
-    {
+    public Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, BlockPos targetPos, float maxDistance) {
         return this.findPath(worldIn, entitylivingIn, targetPos.getX() + 0.5F, targetPos.getY() + 0.5F, targetPos.getZ() + 0.5F, maxDistance);
     }
 
     @Nullable
-    private Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, double x, double y, double z, float maxDistance)
-    {
+    private Path findPath(IBlockAccess worldIn, EntityLiving entitylivingIn, double x, double y, double z, float maxDistance) {
         this.path.clearPath();
         this.nodeProcessor.init(worldIn, entitylivingIn);
         PathPoint pathpoint = this.nodeProcessor.getStart();
@@ -55,8 +55,7 @@ public class PathfinderDrone extends PathFinder
     }
 
     @Nullable
-    private Path findPath(PathPoint pathFrom, PathPoint pathTo, float maxDistance)
-    {
+    private Path findPath(PathPoint pathFrom, PathPoint pathTo, float maxDistance) {
         pathFrom.totalPathDistance = 0.0F;
         pathFrom.distanceToNext = pathFrom.distanceManhattan(pathTo);
         pathFrom.distanceToTarget = pathFrom.distanceToNext;
@@ -66,8 +65,7 @@ public class PathfinderDrone extends PathFinder
         PathPoint pathpoint = pathFrom;
         int i = 0;
 
-        while (!this.path.isPathEmpty())
-        {
+        while (!this.path.isPathEmpty()) {
             ++i;
 
             //if (i >= 200) Remove the pathpoint constraint the super class has.
@@ -77,40 +75,33 @@ public class PathfinderDrone extends PathFinder
 
             PathPoint pathpoint1 = this.path.dequeue();
 
-            if (pathpoint1.equals(pathTo))
-            {
+            if (pathpoint1.equals(pathTo)) {
                 pathpoint = pathTo;
                 break;
             }
 
-            if (pathpoint1.distanceManhattan(pathTo) < pathpoint.distanceManhattan(pathTo))
-            {
+            if (pathpoint1.distanceManhattan(pathTo) < pathpoint.distanceManhattan(pathTo)) {
                 pathpoint = pathpoint1;
             }
 
             pathpoint1.visited = true;
             int j = this.nodeProcessor.findPathOptions(this.pathOptions, pathpoint1, pathTo, maxDistance);
 
-            for (int k = 0; k < j; ++k)
-            {
+            for (int k = 0; k < j; ++k) {
                 PathPoint pathpoint2 = this.pathOptions[k];
                 float f = pathpoint1.distanceManhattan(pathpoint2);
                 pathpoint2.distanceFromOrigin = pathpoint1.distanceFromOrigin + f;
                 pathpoint2.cost = f + pathpoint2.costMalus;
                 float f1 = pathpoint1.totalPathDistance + pathpoint2.cost;
 
-                if (pathpoint2.distanceFromOrigin < maxDistance && (!pathpoint2.isAssigned() || f1 < pathpoint2.totalPathDistance))
-                {
+                if (pathpoint2.distanceFromOrigin < maxDistance && (!pathpoint2.isAssigned() || f1 < pathpoint2.totalPathDistance)) {
                     pathpoint2.previous = pathpoint1;
                     pathpoint2.totalPathDistance = f1;
                     pathpoint2.distanceToNext = pathpoint2.distanceManhattan(pathTo) + pathpoint2.costMalus;
 
-                    if (pathpoint2.isAssigned())
-                    {
+                    if (pathpoint2.isAssigned()) {
                         this.path.changeDistance(pathpoint2, pathpoint2.totalPathDistance + pathpoint2.distanceToNext);
-                    }
-                    else
-                    {
+                    } else {
                         pathpoint2.distanceToTarget = pathpoint2.totalPathDistance + pathpoint2.distanceToNext;
                         this.path.addPoint(pathpoint2);
                     }
@@ -118,12 +109,9 @@ public class PathfinderDrone extends PathFinder
             }
         }
 
-        if (pathpoint == pathFrom)
-        {
+        if (pathpoint == pathFrom) {
             return null;
-        }
-        else
-        {
+        } else {
             return this.createPath(pathFrom, pathpoint);
         }
     }
@@ -131,12 +119,10 @@ public class PathfinderDrone extends PathFinder
     /**
      * Returns a new PathEntity for a given start and end point
      */
-    private Path createPath(PathPoint start, PathPoint end)
-    {
+    private Path createPath(PathPoint start, PathPoint end) {
         int i = 1;
 
-        for (PathPoint pathpoint = end; pathpoint.previous != null; pathpoint = pathpoint.previous)
-        {
+        for (PathPoint pathpoint = end; pathpoint.previous != null; pathpoint = pathpoint.previous) {
             ++i;
         }
 
@@ -144,8 +130,7 @@ public class PathfinderDrone extends PathFinder
         PathPoint pathpoint1 = end;
         --i;
 
-        for (apathpoint[i] = end; pathpoint1.previous != null; apathpoint[i] = pathpoint1)
-        {
+        for (apathpoint[i] = end; pathpoint1.previous != null; apathpoint[i] = pathpoint1) {
             pathpoint1 = pathpoint1.previous;
             --i;
         }

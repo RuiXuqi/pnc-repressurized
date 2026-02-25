@@ -24,24 +24,24 @@ public class GuiProgWidgetImportExport<Widget extends IProgWidget> extends GuiPr
     public void initGui() {
         super.initGui();
 
-        if (showSides()) {
+        if (this.showSides()) {
             for (int i = 0; i < 6; i++) {
                 String sideName = PneumaticCraftUtils.getOrientationName(EnumFacing.byIndex(i));
-                GuiCheckBox checkBox = new GuiCheckBox(i, guiLeft + 4, guiTop + 30 + i * 12, 0xFF404040, sideName);
-                checkBox.checked = ((ProgWidgetInventoryBase) widget).getSides()[i];
-                addWidget(checkBox);
+                GuiCheckBox checkBox = new GuiCheckBox(i, this.guiLeft + 4, this.guiTop + 30 + i * 12, 0xFF404040, sideName);
+                checkBox.checked = ((ProgWidgetInventoryBase) this.widget).getSides()[i];
+                this.addWidget(checkBox);
             }
         }
 
-        GuiCheckBox useItemCount = new GuiCheckBox(6, guiLeft + 4, guiTop + (showSides() ? 115 : 30), 0xFF404040, I18n.format("gui.progWidget.itemFilter.useItemCount"));
+        GuiCheckBox useItemCount = new GuiCheckBox(6, this.guiLeft + 4, this.guiTop + (this.showSides() ? 115 : 30), 0xFF404040, I18n.format("gui.progWidget.itemFilter.useItemCount"));
         useItemCount.setTooltip("gui.progWidget.itemFilter.useItemCount.tooltip");
-        useItemCount.checked = ((ICountWidget) widget).useCount();
-        addWidget(useItemCount);
+        useItemCount.checked = ((ICountWidget) this.widget).useCount();
+        this.addWidget(useItemCount);
 
-        textField = new WidgetTextFieldNumber(Minecraft.getMinecraft().fontRenderer, guiLeft + 7, guiTop + (showSides() ? 128 : 43), 50, 11);
-        textField.setValue(((ICountWidget) widget).getCount());
-        textField.setEnabled(useItemCount.checked);
-        addWidget(textField);
+        this.textField = new WidgetTextFieldNumber(Minecraft.getMinecraft().fontRenderer, this.guiLeft + 7, this.guiTop + (this.showSides() ? 128 : 43), 50, 11);
+        this.textField.setValue(((ICountWidget) this.widget).getCount());
+        this.textField.setEnabled(useItemCount.checked);
+        this.addWidget(this.textField);
     }
 
     protected boolean showSides() {
@@ -51,24 +51,24 @@ public class GuiProgWidgetImportExport<Widget extends IProgWidget> extends GuiPr
     @Override
     public void actionPerformed(IGuiWidget checkBox) {
         if (checkBox.getID() < 6 && checkBox.getID() >= 0) {
-            ((ProgWidgetInventoryBase) widget).getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
+            ((ProgWidgetInventoryBase) this.widget).getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
         } else if (checkBox.getID() == 6) {
-            ((ICountWidget) widget).setUseCount(((GuiCheckBox) checkBox).checked);
-            textField.setEnabled(((GuiCheckBox) checkBox).checked);
+            ((ICountWidget) this.widget).setUseCount(((GuiCheckBox) checkBox).checked);
+            this.textField.setEnabled(((GuiCheckBox) checkBox).checked);
         }
         super.actionPerformed(checkBox);
     }
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        ((ICountWidget) this.widget).setCount(textField.getValue());
+        ((ICountWidget) this.widget).setCount(this.textField.getValue());
         super.onKeyTyped(widget);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        if (showSides()) fontRenderer.drawString("Accessing sides:", guiLeft + 4, guiTop + 20, 0xFF404060);
+        if (this.showSides()) this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
     }
 
 }

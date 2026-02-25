@@ -15,19 +15,19 @@ public class WorldAndCoord {
     }
 
     public Block getBlock() {
-        return world.getBlockState(pos).getBlock();
+        return this.world.getBlockState(this.pos).getBlock();
     }
 
     @Override
     public int hashCode() {
-        return pos.hashCode();
+        return this.pos.hashCode();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof WorldAndCoord) {
             WorldAndCoord wac = (WorldAndCoord) o;
-            return wac.world == world && wac.pos.equals(pos);
+            return wac.world == this.world && wac.pos.equals(this.pos);
         } else {
             return false;
         }

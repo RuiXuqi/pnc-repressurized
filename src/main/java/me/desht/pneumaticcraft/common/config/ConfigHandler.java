@@ -14,7 +14,7 @@ import java.io.IOException;
 
 @Config(modid = Names.MOD_ID)
 public class ConfigHandler {
-    private static final ISubConfig[] subConfigs = new ISubConfig[] {
+    private static final ISubConfig[] subConfigs = new ISubConfig[]{
             new AmadronOfferSettings(),
             AmadronOfferStaticConfig.INSTANCE,
             AmadronOfferPeriodicConfig.INSTANCE,
@@ -83,13 +83,13 @@ public class ConfigHandler {
     public static void onPreInit(File configFile) {
         PneumaticCraftRepressurized.proxy.initConfig();
 
-        for(ISubConfig subConfig : subConfigs) {
+        for (ISubConfig subConfig : subConfigs) {
             File subFolder = new File(configFile.getAbsolutePath().substring(0, configFile.getAbsolutePath().length() - 4) + File.separator);
             if (subFolder.exists() || subFolder.mkdirs()) {
                 File subFile = new File(subFolder, subConfig.getConfigFilename() + ".cfg");
                 try {
                     subConfig.preInit(subFile);
-                } catch(IOException e) {
+                } catch (IOException e) {
                     PneumaticCraftRepressurized.logger.error("Config file " + subConfig.getConfigFilename() + " failed to create! Unexpected things can happen!");
                     e.printStackTrace();
                 } catch (ClassCastException e) {
@@ -101,10 +101,10 @@ public class ConfigHandler {
     }
 
     public static void onPostInit() {
-        for(ISubConfig subConfig : subConfigs) {
+        for (ISubConfig subConfig : subConfigs) {
             try {
                 subConfig.postInit();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 PneumaticCraftRepressurized.logger.error("Config file " + subConfig.getConfigFilename() + " failed to create! Unexpected things can happen!");
                 e.printStackTrace();
             } catch (ClassCastException e) {
@@ -135,7 +135,7 @@ public class ConfigHandler {
         public boolean explosionCrafting = true;
         @Config.Comment("Oil worldgen blacklist: add dimension IDs to this list if you don't want oil worldgen to happen there.")
         @Config.RequiresMcRestart
-        public int[] oilWorldGenBlacklist = new int[] { 1, -1 };
+        public int[] oilWorldGenBlacklist = new int[]{1, -1};
         @Config.Comment("Fluids as hot or hotter than this temperature (Kelvin) will be auto-registered as Liquid Compressor fuels, the quality being dependent on fluid temperature.")
         @Config.RequiresMcRestart
         public int minimumFluidFuelTemperature = 373; // 100C
@@ -161,7 +161,7 @@ public class ConfigHandler {
         public int pneumaticGeneratorEfficiency = 40;
         @Config.Comment("Changing this value will alter the pressurized air production of the Electric Compressor. The input, EU, will stay the same")
         public int electricCompressorEfficiency = 40;
-//        @Config.Comment("Changing this value will alter the pressurized air usage of the Pneumatic Engine. The output, MJ, will stay the same")
+        //        @Config.Comment("Changing this value will alter the pressurized air usage of the Pneumatic Engine. The output, MJ, will stay the same")
 //        public int pneumaticEngineEfficiency = 40;
 //        @Config.Comment("Changing this value will alter the pressurized air production of the Kinetic Compressor. The input, MJ, will stay the same")
 //        public int kineticCompressorEfficiency = 40;
@@ -206,7 +206,7 @@ public class ConfigHandler {
     public static class Advanced {
         @Config.Comment("When set to true, Drones will not execute any program. This is useful to set to true when due to a bug Drones are lagging your server or crashing it. Please report the bug if you encounter it.")
         public boolean stopDroneAI = false;
-//        @Config.Comment("ONLY SET TO TRUE WHEN YOU KNOW WHAT YOU'RE DOING. When set to true, this will convert any Pressure Tube in the world that was a FMP to its block variant. Handy when you're about to remove FMP from the instance. This will remove any other parts from the block like covers. Exception are tube modules.")
+        //        @Config.Comment("ONLY SET TO TRUE WHEN YOU KNOW WHAT YOU'RE DOING. When set to true, this will convert any Pressure Tube in the world that was a FMP to its block variant. Handy when you're about to remove FMP from the instance. This will remove any other parts from the block like covers. Exception are tube modules.")
 //        public boolean convertMultipartsTBlock = false;
         @Config.Comment("When set to true, the Kerosene Lamp's fake air blocks won't be registered and therefore removed from the world. Useful if this causes trouble (it shouldn't though)")
         public boolean disableKeroseneLampFakeAirBlock = false;
@@ -223,7 +223,7 @@ public class ConfigHandler {
         @Config.Comment("Pneumatic Generator for IC2")
         @Config.RequiresMcRestart
         public boolean enablePneumaticGeneratorRecipe = true;
-//        @Config.Comment("Pneumatic Pump")
+        //        @Config.Comment("Pneumatic Pump")
 //        public boolean enablePneumaticPumpRecipe = true;
         @Config.Comment("8 Block of Coal --> 1 Diamond (Pressure Chamber)")
         @Config.RequiresMcRestart
@@ -417,12 +417,11 @@ public class ConfigHandler {
     public static int getProgrammerDifficulty() {
         return client.programmerDifficulty;
     }
+
     @Mod.EventBusSubscriber
-    public static class ConfigSyncHandler
-    {
+    public static class ConfigSyncHandler {
         @SubscribeEvent
-        public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
-        {
+        public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event) {
             if (event.getModID().equals(Names.MOD_ID)) {
                 ConfigManager.sync(Names.MOD_ID, Config.Type.INSTANCE);
                 PneumaticCraftRepressurized.logger.info("Configuration has been saved.");

@@ -16,7 +16,7 @@ public class BlockPressureChamberWall extends BlockPressureChamberWallBase {
 
         @Override
         public String getName() {
-            return toString().toLowerCase();
+            return this.toString().toLowerCase();
         }
     }
 
@@ -24,7 +24,7 @@ public class BlockPressureChamberWall extends BlockPressureChamberWallBase {
 
     BlockPressureChamberWall() {
         super("pressure_chamber_wall");
-        setResistance(2000.0F);
+        this.setResistance(2000.0F);
     }
 
     @Override

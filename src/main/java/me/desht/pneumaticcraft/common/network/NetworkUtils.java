@@ -18,7 +18,7 @@ public class NetworkUtils {
     /**
      * Get a list of all the synced fields for a syncable object
      *
-     * @param syncable the object whose fields we are extracting
+     * @param syncable           the object whose fields we are extracting
      * @param searchedAnnotation the annotation type to search for
      * @return a list of all the fields annotated with the given type
      */

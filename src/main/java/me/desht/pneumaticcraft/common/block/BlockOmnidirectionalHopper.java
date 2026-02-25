@@ -111,14 +111,14 @@ public class BlockOmnidirectionalHopper extends BlockPneumaticCraftModeled {
         if (te instanceof TileEntityOmnidirectionalHopper) {
             TileEntityOmnidirectionalHopper teOh = (TileEntityOmnidirectionalHopper) te;
             if (player != null && player.isSneaking()) {
-                EnumFacing rotation = getRotation(world, pos);
+                EnumFacing rotation = this.getRotation(world, pos);
                 rotation = EnumFacing.byIndex(rotation.ordinal() + 1);
                 if (rotation == teOh.getInputDirection()) rotation = EnumFacing.byIndex(rotation.ordinal() + 1);
-                setRotation(world, pos, rotation);
+                this.setRotation(world, pos, rotation);
             } else {
                 EnumFacing rotation = teOh.getInputDirection();
                 rotation = EnumFacing.byIndex(rotation.ordinal() + 1);
-                if (rotation == getRotation(world, pos)) rotation = EnumFacing.byIndex(rotation.ordinal() + 1);
+                if (rotation == this.getRotation(world, pos)) rotation = EnumFacing.byIndex(rotation.ordinal() + 1);
                 teOh.setInputDirection(rotation);
             }
             return true;
@@ -132,11 +132,11 @@ public class BlockOmnidirectionalHopper extends BlockPneumaticCraftModeled {
         if (te instanceof TileEntityOmnidirectionalHopper) {
             EnumFacing o = ((TileEntityOmnidirectionalHopper) te).getInputDirection();
             boolean isColliding = false;
-            setBlockBounds(new AxisAlignedBB(o.getXOffset() == 1 ? 10 / 16F : 0, o.getYOffset() == 1 ? 10 / 16F : 0, o.getZOffset() == 1 ? 10 / 16F : 0, o.getXOffset() == -1 ? 6 / 16F : 1, o.getYOffset() == -1 ? 6 / 16F : 1, o.getZOffset() == -1 ? 6 / 16F : 1));
+            this.setBlockBounds(new AxisAlignedBB(o.getXOffset() == 1 ? 10 / 16F : 0, o.getYOffset() == 1 ? 10 / 16F : 0, o.getZOffset() == 1 ? 10 / 16F : 0, o.getXOffset() == -1 ? 6 / 16F : 1, o.getYOffset() == -1 ? 6 / 16F : 1, o.getZOffset() == -1 ? 6 / 16F : 1));
             if (super.collisionRayTrace(blockState, world, pos, origin, direction) != null) isColliding = true;
-            setBlockBounds(new AxisAlignedBB(4 / 16F, 4 / 16F, 4 / 16F, 12 / 16F, 12 / 16F, 12 / 16F));
+            this.setBlockBounds(new AxisAlignedBB(4 / 16F, 4 / 16F, 4 / 16F, 12 / 16F, 12 / 16F, 12 / 16F));
             if (super.collisionRayTrace(blockState, world, pos, origin, direction) != null) isColliding = true;
-            setBlockBounds(FULL_BLOCK_AABB);
+            this.setBlockBounds(FULL_BLOCK_AABB);
             return isColliding ? super.collisionRayTrace(blockState, world, pos, origin, direction) : null;
         }
         return null;

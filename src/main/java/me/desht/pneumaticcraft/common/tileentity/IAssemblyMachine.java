@@ -25,7 +25,8 @@ public interface IAssemblyMachine {
      *
      * @return the type of assembly machine.
      */
-    @Nonnull AssemblyProgram.EnumMachine getAssemblyType();
+    @Nonnull
+    AssemblyProgram.EnumMachine getAssemblyType();
 
     /**
      * Inform this machine of its controller's position.

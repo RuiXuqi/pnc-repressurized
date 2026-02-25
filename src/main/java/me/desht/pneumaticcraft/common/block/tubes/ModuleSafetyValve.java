@@ -13,9 +13,9 @@ public class ModuleSafetyValve extends TubeModuleRedstoneReceiving {
     @Override
     public void update() {
         super.update();
-        if (!pressureTube.world().isRemote) {
-            if (pressureTube.getAirHandler(null).getPressure() > getThreshold()) {
-                pressureTube.getAirHandler(null).airLeak(dir);
+        if (!this.pressureTube.world().isRemote) {
+            if (this.pressureTube.getAirHandler(null).getPressure() > this.getThreshold()) {
+                this.pressureTube.getAirHandler(null).airLeak(this.dir);
             }
         }
     }
@@ -23,7 +23,7 @@ public class ModuleSafetyValve extends TubeModuleRedstoneReceiving {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Threshold: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(getThreshold(), 1) + " bar");
+        curInfo.add("Threshold: " + TextFormatting.WHITE + PneumaticCraftUtils.roundNumberTo(this.getThreshold(), 1) + " bar");
     }
 
     @Override

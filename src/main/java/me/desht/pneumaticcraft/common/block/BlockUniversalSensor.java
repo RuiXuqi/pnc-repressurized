@@ -28,7 +28,7 @@ public class BlockUniversalSensor extends BlockPneumaticCraftModeled {
 
     BlockUniversalSensor() {
         super(Material.IRON, "universal_sensor");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Override

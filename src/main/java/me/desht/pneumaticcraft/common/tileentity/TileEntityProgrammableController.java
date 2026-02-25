@@ -110,26 +110,26 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     public TileEntityProgrammableController() {
         super(5, 7, 5000, 4);
-        inventory = new ProgrammableItemStackHandler(this);
-        addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
+        this.inventory = new ProgrammableItemStackHandler(this);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
         MinecraftForge.EVENT_BUS.post(new DroneConstructingEvent(this));
 
-        energyStorage = new PneumaticEnergyStorage(ENERGY_CAPACITY);
+        this.energyStorage = new PneumaticEnergyStorage(ENERGY_CAPACITY);
 
-        itemHandlerSideConfigurator = new SideConfigurator<>("items", this, 5);
-        itemHandlerSideConfigurator.registerHandler("droneInv", new ItemStack(Itemss.DRONE),
-                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, droneInventory,
+        this.itemHandlerSideConfigurator = new SideConfigurator<>("items", this, 5);
+        this.itemHandlerSideConfigurator.registerHandler("droneInv", new ItemStack(Itemss.DRONE),
+                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.droneInventory,
                 RelativeFace.TOP, RelativeFace.FRONT, RelativeFace.BACK, RelativeFace.LEFT, RelativeFace.RIGHT);
-        itemHandlerSideConfigurator.registerHandler("programmableInv", new ItemStack(Itemss.NETWORK_COMPONENT, 1, 1),
-                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, inventory,
+        this.itemHandlerSideConfigurator.registerHandler("programmableInv", new ItemStack(Itemss.NETWORK_COMPONENT, 1, 1),
+                CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.inventory,
                 RelativeFace.BOTTOM);
-        itemHandlerSideConfigurator.setNullFaceHandler("droneInv");
+        this.itemHandlerSideConfigurator.setNullFaceHandler("droneInv");
     }
 
     @SubscribeEvent
     public void onSemiblockEvent(SemiblockEvent event) {
-        if (!event.getWorld().isRemote && event.getWorld() == getWorld()) {
-            logisticsManager = null;
+        if (!event.getWorld().isRemote && event.getWorld() == this.getWorld()) {
+            this.logisticsManager = null;
         }
     }
 
@@ -137,48 +137,48 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote && updateNeighbours) {
-            updateNeighbours();
-            updateNeighbours = false;
+        if (!this.getWorld().isRemote && this.updateNeighbours) {
+            this.updateNeighbours();
+            this.updateNeighbours = false;
         }
 
-        double speed = getSpeed();
-        if (PneumaticCraftUtils.distBetweenSq(getPos(), targetX, targetY, targetZ) <= speed * speed) {
-            curX = targetX;
-            curY = targetY;
-            curZ = targetZ;
-        } else if (PneumaticCraftUtils.distBetweenSq(curX, curY, curZ, targetX, targetY, targetZ) > 0.25) {
+        double speed = this.getSpeed();
+        if (PneumaticCraftUtils.distBetweenSq(this.getPos(), this.targetX, this.targetY, this.targetZ) <= speed * speed) {
+            this.curX = this.targetX;
+            this.curY = this.targetY;
+            this.curZ = this.targetZ;
+        } else if (PneumaticCraftUtils.distBetweenSq(this.curX, this.curY, this.curZ, this.targetX, this.targetY, this.targetZ) > 0.25) {
             // dist-between check here avoids drone "jitter" when it's very near its target
-            Vec3d vec = new Vec3d(targetX - curX, targetY - curY, targetZ - curZ).normalize().scale(speed);
-            curX += vec.x;
-            curY += vec.y;
-            curZ += vec.z;
+            Vec3d vec = new Vec3d(this.targetX - this.curX, this.targetY - this.curY, this.targetZ - this.curZ).normalize().scale(speed);
+            this.curX += vec.x;
+            this.curY += vec.y;
+            this.curZ += vec.z;
         }
 
-        if (!getWorld().isRemote) {
-            droneInventory.updateHeldItem();
-            DroneFakePlayer fp = getFakePlayer();
+        if (!this.getWorld().isRemote) {
+            this.droneInventory.updateHeldItem();
+            DroneFakePlayer fp = this.getFakePlayer();
             for (int i = 0; i < 4; i++) {
                 fp.interactionManager.updateBlockRemoving();
             }
-            fp.posX = curX;
-            fp.posY = curY;
-            fp.posZ = curZ;
+            fp.posX = this.curX;
+            fp.posY = this.curY;
+            fp.posZ = this.curZ;
             fp.onUpdate();
 
-            if (getPressure() >= getMinWorkingPressure()) {
-                if (!aiManager.isIdling()) addAir(-PneumaticValues.USAGE_PROGRAMMABLE_CONTROLLER);
-                aiManager.onUpdateTasks();
+            if (this.getPressure() >= this.getMinWorkingPressure()) {
+                if (!this.aiManager.isIdling()) this.addAir(-PneumaticValues.USAGE_PROGRAMMABLE_CONTROLLER);
+                this.aiManager.onUpdateTasks();
             }
         } else {
-            if (drone == null || drone.isDead) {
-                drone = new EntityProgrammableController(getWorld(), this);
-                drone.posX = curX;
-                drone.posY = curY;
-                drone.posZ = curZ;
-                getWorld().spawnEntity(drone);
+            if (this.drone == null || this.drone.isDead) {
+                this.drone = new EntityProgrammableController(this.getWorld(), this);
+                this.drone.posX = this.curX;
+                this.drone.posY = this.curY;
+                this.drone.posZ = this.curZ;
+                this.getWorld().spawnEntity(this.drone);
             }
-            drone.setPosition(curX, curY, curZ);
+            this.drone.setPosition(this.curX, this.curY, this.curZ);
         }
     }
 
@@ -191,44 +191,44 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     @Override
     public void onDescUpdate() {
         super.onDescUpdate();
-        if (drone != null) {
-            drone.setDead();
+        if (this.drone != null) {
+            this.drone.setDead();
         }
     }
 
     private double getSpeed() {
-        return Math.min(10, speedUpgrades) * 0.1 + 0.1;
+        return Math.min(10, this.speedUpgrades) * 0.1 + 0.1;
     }
 
     private UUID getOwnerUUID() {
-        if (ownerID == null) {
-            ownerID = UUID.randomUUID();
-            Log.warning(String.format("Programmable controller with owner '%s' has no UUID! Substituting a random UUID (%s).", ownerName, ownerID.toString()));
+        if (this.ownerID == null) {
+            this.ownerID = UUID.randomUUID();
+            Log.warning(String.format("Programmable controller with owner '%s' has no UUID! Substituting a random UUID (%s).", this.ownerName, this.ownerID));
         }
-        return ownerID;
+        return this.ownerID;
     }
 
     private void initializeFakePlayer() {
-        fakePlayer = new DroneFakePlayer((WorldServer) getWorld(), new GameProfile(getOwnerUUID(), ownerName), this);
-        fakePlayer.connection = new FakeNetHandlerPlayerServer(FMLCommonHandler.instance().getMinecraftServerInstance(), fakePlayer);
-        fakePlayer.inventory = new InventoryFakePlayer(fakePlayer) {
+        this.fakePlayer = new DroneFakePlayer((WorldServer) this.getWorld(), new GameProfile(this.getOwnerUUID(), this.ownerName), this);
+        this.fakePlayer.connection = new FakeNetHandlerPlayerServer(FMLCommonHandler.instance().getMinecraftServerInstance(), this.fakePlayer);
+        this.fakePlayer.inventory = new InventoryFakePlayer(this.fakePlayer) {
             @Override
             public IItemHandlerModifiable getUnderlyingItemHandler() {
-                return droneInventory;
+                return TileEntityProgrammableController.this.droneInventory;
             }
         };
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
-        if (itemHandlerSideConfigurator.handleButtonPress(buttonID)) {
-            updateNeighbours = true;
+        if (this.itemHandlerSideConfigurator.handleButtonPress(buttonID)) {
+            this.updateNeighbours = true;
         }
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     public void setOwner(EntityPlayer ownerID) {
@@ -238,12 +238,12 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public List<SideConfigurator> getSideConfigurators() {
-        return Collections.singletonList(itemHandlerSideConfigurator);
+        return Collections.singletonList(this.itemHandlerSideConfigurator);
     }
 
     @Override
     public EnumFacing byIndex() {
-        return getRotation();
+        return this.getRotation();
     }
 
     private class ProgrammableItemStackHandler extends BaseItemStackHandler {
@@ -254,26 +254,26 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            ItemStack stack = getStackInSlot(slot);
+            ItemStack stack = this.getStackInSlot(slot);
             if (!stack.isEmpty() && isProgrammableAndValidForDrone(TileEntityProgrammableController.this, stack)) {
-                progWidgets = TileEntityProgrammer.getProgWidgets(stack);
+                TileEntityProgrammableController.this.progWidgets = TileEntityProgrammer.getProgWidgets(stack);
             } else {
-                progWidgets.clear();
-                setDugBlock(null);
-                targetX = getPos().getX() + 0.5;
-                targetY = getPos().getY() + 0.6;
-                targetZ = getPos().getZ() + 0.5;
+                TileEntityProgrammableController.this.progWidgets.clear();
+                TileEntityProgrammableController.this.setDugBlock(null);
+                TileEntityProgrammableController.this.targetX = TileEntityProgrammableController.this.getPos().getX() + 0.5;
+                TileEntityProgrammableController.this.targetY = TileEntityProgrammableController.this.getPos().getY() + 0.6;
+                TileEntityProgrammableController.this.targetZ = TileEntityProgrammableController.this.getPos().getZ() + 0.5;
                 boolean updateNeighbours = false;
-                for (int i = 0; i < redstoneLevels.length; i++) {
-                    if (redstoneLevels[i] > 0) {
-                        redstoneLevels[i] = 0;
+                for (int i = 0; i < TileEntityProgrammableController.this.redstoneLevels.length; i++) {
+                    if (TileEntityProgrammableController.this.redstoneLevels[i] > 0) {
+                        TileEntityProgrammableController.this.redstoneLevels[i] = 0;
                         updateNeighbours = true;
                     }
                 }
-                if (updateNeighbours) updateNeighbours();
+                if (updateNeighbours) TileEntityProgrammableController.this.updateNeighbours();
             }
-            if (!getWorld().isRemote) {
-                getAIManager().setWidgets(progWidgets);
+            if (!TileEntityProgrammableController.this.getWorld().isRemote) {
+                TileEntityProgrammableController.this.getAIManager().setWidgets(TileEntityProgrammableController.this.progWidgets);
             }
         }
 
@@ -291,60 +291,60 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     @Override
     protected void onUpgradesChanged() {
         super.onUpgradesChanged();
-        if (getWorld() != null && !getWorld().isRemote) {
-            calculateUpgrades();
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
+            this.calculateUpgrades();
         }
     }
 
     private void calculateUpgrades() {
-        int oldDispenserUpgrades = dispenserUpgrades;
-        dispenserUpgrades = Math.min(35, getUpgrades(EnumUpgrade.DISPENSER));
-        if (!getWorld().isRemote && oldDispenserUpgrades != dispenserUpgrades) {
-            resizeDroneInventory(oldDispenserUpgrades + 1, dispenserUpgrades + 1);
+        int oldDispenserUpgrades = this.dispenserUpgrades;
+        this.dispenserUpgrades = Math.min(35, this.getUpgrades(EnumUpgrade.DISPENSER));
+        if (!this.getWorld().isRemote && oldDispenserUpgrades != this.dispenserUpgrades) {
+            this.resizeDroneInventory(oldDispenserUpgrades + 1, this.dispenserUpgrades + 1);
 
-            tank.setCapacity((dispenserUpgrades + 1) * 16000);
-            if (tank.getFluidAmount() > tank.getCapacity()) {
-                tank.getFluid().amount = tank.getCapacity();
+            this.tank.setCapacity((this.dispenserUpgrades + 1) * 16000);
+            if (this.tank.getFluidAmount() > this.tank.getCapacity()) {
+                this.tank.getFluid().amount = this.tank.getCapacity();
             }
         }
 
-        speedUpgrades = getUpgrades(EnumUpgrade.SPEED);
+        this.speedUpgrades = this.getUpgrades(EnumUpgrade.SPEED);
     }
 
     private void resizeDroneInventory(int oldSize, int newSize) {
         DroneItemHandler tmpHandler = new DroneItemHandler(newSize, this);
 
         for (int i = 0; i < oldSize && i < newSize; i++) {
-            tmpHandler.setStackInSlot(i, droneInventory.getStackInSlot(i));
+            tmpHandler.setStackInSlot(i, this.droneInventory.getStackInSlot(i));
         }
 
         // if the inventory has shrunk, eject any excess items
         for (int i = newSize; i < oldSize; i++) {
-            ItemStack stack = droneInventory.getStackInSlot(i);
+            ItemStack stack = this.droneInventory.getStackInSlot(i);
             if (!stack.isEmpty()) {
-                PneumaticCraftUtils.dropItemOnGround(stack, getWorld(), getPos().up());
+                PneumaticCraftUtils.dropItemOnGround(stack, this.getWorld(), this.getPos().up());
             }
         }
 
-        droneInventory = tmpHandler;
-        itemHandlerSideConfigurator.updateHandler("droneInv", droneInventory);
+        this.droneInventory = tmpHandler;
+        this.itemHandlerSideConfigurator.updateHandler("droneInv", this.droneInventory);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        tank.readFromNBT(tag.getCompoundTag("tank"));
-        droneInventory = new DroneItemHandler(getDroneSlots(), this);
-        droneInventory.deserializeNBT(tag.getCompoundTag("droneItems"));
-        ownerID = tag.hasKey("ownerID") ? UUID.fromString(tag.getString("ownerID")) : FALLBACK_UUID;
-        ownerName = tag.hasKey("ownerName") ? tag.getString("ownerName") : FALLBACK_NAME;
-        itemHandlerSideConfigurator.updateHandler("droneInv", droneInventory);
-        energyStorage.readFromNBT(tag);
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.tank.readFromNBT(tag.getCompoundTag("tank"));
+        this.droneInventory = new DroneItemHandler(this.getDroneSlots(), this);
+        this.droneInventory.deserializeNBT(tag.getCompoundTag("droneItems"));
+        this.ownerID = tag.hasKey("ownerID") ? UUID.fromString(tag.getString("ownerID")) : FALLBACK_UUID;
+        this.ownerName = tag.hasKey("ownerName") ? tag.getString("ownerName") : FALLBACK_NAME;
+        this.itemHandlerSideConfigurator.updateHandler("droneInv", this.droneInventory);
+        this.energyStorage.readFromNBT(tag);
 
-        if (getDroneSlots() != droneInventory.getSlots() && PneumaticCraftRepressurized.proxy.getClientWorld() == null) {
-            Log.warning("drone inventory size mismatch: dispenser upgrades = " + getDroneSlots() + ", saved inv size = " + droneInventory.getSlots());
+        if (this.getDroneSlots() != this.droneInventory.getSlots() && PneumaticCraftRepressurized.proxy.getClientWorld() == null) {
+            Log.warning("drone inventory size mismatch: dispenser upgrades = " + this.getDroneSlots() + ", saved inv size = " + this.droneInventory.getSlots());
         }
     }
 
@@ -352,22 +352,22 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setTag("Items", this.inventory.serializeNBT());
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        tank.writeToNBT(tankTag);
+        this.tank.writeToNBT(tankTag);
         tag.setTag("tank", tankTag);
 
-        ItemStackHandler handler = new ItemStackHandler(getFakePlayer().inventory.getSizeInventory());
+        ItemStackHandler handler = new ItemStackHandler(this.getFakePlayer().inventory.getSizeInventory());
         for (int i = 0; i < handler.getSlots(); i++) {
-            handler.setStackInSlot(i, getFakePlayer().inventory.getStackInSlot(i));
+            handler.setStackInSlot(i, this.getFakePlayer().inventory.getStackInSlot(i));
         }
         tag.setTag("droneItems", handler.serializeNBT());
 
-        tag.setString("ownerID", ownerID.toString());
-        tag.setString("ownerName", ownerName);
+        tag.setString("ownerID", this.ownerID.toString());
+        tag.setString("ownerName", this.ownerName);
 
-        energyStorage.writeToNBT(tag);
+        this.energyStorage.writeToNBT(tag);
 
         return tag;
     }
@@ -377,7 +377,7 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
             return true;
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return itemHandlerSideConfigurator.getHandler(facing) != null;
+            return this.itemHandlerSideConfigurator.getHandler(facing) != null;
         } else if (capability == CapabilityEnergy.ENERGY) {
             return true;
         } else {
@@ -389,11 +389,11 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.tank);
         } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandlerSideConfigurator.getHandler(facing));
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.itemHandlerSideConfigurator.getHandler(facing));
         } else if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(energyStorage);
+            return CapabilityEnergy.ENERGY.cast(this.energyStorage);
         } else {
             return super.getCapability(capability, facing);
         }
@@ -403,17 +403,17 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     protected void onFirstServerUpdate() {
         super.onFirstServerUpdate();
         SideConfigurator.validateBlockRotation(this);
-        calculateUpgrades();
-        inventory.onContentsChanged(0);  // force initial read of any installed drone/network api
-        curX = targetX = getPos().getX() + 0.5;
-        curY = targetY = getPos().getY() + 0.6;
-        curZ = targetZ = getPos().getZ() + 0.5;
+        this.calculateUpgrades();
+        this.inventory.onContentsChanged(0);  // force initial read of any installed drone/network api
+        this.curX = this.targetX = this.getPos().getX() + 0.5;
+        this.curY = this.targetY = this.getPos().getY() + 0.6;
+        this.curZ = this.targetZ = this.getPos().getZ() + 0.5;
 
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private int getDroneSlots() {
-        return world != null && world.isRemote ? 0 : Math.min(36, 1 + dispenserUpgrades);
+        return this.world != null && this.world.isRemote ? 0 : Math.min(36, 1 + this.dispenserUpgrades);
     }
 
     private static boolean isProgrammableAndValidForDrone(IDroneBase drone, ItemStack programmable) {
@@ -440,12 +440,12 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public float getPressure(ItemStack iStack) {
-        return getPressure();
+        return this.getPressure();
     }
 
     @Override
     public void addAir(ItemStack iStack, int amount) {
-        addAir(amount);
+        this.addAir(amount);
     }
 
     @Override
@@ -455,35 +455,35 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public int getVolume(ItemStack itemStack) {
-        return getAirHandler(null).getVolume();
+        return this.getAirHandler(null).getVolume();
     }
 
     @Override
     public World world() {
-        return getWorld();
+        return this.getWorld();
     }
 
     @Override
     public IFluidTank getTank() {
-        return tank;
+        return this.tank;
     }
 
     @Override
     public IItemHandlerModifiable getInv() {
-        return droneInventory;
+        return this.droneInventory;
     }
 
     @Override
     public Vec3d getDronePos() {
-        if (curX == 0 && curY == 0 && curZ == 0) {
-            curX = getPos().getX() + 0.5;
-            curY = getPos().getY() + 0.6;
-            curZ = getPos().getZ() + 0.5;
-            targetX = curX;
-            targetY = curY;
-            targetZ = curZ;
+        if (this.curX == 0 && this.curY == 0 && this.curZ == 0) {
+            this.curX = this.getPos().getX() + 0.5;
+            this.curY = this.getPos().getY() + 0.6;
+            this.curZ = this.getPos().getZ() + 0.5;
+            this.targetX = this.curX;
+            this.targetY = this.curY;
+            this.targetZ = this.curZ;
         }
-        return new Vec3d(curX, curY, curZ);
+        return new Vec3d(this.curX, this.curY, this.curZ);
     }
 
     @Override
@@ -492,10 +492,10 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
             @Override
             public boolean moveToXYZ(double x, double y, double z) {
-                if (isBlockValidPathfindBlock(new BlockPos(x, y, z))) {
-                    targetX = x + 0.5;
-                    targetY = y - 0.3;
-                    targetZ = z + 0.5;
+                if (TileEntityProgrammableController.this.isBlockValidPathfindBlock(new BlockPos(x, y, z))) {
+                    TileEntityProgrammableController.this.targetX = x + 0.5;
+                    TileEntityProgrammableController.this.targetY = y - 0.3;
+                    TileEntityProgrammableController.this.targetZ = z + 0.5;
                     return true;
                 } else {
                     return false;
@@ -504,12 +504,12 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
             @Override
             public boolean moveToEntity(Entity entity) {
-                return moveToXYZ(entity.posX, entity.posY + 0.3, entity.posZ);
+                return this.moveToXYZ(entity.posX, entity.posY + 0.3, entity.posZ);
             }
 
             @Override
             public boolean hasNoPath() {
-                return PneumaticCraftUtils.distBetweenSq(curX, curY, curZ, targetX, targetY, targetZ) < 0.5;
+                return PneumaticCraftUtils.distBetweenSq(TileEntityProgrammableController.this.curX, TileEntityProgrammableController.this.curY, TileEntityProgrammableController.this.curZ, TileEntityProgrammableController.this.targetX, TileEntityProgrammableController.this.targetY, TileEntityProgrammableController.this.targetZ) < 0.5;
             }
 
             @Override
@@ -526,30 +526,30 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public DroneFakePlayer getFakePlayer() {
-        if (fakePlayer == null) {
-            initializeFakePlayer();
+        if (this.fakePlayer == null) {
+            this.initializeFakePlayer();
         }
-        return fakePlayer;
+        return this.fakePlayer;
     }
 
     @Override
     public boolean isBlockValidPathfindBlock(BlockPos pos) {
-        return getWorld().isAirBlock(pos);
+        return this.getWorld().isAirBlock(pos);
     }
 
     @Override
     public void dropItem(ItemStack stack) {
-        Vec3d pos = getDronePos();
-        getWorld().spawnEntity(new EntityItem(getWorld(), pos.x, pos.y, pos.z, stack));
+        Vec3d pos = this.getDronePos();
+        this.getWorld().spawnEntity(new EntityItem(this.getWorld(), pos.x, pos.y, pos.z, stack));
     }
 
     @Override
     public void getContentsToDrop(NonNullList<ItemStack> drops) {
         super.getContentsToDrop(drops);
 
-        for (int i = 0; i < getDroneSlots(); i++) {
-            if (!fakePlayer.inventory.getStackInSlot(i).isEmpty()) {
-                drops.add(fakePlayer.inventory.getStackInSlot(i).copy());
+        for (int i = 0; i < this.getDroneSlots(); i++) {
+            if (!this.fakePlayer.inventory.getStackInSlot(i).isEmpty()) {
+                drops.add(this.fakePlayer.inventory.getStackInSlot(i).copy());
             }
         }
     }
@@ -557,21 +557,21 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
     @Override
     public void setDugBlock(BlockPos pos) {
         if (pos != null) {
-            diggingX = pos.getX();
-            diggingY = pos.getY();
-            diggingZ = pos.getZ();
+            this.diggingX = pos.getX();
+            this.diggingY = pos.getY();
+            this.diggingZ = pos.getZ();
         } else {
-            diggingX = diggingY = diggingZ = 0;
+            this.diggingX = this.diggingY = this.diggingZ = 0;
         }
     }
 
     public BlockPos getDugPosition() {
-        return diggingX != 0 || diggingY != 0 || diggingZ != 0 ? new BlockPos(diggingX, diggingY, diggingZ) : null;
+        return this.diggingX != 0 || this.diggingY != 0 || this.diggingZ != 0 ? new BlockPos(this.diggingX, this.diggingY, this.diggingZ) : null;
     }
 
     @Override
     public List<IProgWidget> getProgWidgets() {
-        return progWidgets;
+        return this.progWidgets;
     }
 
     @Override
@@ -590,23 +590,23 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public void setEmittingRedstone(EnumFacing orientation, int emittingRedstone) {
-        redstoneLevels[orientation.ordinal()] = emittingRedstone;
-        updateNeighbours();
+        this.redstoneLevels[orientation.ordinal()] = emittingRedstone;
+        this.updateNeighbours();
     }
 
     public int getEmittingRedstone(EnumFacing direction) {
-        return redstoneLevels[direction.ordinal()];
+        return this.redstoneLevels[direction.ordinal()];
     }
 
     @Override
     public void setName(String string) {
-        if (drone != null) {
-            drone.setCustomNameTag(string);
+        if (this.drone != null) {
+            this.drone.setCustomNameTag(string);
         }
-        ItemStack stack = inventory.getStackInSlot(0).copy();
+        ItemStack stack = this.inventory.getStackInSlot(0).copy();
         if (!stack.isEmpty()) {
             stack.setStackDisplayName(string);
-            inventory.setStackInSlot(0, stack);
+            this.inventory.setStackInSlot(0, stack);
         }
     }
 
@@ -632,30 +632,30 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public EntityPlayer getOwner() {
-        if (ownerID == null) return null;
-        if (getWorld().isRemote) return PneumaticCraftRepressurized.proxy.getClientPlayer();
+        if (this.ownerID == null) return null;
+        if (this.getWorld().isRemote) return PneumaticCraftRepressurized.proxy.getClientPlayer();
 
-        return PneumaticCraftUtils.getPlayerFromId(ownerID);
+        return PneumaticCraftUtils.getPlayerFromId(this.ownerID);
     }
 
     @Override
     public void overload(String msgKey, Object... params) {
         NetworkHandler.sendToAllAround(
                 new PacketSpawnParticle(EnumParticleTypes.SMOKE_LARGE,
-                        getPos().getX() - 0.5, getPos().getY() + 1, getPos().getZ() - 0.5,
+                        this.getPos().getX() - 0.5, this.getPos().getY() + 1, this.getPos().getZ() - 0.5,
                         0, 0, 0, 10, 1, 1, 1),
-                getWorld());
+                this.getWorld());
     }
 
     @Override
     public DroneAIManager getAIManager() {
-        if (!getWorld().isRemote) {
-            if (aiManager == null) {
-                aiManager = new DroneAIManager(this, new ArrayList<>());
-                aiManager.dontStopWhenEndReached();
+        if (!this.getWorld().isRemote) {
+            if (this.aiManager == null) {
+                this.aiManager = new DroneAIManager(this, new ArrayList<>());
+                this.aiManager.dontStopWhenEndReached();
             }
         }
-        return aiManager;
+        return this.aiManager;
     }
 
     @Override
@@ -672,7 +672,7 @@ public class TileEntityProgrammableController extends TileEntityPneumaticBase im
 
     @Override
     public LogisticsManager getLogisticsManager() {
-        return logisticsManager;
+        return this.logisticsManager;
     }
 
     @Override

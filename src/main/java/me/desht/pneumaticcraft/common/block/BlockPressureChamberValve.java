@@ -24,7 +24,7 @@ public class BlockPressureChamberValve extends BlockPneumaticCraft implements IB
 
     BlockPressureChamberValve() {
         super(Material.IRON, "pressure_chamber_valve");
-        setResistance(2000.0f);
+        this.setResistance(2000.0f);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class BlockPressureChamberValve extends BlockPneumaticCraft implements IB
 
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        invalidateMultiBlock(world, pos);
+        this.invalidateMultiBlock(world, pos);
         super.breakBlock(world, pos, state);
     }
 

@@ -30,38 +30,38 @@ public class WidgetAmadronOffer extends WidgetBase {
         super(id, x, y, 73, 35);
         this.offer = offer;
         if (offer.getInput() instanceof FluidStack) {
-            widgets.add(new WidgetFluidStack(0, x + 6, y + 15, (FluidStack) offer.getInput()));
+            this.widgets.add(new WidgetFluidStack(0, x + 6, y + 15, (FluidStack) offer.getInput()));
         }
         if (offer.getOutput() instanceof FluidStack) {
-            widgets.add(new WidgetFluidStack(0, x + 51, y + 15, (FluidStack) offer.getOutput()));
+            this.widgets.add(new WidgetFluidStack(0, x + 51, y + 15, (FluidStack) offer.getOutput()));
         }
-        tooltipRectangles[0] = new Rectangle(x + 6, y + 15, 16, 16);
-        tooltipRectangles[1] = new Rectangle(x + 51, y + 15, 16, 16);
+        this.tooltipRectangles[0] = new Rectangle(x + 6, y + 15, 16, 16);
+        this.tooltipRectangles[1] = new Rectangle(x + 51, y + 15, 16, 16);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        if (renderBackground) {
+        if (this.renderBackground) {
             Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGET_AMADRON_OFFER);
-            GlStateManager.color(1f, canBuy ? 1f : 0.4f, canBuy ? 1f : 0.4f, canBuy ? 0.75f : 1f);
-            Gui.drawModalRectWithCustomSizedTexture(x, y, 0, 0, getBounds().width, getBounds().height, 256, 256);
+            GlStateManager.color(1f, this.canBuy ? 1f : 0.4f, this.canBuy ? 1f : 0.4f, this.canBuy ? 0.75f : 1f);
+            Gui.drawModalRectWithCustomSizedTexture(this.x, this.y, 0, 0, this.getBounds().width, this.getBounds().height, 256, 256);
         }
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.render(mouseX, mouseY, partialTick);
         }
-        Minecraft.getMinecraft().fontRenderer.drawString(offer.getVendor(), x + 2, y + 2, 0xFF000000);
-        boolean customOffer = offer instanceof AmadronOfferCustom;
-        if (shoppingAmount > 0) {
-            Minecraft.getMinecraft().fontRenderer.drawString(TextFormatting.BLACK.toString() + shoppingAmount, x + 36 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + shoppingAmount) / 2, y + (customOffer ? 15 : 20), 0xFF000000);
+        Minecraft.getMinecraft().fontRenderer.drawString(this.offer.getVendor(), this.x + 2, this.y + 2, 0xFF000000);
+        boolean customOffer = this.offer instanceof AmadronOfferCustom;
+        if (this.shoppingAmount > 0) {
+            Minecraft.getMinecraft().fontRenderer.drawString(TextFormatting.BLACK.toString() + this.shoppingAmount, this.x + 36 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + this.shoppingAmount) / 2, this.y + (customOffer ? 15 : 20), 0xFF000000);
         }
         if (customOffer) {
-            AmadronOfferCustom custom = (AmadronOfferCustom) offer;
-            Minecraft.getMinecraft().fontRenderer.drawString(TextFormatting.DARK_BLUE.toString() + custom.getStock(), x + 36 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + custom.getStock()) / 2, y + 25, 0xFF000000);
+            AmadronOfferCustom custom = (AmadronOfferCustom) this.offer;
+            Minecraft.getMinecraft().fontRenderer.drawString(TextFormatting.DARK_BLUE.toString() + custom.getStock(), this.x + 36 - Minecraft.getMinecraft().fontRenderer.getStringWidth("" + custom.getStock()) / 2, this.y + 25, 0xFF000000);
         }
     }
 
     public WidgetAmadronOffer setDrawBackground(boolean drawBackground) {
-        renderBackground = drawBackground;
+        this.renderBackground = drawBackground;
         return this;
     }
 
@@ -72,24 +72,24 @@ public class WidgetAmadronOffer extends WidgetBase {
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shiftPressed) {
         super.addTooltip(mouseX, mouseY, curTip, shiftPressed);
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getBounds().contains(mouseX, mouseY)) {
                 widget.addTooltip(mouseX, mouseY, curTip, shiftPressed);
             }
         }
         boolean isInBounds = false;
-        for (Rectangle rect : tooltipRectangles) {
+        for (Rectangle rect : this.tooltipRectangles) {
             if (rect.contains(mouseX, mouseY)) {
                 isInBounds = true;
             }
         }
         if (!isInBounds) {
-            curTip.add(I18n.format("gui.amadron.amadronWidget.vendor", offer.getVendor()));
-            curTip.add(I18n.format("gui.amadron.amadronWidget.selling", getStringForObject(offer.getOutput())));
-            curTip.add(I18n.format("gui.amadron.amadronWidget.buying", getStringForObject(offer.getInput())));
-            curTip.add(I18n.format("gui.amadron.amadronWidget.inBasket", getStringForObject(offer.getOutput(), shoppingAmount)));
-            if (offer.getStock() >= 0) curTip.add(I18n.format("gui.amadron.amadronWidget.stock", offer.getStock()));
-            if (offer.getVendor().equals(PneumaticCraftRepressurized.proxy.getClientPlayer().getName())) {
+            curTip.add(I18n.format("gui.amadron.amadronWidget.vendor", this.offer.getVendor()));
+            curTip.add(I18n.format("gui.amadron.amadronWidget.selling", getStringForObject(this.offer.getOutput())));
+            curTip.add(I18n.format("gui.amadron.amadronWidget.buying", getStringForObject(this.offer.getInput())));
+            curTip.add(I18n.format("gui.amadron.amadronWidget.inBasket", getStringForObject(this.offer.getOutput(), this.shoppingAmount)));
+            if (this.offer.getStock() >= 0) curTip.add(I18n.format("gui.amadron.amadronWidget.stock", this.offer.getStock()));
+            if (this.offer.getVendor().equals(PneumaticCraftRepressurized.proxy.getClientPlayer().getName())) {
                 curTip.addAll(Arrays.asList(WordUtils.wrap(I18n.format("gui.amadron.amadronWidget.sneakRightClickToRemove"), 40).split(System.getProperty("line.separator"))));
             }
         }
@@ -110,10 +110,10 @@ public class WidgetAmadronOffer extends WidgetBase {
     }
 
     public AmadronOffer getOffer() {
-        return offer;
+        return this.offer;
     }
 
     public void setShoppingAmount(int amount) {
-        shoppingAmount = amount;
+        this.shoppingAmount = amount;
     }
 }

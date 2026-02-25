@@ -18,20 +18,20 @@ public class EntityRing extends Entity {
 
     public EntityRing(World par1World, double startX, double startY, double startZ, Entity targetEntity, int color) {
         super(par1World);
-        posX = lastTickPosX = startX;
-        posY = lastTickPosY = startY;
-        posZ = lastTickPosZ = startZ;
+        this.posX = this.lastTickPosX = startX;
+        this.posY = this.lastTickPosY = startY;
+        this.posZ = this.lastTickPosZ = startZ;
         this.targetEntity = targetEntity;
         this.color = color;
 
-        double dx = targetEntity.posX - posX;
-        double dy = targetEntity.posY - posY;
-        double dz = targetEntity.posZ - posZ;
+        double dx = targetEntity.posX - this.posX;
+        double dy = targetEntity.posY - this.posY;
+        double dz = targetEntity.posZ - this.posZ;
         float f = MathHelper.sqrt(dx * dx + dz * dz);
-        prevRotationYaw = rotationYaw = (float) (Math.atan2(dx, dz) * 180.0D / Math.PI);
-        prevRotationPitch = rotationPitch = (float) (Math.atan2(dy, f) * 180.0D / Math.PI);
+        this.prevRotationYaw = this.rotationYaw = (float) (Math.atan2(dx, dz) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = (float) (Math.atan2(dy, f) * 180.0D / Math.PI);
 //        renderDistanceWeight = 10.0D;
-        ignoreFrustumCheck = true;
+        this.ignoreFrustumCheck = true;
         if (par1World.isRemote) {
             setRenderDistanceWeight(10.0D);
         }
@@ -39,38 +39,38 @@ public class EntityRing extends Entity {
 
     @Override
     public void onUpdate() {
-        if (targetEntity == null) return;
+        if (this.targetEntity == null) return;
 
-        double endX = targetEntity.posX;
-        double endY = targetEntity.posY;
-        double endZ = targetEntity.posZ;
-        prevRotationYaw = rotationYaw;
-        prevRotationPitch = rotationPitch;
+        double endX = this.targetEntity.posX;
+        double endY = this.targetEntity.posY;
+        double endZ = this.targetEntity.posZ;
+        this.prevRotationYaw = this.rotationYaw;
+        this.prevRotationPitch = this.rotationPitch;
 
-        if (ring == null) {
-            ring = new RenderRing(posX, posY, posZ, endX, endY, endZ, color);
+        if (this.ring == null) {
+            this.ring = new RenderRing(this.posX, this.posY, this.posZ, endX, endY, endZ, this.color);
         } else {
-            if (oldRing == null) {
-                oldRing = new RenderRing(ring.startX, ring.startY, ring.startZ, ring.endX, ring.endY, ring.endZ, color);
+            if (this.oldRing == null) {
+                this.oldRing = new RenderRing(this.ring.startX, this.ring.startY, this.ring.startZ, this.ring.endX, this.ring.endY, this.ring.endZ, this.color);
             } else {
-                oldRing.endX = ring.endX;
-                oldRing.endY = ring.endY;
-                oldRing.endZ = ring.endZ;
+                this.oldRing.endX = this.ring.endX;
+                this.oldRing.endY = this.ring.endY;
+                this.oldRing.endZ = this.ring.endZ;
             }
-            ring.endX = endX;
-            ring.endY = endY;
-            ring.endZ = endZ;
+            this.ring.endX = endX;
+            this.ring.endY = endY;
+            this.ring.endZ = endZ;
 
-            double dx = endX - posX;
-            double dy = endY - posY;
-            double dz = endZ - posZ;
+            double dx = endX - this.posX;
+            double dy = endY - this.posY;
+            double dz = endZ - this.posZ;
             float f = MathHelper.sqrt(dx * dx + dz * dz);
-            rotationYaw = (float) (Math.atan2(dx, dz) * 180.0D / Math.PI);
-            rotationPitch = (float) (Math.atan2(dy, f) * 180.0D / Math.PI);
+            this.rotationYaw = (float) (Math.atan2(dx, dz) * 180.0D / Math.PI);
+            this.rotationPitch = (float) (Math.atan2(dy, f) * 180.0D / Math.PI);
 
-            oldRing.setProgress(ring.getProgress());
-            if (ring.incProgress(0.05F)) {
-                setDead();
+            this.oldRing.setProgress(this.ring.getProgress());
+            if (this.ring.incProgress(0.05F)) {
+                this.setDead();
             }
         }
     }

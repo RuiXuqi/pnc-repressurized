@@ -52,12 +52,12 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
      */
     public NetworkConnectionHandler(NetworkConnectionHandler copy) {
         this(copy.gui, copy.station, copy.baseX, copy.baseY, copy.nodeSpacing, copy.color, copy.baseBridgeSpeed);
-        for (int i = 0; i < slotHacked.length; i++) {
-            slotHacked[i] = copy.slotHacked[i];
-            slotFortified[i] = copy.slotFortified[i];
+        for (int i = 0; i < this.slotHacked.length; i++) {
+            this.slotHacked[i] = copy.slotHacked[i];
+            this.slotFortified[i] = copy.slotFortified[i];
         }
         for (RenderProgressingLine line : copy.lineList) {
-            lineList.add(new RenderProgressingLine(line));
+            this.lineList.add(new RenderProgressingLine(line));
         }
     }
 
@@ -72,7 +72,7 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
         this(copy);
         this.baseX = baseX;
         this.baseY = baseY;
-        for (RenderProgressingLine line : lineList) { //adjust the copied lines for the new baseX and baseY
+        for (RenderProgressingLine line : this.lineList) { //adjust the copied lines for the new baseX and baseY
             line.startX = line.startX - copy.baseX + baseX;
             line.startY = line.startY - copy.baseY + baseY;
             line.endX = line.endX - copy.baseX + baseX;
@@ -81,15 +81,15 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
     }
 
     public void render() {
-        float f = (color >> 24 & 255) / 255.0F;
-        float f1 = (color >> 16 & 255) / 255.0F;
-        float f2 = (color >> 8 & 255) / 255.0F;
-        float f3 = (color & 255) / 255.0F;
+        float f = (this.color >> 24 & 255) / 255.0F;
+        float f1 = (this.color >> 16 & 255) / 255.0F;
+        float f2 = (this.color >> 8 & 255) / 255.0F;
+        float f3 = (this.color & 255) / 255.0F;
         GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(f1, f2, f3, f);
-        for (RenderProgressingLine line : lineList) {
+        for (RenderProgressingLine line : this.lineList) {
             line.render();
         }
         GlStateManager.enableTexture2D();
@@ -98,14 +98,14 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
 
     @Override
     public void update() {
-        for (RenderProgressingLine line : lineList) {
-            int slot = line.getPointedSlotNumber(gui);
-            ItemStack stack = station.getPrimaryInventory().getStackInSlot(slot);
-            boolean done = line.incProgress(baseBridgeSpeed * (1 / (TileEntityConstants.NETWORK_NOTE_RATING_MULTIPLIER * (stack.isEmpty() ? 1 : stack.getCount() + (slotFortified[slot] ? 1 : 0)))));
+        for (RenderProgressingLine line : this.lineList) {
+            int slot = line.getPointedSlotNumber(this.gui);
+            ItemStack stack = this.station.getPrimaryInventory().getStackInSlot(slot);
+            boolean done = line.incProgress(this.baseBridgeSpeed * (1 / (TileEntityConstants.NETWORK_NOTE_RATING_MULTIPLIER * (stack.isEmpty() ? 1 : stack.getCount() + (this.slotFortified[slot] ? 1 : 0)))));
             if (done) {
-                if (slot < slotHacked.length) {
-                    if (!slotHacked[slot]) onSlotHack(slot, false);
-                    slotHacked[slot] = true;
+                if (slot < this.slotHacked.length) {
+                    if (!this.slotHacked[slot]) this.onSlotHack(slot, false);
+                    this.slotHacked[slot] = true;
                 }
             }
         }
@@ -115,24 +115,24 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
     }
 
     protected void addConnection(int firstSlot, int secondSlot) {
-        double startX = baseX + firstSlot % 5 * nodeSpacing;
-        double startY = baseY + firstSlot / 5 * nodeSpacing;
-        double endX = baseX + secondSlot % 5 * nodeSpacing;
-        double endY = baseY + secondSlot / 5 * nodeSpacing;
-        for (RenderProgressingLine line : lineList) {
+        double startX = this.baseX + firstSlot % 5 * this.nodeSpacing;
+        double startY = this.baseY + firstSlot / 5 * this.nodeSpacing;
+        double endX = this.baseX + secondSlot % 5 * this.nodeSpacing;
+        double endY = this.baseY + secondSlot / 5 * this.nodeSpacing;
+        for (RenderProgressingLine line : this.lineList) {
             if (line.hasLineSameProperties(startX, startY, 0, endX, endY, 0)) return;
         }
-        lineList.add(new RenderProgressingLine(startX, startY, endX, endY));
+        this.lineList.add(new RenderProgressingLine(startX, startY, endX, endY));
     }
 
     protected void removeConnection(int firstSlot, int secondSlot) {
-        double startX = baseX + firstSlot % 5 * nodeSpacing;
-        double startY = baseY + firstSlot / 5 * nodeSpacing;
-        double endX = baseX + secondSlot % 5 * nodeSpacing;
-        double endY = baseY + secondSlot / 5 * nodeSpacing;
-        for (RenderProgressingLine line : lineList) {
+        double startX = this.baseX + firstSlot % 5 * this.nodeSpacing;
+        double startY = this.baseY + firstSlot / 5 * this.nodeSpacing;
+        double endX = this.baseX + secondSlot % 5 * this.nodeSpacing;
+        double endY = this.baseY + secondSlot / 5 * this.nodeSpacing;
+        for (RenderProgressingLine line : this.lineList) {
             if (line.hasLineSameProperties(startX, startY, 0, endX, endY, 0)) {
-                lineList.remove(line);
+                this.lineList.remove(line);
                 return;
             }
         }
@@ -142,8 +142,8 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
         boolean successfullyHacked = false;
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if (station.connects(slotNumber, slotNumber + i + j * 5) && slotHacked[slotNumber + i + j * 5]) {
-                    addConnection(slotNumber + i + j * 5, slotNumber);
+                if (this.station.connects(slotNumber, slotNumber + i + j * 5) && this.slotHacked[slotNumber + i + j * 5]) {
+                    this.addConnection(slotNumber + i + j * 5, slotNumber);
                     successfullyHacked = true;
                 }
             }
@@ -154,7 +154,7 @@ public class NetworkConnectionHandler implements INeedTickUpdate {
     public boolean canHackSlot(int slotNumber) {
         for (int i = -1; i <= 1; i++) {
             for (int j = -1; j <= 1; j++) {
-                if (station.connects(slotNumber, slotNumber + i + j * 5) && slotHacked[slotNumber + i + j * 5]) {
+                if (this.station.connects(slotNumber, slotNumber + i + j * 5) && this.slotHacked[slotNumber + i + j * 5]) {
                     return true;
                 }
             }

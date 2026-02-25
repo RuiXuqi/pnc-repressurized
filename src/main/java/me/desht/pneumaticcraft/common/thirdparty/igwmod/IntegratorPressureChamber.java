@@ -43,10 +43,10 @@ public class IntegratorPressureChamber implements IRecipeIntegrator {
 
         switch (arguments[2]) {
             case "disenchanting":
-                handleDisenchanting(x, y, locatedStacks);
+                this.handleDisenchanting(x, y, locatedStacks);
                 break;
             case "villagers":
-                handleVillagers(x, y, locatedTextures);
+                this.handleVillagers(x, y, locatedTextures);
                 break;
             default:
                 IPressureChamberRecipe foundRecipe = null;

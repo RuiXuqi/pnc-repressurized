@@ -8,7 +8,7 @@ public class Container4UpgradeSlots<Tile extends TileEntityTickableBase> extends
     public Container4UpgradeSlots(InventoryPlayer inventoryPlayer, Tile te) {
         super(te);
 
-        addUpgradeSlots(48, 29);
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addUpgradeSlots(48, 29);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

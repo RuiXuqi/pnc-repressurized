@@ -30,38 +30,38 @@ public class SensorHandler implements ISensorRegistry {
     }
 
     public void init() {
-        registerSensor(new EntityInRangeSensor());
-        registerSensor(new PlayerAttackSensor());
-        registerSensor(new PlayerItemPickupSensor());
-        registerSensor(new BlockInteractSensor());
-        registerSensor(new WorldDayLightSensor());
-        registerSensor(new WorldRainingSensor());
-        registerSensor(new WorldTimeSensor());
-        registerSensor(new WorldWeatherForecaster());
-        registerSensor(new WorldPlayersInServerSensor());
-        registerSensor(new WorldTicktimeSensor());
-        registerSensor(new WorldGlobalVariableSensor());
-        registerSensor(new WorldGlobalVariableAnalogSensor());
-        registerSensor(new BlockPresenceSensor());
-        registerSensor(new BlockMetadataSensor());
-        registerSensor(new BlockComparatorSensor());
-        registerSensor(new BlockRedstoneSensor());
-        registerSensor(new BlockLightLevelSensor());
-        registerSensor(new BlockHeatSensor());
-        registerSensor(new UserSetSensor());
-        registerSensor(new TwitchStreamerSensor());
-        registerSensor(new PlayerHealthSensor());
+        this.registerSensor(new EntityInRangeSensor());
+        this.registerSensor(new PlayerAttackSensor());
+        this.registerSensor(new PlayerItemPickupSensor());
+        this.registerSensor(new BlockInteractSensor());
+        this.registerSensor(new WorldDayLightSensor());
+        this.registerSensor(new WorldRainingSensor());
+        this.registerSensor(new WorldTimeSensor());
+        this.registerSensor(new WorldWeatherForecaster());
+        this.registerSensor(new WorldPlayersInServerSensor());
+        this.registerSensor(new WorldTicktimeSensor());
+        this.registerSensor(new WorldGlobalVariableSensor());
+        this.registerSensor(new WorldGlobalVariableAnalogSensor());
+        this.registerSensor(new BlockPresenceSensor());
+        this.registerSensor(new BlockMetadataSensor());
+        this.registerSensor(new BlockComparatorSensor());
+        this.registerSensor(new BlockRedstoneSensor());
+        this.registerSensor(new BlockLightLevelSensor());
+        this.registerSensor(new BlockHeatSensor());
+        this.registerSensor(new UserSetSensor());
+        this.registerSensor(new TwitchStreamerSensor());
+        this.registerSensor(new PlayerHealthSensor());
     }
 
     private final Map<String, ISensorSetting> sensors = new LinkedHashMap<>();
 
     public ISensorSetting getSensorFromPath(String buttonPath) {
-        return sensors.get(buttonPath);
+        return this.sensors.get(buttonPath);
     }
 
     private List<ISensorSetting> getSensorsFromPath(String buttonPath) {
         List<ISensorSetting> matchingSensors = new ArrayList<>();
-        for (Map.Entry<String, ISensorSetting> entry : sensors.entrySet()) {
+        for (Map.Entry<String, ISensorSetting> entry : this.sensors.entrySet()) {
             if (entry.getKey().startsWith(buttonPath)) {
                 matchingSensors.add(entry.getValue());
             }
@@ -70,12 +70,12 @@ public class SensorHandler implements ISensorRegistry {
     }
 
     public ISensorSetting getSensorByIndex(int index) {
-        return getSensorsFromPath("").get(index);
+        return this.getSensorsFromPath("").get(index);
     }
 
     public String[] getSensorNames() {
-        String[] sensorNames = new String[sensors.size()];
-        Iterator<String> iterator = sensors.keySet().iterator();
+        String[] sensorNames = new String[this.sensors.size()];
+        Iterator<String> iterator = this.sensors.keySet().iterator();
         for (int i = 0; i < sensorNames.length; i++) {
             String sensorPath = iterator.next();
             sensorNames[i] = sensorPath.substring(sensorPath.lastIndexOf('/') + 1);
@@ -90,9 +90,9 @@ public class SensorHandler implements ISensorRegistry {
      * @return the sensor settings
      */
     public ISensorSetting getSensorForName(String name) {
-        String[] sensorNames = getSensorNames();
+        String[] sensorNames = this.getSensorNames();
         for (int i = 0; i < sensorNames.length; i++) {
-            if (sensorNames[i].equals(name)) return getSensorByIndex(i);
+            if (sensorNames[i].equals(name)) return this.getSensorByIndex(i);
         }
         return null;
     }
@@ -102,7 +102,7 @@ public class SensorHandler implements ISensorRegistry {
         text.add(TextFormatting.GRAY + "The following combinations of upgrades are used in sensors to work:");
 
         Set<Set<Item>> upgrades = new HashSet<>();
-        for (ISensorSetting sensor : sensors.values()) {
+        for (ISensorSetting sensor : this.sensors.values()) {
             upgrades.add(sensor.getRequiredUpgrades());
         }
 
@@ -120,7 +120,7 @@ public class SensorHandler implements ISensorRegistry {
 
     public Set<Item> getUniversalSensorUpgrades() {
         Set<Item> items = new HashSet<>();
-        for (ISensorSetting sensor : sensors.values()) {
+        for (ISensorSetting sensor : this.sensors.values()) {
             items.addAll(sensor.getRequiredUpgrades());
         }
         return items;
@@ -128,7 +128,7 @@ public class SensorHandler implements ISensorRegistry {
 
     public String[] getDirectoriesAtLocation(String path) {
         List<String> directories = new ArrayList<>();
-        for (String sensorPath : sensors.keySet()) {
+        for (String sensorPath : this.sensors.keySet()) {
             if (sensorPath.startsWith(path) && !sensorPath.equals(path)) {
 
                 //if path equals "entityTracker/player/" and sensor path equals "entityTracker/player/speed", to directories will "speed" be added.
@@ -160,74 +160,74 @@ public class SensorHandler implements ISensorRegistry {
     }
 
     public Set<Item> getRequiredStacksFromText(String text) {
-        List<ISensorSetting> sensors = getSensorsFromPath(text);
+        List<ISensorSetting> sensors = this.getSensorsFromPath(text);
         return sensors.isEmpty() ? new HashSet<>() : sensors.get(0).getRequiredUpgrades();
     }
 
     @Override
     public void registerSensor(ISensorSetting sensor) {
-        String path = getUpgradePrefix(sensor) + sensor.getSensorPath();
-        sensors.put(path, sensor);
+        String path = this.getUpgradePrefix(sensor) + sensor.getSensorPath();
+        this.sensors.put(path, sensor);
     }
 
     @Override
     public void registerSensor(IBlockAndCoordinateEventSensor sensor) {
-        registerSensor(new BlockAndCoordinateEventSensor(sensor));
+        this.registerSensor(new BlockAndCoordinateEventSensor(sensor));
     }
 
     @Override
     public void registerSensor(IBlockAndCoordinatePollSensor sensor) {
-        registerSensor(new BlockAndCoordinatePollSensor(sensor));
+        this.registerSensor(new BlockAndCoordinatePollSensor(sensor));
     }
 
     private class BlockAndCoordinateEventSensor implements IEventSensorSetting {
         private final IBlockAndCoordinateEventSensor coordinateSensor;
 
         BlockAndCoordinateEventSensor(IBlockAndCoordinateEventSensor sensor) {
-            coordinateSensor = sensor;
+            this.coordinateSensor = sensor;
         }
 
         @Override
         public String getSensorPath() {
-            return coordinateSensor.getSensorPath();
+            return this.coordinateSensor.getSensorPath();
         }
 
         @Override
         public boolean needsTextBox() {
-            return coordinateSensor.needsTextBox();
+            return this.coordinateSensor.needsTextBox();
         }
 
         @Override
         public List<String> getDescription() {
-            return coordinateSensor.getDescription();
+            return this.coordinateSensor.getDescription();
         }
 
         @Override
         public int emitRedstoneOnEvent(Event event, TileEntity tile, int sensorRange, String textboxText) {
             TileEntityUniversalSensor teUs = (TileEntityUniversalSensor) tile;
             Set<BlockPos> positions = teUs.getGPSPositions();
-            return positions.isEmpty() ? 0 : coordinateSensor.emitRedstoneOnEvent(event, teUs, sensorRange, positions);
+            return positions.isEmpty() ? 0 : this.coordinateSensor.emitRedstoneOnEvent(event, teUs, sensorRange, positions);
         }
 
         @Override
         public int getRedstonePulseLength() {
-            return coordinateSensor.getRedstonePulseLength();
+            return this.coordinateSensor.getRedstonePulseLength();
         }
 
         @Override
         @SideOnly(Side.CLIENT)
         public void drawAdditionalInfo(FontRenderer fontRenderer) {
-            coordinateSensor.drawAdditionalInfo(fontRenderer);
+            this.coordinateSensor.drawAdditionalInfo(fontRenderer);
         }
 
         @Override
         public Rectangle needsSlot() {
-            return coordinateSensor.needsSlot();
+            return this.coordinateSensor.needsSlot();
         }
 
         @Override
         public Set<Item> getRequiredUpgrades() {
-            Set<Item> upgrades = new HashSet<>(coordinateSensor.getRequiredUpgrades());
+            Set<Item> upgrades = new HashSet<>(this.coordinateSensor.getRequiredUpgrades());
             upgrades.add(Itemss.GPS_TOOL);
             return upgrades;
         }
@@ -237,22 +237,22 @@ public class SensorHandler implements ISensorRegistry {
         private final IBlockAndCoordinatePollSensor coordinateSensor;
 
         BlockAndCoordinatePollSensor(IBlockAndCoordinatePollSensor sensor) {
-            coordinateSensor = sensor;
+            this.coordinateSensor = sensor;
         }
 
         @Override
         public String getSensorPath() {
-            return coordinateSensor.getSensorPath();
+            return this.coordinateSensor.getSensorPath();
         }
 
         @Override
         public boolean needsTextBox() {
-            return coordinateSensor.needsTextBox();
+            return this.coordinateSensor.needsTextBox();
         }
 
         @Override
         public List<String> getDescription() {
-            return coordinateSensor.getDescription();
+            return this.coordinateSensor.getDescription();
         }
 
         @Override
@@ -260,7 +260,7 @@ public class SensorHandler implements ISensorRegistry {
             TileEntityUniversalSensor us = (TileEntityUniversalSensor) te;
             Set<BlockPos> positions = us.getGPSPositions();
             int mult = positions.isEmpty() ? 1 : positions.size();
-            return coordinateSensor.getPollFrequency() * mult;
+            return this.coordinateSensor.getPollFrequency() * mult;
         }
 
         @Override
@@ -269,7 +269,7 @@ public class SensorHandler implements ISensorRegistry {
             if (te instanceof TileEntityUniversalSensor) {
                 TileEntityUniversalSensor teUs = (TileEntityUniversalSensor) te;
                 Set<BlockPos> positions = teUs.getGPSPositions();
-                return positions.isEmpty() ? 0 : coordinateSensor.getRedstoneValue(world, pos, sensorRange, textBoxText, positions);
+                return positions.isEmpty() ? 0 : this.coordinateSensor.getRedstoneValue(world, pos, sensorRange, textBoxText, positions);
             }
             return 0;
         }
@@ -277,17 +277,17 @@ public class SensorHandler implements ISensorRegistry {
         @Override
         @SideOnly(Side.CLIENT)
         public void drawAdditionalInfo(FontRenderer fontRenderer) {
-            coordinateSensor.drawAdditionalInfo(fontRenderer);
+            this.coordinateSensor.drawAdditionalInfo(fontRenderer);
         }
 
         @Override
         public Rectangle needsSlot() {
-            return coordinateSensor.needsSlot();
+            return this.coordinateSensor.needsSlot();
         }
 
         @Override
         public Set<Item> getRequiredUpgrades() {
-            Set<Item> upgrades = new HashSet<>(coordinateSensor.getRequiredUpgrades());
+            Set<Item> upgrades = new HashSet<>(this.coordinateSensor.getRequiredUpgrades());
             upgrades.add(Itemss.GPS_TOOL);
             return upgrades;
         }

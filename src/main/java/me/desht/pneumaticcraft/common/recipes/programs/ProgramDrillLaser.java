@@ -21,9 +21,9 @@ public class ProgramDrillLaser extends AssemblyProgram {
         boolean useAir = true;
 
         if (!system.getPlatform().getHeldStack().isEmpty()) {
-            if (canItemBeDrilled(system.getPlatform().getHeldStack())) {
+            if (this.canItemBeDrilled(system.getPlatform().getHeldStack())) {
                 system.getDrill().goDrilling();
-            } else if (system.getDrill().isIdle() && canItemBeLasered(system.getPlatform().getHeldStack())) {
+            } else if (system.getDrill().isIdle() && this.canItemBeLasered(system.getPlatform().getHeldStack())) {
                 system.getLaser().startLasering();
             } else if (system.getDrill().isIdle() && system.getLaser().isIdle()) {
                 useAir = system.getExportUnit().pickupItem(null);
@@ -32,7 +32,7 @@ public class ProgramDrillLaser extends AssemblyProgram {
             useAir = system.getExportUnit().pickupItem(null);
         } else {
             List<AssemblyRecipe> recipes = new ArrayList<>();
-            recipes.addAll(getRecipeList());
+            recipes.addAll(this.getRecipeList());
             recipes.addAll(new ProgramDrill().getRecipeList());
             recipes.addAll(new ProgramLaser().getRecipeList());
             useAir = system.getImportUnit().pickupItem(recipes);
@@ -43,7 +43,7 @@ public class ProgramDrillLaser extends AssemblyProgram {
 
     /*
     private boolean canItemBeProcessed(ItemStack item) {
-    	return(this.canItemBeDrilled(item) && this.canItemBeLasered(item));
+        return(this.canItemBeDrilled(item) && this.canItemBeLasered(item));
     }
     */
 

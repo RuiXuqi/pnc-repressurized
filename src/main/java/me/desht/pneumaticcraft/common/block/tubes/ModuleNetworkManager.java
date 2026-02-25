@@ -18,15 +18,15 @@ public class ModuleNetworkManager {
     }
 
     Set<TubeModule> getConnectedModules(TubeModule module) {
-        if (needInvalidate) {
-            connectionCache.clear();
-            needInvalidate = false;
+        if (this.needInvalidate) {
+            this.connectionCache.clear();
+            this.needInvalidate = false;
         }
-        return connectionCache.computeIfAbsent(module, this::computeConnections);
+        return this.connectionCache.computeIfAbsent(module, this::computeConnections);
     }
 
     public void invalidateCache() {
-        needInvalidate = true;
+        this.needInvalidate = true;
     }
 
     private Set<TubeModule> computeConnections(TubeModule module) {
@@ -43,7 +43,7 @@ public class ModuleNetworkManager {
             }
             TileEntityCache[] cache = ((AirHandler) tube.getAirHandler(null)).getTileCache();
             for (int dir = 0; dir < 6; dir++) {
-                if (isTubeConnected(tube, dir)) {
+                if (this.isTubeConnected(tube, dir)) {
                     TileEntityPressureTube newTube = TileEntityPressureTube.getTube(cache[dir].getTileEntity());
                     if (newTube != null && !traversedTubes.contains(newTube)) {
                         pendingTubes.add(newTube);

@@ -28,22 +28,22 @@ public class GuiProgWidgetDigAndPlace<Widget extends ProgWidgetDigAndPlace> exte
         List<GuiRadioButton> radioButtons = new ArrayList<>();
         ProgWidgetDigAndPlace.EnumOrder[] orders = ProgWidgetDigAndPlace.EnumOrder.values();
         for (int i = 0; i < orders.length; i++) {
-            GuiRadioButton radioButton = new GuiRadioButton(i, guiLeft + 4, guiTop + 30 + i * 12, 0xFF404040, orders[i].getLocalizedName());
-            radioButton.checked = orders[i] == widget.getOrder();
-            addWidget(radioButton);
+            GuiRadioButton radioButton = new GuiRadioButton(i, this.guiLeft + 4, this.guiTop + 30 + i * 12, 0xFF404040, orders[i].getLocalizedName());
+            radioButton.checked = orders[i] == this.widget.getOrder();
+            this.addWidget(radioButton);
             radioButtons.add(radioButton);
             radioButton.otherChoices = radioButtons;
         }
 
-        GuiCheckBox useMaxActions = new GuiCheckBox(16, guiLeft + (moveActionsToSide() ? 54 : 4), guiTop + 115, 0xFF404040, I18n.format("gui.progWidget.digAndPlace.useMaxActions"));
+        GuiCheckBox useMaxActions = new GuiCheckBox(16, this.guiLeft + (this.moveActionsToSide() ? 54 : 4), this.guiTop + 115, 0xFF404040, I18n.format("gui.progWidget.digAndPlace.useMaxActions"));
         useMaxActions.setTooltip("gui.progWidget.digAndPlace.useMaxActions.tooltip");
-        useMaxActions.checked = widget.useMaxActions();
-        addWidget(useMaxActions);
+        useMaxActions.checked = this.widget.useMaxActions();
+        this.addWidget(useMaxActions);
 
-        textField = new WidgetTextFieldNumber(Minecraft.getMinecraft().fontRenderer, guiLeft + (moveActionsToSide() ? 57 : 7), guiTop + 128, 50, 11);
-        textField.setValue(widget.getMaxActions());
-        textField.setVisible(useMaxActions.checked);
-        addWidget(textField);
+        this.textField = new WidgetTextFieldNumber(Minecraft.getMinecraft().fontRenderer, this.guiLeft + (this.moveActionsToSide() ? 57 : 7), this.guiTop + 128, 50, 11);
+        this.textField.setValue(this.widget.getMaxActions());
+        this.textField.setVisible(useMaxActions.checked);
+        this.addWidget(this.textField);
     }
 
     protected boolean moveActionsToSide() {
@@ -53,10 +53,10 @@ public class GuiProgWidgetDigAndPlace<Widget extends ProgWidgetDigAndPlace> exte
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget.getID() >= 0 && guiWidget.getID() < ProgWidgetDigAndPlace.EnumOrder.values().length)
-            widget.setOrder(ProgWidgetDigAndPlace.EnumOrder.values()[guiWidget.getID()]);
+            this.widget.setOrder(ProgWidgetDigAndPlace.EnumOrder.values()[guiWidget.getID()]);
         if (guiWidget.getID() == 16) {
-            widget.setUseMaxActions(((GuiCheckBox) guiWidget).checked);
-            textField.setVisible(widget.useMaxActions());
+            this.widget.setUseMaxActions(((GuiCheckBox) guiWidget).checked);
+            this.textField.setVisible(this.widget.useMaxActions());
         }
         super.actionPerformed(guiWidget);
     }
@@ -64,13 +64,13 @@ public class GuiProgWidgetDigAndPlace<Widget extends ProgWidgetDigAndPlace> exte
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        widget.setMaxActions(textField.getValue());
+        this.widget.setMaxActions(this.textField.getValue());
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString(TextFormatting.UNDERLINE + "Order", guiLeft + 6, guiTop + 20, 0xFF404060);
+        this.fontRenderer.drawString(TextFormatting.UNDERLINE + "Order", this.guiLeft + 6, this.guiTop + 20, 0xFF404060);
     }
 
 }

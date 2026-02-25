@@ -8,12 +8,12 @@ public class ContainerLiquidCompressor extends ContainerPneumaticBase<TileEntity
     public ContainerLiquidCompressor(InventoryPlayer inventoryPlayer, TileEntityLiquidCompressor te) {
         super(te);
 
-        addUpgradeSlots(11, 29);
+        this.addUpgradeSlots(11, 29);
 
-        addSlotToContainer(new SlotFullFluidContainer(te.getPrimaryInventory(), 0, getFluidContainerOffset(), 22));
-        addSlotToContainer(new SlotOutput(te.getPrimaryInventory(), 1, getFluidContainerOffset(), 55));
+        this.addSlotToContainer(new SlotFullFluidContainer(te.getPrimaryInventory(), 0, this.getFluidContainerOffset(), 22));
+        this.addSlotToContainer(new SlotOutput(te.getPrimaryInventory(), 1, this.getFluidContainerOffset(), 55));
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
     protected int getFluidContainerOffset() {

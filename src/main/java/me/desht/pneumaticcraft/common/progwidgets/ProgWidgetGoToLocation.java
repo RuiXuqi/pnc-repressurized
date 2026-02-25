@@ -24,25 +24,25 @@ public class ProgWidgetGoToLocation extends ProgWidget implements IGotoWidget, I
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) {
+        if (this.getConnectedParameters()[0] == null) {
             curInfo.add("gui.progWidget.area.error.noArea");
         }
     }
 
     @Override
     public boolean doneWhenDeparting() {
-        return doneWhenDeparting;
+        return this.doneWhenDeparting;
     }
 
     @Override
     public void setDoneWhenDeparting(boolean bool) {
-        doneWhenDeparting = bool;
+        this.doneWhenDeparting = bool;
     }
 
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Done when " + (doneWhenDeparting ? "departing" : "arrived"));
+        curTooltip.add("Done when " + (this.doneWhenDeparting ? "departing" : "arrived"));
     }
 
     @Override
@@ -77,19 +77,19 @@ public class ProgWidgetGoToLocation extends ProgWidget implements IGotoWidget, I
 
     @Override
     public void getArea(Set<BlockPos> area) {
-        ProgWidgetAreaItemBase.getArea(area, (ProgWidgetArea) getConnectedParameters()[0], (ProgWidgetArea) getConnectedParameters()[getParameters().length]);
+        ProgWidgetAreaItemBase.getArea(area, (ProgWidgetArea) this.getConnectedParameters()[0], (ProgWidgetArea) this.getConnectedParameters()[this.getParameters().length]);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("doneWhenDeparting", doneWhenDeparting);
+        tag.setBoolean("doneWhenDeparting", this.doneWhenDeparting);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        doneWhenDeparting = tag.getBoolean("doneWhenDeparting");
+        this.doneWhenDeparting = tag.getBoolean("doneWhenDeparting");
     }
 
     @Override

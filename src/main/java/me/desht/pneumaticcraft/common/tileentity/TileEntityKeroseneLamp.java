@@ -70,13 +70,14 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
     @GuiSynced
     private final SmartSyncTank tank = new SmartSyncTank(this, 2000) {
         private FluidStack prevFluid;
+
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
-            if (prevFluid == null && fluid != null || prevFluid != null && fluid == null) {
-                recalculateFuelQuality();
+            if (this.prevFluid == null && this.fluid != null || this.prevFluid != null && this.fluid == null) {
+                TileEntityKeroseneLamp.this.recalculateFuelQuality();
             }
-            prevFluid = fluid;
+            this.prevFluid = this.fluid;
         }
     };
     @SuppressWarnings("unused")
@@ -94,153 +95,153 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            if (fuelQuality < 0) recalculateFuelQuality();
-            processFluidItem(INPUT_SLOT, OUTPUT_SLOT);
-            if (getWorld().getTotalWorldTime() % 5 == 0) {
-                int realTargetRange = redstoneAllows() && fuel > 0 ? targetRange : 0;
-                if (redstoneMode == 3) realTargetRange = (int) (poweredRedstone / 15D * targetRange);
-                updateRange(Math.min(realTargetRange, tank.getFluidAmount())); //Fade out the lamp when almost empty.
-                updateLights();
-                useFuel();
+        if (!this.getWorld().isRemote) {
+            if (this.fuelQuality < 0) this.recalculateFuelQuality();
+            this.processFluidItem(INPUT_SLOT, OUTPUT_SLOT);
+            if (this.getWorld().getTotalWorldTime() % 5 == 0) {
+                int realTargetRange = this.redstoneAllows() && this.fuel > 0 ? this.targetRange : 0;
+                if (this.redstoneMode == 3) realTargetRange = (int) (this.poweredRedstone / 15D * this.targetRange);
+                this.updateRange(Math.min(realTargetRange, this.tank.getFluidAmount())); //Fade out the lamp when almost empty.
+                this.updateLights();
+                this.useFuel();
             }
         } else {
-            if (isOn && getWorld().getTotalWorldTime() % 5 == 0) {
-                getWorld().spawnParticle(EnumParticleTypes.FLAME, getPos().getX() + 0.4 + 0.2 * getWorld().rand.nextDouble(), getPos().getY() + 0.2 + tank.getFluidAmount() / 1000D * 3 / 16D, getPos().getZ() + 0.4 + 0.2 * getWorld().rand.nextDouble(), 0, 0, 0);
+            if (this.isOn && this.getWorld().getTotalWorldTime() % 5 == 0) {
+                this.getWorld().spawnParticle(EnumParticleTypes.FLAME, this.getPos().getX() + 0.4 + 0.2 * this.getWorld().rand.nextDouble(), this.getPos().getY() + 0.2 + this.tank.getFluidAmount() / 1000D * 3 / 16D, this.getPos().getZ() + 0.4 + 0.2 * this.getWorld().rand.nextDouble(), 0, 0, 0);
             }
         }
     }
 
     private void recalculateFuelQuality() {
-        if (tank.getFluid() != null && tank.getFluid().amount > 0) {
+        if (this.tank.getFluid() != null && this.tank.getFluid().amount > 0) {
             if (ConfigHandler.machineProperties.keroseneLampCanUseAnyFuel) {
-                Fluid f = tank.getFluid().getFluid();
+                Fluid f = this.tank.getFluid().getFluid();
                 // 110 comes from kerosene's fuel value of 1,100,000 divided by the old FUEL_PER_MB value (10000)
-                fuelQuality = PneumaticCraftAPIHandler.getInstance().liquidFuels.getOrDefault(f.getName(), 0) / 110f;
+                this.fuelQuality = PneumaticCraftAPIHandler.getInstance().liquidFuels.getOrDefault(f.getName(), 0) / 110f;
             } else {
-                fuelQuality = Fluids.areFluidsEqual(tank.getFluid().getFluid(), Fluids.KEROSENE) ? 10000f : 0f;
+                this.fuelQuality = Fluids.areFluidsEqual(this.tank.getFluid().getFluid(), Fluids.KEROSENE) ? 10000f : 0f;
             }
-            fuelQuality *= ConfigHandler.machineProperties.keroseneLampFuelEfficiency;
+            this.fuelQuality *= ConfigHandler.machineProperties.keroseneLampFuelEfficiency;
         }
     }
 
     private void useFuel() {
-        if (fuelQuality == 0) return; // tank is empty or a non-burnable liquid in the tank
-        fuel -= range * range * range;
-        while (fuel <= 0 && tank.drain(1, true) != null) {
-            fuel += fuelQuality;
+        if (this.fuelQuality == 0) return; // tank is empty or a non-burnable liquid in the tank
+        this.fuel -= this.range * this.range * this.range;
+        while (this.fuel <= 0 && this.tank.drain(1, true) != null) {
+            this.fuel += this.fuelQuality;
         }
-        if (fuel < 0) fuel = 0;
+        if (this.fuel < 0) this.fuel = 0;
     }
 
     @Override
     public void validate() {
         super.validate();
-        checkingX = getPos().getX();
-        checkingY = getPos().getY();
-        checkingZ = getPos().getZ();
+        this.checkingX = this.getPos().getX();
+        this.checkingY = this.getPos().getY();
+        this.checkingZ = this.getPos().getZ();
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        for (BlockPos pos : managingLights) {
-            if (isLampLight(pos)) {
-                getWorld().setBlockToAir(pos);
+        for (BlockPos pos : this.managingLights) {
+            if (this.isLampLight(pos)) {
+                this.getWorld().setBlockToAir(pos);
             }
         }
     }
 
     private boolean isLampLight(BlockPos pos) {
-        return getWorld().getBlockState(pos).getBlock() == Blockss.KEROSENE_LAMP_LIGHT;
+        return this.getWorld().getBlockState(pos).getBlock() == Blockss.KEROSENE_LAMP_LIGHT;
     }
 
     private void updateLights() {
-        int roundedRange = range / LIGHT_SPACING * LIGHT_SPACING;
-        checkingX += LIGHT_SPACING;
-        if (checkingX > getPos().getX() + roundedRange) {
-            checkingX = getPos().getX() - roundedRange;
-            checkingY += LIGHT_SPACING;
-            if (checkingY > getPos().getY() + roundedRange) {
-                checkingY = getPos().getY() - roundedRange;
-                checkingZ += LIGHT_SPACING;
-                if (checkingZ > getPos().getZ() + roundedRange) checkingZ = getPos().getZ() - roundedRange;
+        int roundedRange = this.range / LIGHT_SPACING * LIGHT_SPACING;
+        this.checkingX += LIGHT_SPACING;
+        if (this.checkingX > this.getPos().getX() + roundedRange) {
+            this.checkingX = this.getPos().getX() - roundedRange;
+            this.checkingY += LIGHT_SPACING;
+            if (this.checkingY > this.getPos().getY() + roundedRange) {
+                this.checkingY = this.getPos().getY() - roundedRange;
+                this.checkingZ += LIGHT_SPACING;
+                if (this.checkingZ > this.getPos().getZ() + roundedRange) this.checkingZ = this.getPos().getZ() - roundedRange;
             }
         }
-        BlockPos pos = new BlockPos(checkingX, checkingY, checkingZ);
-        BlockPos lampPos = new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ());
-        if (managingLights.contains(pos)) {
-            if (isLampLight(pos)) {
-                if (!passesRaytraceTest(pos, lampPos)) {
-                    getWorld().setBlockToAir(pos);
-                    managingLights.remove(pos);
+        BlockPos pos = new BlockPos(this.checkingX, this.checkingY, this.checkingZ);
+        BlockPos lampPos = new BlockPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+        if (this.managingLights.contains(pos)) {
+            if (this.isLampLight(pos)) {
+                if (!this.passesRaytraceTest(pos, lampPos)) {
+                    this.getWorld().setBlockToAir(pos);
+                    this.managingLights.remove(pos);
                 }
             } else {
-                managingLights.remove(pos);
+                this.managingLights.remove(pos);
             }
         } else {
-            tryAddLight(pos, lampPos);
+            this.tryAddLight(pos, lampPos);
         }
     }
 
     private void updateRange(int targetRange) {
-        if (targetRange > range) {
-            range++;
-            BlockPos lampPos = new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ());
-            int roundedRange = range / LIGHT_SPACING * LIGHT_SPACING;
+        if (targetRange > this.range) {
+            this.range++;
+            BlockPos lampPos = new BlockPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
+            int roundedRange = this.range / LIGHT_SPACING * LIGHT_SPACING;
             for (int x = -roundedRange; x <= roundedRange; x += LIGHT_SPACING) {
                 for (int y = -roundedRange; y <= roundedRange; y += LIGHT_SPACING) {
                     for (int z = -roundedRange; z <= roundedRange; z += LIGHT_SPACING) {
-                        BlockPos pos = new BlockPos(x + getPos().getX(), y + getPos().getY(), z + getPos().getZ());
-                        if (!managingLights.contains(pos)) {
-                            tryAddLight(pos, lampPos);
+                        BlockPos pos = new BlockPos(x + this.getPos().getX(), y + this.getPos().getY(), z + this.getPos().getZ());
+                        if (!this.managingLights.contains(pos)) {
+                            this.tryAddLight(pos, lampPos);
                         }
                     }
                 }
             }
-        } else if (targetRange < range) {
-            range--;
-            Iterator<BlockPos> iterator = managingLights.iterator();
-            BlockPos lampPos = new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ());
+        } else if (targetRange < this.range) {
+            this.range--;
+            Iterator<BlockPos> iterator = this.managingLights.iterator();
+            BlockPos lampPos = new BlockPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             while (iterator.hasNext()) {
                 BlockPos pos = iterator.next();
-                if (!isLampLight(pos)) {
+                if (!this.isLampLight(pos)) {
                     iterator.remove();
-                } else if (PneumaticCraftUtils.distBetween(pos, lampPos) > range) {
-                    getWorld().setBlockToAir(pos);
+                } else if (PneumaticCraftUtils.distBetween(pos, lampPos) > this.range) {
+                    this.getWorld().setBlockToAir(pos);
                     iterator.remove();
                 }
             }
         }
-        boolean oldIsOn = isOn;
-        isOn = range > 0;
-        if (isOn != oldIsOn) {
-            getWorld().checkLightFor(EnumSkyBlock.BLOCK, getPos());
-            sendDescriptionPacket();
+        boolean oldIsOn = this.isOn;
+        this.isOn = this.range > 0;
+        if (this.isOn != oldIsOn) {
+            this.getWorld().checkLightFor(EnumSkyBlock.BLOCK, this.getPos());
+            this.sendDescriptionPacket();
         }
     }
 
     public boolean isOn() {
-        return isOn;
+        return this.isOn;
     }
 
     private boolean passesRaytraceTest(BlockPos pos, BlockPos lampPos) {
-        RayTraceResult mop = getWorld().rayTraceBlocks(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3d(lampPos.getX() + 0.5, lampPos.getY() + 0.5, lampPos.getZ() + 0.5));
+        RayTraceResult mop = this.getWorld().rayTraceBlocks(new Vec3d(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5), new Vec3d(lampPos.getX() + 0.5, lampPos.getY() + 0.5, lampPos.getZ() + 0.5));
         return mop != null && lampPos.equals(mop.getBlockPos());
     }
 
     private void tryAddLight(BlockPos pos, BlockPos lampPos) {
-        if (PneumaticCraftUtils.distBetween(pos, lampPos) <= range) {
-            if (getWorld().isAirBlock(pos) && !isLampLight(pos)) {
-                if (passesRaytraceTest(pos, lampPos)) {
-                    getWorld().setBlockState(pos, Blockss.KEROSENE_LAMP_LIGHT.getDefaultState());
-                    managingLights.add(pos);
+        if (PneumaticCraftUtils.distBetween(pos, lampPos) <= this.range) {
+            if (this.getWorld().isAirBlock(pos) && !this.isLampLight(pos)) {
+                if (this.passesRaytraceTest(pos, lampPos)) {
+                    this.getWorld().setBlockState(pos, Blockss.KEROSENE_LAMP_LIGHT.getDefaultState());
+                    this.managingLights.add(pos);
                 }
             }
         }
@@ -249,32 +250,32 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        EnumFacing oldSideConnected = sideConnected;
-        sideConnected = EnumFacing.DOWN;
+        EnumFacing oldSideConnected = this.sideConnected;
+        this.sideConnected = EnumFacing.DOWN;
         for (EnumFacing d : EnumFacing.VALUES) {
-            BlockPos neighborPos = getPos().offset(d);
-            IBlockState state = getWorld().getBlockState(neighborPos);
-            if (state.isSideSolid(getWorld(), neighborPos, d.getOpposite())) {
-                sideConnected = d;
+            BlockPos neighborPos = this.getPos().offset(d);
+            IBlockState state = this.getWorld().getBlockState(neighborPos);
+            if (state.isSideSolid(this.getWorld(), neighborPos, d.getOpposite())) {
+                this.sideConnected = d;
                 break;
             }
         }
-        if (sideConnected != oldSideConnected) {
-            sendDescriptionPacket();
+        if (this.sideConnected != oldSideConnected) {
+            this.sendDescriptionPacket();
         }
     }
 
     @Override
     public void onDescUpdate() {
-        getWorld().checkLightFor(EnumSkyBlock.BLOCK, getPos());
-        getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
+        this.getWorld().checkLightFor(EnumSkyBlock.BLOCK, this.getPos());
+        this.getWorld().markBlockRangeForRenderUpdate(this.getPos(), this.getPos());
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         NBTTagList lights = new NBTTagList();
-        for (BlockPos pos : managingLights) {
+        for (BlockPos pos : this.managingLights) {
             NBTTagCompound t = new NBTTagCompound();
             t.setInteger("x", pos.getX());
             t.setInteger("y", pos.getY());
@@ -284,73 +285,73 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
         tag.setTag("lights", lights);
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        tank.writeToNBT(tankTag);
+        this.tank.writeToNBT(tankTag);
         tag.setTag("tank", tankTag);
-        tag.setByte("redstoneMode", (byte) redstoneMode);
-        tag.setByte("targetRange", (byte) targetRange);
-        tag.setByte("range", (byte) range);
-        tag.setByte("sideConnected", (byte) sideConnected.ordinal());
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
+        tag.setByte("targetRange", (byte) this.targetRange);
+        tag.setByte("range", (byte) this.range);
+        tag.setByte("sideConnected", (byte) this.sideConnected.ordinal());
+        tag.setTag("Items", this.inventory.serializeNBT());
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        managingLights.clear();
+        this.managingLights.clear();
         NBTTagList lights = tag.getTagList("lights", 10);
         for (int i = 0; i < lights.tagCount(); i++) {
             NBTTagCompound t = lights.getCompoundTagAt(i);
-            managingLights.add(new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
+            this.managingLights.add(new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
         }
-        tank.readFromNBT(tag.getCompoundTag("tank"));
-        fluidAmountScaled = tank.getScaledFluidAmount();
-        recalculateFuelQuality();
-        redstoneMode = tag.getByte("redstoneMode");
-        targetRange = tag.getByte("targetRange");
-        range = tag.getByte("range");
-        sideConnected = EnumFacing.byIndex(tag.getByte("sideConnected"));
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.tank.readFromNBT(tag.getCompoundTag("tank"));
+        this.fluidAmountScaled = this.tank.getScaledFluidAmount();
+        this.recalculateFuelQuality();
+        this.redstoneMode = tag.getByte("redstoneMode");
+        this.targetRange = tag.getByte("targetRange");
+        this.range = tag.getByte("range");
+        this.sideConnected = EnumFacing.byIndex(tag.getByte("sideConnected"));
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
     }
 
     @Override
     public boolean redstoneAllows() {
-        return redstoneMode == 3 || super.redstoneAllows();
+        return this.redstoneMode == 3 || super.redstoneAllows();
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 3) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 3) this.redstoneMode = 0;
         } else if (buttonID > 0 && buttonID <= MAX_RANGE) {
-            targetRange = buttonID;
+            this.targetRange = buttonID;
         }
     }
 
     public FluidTank getTank() {
-        return tank;
+        return this.tank;
     }
 
     public int getRange() {
-        return range;
+        return this.range;
     }
 
     public int getTargetRange() {
-        return targetRange;
+        return this.targetRange;
     }
 
     public int getFuel() {
-        return fuel;
+        return this.fuel;
     }
 
     public EnumFacing getSideConnected() {
-        return sideConnected;
+        return this.sideConnected;
     }
 
     @Override
@@ -362,7 +363,7 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.tank);
         } else {
             return super.getCapability(capability, facing);
         }
@@ -377,7 +378,7 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
     }
 
     public float getFuelQuality() {
-        return fuelQuality;
+        return this.fuelQuality;
     }
 
     @Override
@@ -388,11 +389,11 @@ public class TileEntityKeroseneLamp extends TileEntityTickableBase implements IR
     @Nonnull
     @Override
     public Map<String, FluidTank> getSerializableTanks() {
-        return ImmutableMap.of("Tank", tank);
+        return ImmutableMap.of("Tank", this.tank);
     }
 
     @Override
     public void updateScaledFluidAmount(int tankIndex, int amount) {
-        fluidAmountScaled = amount;
+        this.fluidAmountScaled = amount;
     }
 }

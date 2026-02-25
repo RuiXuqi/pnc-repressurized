@@ -30,22 +30,22 @@ public class GuiSentryTurret extends GuiPneumaticContainerBase<TileEntitySentryT
     @Override
     public void initGui() {
         super.initGui();
-        addWidget(entityFilter = new WidgetTextField(fontRenderer, guiLeft + 80, guiTop + 63, 70, fontRenderer.FONT_HEIGHT));
+        this.addWidget(this.entityFilter = new WidgetTextField(this.fontRenderer, this.guiLeft + 80, this.guiTop + 63, 70, this.fontRenderer.FONT_HEIGHT));
 
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (!entityFilter.isFocused()) entityFilter.setText(te.getText(0));
+        if (!this.entityFilter.isFocused()) this.entityFilter.setText(this.te.getText(0));
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        if (!entityFilter.isFocused()) {
-            te.setText(0, entityFilter.getText());
-            NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        if (!this.entityFilter.isFocused()) {
+            this.te.setText(0, this.entityFilter.getText());
+            NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
         }
     }
 
@@ -53,23 +53,23 @@ public class GuiSentryTurret extends GuiPneumaticContainerBase<TileEntitySentryT
     public void onGuiClosed() {
         super.onGuiClosed();
 
-        te.setText(0, entityFilter.getText());
-        NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        this.te.setText(0, this.entityFilter.getText());
+        NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-        fontRenderer.drawString(I18n.format("gui.sentryTurret.ammo"), 80, 19, 4210752);
-        fontRenderer.drawString(I18n.format("gui.sentryTurret.targetFilter"), 80, 53, 4210752);
+        this.fontRenderer.drawString("Upgr.", 28, 19, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui.sentryTurret.ammo"), 80, 19, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui.sentryTurret.targetFilter"), 80, 53, 4210752);
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-            GuiUtils.showPopupHelpScreen(this, fontRenderer,
+            GuiUtils.showPopupHelpScreen(this, this.fontRenderer,
                     PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.entityFilter.helpText"), 60));
-        } else if (x >= guiLeft + 76 && y >= guiTop + 51 && x <= guiLeft + 153 && y <= guiTop + 74) {
+        } else if (x >= this.guiLeft + 76 && y >= this.guiTop + 51 && x <= this.guiLeft + 153 && y <= this.guiTop + 74) {
             // cursor inside the entity filter area
             String str = I18n.format("gui.entityFilter");
-            fontRenderer.drawString(str, (xSize - fontRenderer.getStringWidth(str)) / 2, ySize + 5, 0x808080);
+            this.fontRenderer.drawString(str, (this.xSize - this.fontRenderer.getStringWidth(str)) / 2, this.ySize + 5, 0x808080);
         }
     }
 
@@ -78,8 +78,8 @@ public class GuiSentryTurret extends GuiPneumaticContainerBase<TileEntitySentryT
         super.addProblems(curInfo);
 
         boolean hasAmmo = false;
-        for (int i = 0; i < te.getPrimaryInventory().getSlots(); i++) {
-            if (!te.getPrimaryInventory().getStackInSlot(i).isEmpty()) {
+        for (int i = 0; i < this.te.getPrimaryInventory().getSlots(); i++) {
+            if (!this.te.getPrimaryInventory().getStackInSlot(i).isEmpty()) {
                 hasAmmo = true;
                 break;
             }

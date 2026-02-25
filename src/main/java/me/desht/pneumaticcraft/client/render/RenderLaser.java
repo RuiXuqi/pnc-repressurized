@@ -31,7 +31,7 @@ public class RenderLaser {
     }
 
     public void update() {
-        ticksExisted++;
+        this.ticksExisted++;
     }
 
     public void render(float partialTicks, double x1, double y1, double z1, double x2, double y2, double z2) {
@@ -55,12 +55,12 @@ public class RenderLaser {
         double rotYaw = Math.atan2(dx, dz) * 180.0D / Math.PI;
         double rotPitch = 90 - (float) (Math.atan2(dy, f3) * 180.0D / Math.PI);
 
-        GlStateManager.rotate((float)rotYaw, 0, 1, 0);
-        GlStateManager.rotate((float)rotPitch, 1, 0, 0);
+        GlStateManager.rotate((float) rotYaw, 0, 1, 0);
+        GlStateManager.rotate((float) rotPitch, 1, 0, 0);
 
         GlStateManager.scale(laserSize, laserSize, laserSize);
         GlStateManager.translate(0, 0.6, 0);
-        GlStateManager.rotate((ticksExisted + partialTicks) * 200, 0, 1, 0);
+        GlStateManager.rotate((this.ticksExisted + partialTicks) * 200, 0, 1, 0);
 
         GlStateManager.pushMatrix();
         GlStateManager.scale(1, laserLength / laserSize, 1);
@@ -71,16 +71,16 @@ public class RenderLaser {
            GlStateManager.translate(0, 0.01, 0);*/
 
         textureManager.bindTexture(Textures.RENDER_LASER);
-        renderQuad(glowColor);
+        this.renderQuad(this.glowColor);
         textureManager.bindTexture(Textures.RENDER_LASER_OVERLAY);
-        renderQuad(coreColor);
+        this.renderQuad(this.coreColor);
         GlStateManager.popMatrix();
 
         GlStateManager.rotate(180, 1, 0, 0);
         textureManager.bindTexture(Textures.RENDER_LASER_START);
-        renderQuad(glowColor);
+        this.renderQuad(this.glowColor);
         textureManager.bindTexture(Textures.RENDER_LASER_START_OVERLAY);
-        renderQuad(coreColor);
+        this.renderQuad(this.coreColor);
 
         GlStateManager.disableBlend();
         GlStateManager.enableCull();

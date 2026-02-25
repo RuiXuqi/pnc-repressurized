@@ -7,7 +7,7 @@ public class AE2 implements IThirdParty {
 
     @Override
     public void init() {
-    	PneumaticRegistry.getInstance().getItemRegistry().registerInventoryItem(new AE2DiskInventoryItemHandler());
+        PneumaticRegistry.getInstance().getItemRegistry().registerInventoryItem(new AE2DiskInventoryItemHandler());
     }
 
 }

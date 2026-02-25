@@ -16,7 +16,7 @@ public class DamageSourcePneumaticCraft extends DamageSource {
 
     private DamageSourcePneumaticCraft(String damageType, int messages) {
         super(damageType);
-        deathMessages = messages;
+        this.deathMessages = messages;
     }
 
     DamageSourcePneumaticCraft(String damageType) {
@@ -43,10 +43,10 @@ public class DamageSourcePneumaticCraft extends DamageSource {
      */
     @Override
     public ITextComponent getDeathMessage(EntityLivingBase par1EntityLivingBase) {
-        int messageNumber = par1EntityLivingBase.getRNG().nextInt(deathMessages) + 1;
+        int messageNumber = par1EntityLivingBase.getRNG().nextInt(this.deathMessages) + 1;
 
         EntityLivingBase entitylivingbase1 = par1EntityLivingBase.getAttackingEntity();
-        String s = "death.attack." + damageType + messageNumber;
+        String s = "death.attack." + this.damageType + messageNumber;
         String s1 = s + ".player";
         return entitylivingbase1 != null && I18n.hasKey(s1) ?
                 new TextComponentTranslation(s1, par1EntityLivingBase.getDisplayName(), entitylivingbase1.getDisplayName()) :
@@ -59,8 +59,8 @@ public class DamageSourcePneumaticCraft extends DamageSource {
 
         public DamageSourceDroneOverload(String msgKey, Object... params) {
             super("droneOverload");
-            setDamageBypassesArmor();
-            setDamageAllowedInCreativeMode();
+            this.setDamageBypassesArmor();
+            this.setDamageAllowedInCreativeMode();
             this.msgKey = msgKey;
             this.params = new Object[params.length];
             System.arraycopy(params, 0, this.params, 0, params.length);
@@ -68,7 +68,7 @@ public class DamageSourcePneumaticCraft extends DamageSource {
 
         @Override
         public ITextComponent getDeathMessage(EntityLivingBase par1EntityLivingBase) {
-            return new TextComponentTranslation("death.drone.overload." + msgKey, params);
+            return new TextComponentTranslation("death.drone.overload." + this.msgKey, this.params);
         }
     }
 }

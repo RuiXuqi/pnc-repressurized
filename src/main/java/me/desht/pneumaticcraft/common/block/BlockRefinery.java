@@ -38,9 +38,9 @@ public class BlockRefinery extends BlockPneumaticCraftModeled {
             TileEntityRefinery master = ((TileEntityRefinery) te).getMasterRefinery();
             BlockPos actualPos = master.getPos();
             IFluidHandler heldHandler = FluidUtil.getFluidHandler(ItemHandlerHelper.copyStackWithSize(player.getHeldItem(hand), 1));
-            if (heldHandler != null ) {
+            if (heldHandler != null) {
                 IFluidHandler refineryHandler = FluidUtil.getFluidHandler(world, pos, side);
-                if (refineryHandler != null && couldTransferFluidEitherWay(heldHandler, refineryHandler)) {
+                if (refineryHandler != null && this.couldTransferFluidEitherWay(heldHandler, refineryHandler)) {
                     actualPos = pos;
                 }
             }

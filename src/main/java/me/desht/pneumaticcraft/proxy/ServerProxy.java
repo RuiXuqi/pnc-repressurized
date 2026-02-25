@@ -43,7 +43,7 @@ public class ServerProxy implements IProxy {
 
     @Override
     public HackTickHandler getHackTickHandler() {
-        return serverHackTickHandler;
+        return this.serverHackTickHandler;
     }
 
     @Override

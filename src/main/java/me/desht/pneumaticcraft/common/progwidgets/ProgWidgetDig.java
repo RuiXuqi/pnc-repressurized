@@ -1,7 +1,5 @@
 package me.desht.pneumaticcraft.common.progwidgets;
 
-import java.util.List;
-
 import me.desht.pneumaticcraft.client.gui.GuiProgrammer;
 import me.desht.pneumaticcraft.client.gui.programmer.GuiProgWidgetDig;
 import me.desht.pneumaticcraft.common.ai.DroneAIDig;
@@ -16,10 +14,12 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.List;
+
 public class ProgWidgetDig extends ProgWidgetDigAndPlace implements IToolUser {
 
     private boolean requireDiggingTool;
-    
+
     public ProgWidgetDig() {
         super(ProgWidgetDigAndPlace.EnumOrder.CLOSEST);
     }
@@ -36,9 +36,9 @@ public class ProgWidgetDig extends ProgWidgetDigAndPlace implements IToolUser {
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        return setupMaxActions(new DroneAIDig(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
+        return this.setupMaxActions(new DroneAIDig(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public GuiScreen getOptionWindow(GuiProgrammer guiProgrammer) {
@@ -51,32 +51,32 @@ public class ProgWidgetDig extends ProgWidgetDigAndPlace implements IToolUser {
     }
 
     @Override
-    public boolean requiresTool(){
-        return requireDiggingTool;
+    public boolean requiresTool() {
+        return this.requireDiggingTool;
     }
-    
+
     @Override
-    public void setRequiresTool(boolean requireDiggingTool){
+    public void setRequiresTool(boolean requireDiggingTool) {
         this.requireDiggingTool = requireDiggingTool;
     }
-    
+
     @Override
     @SideOnly(Side.CLIENT)
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        
-        if(requiresTool()) curTooltip.add(I18n.format("gui.progWidget.dig.requiresDiggingTool"));
+
+        if (this.requiresTool()) curTooltip.add(I18n.format("gui.progWidget.dig.requiresDiggingTool"));
     }
-    
+
     @Override
-    public void writeToNBT(NBTTagCompound tag){
+    public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("requireDiggingTool", requireDiggingTool);
+        tag.setBoolean("requireDiggingTool", this.requireDiggingTool);
     }
-    
+
     @Override
-    public void readFromNBT(NBTTagCompound tag){
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        requireDiggingTool = tag.getBoolean("requireDiggingTool");
+        this.requireDiggingTool = tag.getBoolean("requireDiggingTool");
     }
 }

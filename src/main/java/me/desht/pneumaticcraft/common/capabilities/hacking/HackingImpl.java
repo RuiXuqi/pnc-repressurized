@@ -21,17 +21,17 @@ public class HackingImpl implements IHacking {
 
     @Override
     public void update(Entity entity) {
-        hackables.removeIf(hackable -> !hackable.afterHackTick(entity));
+        this.hackables.removeIf(hackable -> !hackable.afterHackTick(entity));
     }
 
     @Override
     public void addHackable(IHackableEntity hackable) {
-        hackables.add(hackable);
+        this.hackables.add(hackable);
     }
 
     @Override
     public List<IHackableEntity> getCurrentHacks() {
-        return hackables;
+        return this.hackables;
     }
 
     public static class Storage implements Capability.IStorage<IHacking> {

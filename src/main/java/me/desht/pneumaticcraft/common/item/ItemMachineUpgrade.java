@@ -31,7 +31,7 @@ public class ItemMachineUpgrade extends ItemPneumatic {
     }
 
     public IItemRegistry.EnumUpgrade getUpgradeType() {
-        return IItemRegistry.EnumUpgrade.values()[index];
+        return IItemRegistry.EnumUpgrade.values()[this.index];
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ItemMachineUpgrade extends ItemPneumatic {
         } else {
             infoList.add(I18n.format("gui.tooltip.item.upgrade.shiftMessage"));
         }
-        if (getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
+        if (this.getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
             EnumFacing dir = stack.hasTagCompound() ? EnumFacing.byName(NBTUtil.getString(stack, NBT_DIRECTION)) : null;
             infoList.add(I18n.format("message.dispenser.direction", dir == null ? "*" : dir.getName()));
             infoList.add(I18n.format("message.dispenser.clickToSet"));
@@ -53,9 +53,9 @@ public class ItemMachineUpgrade extends ItemPneumatic {
 
     @Override
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
-        if (getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
+        if (this.getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
             if (!world.isRemote) {
-                setDirection(player, hand, side);
+                this.setDirection(player, hand, side);
             }
             return EnumActionResult.SUCCESS;
         }
@@ -64,9 +64,9 @@ public class ItemMachineUpgrade extends ItemPneumatic {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
+        if (this.getUpgradeType() == IItemRegistry.EnumUpgrade.DISPENSER) {
             if (!worldIn.isRemote) {
-                setDirection(playerIn, handIn, null);
+                this.setDirection(playerIn, handIn, null);
             }
             return ActionResult.newResult(EnumActionResult.SUCCESS, playerIn.getHeldItem(handIn));
         }
@@ -86,6 +86,6 @@ public class ItemMachineUpgrade extends ItemPneumatic {
 
     @Override
     public EnumRarity getRarity(ItemStack stack) {
-        return getUpgradeType() == IItemRegistry.EnumUpgrade.CREATIVE ? EnumRarity.EPIC : EnumRarity.COMMON;
+        return this.getUpgradeType() == IItemRegistry.EnumUpgrade.CREATIVE ? EnumRarity.EPIC : EnumRarity.COMMON;
     }
 }

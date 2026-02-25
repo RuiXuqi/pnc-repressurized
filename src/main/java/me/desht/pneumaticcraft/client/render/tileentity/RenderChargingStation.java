@@ -26,8 +26,8 @@ public class RenderChargingStation extends AbstractModelRenderer<TileEntityCharg
             EntityItem ghostEntityItem = new EntityItem(te.getWorld());
             ghostEntityItem.hoverStart = 0.0F;
             ghostEntityItem.setItem(te.chargingStackSynced);
-            if (customRenderItem == null) {
-                customRenderItem = new NoBobItemRenderer();
+            if (this.customRenderItem == null) {
+                this.customRenderItem = new NoBobItemRenderer();
             }
             GlStateManager.translate(0, 1.25f, 0);
             GlStateManager.scale(1.0F, -1F, -1F);
@@ -36,7 +36,7 @@ public class RenderChargingStation extends AbstractModelRenderer<TileEntityCharg
             RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
             boolean fancySetting = renderManager.options.fancyGraphics;
             renderManager.options.fancyGraphics = true;
-            customRenderItem.doRender(ghostEntityItem, 0, 0, 0, 0, 0);
+            this.customRenderItem.doRender(ghostEntityItem, 0, 0, 0, 0, 0);
             renderManager.options.fancyGraphics = fancySetting;
         }
     }

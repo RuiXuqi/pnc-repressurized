@@ -61,7 +61,7 @@ public class IGWSupportNotifier {
                 List<ModContainer> loadedMods = Loader.instance().getActiveModList();
                 for (ModContainer container : loadedMods) {
                     if (container.getModId().equals(modid)) {
-                        supportingMod = container.getName();
+                        this.supportingMod = container.getName();
                         MinecraftForge.EVENT_BUS.register(this);
                         ClientCommandHandler.instance.registerCommand(new CommandDownloadIGW());
                         break;
@@ -75,7 +75,7 @@ public class IGWSupportNotifier {
     @SubscribeEvent
     public void onPlayerJoin(TickEvent.PlayerTickEvent event) {
         if (event.player.world.isRemote && event.player == FMLClientHandler.instance().getClientPlayerEntity()) {
-            event.player.sendStatusMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"), false);
+            event.player.sendStatusMessage(ITextComponent.Serializer.jsonToComponent("[\"" + TextFormatting.GOLD + "The mod " + this.supportingMod + " is supporting In-Game Wiki mod. " + TextFormatting.GOLD + "However, In-Game Wiki isn't installed! " + "[\"," + "{\"text\":\"Download Latest\",\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/igwmod_download\"}}," + "\"]\"]"), false);
             MinecraftForge.EVENT_BUS.unregister(this);
         }
     }
@@ -94,7 +94,7 @@ public class IGWSupportNotifier {
 
         @Override
         public String getUsage(ICommandSender sender) {
-            return getName();
+            return this.getName();
         }
 
         @Override
@@ -106,8 +106,8 @@ public class IGWSupportNotifier {
     private class ThreadDownloadIGW extends Thread {
 
         public ThreadDownloadIGW() {
-            setName("IGW-Mod Download Thread");
-            start();
+            this.setName("IGW-Mod Download Thread");
+            this.start();
         }
 
         @Override
@@ -149,13 +149,13 @@ public class IGWSupportNotifier {
                         Minecraft.getMinecraft().player.sendStatusMessage(new TextComponentString(TextFormatting.RED + "The version of Minecraft you are running doesn't seem to match the version of IGW-Mod that has been downloaded. The mod may not work."), false);
                 }
 
-                finalize();
+                this.finalize();
             } catch (Throwable e) {
                 e.printStackTrace();
                 if (Minecraft.getMinecraft().player != null)
                     Minecraft.getMinecraft().player.sendStatusMessage(new TextComponentString(TextFormatting.RED + "Failed to download"), false);
                 try {
-                    finalize();
+                    this.finalize();
                 } catch (Throwable e1) {
                     e1.printStackTrace();
                 }

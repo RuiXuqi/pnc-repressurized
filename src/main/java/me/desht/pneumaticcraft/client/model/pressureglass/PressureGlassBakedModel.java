@@ -35,16 +35,16 @@ public class PressureGlassBakedModel implements IBakedModel {
     }
 
     private void putVertex(UnpackedBakedQuad.Builder builder, Vec3d normal, double x, double y, double z, TextureAtlasSprite sprite, float u, float v) {
-        for (int e = 0; e < format.getElementCount(); e++) {
-            switch (format.getElement(e).getUsage()) {
+        for (int e = 0; e < this.format.getElementCount(); e++) {
+            switch (this.format.getElement(e).getUsage()) {
                 case POSITION:
-                    builder.put(e, (float)x, (float)y, (float)z, 1.0f);
+                    builder.put(e, (float) x, (float) y, (float) z, 1.0f);
                     break;
                 case COLOR:
                     builder.put(e, 1.0f, 1.0f, 1.0f, 1.0f);
                     break;
                 case UV:
-                    if (format.getElement(e).getIndex() == 0) {
+                    if (this.format.getElement(e).getIndex() == 0) {
                         u = sprite.getInterpolatedU(u);
                         v = sprite.getInterpolatedV(v);
                         builder.put(e, u, v, 0f, 1f);
@@ -63,12 +63,12 @@ public class PressureGlassBakedModel implements IBakedModel {
     private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite, EnumFacing face) {
         Vec3d normal = new Vec3d(face.getDirectionVec());//v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
 
-        UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
+        UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
         builder.setTexture(sprite);
-        putVertex(builder, normal, v1.x, v1.y, v1.z, sprite, 0, 0);
-        putVertex(builder, normal, v2.x, v2.y, v2.z, sprite, 0, 16);
-        putVertex(builder, normal, v3.x, v3.y, v3.z, sprite, 16, 16);
-        putVertex(builder, normal, v4.x, v4.y, v4.z, sprite, 16, 0);
+        this.putVertex(builder, normal, v1.x, v1.y, v1.z, sprite, 0, 0);
+        this.putVertex(builder, normal, v2.x, v2.y, v2.z, sprite, 0, 16);
+        this.putVertex(builder, normal, v3.x, v3.y, v3.z, sprite, 16, 16);
+        this.putVertex(builder, normal, v4.x, v4.y, v4.z, sprite, 16, 0);
         builder.setQuadOrientation(face);
         return builder.build();
     }
@@ -84,38 +84,38 @@ public class PressureGlassBakedModel implements IBakedModel {
         List<BakedQuad> quads = new ArrayList<>();
         switch (side) {
             case DOWN:
-                int down = getSprite(extendedBlockState, BlockPressureChamberGlass.DOWN);
-                quads.add(createQuad(
+                int down = this.getSprite(extendedBlockState, BlockPressureChamberGlass.DOWN);
+                quads.add(this.createQuad(
                         new Vec3d(1, 0, 0), new Vec3d(1, 0, 1),
                         new Vec3d(0, 0, 1), new Vec3d(0, 0, 0), SPRITES[down], side));
                 break;
             case UP:
-                int up = getSprite(extendedBlockState, BlockPressureChamberGlass.UP);
-                quads.add(createQuad(
+                int up = this.getSprite(extendedBlockState, BlockPressureChamberGlass.UP);
+                quads.add(this.createQuad(
                         new Vec3d(0, 1, 0), new Vec3d(0, 1, 1),
                         new Vec3d(1, 1, 1), new Vec3d(1, 1, 0), SPRITES[up], side));
                 break;
             case NORTH:
-                int north = getSprite(extendedBlockState, BlockPressureChamberGlass.NORTH);
-                quads.add(createQuad(
+                int north = this.getSprite(extendedBlockState, BlockPressureChamberGlass.NORTH);
+                quads.add(this.createQuad(
                         new Vec3d(1, 1, 0), new Vec3d(1, 0, 0),
                         new Vec3d(0, 0, 0), new Vec3d(0, 1, 0), SPRITES[north], side));
                 break;
             case SOUTH:
-                int south = getSprite(extendedBlockState, BlockPressureChamberGlass.SOUTH);
-                quads.add(createQuad(
+                int south = this.getSprite(extendedBlockState, BlockPressureChamberGlass.SOUTH);
+                quads.add(this.createQuad(
                         new Vec3d(0, 1, 1), new Vec3d(0, 0, 1),
                         new Vec3d(1, 0, 1), new Vec3d(1, 1, 1), SPRITES[south], side));
                 break;
             case WEST:
-                int west = getSprite(extendedBlockState, BlockPressureChamberGlass.WEST);
-                quads.add(createQuad(
+                int west = this.getSprite(extendedBlockState, BlockPressureChamberGlass.WEST);
+                quads.add(this.createQuad(
                         new Vec3d(0, 1, 0), new Vec3d(0, 0, 0),
                         new Vec3d(0, 0, 1), new Vec3d(0, 1, 1), SPRITES[west], side));
                 break;
             case EAST:
-                int east = getSprite(extendedBlockState, BlockPressureChamberGlass.EAST);
-                quads.add(createQuad(
+                int east = this.getSprite(extendedBlockState, BlockPressureChamberGlass.EAST);
+                quads.add(this.createQuad(
                         new Vec3d(1, 1, 1), new Vec3d(1, 0, 1),
                         new Vec3d(1, 0, 0), new Vec3d(1, 1, 0), SPRITES[east], side));
                 break;

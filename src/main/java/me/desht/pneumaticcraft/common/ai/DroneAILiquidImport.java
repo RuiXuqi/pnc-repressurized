@@ -21,53 +21,53 @@ public class DroneAILiquidImport extends DroneAIImExBase {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return emptyTank(pos, true);
+        return this.emptyTank(pos, true);
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return emptyTank(pos, false) && super.doBlockInteraction(pos, distToBlock);
+        return this.emptyTank(pos, false) && super.doBlockInteraction(pos, distToBlock);
     }
 
     private boolean emptyTank(BlockPos pos, boolean simulate) {
-        if (drone.getTank().getFluidAmount() == drone.getTank().getCapacity()) {
-            drone.addDebugEntry("gui.progWidget.liquidImport.debug.fullDroneTank");
-            abort();
+        if (this.drone.getTank().getFluidAmount() == this.drone.getTank().getCapacity()) {
+            this.drone.addDebugEntry("gui.progWidget.liquidImport.debug.fullDroneTank");
+            this.abort();
             return false;
         } else {
-            TileEntity te = drone.world().getTileEntity(pos);
+            TileEntity te = this.drone.world().getTileEntity(pos);
             if (te != null) {
                 for (int i = 0; i < 6; i++) {
-                    if (((ISidedWidget) widget).getSides()[i] && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i))) {
+                    if (((ISidedWidget) this.widget).getSides()[i] && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i))) {
                         IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i));
                         FluidStack importedFluid = handler.drain(Integer.MAX_VALUE, false);
-                        if (importedFluid != null && ((ILiquidFiltered) widget).isFluidValid(importedFluid.getFluid())) {
-                            int filledAmount = drone.getTank().fill(importedFluid, false);
+                        if (importedFluid != null && ((ILiquidFiltered) this.widget).isFluidValid(importedFluid.getFluid())) {
+                            int filledAmount = this.drone.getTank().fill(importedFluid, false);
                             if (filledAmount > 0) {
-                                if (((ICountWidget) widget).useCount())
-                                    filledAmount = Math.min(filledAmount, getRemainingCount());
+                                if (((ICountWidget) this.widget).useCount())
+                                    filledAmount = Math.min(filledAmount, this.getRemainingCount());
                                 if (!simulate) {
-                                    decreaseCount(drone.getTank().fill(handler.drain(filledAmount, true), true));
+                                    this.decreaseCount(this.drone.getTank().fill(handler.drain(filledAmount, true), true));
                                 }
                                 return true;
                             }
                         }
                     }
                 }
-                drone.addDebugEntry("gui.progWidget.liquidImport.debug.emptiedToMax", pos);
+                this.drone.addDebugEntry("gui.progWidget.liquidImport.debug.emptiedToMax", pos);
             }
 
             // fall through to fluid-in-world check here; it's possible for a fluid block to be a TE (with no
             // fluid capability) and also a fluid block which can be drained directly
-            if (!((ICountWidget) widget).useCount() || getRemainingCount() >= Fluid.BUCKET_VOLUME) {
-                FluidStack fluidStack = FluidUtils.getFluidAt(drone.world(), pos, false);
+            if (!((ICountWidget) this.widget).useCount() || this.getRemainingCount() >= Fluid.BUCKET_VOLUME) {
+                FluidStack fluidStack = FluidUtils.getFluidAt(this.drone.world(), pos, false);
                 if (fluidStack != null && fluidStack.amount == Fluid.BUCKET_VOLUME
-                        && ((ILiquidFiltered) widget).isFluidValid(fluidStack.getFluid())
-                        && drone.getTank().fill(fluidStack, false) == Fluid.BUCKET_VOLUME) {
+                        && ((ILiquidFiltered) this.widget).isFluidValid(fluidStack.getFluid())
+                        && this.drone.getTank().fill(fluidStack, false) == Fluid.BUCKET_VOLUME) {
                     if (!simulate) {
-                        decreaseCount(Fluid.BUCKET_VOLUME);
-                        FluidStack fluidStack1 = FluidUtils.getFluidAt(drone.world(), pos, true);
-                        drone.getTank().fill(fluidStack1, true);
+                        this.decreaseCount(Fluid.BUCKET_VOLUME);
+                        FluidStack fluidStack1 = FluidUtils.getFluidAt(this.drone.world(), pos, true);
+                        this.drone.getTank().fill(fluidStack1, true);
                     }
                     return true;
                 }

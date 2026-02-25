@@ -20,13 +20,13 @@ public abstract class PacketSecurityStation<REQ extends PacketSecurityStation<RE
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        ByteBufUtils.writeUTF8String(buffer, username);
+        ByteBufUtils.writeUTF8String(buffer, this.username);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        username = ByteBufUtils.readUTF8String(buffer);
+        this.username = ByteBufUtils.readUTF8String(buffer);
     }
 
     @Override
@@ -36,7 +36,7 @@ public abstract class PacketSecurityStation<REQ extends PacketSecurityStation<RE
     @Override
     public void handleServerSide(REQ message, EntityPlayer player) {
         TileEntity te = message.getTileEntity(player.getEntityWorld());
-        handleServerSide(te, message.username);
+        this.handleServerSide(te, message.username);
     }
 
     protected abstract void handleServerSide(TileEntity te, String username);

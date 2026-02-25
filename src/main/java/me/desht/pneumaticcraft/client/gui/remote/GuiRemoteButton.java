@@ -19,48 +19,48 @@ public class GuiRemoteButton extends GuiRemoteVariable<ActionWidgetButton> {
     public void initGui() {
         super.initGui();
 
-        addLabel(I18n.format("gui.remote.button.settingValue"), guiLeft + 10, guiTop + 95);
-        addLabel("X:", guiLeft + 10, guiTop + 106);
-        addLabel("Y:", guiLeft + 67, guiTop + 106);
-        addLabel("Z:", guiLeft + 124, guiTop + 106);
-        addLabel(I18n.format("gui.remote.button.width"), guiLeft + 10, guiTop + 123);
-        addLabel(I18n.format("gui.remote.button.height"), guiLeft + 10, guiTop + 138);
+        this.addLabel(I18n.format("gui.remote.button.settingValue"), this.guiLeft + 10, this.guiTop + 95);
+        this.addLabel("X:", this.guiLeft + 10, this.guiTop + 106);
+        this.addLabel("Y:", this.guiLeft + 67, this.guiTop + 106);
+        this.addLabel("Z:", this.guiLeft + 124, this.guiTop + 106);
+        this.addLabel(I18n.format("gui.remote.button.width"), this.guiLeft + 10, this.guiTop + 123);
+        this.addLabel(I18n.format("gui.remote.button.height"), this.guiLeft + 10, this.guiTop + 138);
 
         String valueTooltip = I18n.format("gui.remote.button.value.tooltip");
 
-        xValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 20, guiTop + 105, 38, 10);
-        xValueField.setValue(widget.settingCoordinate.getX());
-        xValueField.setTooltip(valueTooltip);
-        addWidget(xValueField);
+        this.xValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 20, this.guiTop + 105, 38, 10);
+        this.xValueField.setValue(this.widget.settingCoordinate.getX());
+        this.xValueField.setTooltip(valueTooltip);
+        this.addWidget(this.xValueField);
 
-        yValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 78, guiTop + 105, 38, 10);
-        yValueField.setValue(widget.settingCoordinate.getY());
-        yValueField.setTooltip(valueTooltip);
-        addWidget(yValueField);
+        this.yValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 78, this.guiTop + 105, 38, 10);
+        this.yValueField.setValue(this.widget.settingCoordinate.getY());
+        this.yValueField.setTooltip(valueTooltip);
+        this.addWidget(this.yValueField);
 
-        zValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 136, guiTop + 105, 38, 10);
-        zValueField.setValue(widget.settingCoordinate.getZ());
-        zValueField.setTooltip(valueTooltip);
-        addWidget(zValueField);
+        this.zValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 136, this.guiTop + 105, 38, 10);
+        this.zValueField.setValue(this.widget.settingCoordinate.getZ());
+        this.zValueField.setTooltip(valueTooltip);
+        this.addWidget(this.zValueField);
 
-        widthField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 100, guiTop + 123, 60, 10);
-        widthField.setValue(widget.getWidth());
-        widthField.minValue = 10;
-        addWidget(widthField);
+        this.widthField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 100, this.guiTop + 123, 60, 10);
+        this.widthField.setValue(this.widget.getWidth());
+        this.widthField.minValue = 10;
+        this.addWidget(this.widthField);
 
-        heightField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 100, guiTop + 138, 60, 10);
-        heightField.setValue(widget.getHeight());
-        heightField.minValue = 10;
-        heightField.maxValue = 100;
-        addWidget(heightField);
+        this.heightField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 100, this.guiTop + 138, 60, 10);
+        this.heightField.setValue(this.widget.getHeight());
+        this.heightField.minValue = 10;
+        this.heightField.maxValue = 100;
+        this.addWidget(this.heightField);
 
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        widget.settingCoordinate = new BlockPos(xValueField.getValue(), yValueField.getValue(), zValueField.getValue());
-        widget.setWidth(widthField.getValue());
-        widget.setHeight(heightField.getValue());
+        this.widget.settingCoordinate = new BlockPos(this.xValueField.getValue(), this.yValueField.getValue(), this.zValueField.getValue());
+        this.widget.setWidth(this.widthField.getValue());
+        this.widget.setHeight(this.heightField.getValue());
     }
 }

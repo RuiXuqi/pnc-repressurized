@@ -17,15 +17,15 @@ public class ModuleFlowDetector extends TubeModuleRedstoneEmitting implements II
     @Override
     public void update() {
         super.update();
-        oldRotation = rotation;
-        rotation += getRedstoneLevel() / 100F;
+        this.oldRotation = this.rotation;
+        this.rotation += this.getRedstoneLevel() / 100F;
 
-        if (!pressureTube.world().isRemote) {
-            if (setRedstone(flow / 5)) {
-                sendDescriptionPacket();
+        if (!this.pressureTube.world().isRemote) {
+            if (this.setRedstone(this.flow / 5)) {
+                this.sendDescriptionPacket();
             }
-            oldFlow = flow;
-            flow = 0;
+            this.oldFlow = this.flow;
+            this.flow = 0;
         }
     }
 
@@ -41,13 +41,13 @@ public class ModuleFlowDetector extends TubeModuleRedstoneEmitting implements II
 
     @Override
     public void onAirDispersion(int amount) {
-        flow += amount;
+        this.flow += amount;
     }
 
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Flow: " + TextFormatting.WHITE + oldFlow + " mL/tick");
+        curInfo.add("Flow: " + TextFormatting.WHITE + this.oldFlow + " mL/tick");
         super.addInfo(curInfo);
     }
 
@@ -59,15 +59,15 @@ public class ModuleFlowDetector extends TubeModuleRedstoneEmitting implements II
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        rotation = tag.getFloat("rotation");
-        oldFlow = tag.getInteger("flow");//taggin it for waila purposes.
+        this.rotation = tag.getFloat("rotation");
+        this.oldFlow = tag.getInteger("flow");//taggin it for waila purposes.
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setFloat("rotation", rotation);
-        tag.setInteger("flow", oldFlow);
+        tag.setFloat("rotation", this.rotation);
+        tag.setInteger("flow", this.oldFlow);
     }
 
     @Override

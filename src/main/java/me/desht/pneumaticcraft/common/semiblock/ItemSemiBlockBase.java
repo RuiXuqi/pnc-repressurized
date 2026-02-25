@@ -19,7 +19,7 @@ public class ItemSemiBlockBase extends ItemPneumatic implements ISemiBlockItem {
 
     @Override
     public ISemiBlock getSemiBlock(World world, BlockPos pos, ItemStack stack) {
-        return SemiBlockManager.getSemiBlockForKey(semiBlockId);
+        return SemiBlockManager.getSemiBlockForKey(this.semiBlockId);
     }
 
 }

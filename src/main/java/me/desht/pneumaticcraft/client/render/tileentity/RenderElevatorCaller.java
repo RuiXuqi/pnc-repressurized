@@ -42,7 +42,7 @@ public class RenderElevatorCaller extends TileEntitySpecialRenderer<TileEntityEl
             GlStateManager.pushMatrix();
             GlStateManager.translate(button.posX + 0.5D, button.posY + 0.5D, 0.498);
             GlStateManager.translate(button.width / 2, button.height / 2, 0);
-            float textScale = Math.min((float)button.width / 10F, (float)button.height / 10F);
+            float textScale = Math.min((float) button.width / 10F, (float) button.height / 10F);
             GlStateManager.scale(textScale, textScale, textScale);
             fontRenderer.drawString(button.buttonText, -fontRenderer.getStringWidth(button.buttonText) / 2, -fontRenderer.FONT_HEIGHT / 2, 0xFF000000);
             GlStateManager.popMatrix();

@@ -34,8 +34,8 @@ public class RenderSearchItemBlock {
 
     public int getSearchedItemCount() {
         // this gets called every frame from the render methods, so some caching is desirable...
-        if (world.getTotalWorldTime() - lastCheck >= 20) {
-            TileEntity te = world.getTileEntity(pos);
+        if (this.world.getTotalWorldTime() - this.lastCheck >= 20) {
+            TileEntity te = this.world.getTileEntity(this.pos);
             if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)) {
                 IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
                 int itemCount = 0;
@@ -46,13 +46,13 @@ public class RenderSearchItemBlock {
                         itemCount += getSearchedItemCount(handler.getStackInSlot(l), searchStack);
                     }
                 }
-                cachedAmount = itemCount;
+                this.cachedAmount = itemCount;
             } else {
-                cachedAmount = 0;
+                this.cachedAmount = 0;
             }
-            lastCheck = world.getTotalWorldTime();
+            this.lastCheck = this.world.getTotalWorldTime();
         }
-        return cachedAmount;
+        return this.cachedAmount;
     }
 
     public static int getSearchedItemCount(ItemStack stack, ItemStack searchStack) {
@@ -68,7 +68,7 @@ public class RenderSearchItemBlock {
     }
 
     public void renderSearchBlock(int totalCount, float partialTicks) {
-        renderSearch(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, getSearchedItemCount(), totalCount, partialTicks);
+        renderSearch(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D, this.getSearchedItemCount(), totalCount, partialTicks);
     }
 
     public static void renderSearch(double x, double y, double z, int itemCount, int totalCount, float partialTicks) {

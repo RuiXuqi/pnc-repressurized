@@ -47,32 +47,27 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
-public class TintedOBJModel implements IModel
-{
+public class TintedOBJModel implements IModel {
     //private Gson GSON = new GsonBuilder().create();
-    private MaterialLibrary matLib;
+    private final MaterialLibrary matLib;
     private final ResourceLocation modelLocation;
-    private CustomData customData;
+    private final CustomData customData;
 
-    public TintedOBJModel(MaterialLibrary matLib, ResourceLocation modelLocation)
-    {
+    public TintedOBJModel(MaterialLibrary matLib, ResourceLocation modelLocation) {
         this(matLib, modelLocation, new CustomData());
     }
 
-    public TintedOBJModel(MaterialLibrary matLib, ResourceLocation modelLocation, CustomData customData)
-    {
+    public TintedOBJModel(MaterialLibrary matLib, ResourceLocation modelLocation, CustomData customData) {
         this.matLib = matLib;
         this.modelLocation = modelLocation;
         this.customData = customData;
     }
 
     @Override
-    public Collection<ResourceLocation> getTextures()
-    {
+    public Collection<ResourceLocation> getTextures() {
         Iterator<Material> materialIterator = this.matLib.materials.values().iterator();
         List<ResourceLocation> textures = Lists.newArrayList();
-        while (materialIterator.hasNext())
-        {
+        while (materialIterator.hasNext()) {
             Material mat = materialIterator.next();
             ResourceLocation textureLoc = new ResourceLocation(mat.getTexture().getPath());
             if (!textures.contains(textureLoc) && !mat.isWhite())
@@ -82,20 +77,15 @@ public class TintedOBJModel implements IModel
     }
 
     @Override
-    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
-    {
+    public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
         ImmutableMap.Builder<String, TextureAtlasSprite> builder = ImmutableMap.builder();
         builder.put(ModelLoader.White.LOCATION.toString(), ModelLoader.White.INSTANCE);
         TextureAtlasSprite missing = bakedTextureGetter.apply(new ResourceLocation("missingno"));
-        for (Map.Entry<String, Material> e : matLib.materials.entrySet())
-        {
-            if (e.getValue().getTexture().getTextureLocation().getPath().startsWith("#"))
-            {
-                FMLLog.log.fatal("OBJLoader: Unresolved texture '{}' for obj model '{}'", e.getValue().getTexture().getTextureLocation().getPath(), modelLocation);
+        for (Map.Entry<String, Material> e : this.matLib.materials.entrySet()) {
+            if (e.getValue().getTexture().getTextureLocation().getPath().startsWith("#")) {
+                FMLLog.log.fatal("OBJLoader: Unresolved texture '{}' for obj model '{}'", e.getValue().getTexture().getTextureLocation().getPath(), this.modelLocation);
                 builder.put(e.getKey(), missing);
-            }
-            else
-            {
+            } else {
                 builder.put(e.getKey(), bakedTextureGetter.apply(e.getValue().getTexture().getTextureLocation()));
             }
         }
@@ -103,34 +93,29 @@ public class TintedOBJModel implements IModel
         return new TintedOBJBakedModel(this, state, format, builder.build());
     }
 
-    public MaterialLibrary getMatLib()
-    {
+    public MaterialLibrary getMatLib() {
         return this.matLib;
     }
 
     @Override
-    public IModel process(ImmutableMap<String, String> customData)
-    {
+    public IModel process(ImmutableMap<String, String> customData) {
         return new TintedOBJModel(this.matLib, this.modelLocation, new CustomData(this.customData, customData));
     }
 
     @Override
-    public IModel retexture(ImmutableMap<String, String> textures)
-    {
+    public IModel retexture(ImmutableMap<String, String> textures) {
         return new TintedOBJModel(this.matLib.makeLibWithReplacements(textures), this.modelLocation, this.customData);
     }
 
-    static class CustomData
-    {
+    static class CustomData {
         public boolean ambientOcclusion = true;
         public boolean gui3d = true;
         // should be an enum, TODO
         //public boolean modifyUVs = false;
         public boolean flipV = false;
-        public Map<String,Integer> tintMap = Collections.emptyMap();
+        public Map<String, Integer> tintMap = Collections.emptyMap();
 
-        public CustomData(CustomData parent, ImmutableMap<String, String> customData)
-        {
+        public CustomData(CustomData parent, ImmutableMap<String, String> customData) {
             this.ambientOcclusion = parent.ambientOcclusion;
             this.gui3d = parent.gui3d;
             this.flipV = parent.flipV;
@@ -138,12 +123,11 @@ public class TintedOBJModel implements IModel
             this.process(customData);
         }
 
-        public CustomData() {}
+        public CustomData() {
+        }
 
-        public void process(ImmutableMap<String, String> customData)
-        {
-            for (Map.Entry<String, String> e : customData.entrySet())
-            {
+        public void process(ImmutableMap<String, String> customData) {
+            for (Map.Entry<String, String> e : customData.entrySet()) {
                 if (e.getKey().equals("ambient"))
                     this.ambientOcclusion = Boolean.valueOf(e.getValue());
                 else if (e.getKey().equals("gui3d"))
@@ -153,38 +137,36 @@ public class TintedOBJModel implements IModel
                 else if (e.getKey().equals("flip-v"))
                     this.flipV = Boolean.valueOf(e.getValue());
                 else if (e.getKey().equals("tintmap")) {
-                    Type type = new TypeToken<Map<String,Integer>>(){}.getType();
+                    Type type = new TypeToken<Map<String, Integer>>() {
+                    }.getType();
                     this.tintMap = new Gson().fromJson(e.getValue(), type);
                 }
             }
         }
     }
 
-    public static class Parser
-    {
+    public static class Parser {
         private static final Pattern WHITE_SPACE = Pattern.compile("\\s+");
-        private static Set<String> unknownObjectCommands = new HashSet<>();
+        private static final Set<String> unknownObjectCommands = new HashSet<>();
         public MaterialLibrary materialLibrary = new MaterialLibrary();
-        private IResourceManager manager;
-        private InputStreamReader objStream;
-        private BufferedReader objReader;
-        private ResourceLocation objFrom;
+        private final IResourceManager manager;
+        private final InputStreamReader objStream;
+        private final BufferedReader objReader;
+        private final ResourceLocation objFrom;
 
-        private List<String> groupList = Lists.newArrayList();
-        private List<Vertex> vertices = Lists.newArrayList();
-        private List<Normal> normals = Lists.newArrayList();
-        private List<TextureCoordinate> texCoords = Lists.newArrayList();
+        private final List<String> groupList = Lists.newArrayList();
+        private final List<Vertex> vertices = Lists.newArrayList();
+        private final List<Normal> normals = Lists.newArrayList();
+        private final List<TextureCoordinate> texCoords = Lists.newArrayList();
 
-        public Parser(IResource from, IResourceManager manager) throws IOException
-        {
+        public Parser(IResource from, IResourceManager manager) throws IOException {
             this.manager = manager;
             this.objFrom = from.getResourceLocation();
             this.objStream = new InputStreamReader(from.getInputStream(), StandardCharsets.UTF_8);
-            this.objReader = new BufferedReader(objStream);
+            this.objReader = new BufferedReader(this.objStream);
         }
 
-        public List<String> getElements()
-        {
+        public List<String> getElements() {
             return this.groupList;
         }
 
@@ -197,74 +179,60 @@ public class TintedOBJModel implements IModel
         }
 
         //Partial reading of the OBJ format. Documentation taken from http://paulbourke.net/dataformats/obj/
-        public TintedOBJModel parse() throws IOException
-        {
+        public TintedOBJModel parse() throws IOException {
             String currentLine = "";
             Material material = new Material();
             material.setName(Material.DEFAULT_NAME);
             int usemtlCounter = 0;
             int lineNum = 0;
 
-            for (;;)
-            {
+            for (; ; ) {
                 lineNum++;
-                currentLine = objReader.readLine();
+                currentLine = this.objReader.readLine();
                 if (currentLine == null) break;
                 currentLine.trim();
                 if (currentLine.isEmpty() || currentLine.startsWith("#")) continue;
 
-                try
-                {
+                try {
                     String[] fields = WHITE_SPACE.split(currentLine, 2);
                     String key = fields[0];
                     String data = fields[1];
                     String[] splitData = WHITE_SPACE.split(data);
 
-                    if (key.equalsIgnoreCase("mtllib"))
-                    {
-                        this.materialLibrary.parseMaterials(manager, data, objFrom);
-                    }
-                    else if (key.equalsIgnoreCase("usemtl"))
-                    {
-                        if (this.materialLibrary.materials.containsKey(data))
-                        {
+                    if (key.equalsIgnoreCase("mtllib")) {
+                        this.materialLibrary.parseMaterials(this.manager, data, this.objFrom);
+                    } else if (key.equalsIgnoreCase("usemtl")) {
+                        if (this.materialLibrary.materials.containsKey(data)) {
                             material = this.materialLibrary.materials.get(data);
-                        }
-                        else
-                        {
-                            FMLLog.log.error("OBJModel.Parser: (Model: '{}', Line: {}) material '{}' referenced but was not found", objFrom, lineNum, data);
+                        } else {
+                            FMLLog.log.error("OBJModel.Parser: (Model: '{}', Line: {}) material '{}' referenced but was not found", this.objFrom, lineNum, data);
                         }
                         usemtlCounter++;
-                    }
-                    else if (key.equalsIgnoreCase("v")) // Vertices: x y z [w] - w Defaults to 1.0
+                    } else if (key.equalsIgnoreCase("v")) // Vertices: x y z [w] - w Defaults to 1.0
                     {
-                        float[] coords = parseFloats(splitData);
+                        float[] coords = this.parseFloats(splitData);
                         Vector4f pos = new Vector4f(coords[0], coords[1], coords[2], coords.length == 4 ? coords[3] : 1.0F);
                         this.vertices.add(new Vertex(pos, material));
-                    }
-                    else if (key.equalsIgnoreCase("vn")) // Vertex normals: x y z
+                    } else if (key.equalsIgnoreCase("vn")) // Vertex normals: x y z
                     {
-                        this.normals.add(new Normal(parseFloats(splitData)));
-                    }
-                    else if (key.equalsIgnoreCase("vt")) // Vertex Textures: u [v] [w] - v/w Defaults to 0
+                        this.normals.add(new Normal(this.parseFloats(splitData)));
+                    } else if (key.equalsIgnoreCase("vt")) // Vertex Textures: u [v] [w] - v/w Defaults to 0
                     {
-                        float[] coords = parseFloats(splitData);
+                        float[] coords = this.parseFloats(splitData);
                         TextureCoordinate texCoord = new TextureCoordinate(coords[0],
                                 coords.length >= 2 ? coords[1] : 0.0F,
                                 coords.length >= 3 ? coords[2] : 0.0F);
                         if (texCoord.u < 0.0f || texCoord.u > 1.0f || texCoord.v < 0.0f || texCoord.v > 1.0f)
                             throw new UVsOutOfBoundsException(this.objFrom);
                         this.texCoords.add(texCoord);
-                    }
-                    else if (key.equalsIgnoreCase("f")) // Face Elements: f v1[/vt1][/vn1] ...
+                    } else if (key.equalsIgnoreCase("f")) // Face Elements: f v1[/vt1][/vn1] ...
                     {
                         if (splitData.length > 4)
                             FMLLog.log.warn("OBJModel.Parser: found a face ('f') with more than 4 vertices, only the first 4 of these vertices will be rendered!");
 
                         List<Vertex> v = Lists.newArrayListWithCapacity(splitData.length);
 
-                        for (int i = 0; i < splitData.length; i++)
-                        {
+                        for (int i = 0; i < splitData.length; i++) {
                             String[] pts = splitData[i].split("/");
 
                             int vert = Integer.parseInt(pts[0]);
@@ -285,68 +253,46 @@ public class TintedOBJModel implements IModel
                         Vertex[] va = v.toArray(new Vertex[0]);
 
                         Face face = new Face(va, material.name);
-                        if (usemtlCounter < this.vertices.size())
-                        {
-                            for (Vertex ver : face.getVertices())
-                            {
+                        if (usemtlCounter < this.vertices.size()) {
+                            for (Vertex ver : face.getVertices()) {
                                 ver.setMaterial(material);
                             }
                         }
 
-                        if (groupList.isEmpty())
-                        {
-                            if (this.materialLibrary.getGroups().containsKey(Group.DEFAULT_NAME))
-                            {
+                        if (this.groupList.isEmpty()) {
+                            if (this.materialLibrary.getGroups().containsKey(Group.DEFAULT_NAME)) {
                                 this.materialLibrary.getGroups().get(Group.DEFAULT_NAME).addFace(face);
-                            }
-                            else
-                            {
+                            } else {
                                 Group def = new Group(Group.DEFAULT_NAME, null);
                                 def.addFace(face);
                                 this.materialLibrary.getGroups().put(Group.DEFAULT_NAME, def);
                             }
-                        }
-                        else
-                        {
-                            for (String s : groupList)
-                            {
-                                if (this.materialLibrary.getGroups().containsKey(s))
-                                {
+                        } else {
+                            for (String s : this.groupList) {
+                                if (this.materialLibrary.getGroups().containsKey(s)) {
                                     this.materialLibrary.getGroups().get(s).addFace(face);
-                                }
-                                else
-                                {
+                                } else {
                                     Group e = new Group(s, null);
                                     e.addFace(face);
                                     this.materialLibrary.getGroups().put(s, e);
                                 }
                             }
                         }
-                    }
-                    else if (key.equalsIgnoreCase("g") || key.equalsIgnoreCase("o"))
-                    {
-                        groupList.clear();
-                        if (key.equalsIgnoreCase("g"))
-                        {
+                    } else if (key.equalsIgnoreCase("g") || key.equalsIgnoreCase("o")) {
+                        this.groupList.clear();
+                        if (key.equalsIgnoreCase("g")) {
                             String[] splitSpace = data.split(" ");
-                            Collections.addAll(groupList, splitSpace);
+                            Collections.addAll(this.groupList, splitSpace);
+                        } else {
+                            this.groupList.add(data);
                         }
-                        else
-                        {
-                            groupList.add(data);
-                        }
-                    }
-                    else
-                    {
-                        if (!unknownObjectCommands.contains(key))
-                        {
+                    } else {
+                        if (!unknownObjectCommands.contains(key)) {
                             unknownObjectCommands.add(key);
-                            FMLLog.log.info("OBJLoader.Parser: command '{}' (model: '{}') is not currently supported, skipping. Line: {} '{}'", key, objFrom, lineNum, currentLine);
+                            FMLLog.log.info("OBJLoader.Parser: command '{}' (model: '{}') is not currently supported, skipping. Line: {} '{}'", key, this.objFrom, lineNum, currentLine);
                         }
                     }
-                }
-                catch (RuntimeException e)
-                {
+                } catch (RuntimeException e) {
                     throw new RuntimeException(String.format("OBJLoader.Parser: Exception parsing line #%d: `%s`", lineNum, currentLine), e);
                 }
             }
@@ -355,8 +301,7 @@ public class TintedOBJModel implements IModel
         }
     }
 
-    public static class MaterialLibrary
-    {
+    public static class MaterialLibrary {
         private static final Pattern WHITE_SPACE = Pattern.compile("\\s+");
         private Set<String> unknownMaterialCommands = new HashSet<>();
         private Map<String, Material> materials = new HashMap<>();
@@ -367,42 +312,34 @@ public class TintedOBJModel implements IModel
 //        private float[] minUVBounds = new float[] {0.0f, 0.0f};
 //        private float[] maxUVBounds = new float[] {1.0f, 1.0f};
 
-        public MaterialLibrary()
-        {
+        public MaterialLibrary() {
             this.groups.put(Group.DEFAULT_NAME, new Group(Group.DEFAULT_NAME, null));
             Material def = new Material();
             def.setName(Material.DEFAULT_NAME);
             this.materials.put(Material.DEFAULT_NAME, def);
         }
 
-        public MaterialLibrary makeLibWithReplacements(ImmutableMap<String, String> replacements)
-        {
+        public MaterialLibrary makeLibWithReplacements(ImmutableMap<String, String> replacements) {
             Map<String, Material> mats = new HashMap<>();
-            for (Map.Entry<String, Material> e : this.materials.entrySet())
-            {
+            for (Map.Entry<String, Material> e : this.materials.entrySet()) {
                 // key for the material name, with # added if missing
                 String keyMat = e.getKey();
-                if(!keyMat.startsWith("#")) keyMat = "#" + keyMat;
+                if (!keyMat.startsWith("#")) keyMat = "#" + keyMat;
                 // key for the texture name, with ".png" stripped and # added if missing
                 String keyTex = e.getValue().getTexture().getPath();
-                if(keyTex.endsWith(".png")) keyTex = keyTex.substring(0, keyTex.length() - ".png".length());
-                if(!keyTex.startsWith("#")) keyTex = "#" + keyTex;
-                if (replacements.containsKey(keyMat))
-                {
+                if (keyTex.endsWith(".png")) keyTex = keyTex.substring(0, keyTex.length() - ".png".length());
+                if (!keyTex.startsWith("#")) keyTex = "#" + keyTex;
+                if (replacements.containsKey(keyMat)) {
                     Texture currentTexture = e.getValue().texture;
                     Texture replacementTexture = new Texture(replacements.get(keyMat), currentTexture.position, currentTexture.scale, currentTexture.rotation);
                     Material replacementMaterial = new Material(e.getValue().color, replacementTexture, e.getValue().name);
                     mats.put(e.getKey(), replacementMaterial);
-                }
-                else if (replacements.containsKey(keyTex))
-                {
+                } else if (replacements.containsKey(keyTex)) {
                     Texture currentTexture = e.getValue().texture;
                     Texture replacementTexture = new Texture(replacements.get(keyTex), currentTexture.position, currentTexture.scale, currentTexture.rotation);
                     Material replacementMaterial = new Material(e.getValue().color, replacementTexture, e.getValue().name);
                     mats.put(e.getKey(), replacementMaterial);
-                }
-                else
-                {
+                } else {
                     mats.put(e.getKey(), e.getValue());
                 }
             }
@@ -435,23 +372,19 @@ public class TintedOBJModel implements IModel
 //            this.maxUVBounds[1] = maxV;
 //        }
 
-        public Map<String, Group> getGroups()
-        {
+        public Map<String, Group> getGroups() {
             return this.groups;
         }
 
-        public List<Group> getGroupsContainingFace(Face f)
-        {
+        public List<Group> getGroupsContainingFace(Face f) {
             List<Group> groupList = Lists.newArrayList();
-            for (Group g : this.groups.values())
-            {
+            for (Group g : this.groups.values()) {
                 if (g.faces.contains(f)) groupList.add(g);
             }
             return groupList;
         }
 
-        public void changeMaterialColor(String name, int color)
-        {
+        public void changeMaterialColor(String name, int color) {
             Vector4f colorVec = new Vector4f();
             colorVec.w = (color >> 24 & 255) / 255f;
             colorVec.x = (color >> 16 & 255) / 255f;
@@ -460,26 +393,23 @@ public class TintedOBJModel implements IModel
             this.materials.get(name).setColor(colorVec);
         }
 
-        public Material getMaterial(String name)
-        {
+        public Material getMaterial(String name) {
             return this.materials.get(name);
         }
 
-        public ImmutableList<String> getMaterialNames()
-        {
+        public ImmutableList<String> getMaterialNames() {
             return ImmutableList.copyOf(this.materials.keySet());
         }
 
-        public void parseMaterials(IResourceManager manager, String path, ResourceLocation from) throws IOException
-        {
+        public void parseMaterials(IResourceManager manager, String path, ResourceLocation from) throws IOException {
             this.materials.clear();
             boolean hasSetTexture = false;
             boolean hasSetColor = false;
             String domain = from.getNamespace();
             if (!path.contains("/"))
                 path = from.getPath().substring(0, from.getPath().lastIndexOf("/") + 1) + path;
-            mtlStream = new InputStreamReader(manager.getResource(new ResourceLocation(domain, path)).getInputStream(), StandardCharsets.UTF_8);
-            mtlReader = new BufferedReader(mtlStream);
+            this.mtlStream = new InputStreamReader(manager.getResource(new ResourceLocation(domain, path)).getInputStream(), StandardCharsets.UTF_8);
+            this.mtlReader = new BufferedReader(this.mtlStream);
 
             String currentLine = "";
             Material material = new Material();
@@ -488,9 +418,8 @@ public class TintedOBJModel implements IModel
             this.materials.put(Material.WHITE_NAME, material);
             this.materials.put(Material.DEFAULT_NAME, new Material(Texture.WHITE));
 
-            for (;;)
-            {
-                currentLine = mtlReader.readLine();
+            for (; ; ) {
+                currentLine = this.mtlReader.readLine();
                 if (currentLine == null) break;
                 currentLine.trim();
                 if (currentLine.isEmpty() || currentLine.startsWith("#")) continue;
@@ -499,65 +428,46 @@ public class TintedOBJModel implements IModel
                 String key = fields[0];
                 String data = fields[1];
 
-                if (key.equalsIgnoreCase("newmtl"))
-                {
+                if (key.equalsIgnoreCase("newmtl")) {
                     hasSetColor = false;
                     hasSetTexture = false;
                     material = new Material();
                     material.setName(data);
                     this.materials.put(data, material);
-                }
-                else if (key.equalsIgnoreCase("Ka") || key.equalsIgnoreCase("Kd") || key.equalsIgnoreCase("Ks"))
-                {
-                    if (key.equalsIgnoreCase("Kd") || !hasSetColor)
-                    {
+                } else if (key.equalsIgnoreCase("Ka") || key.equalsIgnoreCase("Kd") || key.equalsIgnoreCase("Ks")) {
+                    if (key.equalsIgnoreCase("Kd") || !hasSetColor) {
                         String[] rgbStrings = WHITE_SPACE.split(data, 3);
                         Vector4f color = new Vector4f(Float.parseFloat(rgbStrings[0]), Float.parseFloat(rgbStrings[1]), Float.parseFloat(rgbStrings[2]), 1.0f);
                         hasSetColor = true;
                         material.setColor(color);
-                    }
-                    else
-                    {
+                    } else {
                         FMLLog.log.info("OBJModel: A color has already been defined for material '{}' in '{}'. The color defined by key '{}' will not be applied!", material.getName(), new ResourceLocation(domain, path).toString(), key);
                     }
-                }
-                else if (key.equalsIgnoreCase("map_Ka") || key.equalsIgnoreCase("map_Kd") || key.equalsIgnoreCase("map_Ks"))
-                {
-                    if (key.equalsIgnoreCase("map_Kd") || !hasSetTexture)
-                    {
-                        if (data.contains(" "))
-                        {
+                } else if (key.equalsIgnoreCase("map_Ka") || key.equalsIgnoreCase("map_Kd") || key.equalsIgnoreCase("map_Ks")) {
+                    if (key.equalsIgnoreCase("map_Kd") || !hasSetTexture) {
+                        if (data.contains(" ")) {
                             String[] mapStrings = WHITE_SPACE.split(data);
                             String texturePath = mapStrings[mapStrings.length - 1];
                             Texture texture = new Texture(texturePath);
                             hasSetTexture = true;
                             material.setTexture(texture);
-                        }
-                        else
-                        {
+                        } else {
                             Texture texture = new Texture(data);
                             hasSetTexture = true;
                             material.setTexture(texture);
                         }
-                    }
-                    else
-                    {
+                    } else {
                         FMLLog.log.info("OBJModel: A texture has already been defined for material '{}' in '{}'. The texture defined by key '{}' will not be applied!", material.getName(), new ResourceLocation(domain, path).toString(), key);
                     }
-                }
-                else if (key.equalsIgnoreCase("d") || key.equalsIgnoreCase("Tr"))
-                {
+                } else if (key.equalsIgnoreCase("d") || key.equalsIgnoreCase("Tr")) {
                     //d <-optional key here> float[0.0:1.0, 1.0]
                     //Tr r g b OR Tr spectral map file OR Tr xyz r g b (CIEXYZ colorspace)
                     String[] splitData = WHITE_SPACE.split(data);
                     float alpha = Float.parseFloat(splitData[splitData.length - 1]);
                     material.getColor().setW(alpha);
-                }
-                else
-                {
-                    if (!unknownMaterialCommands.contains(key))
-                    {
-                        unknownMaterialCommands.add(key);
+                } else {
+                    if (!this.unknownMaterialCommands.contains(key)) {
+                        this.unknownMaterialCommands.add(key);
                         FMLLog.log.info("OBJLoader.MaterialLibrary: key '{}' (model: '{}') is not currently supported, skipping", key, new ResourceLocation(domain, path));
                     }
                 }
@@ -565,151 +475,124 @@ public class TintedOBJModel implements IModel
         }
     }
 
-    public static class Material
-    {
+    public static class Material {
         public static final String WHITE_NAME = "OBJModel.White.Texture.Name";
         public static final String DEFAULT_NAME = "OBJModel.Default.Texture.Name";
         private Vector4f color;
         private Texture texture = Texture.WHITE;
         private String name = DEFAULT_NAME;
 
-        public Material()
-        {
+        public Material() {
             this(new Vector4f(1f, 1f, 1f, 1f));
         }
 
-        public Material(Vector4f color)
-        {
+        public Material(Vector4f color) {
             this(color, Texture.WHITE, WHITE_NAME);
         }
 
-        public Material(Texture texture)
-        {
+        public Material(Texture texture) {
             this(new Vector4f(1f, 1f, 1f, 1f), texture, DEFAULT_NAME);
         }
 
-        public Material(Vector4f color, Texture texture, String name)
-        {
+        public Material(Vector4f color, Texture texture, String name) {
             this.color = color;
             this.texture = texture;
             this.name = name != null ? name : DEFAULT_NAME;
         }
 
-        public void setName(String name)
-        {
+        public void setName(String name) {
             this.name = name != null ? name : DEFAULT_NAME;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return this.name;
         }
 
-        public void setColor(Vector4f color)
-        {
+        public void setColor(Vector4f color) {
             this.color = color;
         }
 
-        public Vector4f getColor()
-        {
+        public Vector4f getColor() {
             return this.color;
         }
 
-        public void setTexture(Texture texture)
-        {
+        public void setTexture(Texture texture) {
             this.texture = texture;
         }
 
-        public Texture getTexture()
-        {
+        public Texture getTexture() {
             return this.texture;
         }
 
-        public boolean isWhite()
-        {
+        public boolean isWhite() {
             return this.texture.equals(Texture.WHITE);
         }
 
         @Override
-        public String toString()
-        {
-            StringBuilder builder = new StringBuilder(String.format("%nMaterial:%n"));
-            builder.append(String.format("    Name: %s%n", this.name));
-            builder.append(String.format("    Color: %s%n", this.color.toString()));
-            builder.append(String.format("    Is White: %b%n", this.isWhite()));
-            return builder.toString();
+        public String toString() {
+            String builder = String.format("%nMaterial:%n") + String.format("    Name: %s%n", this.name) +
+                    String.format("    Color: %s%n", this.color.toString()) +
+                    String.format("    Is White: %b%n", this.isWhite());
+            return builder;
         }
     }
 
-    public static class Texture
-    {
+    public static class Texture {
         public static Texture WHITE = new Texture("builtin/white", new Vector2f(0, 0), new Vector2f(1, 1), 0);
         private String path;
         private Vector2f position;
         private Vector2f scale;
         private float rotation;
 
-        public Texture(String path)
-        {
+        public Texture(String path) {
             this(path, new Vector2f(0, 0), new Vector2f(1, 1), 0);
         }
 
-        public Texture(String path, Vector2f position, Vector2f scale, float rotation)
-        {
+        public Texture(String path, Vector2f position, Vector2f scale, float rotation) {
             this.path = path;
             this.position = position;
             this.scale = scale;
             this.rotation = rotation;
         }
 
-        public ResourceLocation getTextureLocation()
-        {
+        public ResourceLocation getTextureLocation() {
             return new ResourceLocation(this.path);
         }
 
-        public void setPath(String path)
-        {
+        public void setPath(String path) {
             this.path = path;
         }
 
-        public String getPath()
-        {
+        public String getPath() {
             return this.path;
         }
 
-        public void setPosition(Vector2f position)
-        {
+        public void setPosition(Vector2f position) {
             this.position = position;
         }
 
-        public Vector2f getPosition()
-        {
+        public Vector2f getPosition() {
             return this.position;
         }
 
-        public void setScale(Vector2f scale)
-        {
+        public void setScale(Vector2f scale) {
             this.scale = scale;
         }
 
-        public Vector2f getScale()
-        {
+        public Vector2f getScale() {
             return this.scale;
         }
 
-        public void setRotation(float rotation)
-        {
+        public void setRotation(float rotation) {
             this.rotation = rotation;
         }
 
-        public float getRotation()
-        {
+        public float getRotation() {
             return this.rotation;
         }
     }
 
-    public static class Face
-    {
+    public static class Face {
         private Vertex[] verts = new Vertex[4];
         //        private Normal[] norms = new Normal[4];
 //        private TextureCoordinate[] texCoords = new TextureCoordinate[4];
@@ -717,15 +600,14 @@ public class TintedOBJModel implements IModel
         private boolean isTri = false;
         private int tintIndex = -1;
 
-        public Face(Vertex[] verts)
-        {
+        public Face(Vertex[] verts) {
             this(verts, Material.DEFAULT_NAME);
         }
 
         public Face(Vertex[] verts, String materialName) {
             this.verts = verts != null && verts.length > 2 ? verts : null;
-            setMaterialName(materialName);
-            checkData();
+            this.setMaterialName(materialName);
+            this.checkData();
         }
 
         //            this(verts, norms, null);
@@ -753,10 +635,8 @@ public class TintedOBJModel implements IModel
 //            checkData();
 //        }
 
-        private void checkData()
-        {
-            if (this.verts != null && this.verts.length == 3)
-            {
+        private void checkData() {
+            if (this.verts != null && this.verts.length == 3) {
                 this.isTri = true;
                 this.verts = new Vertex[]{this.verts[0], this.verts[1], this.verts[2], this.verts[2]};
             }
@@ -767,34 +647,29 @@ public class TintedOBJModel implements IModel
         }
 
         public int getTintIndex() {
-            return tintIndex;
+            return this.tintIndex;
         }
 
-        public void setMaterialName(String materialName)
-        {
+        public void setMaterialName(String materialName) {
             this.materialName = materialName != null && !materialName.isEmpty() ? materialName : this.materialName;
         }
 
-        public String getMaterialName()
-        {
+        public String getMaterialName() {
             return this.materialName;
         }
 
-        public boolean isTriangles()
-        {
-            return isTri;
+        public boolean isTriangles() {
+            return this.isTri;
         }
 
-        public boolean setVertices(Vertex[] verts)
-        {
+        public boolean setVertices(Vertex[] verts) {
             if (verts == null) return false;
             else this.verts = verts;
-            checkData();
+            this.checkData();
             return true;
         }
 
-        public Vertex[] getVertices()
-        {
+        public Vertex[] getVertices() {
             return this.verts;
         }
 
@@ -825,17 +700,15 @@ public class TintedOBJModel implements IModel
 //            }
 //        }
 
-        public Face bake(TRSRTransformation transform)
-        {
+        public Face bake(TRSRTransformation transform) {
             Matrix4f m = transform.getMatrix();
             Matrix3f mn = null;
-            Vertex[] vertices = new Vertex[verts.length];
+            Vertex[] vertices = new Vertex[this.verts.length];
 //            Normal[] normals = norms != null ? new Normal[norms.length] : null;
 //            TextureCoordinate[] textureCoords = texCoords != null ? new TextureCoordinate[texCoords.length] : null;
 
-            for (int i = 0; i < verts.length; i++)
-            {
-                Vertex v = verts[i];
+            for (int i = 0; i < this.verts.length; i++) {
+                Vertex v = this.verts[i];
 //                Normal n = norms != null ? norms[i] : null;
 //                TextureCoordinate t = texCoords != null ? texCoords[i] : null;
 
@@ -844,10 +717,8 @@ public class TintedOBJModel implements IModel
                 m.transform(pos, newPos);
                 vertices[i] = new Vertex(newPos, v.getMaterial());
 
-                if (v.hasNormal())
-                {
-                    if(mn == null)
-                    {
+                if (v.hasNormal()) {
+                    if (mn == null) {
                         mn = new Matrix3f();
                         m.getRotationScale(mn);
                         mn.invert();
@@ -866,12 +737,11 @@ public class TintedOBJModel implements IModel
 //                if (t != null) textureCoords[i] = t;
             }
             Face newFace = new Face(vertices, this.materialName);
-            newFace.setTintIndex(tintIndex);
+            newFace.setTintIndex(this.tintIndex);
             return newFace;
         }
 
-        public Normal getNormal()
-        {
+        public Normal getNormal() {
             Vector3f a = this.verts[2].getPos3();
             a.sub(this.verts[0].getPos3());
             Vector3f b = this.verts[3].getPos3();
@@ -882,61 +752,50 @@ public class TintedOBJModel implements IModel
         }
     }
 
-    public static class Vertex
-    {
+    public static class Vertex {
         private Vector4f position;
         private Normal normal;
         private TextureCoordinate texCoord;
         private Material material = new Material();
 
-        public Vertex(Vector4f position, Material material)
-        {
+        public Vertex(Vector4f position, Material material) {
             this.position = position;
             this.material = material;
         }
 
-        public void setPos(Vector4f position)
-        {
+        public void setPos(Vector4f position) {
             this.position = position;
         }
 
-        public Vector4f getPos()
-        {
+        public Vector4f getPos() {
             return this.position;
         }
 
-        public Vector3f getPos3()
-        {
+        public Vector3f getPos3() {
             return new Vector3f(this.position.x, this.position.y, this.position.z);
         }
 
-        public boolean hasNormal()
-        {
+        public boolean hasNormal() {
             return this.normal != null;
         }
 
-        public void setNormal(Normal normal)
-        {
+        public void setNormal(Normal normal) {
             this.normal = normal;
         }
 
-        public Normal getNormal()
-        {
+        public Normal getNormal() {
             return this.normal;
         }
 
-        public boolean hasTextureCoordinate()
-        {
+        public boolean hasTextureCoordinate() {
             return this.texCoord != null;
         }
 
-        public void setTextureCoordinate(TextureCoordinate texCoord)
-        {
+        public void setTextureCoordinate(TextureCoordinate texCoord) {
             this.texCoord = texCoord;
         }
 
-        public TextureCoordinate getTextureCoordinate()
-        {
+        public TextureCoordinate getTextureCoordinate() {
             return this.texCoord;
         }
 
@@ -945,43 +804,35 @@ public class TintedOBJModel implements IModel
 //            return this.texCoord.u >= 0.0f && this.texCoord.u <= 1.0f && this.texCoord.v >= 0.0f && this.texCoord.v <= 1.0f;
 //        }
 
-        public void setMaterial(Material material)
-        {
+        public void setMaterial(Material material) {
             this.material = material;
         }
 
-        public Material getMaterial()
-        {
+        public Material getMaterial() {
             return this.material;
         }
 
         @Override
-        public String toString()
-        {
-            StringBuilder builder = new StringBuilder();
-            builder.append(String.format("v:%n"));
-            builder.append(String.format("    position: %s %s %s%n", position.x, position.y, position.z));
-            builder.append(String.format("    material: %s %s %s %s %s%n", material.getName(), material.getColor().x, material.getColor().y, material.getColor().z, material.getColor().w));
-            return builder.toString();
+        public String toString() {
+            String builder = String.format("v:%n") +
+                    String.format("    position: %s %s %s%n", this.position.x, this.position.y, this.position.z) +
+                    String.format("    material: %s %s %s %s %s%n", this.material.getName(), this.material.getColor().x, this.material.getColor().y, this.material.getColor().z, this.material.getColor().w);
+            return builder;
         }
     }
 
-    public static class Normal
-    {
+    public static class Normal {
         public float x, y, z;
 
-        public Normal()
-        {
+        public Normal() {
             this(0.0f, 0.0f, 0.0f);
         }
 
-        public Normal(float[] data)
-        {
+        public Normal(float[] data) {
             this(data[0], data[1], data[2]);
         }
 
-        public Normal(Vector3f vector3f)
-        {
+        public Normal(Vector3f vector3f) {
             this(vector3f.x, vector3f.y, vector3f.z);
         }
 
@@ -991,45 +842,37 @@ public class TintedOBJModel implements IModel
             this.z = z;
         }
 
-        public Vector3f getData()
-        {
+        public Vector3f getData() {
             return new Vector3f(this.x, this.y, this.z);
         }
     }
 
-    public static class TextureCoordinate
-    {
+    public static class TextureCoordinate {
         public float u, v, w;
 
-        public TextureCoordinate()
-        {
+        public TextureCoordinate() {
             this(0.0f, 0.0f, 1.0f);
         }
 
-        public TextureCoordinate(float[] data)
-        {
+        public TextureCoordinate(float[] data) {
             this(data[0], data[1], data[2]);
         }
 
-        public TextureCoordinate(Vector3f data)
-        {
+        public TextureCoordinate(Vector3f data) {
             this(data.x, data.y, data.z);
         }
 
-        public TextureCoordinate(float u, float v, float w)
-        {
+        public TextureCoordinate(float u, float v, float w) {
             this.u = u;
             this.v = v;
             this.w = w;
         }
 
-        public Vector3f getData()
-        {
+        public Vector3f getData() {
             return new Vector3f(this.u, this.v, this.w);
         }
 
-        public static TextureCoordinate[] getDefaultUVs()
-        {
+        public static TextureCoordinate[] getDefaultUVs() {
             TextureCoordinate[] texCoords = new TextureCoordinate[4];
             texCoords[0] = new TextureCoordinate(0.0f, 0.0f, 1.0f);
             texCoords[1] = new TextureCoordinate(1.0f, 0.0f, 1.0f);
@@ -1040,65 +883,56 @@ public class TintedOBJModel implements IModel
     }
 
     @Deprecated
-    public static class Group implements IModelPart
-    {
+    public static class Group implements IModelPart {
         public static final String DEFAULT_NAME = "OBJModel.Default.Element.Name";
         public static final String ALL = "OBJModel.Group.All.Key";
         public static final String ALL_EXCEPT = "OBJModel.Group.All.Except.Key";
         private String name = DEFAULT_NAME;
         private LinkedHashSet<Face> faces = new LinkedHashSet<>();
-        public float[] minUVBounds = new float[] {0.0f, 0.0f};
-        public float[] maxUVBounds = new float[] {1.0f, 1.0f};
+        public float[] minUVBounds = new float[]{0.0f, 0.0f};
+        public float[] maxUVBounds = new float[]{1.0f, 1.0f};
         private int tintIndex = -1;
 
 //        public float[] minUVBounds = new float[] {0.0f, 0.0f};
 //        public float[] maxUVBounds = new float[] {1.0f, 1.0f};
 
-        public Group(String name, @Nullable LinkedHashSet<Face> faces)
-        {
+        public Group(String name, @Nullable LinkedHashSet<Face> faces) {
             this.name = name != null ? name : DEFAULT_NAME;
             this.faces = faces == null ? new LinkedHashSet<>() : faces;
         }
 
-        public LinkedHashSet<Face> applyTransform(Optional<TRSRTransformation> transform)
-        {
+        public LinkedHashSet<Face> applyTransform(Optional<TRSRTransformation> transform) {
             LinkedHashSet<Face> faceSet = new LinkedHashSet<>();
-            for (Face f : this.faces)
-            {
-                f.setTintIndex(getTintIndex());
+            for (Face f : this.faces) {
+                f.setTintIndex(this.getTintIndex());
 //                if (minUVBounds != null && maxUVBounds != null) f.normalizeUVs(minUVBounds, maxUVBounds);
                 faceSet.add(f.bake(transform.orElse(TRSRTransformation.identity())));
             }
             return faceSet;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return this.name;
         }
 
-        public LinkedHashSet<Face> getFaces()
-        {
+        public LinkedHashSet<Face> getFaces() {
             return this.faces;
         }
 
-        public void setFaces(LinkedHashSet<Face> faces)
-        {
+        public void setFaces(LinkedHashSet<Face> faces) {
             this.faces = faces;
         }
 
-        public void addFace(Face face)
-        {
+        public void addFace(Face face) {
             this.faces.add(face);
         }
 
-        public void addFaces(List<Face> faces)
-        {
+        public void addFaces(List<Face> faces) {
             this.faces.addAll(faces);
         }
 
         public int getTintIndex() {
-            return tintIndex;
+            return this.tintIndex;
         }
 
         public void setTintIndex(int tintIndex) {
@@ -1107,186 +941,157 @@ public class TintedOBJModel implements IModel
     }
 
     @Deprecated
-    public static class OBJState implements IModelState
-    {
+    public static class OBJState implements IModelState {
         protected Map<String, Boolean> visibilityMap = Maps.newHashMap();
         public IModelState parent;
         protected OBJState.Operation operation = OBJState.Operation.SET_TRUE;
 
-        public OBJState(List<String> visibleGroups, boolean visibility)
-        {
+        public OBJState(List<String> visibleGroups, boolean visibility) {
             this(visibleGroups, visibility, TRSRTransformation.identity());
         }
 
-        public OBJState(List<String> visibleGroups, boolean visibility, IModelState parent)
-        {
+        public OBJState(List<String> visibleGroups, boolean visibility, IModelState parent) {
             this.parent = parent;
             for (String s : visibleGroups) this.visibilityMap.put(s, visibility);
         }
 
         @Nullable
-        public IModelState getParent(IModelState parent)
-        {
+        public IModelState getParent(IModelState parent) {
             if (parent == null) return null;
             else if (parent instanceof OBJState) return ((OBJState) parent).parent;
             return parent;
         }
 
         @Override
-        public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part)
-        {
-            if (parent != null) return parent.apply(part);
+        public Optional<TRSRTransformation> apply(Optional<? extends IModelPart> part) {
+            if (this.parent != null) return this.parent.apply(part);
             return Optional.empty();
         }
 
-        public Map<String, Boolean> getVisibilityMap()
-        {
+        public Map<String, Boolean> getVisibilityMap() {
             return this.visibilityMap;
         }
 
-        public List<String> getGroupsWithVisibility(boolean visibility)
-        {
+        public List<String> getGroupsWithVisibility(boolean visibility) {
             List<String> ret = Lists.newArrayList();
-            for (Map.Entry<String, Boolean> e : this.visibilityMap.entrySet())
-            {
-                if (e.getValue() == visibility)
-                {
+            for (Map.Entry<String, Boolean> e : this.visibilityMap.entrySet()) {
+                if (e.getValue() == visibility) {
                     ret.add(e.getKey());
                 }
             }
             return ret;
         }
 
-        public List<String> getGroupNamesFromMap()
-        {
+        public List<String> getGroupNamesFromMap() {
             return Lists.newArrayList(this.visibilityMap.keySet());
         }
 
-        public void changeGroupVisibilities(List<String> names, OBJState.Operation operation)
-        {
+        public void changeGroupVisibilities(List<String> names, OBJState.Operation operation) {
             if (names == null || names.isEmpty()) return;
             this.operation = operation;
-            if (names.get(0).equals(Group.ALL))
-            {
-                for (String s : this.visibilityMap.keySet())
-                {
+            if (names.get(0).equals(Group.ALL)) {
+                for (String s : this.visibilityMap.keySet()) {
                     this.visibilityMap.put(s, this.operation.performOperation(this.visibilityMap.get(s)));
                 }
-            }
-            else if (names.get(0).equals(Group.ALL_EXCEPT))
-            {
-                for (String s : this.visibilityMap.keySet())
-                {
-                    if (!names.subList(1,  names.size()).contains(s))
-                    {
-                        this.visibilityMap.put(s,  this.operation.performOperation(this.visibilityMap.get(s)));
+            } else if (names.get(0).equals(Group.ALL_EXCEPT)) {
+                for (String s : this.visibilityMap.keySet()) {
+                    if (!names.subList(1, names.size()).contains(s)) {
+                        this.visibilityMap.put(s, this.operation.performOperation(this.visibilityMap.get(s)));
                     }
                 }
-            }
-            else
-            {
-                for (String s : names)
-                {
+            } else {
+                for (String s : names) {
                     this.visibilityMap.put(s, this.operation.performOperation(this.visibilityMap.get(s)));
                 }
             }
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             StringBuilder builder = new StringBuilder("OBJState: ");
             builder.append(String.format("%n    parent: %s%n", this.parent.toString()));
             builder.append(String.format("    visibility map: %n"));
-            for (Map.Entry<String, Boolean> e : this.visibilityMap.entrySet())
-            {
+            for (Map.Entry<String, Boolean> e : this.visibilityMap.entrySet()) {
                 builder.append(String.format("        name: %s visible: %b%n", e.getKey(), e.getValue()));
             }
             return builder.toString();
         }
 
         @Override
-        public int hashCode()
-        {
-            return com.google.common.base.Objects.hashCode(visibilityMap, parent, operation);
+        public int hashCode() {
+            return com.google.common.base.Objects.hashCode(this.visibilityMap, this.parent, this.operation);
         }
 
         @Override
-        public boolean equals(Object obj)
-        {
+        public boolean equals(Object obj) {
             if (this == obj)
                 return true;
             if (obj == null)
                 return false;
-            if (getClass() != obj.getClass())
+            if (this.getClass() != obj.getClass())
                 return false;
             OBJState other = (OBJState) obj;
-            return com.google.common.base.Objects.equal(visibilityMap, other.visibilityMap) &&
-                    com.google.common.base.Objects.equal(parent, other.parent) &&
-                    operation == other.operation;
+            return com.google.common.base.Objects.equal(this.visibilityMap, other.visibilityMap) &&
+                    com.google.common.base.Objects.equal(this.parent, other.parent) &&
+                    this.operation == other.operation;
         }
 
-        public enum Operation
-        {
+        public enum Operation {
             SET_TRUE,
             SET_FALSE,
             TOGGLE;
 
-            Operation(){}
+            Operation() {
+            }
 
-            public boolean performOperation(boolean valueToToggle)
-            {
-                switch(this)
-                {
+            public boolean performOperation(boolean valueToToggle) {
+                switch (this) {
                     default:
-                    case SET_TRUE: return true;
-                    case SET_FALSE: return false;
-                    case TOGGLE: return !valueToToggle;
+                    case SET_TRUE:
+                        return true;
+                    case SET_FALSE:
+                        return false;
+                    case TOGGLE:
+                        return !valueToToggle;
                 }
             }
         }
     }
 
     @Deprecated
-    public enum OBJProperty implements IUnlistedProperty<OBJState>
-    {
+    public enum OBJProperty implements IUnlistedProperty<OBJState> {
         INSTANCE;
+
         @Override
-        public String getName()
-        {
+        public String getName() {
             return "OBJProperty";
         }
 
         @Override
-        public boolean isValid(OBJState value)
-        {
+        public boolean isValid(OBJState value) {
             return value instanceof OBJState;
         }
 
         @Override
-        public Class<OBJState> getType()
-        {
+        public Class<OBJState> getType() {
             return OBJState.class;
         }
 
         @Override
-        public String valueToString(OBJState value)
-        {
+        public String valueToString(OBJState value) {
             return value.toString();
         }
     }
 
-    public class TintedOBJBakedModel implements IBakedModel
-    {
+    public class TintedOBJBakedModel implements IBakedModel {
         private final TintedOBJModel model;
-        private IModelState state;
+        private final IModelState state;
         private final VertexFormat format;
         private ImmutableList<BakedQuad> quads;
-        private ImmutableMap<String, TextureAtlasSprite> textures;
+        private final ImmutableMap<String, TextureAtlasSprite> textures;
         private TextureAtlasSprite sprite = ModelLoader.White.INSTANCE;
 
-        public TintedOBJBakedModel(TintedOBJModel model, IModelState state, VertexFormat format, ImmutableMap<String, TextureAtlasSprite> textures)
-        {
+        public TintedOBJBakedModel(TintedOBJModel model, IModelState state, VertexFormat format, ImmutableMap<String, TextureAtlasSprite> textures) {
             this.model = model;
             this.state = state;
             if (this.state instanceof OBJState) this.updateStateVisibilityMap((OBJState) this.state);
@@ -1294,34 +1099,28 @@ public class TintedOBJModel implements IModel
             this.textures = textures;
         }
 
-        public void scheduleRebake()
-        {
+        public void scheduleRebake() {
         }
 
         // FIXME: merge with getQuads
         @Override
-        public List<BakedQuad> getQuads(IBlockState blockState, EnumFacing side, long rand)
-        {
+        public List<BakedQuad> getQuads(IBlockState blockState, EnumFacing side, long rand) {
             if (side != null) return ImmutableList.of();
-            if (quads == null)
-            {
-                quads = buildQuads(this.state);
+            if (this.quads == null) {
+                this.quads = this.buildQuads(this.state);
             }
-            if (blockState instanceof IExtendedBlockState)
-            {
+            if (blockState instanceof IExtendedBlockState) {
                 IExtendedBlockState exState = (IExtendedBlockState) blockState;
-                if (exState.getUnlistedNames().contains(Properties.AnimationProperty))
-                {
+                if (exState.getUnlistedNames().contains(Properties.AnimationProperty)) {
 
                     IModelState newState = exState.getValue(Properties.AnimationProperty);
-                    if (newState != null)
-                    {
+                    if (newState != null) {
                         newState = new ModelStateComposition(this.state, newState);
-                        return buildQuads(newState);
+                        return this.buildQuads(newState);
                     }
                 }
             }
-            return quads;
+            return this.quads;
         }
 
         private ImmutableList<BakedQuad> buildQuads(IModelState modelState) {
@@ -1377,29 +1176,26 @@ public class TintedOBJModel implements IModel
                             v.setMaterial(this.model.getMatLib().getMaterial(v.getMaterial().getName()));
                         }
                     }
-                    sprite = ModelLoader.White.INSTANCE;
-                } else sprite = this.textures.get(f.getMaterialName());
-                UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(format);
+                    this.sprite = ModelLoader.White.INSTANCE;
+                } else this.sprite = this.textures.get(f.getMaterialName());
+                UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(this.format);
                 builder.setContractUVs(true);
                 builder.setQuadOrientation(EnumFacing.getFacingFromVector(f.getNormal().x, f.getNormal().y, f.getNormal().z));
-                builder.setTexture(sprite);
+                builder.setTexture(this.sprite);
                 builder.setQuadTint(f.getTintIndex());
                 Normal faceNormal = f.getNormal();
-                putVertexData(builder, f.verts[0], faceNormal, TextureCoordinate.getDefaultUVs()[0], sprite);
-                putVertexData(builder, f.verts[1], faceNormal, TextureCoordinate.getDefaultUVs()[1], sprite);
-                putVertexData(builder, f.verts[2], faceNormal, TextureCoordinate.getDefaultUVs()[2], sprite);
-                putVertexData(builder, f.verts[3], faceNormal, TextureCoordinate.getDefaultUVs()[3], sprite);
+                this.putVertexData(builder, f.verts[0], faceNormal, TextureCoordinate.getDefaultUVs()[0], this.sprite);
+                this.putVertexData(builder, f.verts[1], faceNormal, TextureCoordinate.getDefaultUVs()[1], this.sprite);
+                this.putVertexData(builder, f.verts[2], faceNormal, TextureCoordinate.getDefaultUVs()[2], this.sprite);
+                this.putVertexData(builder, f.verts[3], faceNormal, TextureCoordinate.getDefaultUVs()[3], this.sprite);
                 quads.add(builder.build());
             }
             return ImmutableList.copyOf(quads);
         }
 
-        private void putVertexData(UnpackedBakedQuad.Builder builder, Vertex v, Normal faceNormal, TextureCoordinate defUV, TextureAtlasSprite sprite)
-        {
-            for (int e = 0; e < format.getElementCount(); e++)
-            {
-                switch (format.getElement(e).getUsage())
-                {
+        private void putVertexData(UnpackedBakedQuad.Builder builder, Vertex v, Normal faceNormal, TextureCoordinate defUV, TextureAtlasSprite sprite) {
+            for (int e = 0; e < this.format.getElementCount(); e++) {
+                switch (this.format.getElement(e).getUsage()) {
                     case POSITION:
                         builder.put(e, v.getPos().x, v.getPos().y, v.getPos().z, v.getPos().w);
                         break;
@@ -1417,12 +1213,12 @@ public class TintedOBJModel implements IModel
                         if (!v.hasTextureCoordinate())
                             builder.put(e,
                                     sprite.getInterpolatedU(defUV.u * 16),
-                                    sprite.getInterpolatedV((model.customData.flipV ? 1 - defUV.v: defUV.v) * 16),
+                                    sprite.getInterpolatedV((this.model.customData.flipV ? 1 - defUV.v : defUV.v) * 16),
                                     0, 1);
                         else
                             builder.put(e,
                                     sprite.getInterpolatedU(v.getTextureCoordinate().u * 16),
-                                    sprite.getInterpolatedV((model.customData.flipV ? 1 - v.getTextureCoordinate().v : v.getTextureCoordinate().v) * 16),
+                                    sprite.getInterpolatedV((this.model.customData.flipV ? 1 - v.getTextureCoordinate().v : v.getTextureCoordinate().v) * 16),
                                     0, 1);
                         break;
                     case NORMAL:
@@ -1438,26 +1234,22 @@ public class TintedOBJModel implements IModel
         }
 
         @Override
-        public boolean isAmbientOcclusion()
-        {
-            return model != null ? model.customData.ambientOcclusion : true;
+        public boolean isAmbientOcclusion() {
+            return this.model == null || this.model.customData.ambientOcclusion;
         }
 
         @Override
-        public boolean isGui3d()
-        {
-            return model != null ? model.customData.gui3d : true;
+        public boolean isGui3d() {
+            return this.model == null || this.model.customData.gui3d;
         }
 
         @Override
-        public boolean isBuiltInRenderer()
-        {
+        public boolean isBuiltInRenderer() {
             return false;
         }
 
         @Override
-        public TextureAtlasSprite getParticleTexture()
-        {
+        public TextureAtlasSprite getParticleTexture() {
             return this.sprite;
         }
 
@@ -1484,93 +1276,72 @@ public class TintedOBJModel implements IModel
             return this;
         }*/
 
-        private void updateStateVisibilityMap(OBJState state)
-        {
-            if (state.visibilityMap.containsKey(Group.ALL))
-            {
+        private void updateStateVisibilityMap(OBJState state) {
+            if (state.visibilityMap.containsKey(Group.ALL)) {
                 boolean operation = state.visibilityMap.get(Group.ALL);
                 state.visibilityMap.clear();
-                for (String s : this.model.getMatLib().getGroups().keySet())
-                {
-                    state.visibilityMap.put(s,  state.operation.performOperation(operation));
+                for (String s : this.model.getMatLib().getGroups().keySet()) {
+                    state.visibilityMap.put(s, state.operation.performOperation(operation));
                 }
-            }
-            else if (state.visibilityMap.containsKey(Group.ALL_EXCEPT))
-            {
+            } else if (state.visibilityMap.containsKey(Group.ALL_EXCEPT)) {
                 List<String> exceptList = state.getGroupNamesFromMap().subList(1, state.getGroupNamesFromMap().size());
                 state.visibilityMap.remove(Group.ALL_EXCEPT);
-                for (String s : this.model.getMatLib().getGroups().keySet())
-                {
-                    if (!exceptList.contains(s))
-                    {
+                for (String s : this.model.getMatLib().getGroups().keySet()) {
+                    if (!exceptList.contains(s)) {
                         state.visibilityMap.put(s, state.operation.performOperation(state.visibilityMap.get(s)));
                     }
                 }
-            }
-            else
-            {
-                for (String s : state.visibilityMap.keySet())
-                {
+            } else {
+                for (String s : state.visibilityMap.keySet()) {
                     state.visibilityMap.put(s, state.operation.performOperation(state.visibilityMap.get(s)));
                 }
             }
         }
 
-        private final LoadingCache<IModelState, TintedOBJBakedModel> cache = CacheBuilder.newBuilder().maximumSize(20).build(new CacheLoader<IModelState, TintedOBJBakedModel>()
-        {
+        private final LoadingCache<IModelState, TintedOBJBakedModel> cache = CacheBuilder.newBuilder().maximumSize(20).build(new CacheLoader<IModelState, TintedOBJBakedModel>() {
             @Override
-            public TintedOBJBakedModel load(IModelState state) throws Exception
-            {
-                return new TintedOBJBakedModel(model, state, format, textures);
+            public TintedOBJBakedModel load(IModelState state) throws Exception {
+                return new TintedOBJBakedModel(TintedOBJBakedModel.this.model, state, TintedOBJBakedModel.this.format, TintedOBJBakedModel.this.textures);
             }
         });
 
-        public TintedOBJBakedModel getCachedModel(IModelState state)
-        {
-            return cache.getUnchecked(state);
+        public TintedOBJBakedModel getCachedModel(IModelState state) {
+            return this.cache.getUnchecked(state);
         }
 
-        public TintedOBJModel getModel()
-        {
+        public TintedOBJModel getModel() {
             return this.model;
         }
 
-        public IModelState getState()
-        {
+        public IModelState getState() {
             return this.state;
         }
 
-        public TintedOBJBakedModel getBakedModel()
-        {
+        public TintedOBJBakedModel getBakedModel() {
             return new TintedOBJBakedModel(this.model, this.state, this.format, this.textures);
         }
 
         @Override
-        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType)
-        {
-            return PerspectiveMapWrapper.handlePerspective(this, state, cameraTransformType);
+        public Pair<? extends IBakedModel, Matrix4f> handlePerspective(ItemCameraTransforms.TransformType cameraTransformType) {
+            return PerspectiveMapWrapper.handlePerspective(this, this.state, cameraTransformType);
         }
 
         @Override
-        public String toString()
-        {
+        public String toString() {
             return this.model.modelLocation.toString();
         }
 
         @Override
-        public ItemOverrideList getOverrides()
-        {
+        public ItemOverrideList getOverrides() {
             return ItemOverrideList.NONE;
         }
     }
 
     @SuppressWarnings("serial")
-    public static class UVsOutOfBoundsException extends RuntimeException
-    {
+    public static class UVsOutOfBoundsException extends RuntimeException {
         public ResourceLocation modelLocation;
 
-        public UVsOutOfBoundsException(ResourceLocation modelLocation)
-        {
+        public UVsOutOfBoundsException(ResourceLocation modelLocation) {
             super(String.format("Model '%s' has UVs ('vt') out of bounds 0-1! The missing model will be used instead. Support for UV processing will be added to the OBJ loader in the future.", modelLocation));
             this.modelLocation = modelLocation;
         }

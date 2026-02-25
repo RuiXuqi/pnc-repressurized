@@ -46,8 +46,8 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     private final Map<BlockPos, RenderBlockTarget> blockTargets = new HashMap<>();
     private GuiAnimatedStat blockTrackInfo;
-    private final Map<String,Integer> blockTypeCount = new HashMap<>();
-    private final Map<String,Integer> blockTypeCountPartial = new HashMap<>();
+    private final Map<String, Integer> blockTypeCount = new HashMap<>();
+    private final Map<String, Integer> blockTypeCountPartial = new HashMap<>();
     private int xOff = 0, yOff = 0, zOff = 0;
     private RenderBlockTarget focusedTarget = null;
     private EnumFacing focusedFace = null;
@@ -68,11 +68,11 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int i = 0; i < HARD_MAX_BLOCKS_PER_TICK; i++) {
             // 1% of a tick = 500,000ns
-            if ((i & 0xff) == 0 && System.nanoTime() - now > ConfigHandler.client.blockTrackerMaxTimePerTick * 500000) {
+            if ((i & 0xff) == 0 && System.nanoTime() - now > ConfigHandler.client.blockTrackerMaxTimePerTick * 500000L) {
                 break;
             }
 
-            nextScanPos(pos, player, blockTrackRange);
+            this.nextScanPos(pos, player, blockTrackRange);
 
             if (!player.world.isBlockLoaded(pos)) break;
 
@@ -87,11 +87,11 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 
                     entries.forEach(entry -> {
                         String k = entry.getEntryName();
-                        blockTypeCountPartial.put(k, blockTypeCountPartial.getOrDefault(k, 0) + 1);
+                        this.blockTypeCountPartial.put(k, this.blockTypeCountPartial.getOrDefault(k, 0) + 1);
                     });
 
                     // there's at least one tracker type relevant to this blockpos
-                    RenderBlockTarget blockTarget = blockTargets.get(pos);
+                    RenderBlockTarget blockTarget = this.blockTargets.get(pos);
                     if (blockTarget != null) {
                         // we already have a tracker active for this pos
                         blockTarget.ticksExisted = Math.abs(blockTarget.ticksExisted); // cancel possible "lost target" status
@@ -99,7 +99,7 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 //                        break;
                     } else {
                         // no tracker currently active - add one
-                        RenderBlockTarget target = addBlockTarget(new RenderBlockTarget(player.world, player, pos.toImmutable(), te, this));
+                        RenderBlockTarget target = this.addBlockTarget(new RenderBlockTarget(player.world, player, pos.toImmutable(), te, this));
 
                         target.maybeRefreshFromServer(entries);
 
@@ -113,28 +113,28 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
             }
         }
 
-        checkBlockFocus(player, blockTrackRange);
+        this.checkBlockFocus(player, blockTrackRange);
 
-        processTrackerEntries(player, blockTrackRange);
+        this.processTrackerEntries(player, blockTrackRange);
 
-        updateTrackerText();
+        this.updateTrackerText();
     }
 
     private void checkBlockFocus(EntityPlayer player, int blockTrackRange) {
-        focusedTarget = null;
-        focusedFace = null;
+        this.focusedTarget = null;
+        this.focusedFace = null;
         Vec3d eyes = player.getPositionEyes(1.0f);
         Vec3d v = eyes;
         Vec3d lookVec = player.getLookVec();
         for (int i = 0; i < blockTrackRange * 4; i++) {
             v = v.add(lookVec.scale(0.25));  // scale down to minimise clipping across a corner and missing the block
             BlockPos checkPos = new BlockPos(v.x, v.y, v.z);
-            if (blockTargets.containsKey(checkPos)) {
+            if (this.blockTargets.containsKey(checkPos)) {
                 IBlockState state = player.world.getBlockState(checkPos);
                 RayTraceResult rtr = state.getBoundingBox(player.world, checkPos).offset(checkPos).calculateIntercept(eyes, v);
                 if (rtr != null && rtr.typeOfHit == RayTraceResult.Type.BLOCK) {
-                    focusedTarget = blockTargets.get(checkPos);
-                    focusedFace = rtr.sideHit;
+                    this.focusedTarget = this.blockTargets.get(checkPos);
+                    this.focusedFace = rtr.sideHit;
                     break;
                 }
             }
@@ -142,15 +142,15 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
     }
 
     public RenderBlockTarget getFocusedTarget() {
-        return focusedTarget;
+        return this.focusedTarget;
     }
 
     public BlockPos getFocusedPos() {
-        return focusedTarget == null ? null : focusedTarget.getPos();
+        return this.focusedTarget == null ? null : this.focusedTarget.getPos();
     }
 
     public EnumFacing getFocusedFace() {
-        return focusedFace;
+        return this.focusedFace;
     }
 
     /**
@@ -160,95 +160,96 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
         EnumFacing dir = PneumaticCraftUtils.getDirectionFacing(player, true);
         switch (dir) {
             case UP:
-                if (++xOff > range) {
-                    xOff = -range;
-                    if (++yOff > range) {
-                        yOff = 0;
-                        if (++zOff > range) {
-                            zOff = -range;
-                            updateBlockTypeCounts();
+                if (++this.xOff > range) {
+                    this.xOff = -range;
+                    if (++this.yOff > range) {
+                        this.yOff = 0;
+                        if (++this.zOff > range) {
+                            this.zOff = -range;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
             case DOWN:
-                if (++xOff > range) {
-                    xOff = -range;
-                    if (--yOff < -range) {
-                        yOff = 0;
-                        if (++zOff > range) {
-                            zOff = -range;
-                            updateBlockTypeCounts();
+                if (++this.xOff > range) {
+                    this.xOff = -range;
+                    if (--this.yOff < -range) {
+                        this.yOff = 0;
+                        if (++this.zOff > range) {
+                            this.zOff = -range;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
             case EAST:
-                if (++xOff > range) {
-                    xOff = 0;
-                    if (++yOff > range) {
-                        yOff = -range;
-                        if (++zOff > range) {
-                            zOff = -range;
-                            updateBlockTypeCounts();
+                if (++this.xOff > range) {
+                    this.xOff = 0;
+                    if (++this.yOff > range) {
+                        this.yOff = -range;
+                        if (++this.zOff > range) {
+                            this.zOff = -range;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
             case WEST:
-                if (--xOff < -range) {
-                    xOff = 0;
-                    if (++yOff > range) {
-                        yOff = -range;
-                        if (++zOff > range) {
-                            zOff = -range;
-                            updateBlockTypeCounts();
+                if (--this.xOff < -range) {
+                    this.xOff = 0;
+                    if (++this.yOff > range) {
+                        this.yOff = -range;
+                        if (++this.zOff > range) {
+                            this.zOff = -range;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
             case NORTH:
-                if (++xOff > range) {
-                    xOff = -range;
-                    if (++yOff > range) {
-                        yOff = -range;
-                        if (--zOff < -range) {
-                            zOff = 0;
-                            updateBlockTypeCounts();
+                if (++this.xOff > range) {
+                    this.xOff = -range;
+                    if (++this.yOff > range) {
+                        this.yOff = -range;
+                        if (--this.zOff < -range) {
+                            this.zOff = 0;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
             case SOUTH:
-                if (++xOff > range) {
-                    xOff = -range;
-                    if (++yOff > range) {
-                        yOff = -range;
-                        if (++zOff > range) {
-                            zOff = 0;
-                            updateBlockTypeCounts();
+                if (++this.xOff > range) {
+                    this.xOff = -range;
+                    if (++this.yOff > range) {
+                        this.yOff = -range;
+                        if (++this.zOff > range) {
+                            this.zOff = 0;
+                            this.updateBlockTypeCounts();
                         }
                     }
                 }
                 break;
         }
-        pos.setPos(player.posX + xOff, MathHelper.clamp(player.posY + yOff, 0, 255), player.posZ + zOff);
+        pos.setPos(player.posX + this.xOff, MathHelper.clamp(player.posY + this.yOff, 0, 255), player.posZ + this.zOff);
     }
 
     private void updateBlockTypeCounts() {
-        blockTypeCount.clear();
-        blockTypeCountPartial.forEach(blockTypeCount::put);
-        blockTypeCountPartial.clear();
+        this.blockTypeCount.clear();
+        this.blockTypeCountPartial.forEach(this.blockTypeCount::put);
+        this.blockTypeCountPartial.clear();
     }
 
     /**
      * Update all existing trackers and cull any which are either out of range or otherwise invalid
-     * @param player the player
+     *
+     * @param player          the player
      * @param blockTrackRange the track range
      */
     private void processTrackerEntries(EntityPlayer player, int blockTrackRange) {
         List<RenderBlockTarget> toRemove = new ArrayList<>();
-        for (RenderBlockTarget blockTarget : blockTargets.values()) {
+        for (RenderBlockTarget blockTarget : this.blockTargets.values()) {
             boolean wasNegative = blockTarget.ticksExisted < 0;
             blockTarget.ticksExisted += CommonArmorHandler.getHandlerForPlayer(player).getSpeedFromUpgrades(EntityEquipmentSlot.HEAD);
             if (blockTarget.ticksExisted >= 0 && wasNegative) {
@@ -271,34 +272,34 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
     private void updateTrackerText() {
         List<String> textList = new ArrayList<>();
 
-        if (focusedTarget != null) {
-            blockTrackInfo.setTitle(focusedTarget.stat.getTitle());
-            textList.addAll(focusedTarget.textList);
+        if (this.focusedTarget != null) {
+            this.blockTrackInfo.setTitle(this.focusedTarget.stat.getTitle());
+            textList.addAll(this.focusedTarget.textList);
         } else {
-            blockTrackInfo.setTitle("Current tracked blocks:");
+            this.blockTrackInfo.setTitle("Current tracked blocks:");
 
-            blockTypeCount.forEach((k, v) -> {
+            this.blockTypeCount.forEach((k, v) -> {
                 if (v > 0 && GuiKeybindCheckBox.fromKeyBindingName(k).checked) textList.add(v + " " + I18n.format(k));
             });
 
             if (textList.size() == 0) textList.add("Tracking no blocks currently.");
         }
 
-        blockTrackInfo.setText(textList);
+        this.blockTrackInfo.setText(textList);
     }
 
     private RenderBlockTarget addBlockTarget(RenderBlockTarget blockTarget) {
-        blockTargets.put(blockTarget.getPos(), blockTarget);
+        this.blockTargets.put(blockTarget.getPos(), blockTarget);
 
         return blockTarget;
     }
 
     private void removeBlockTarget(RenderBlockTarget blockTarget) {
-        blockTargets.remove(blockTarget.getPos());
+        this.blockTargets.remove(blockTarget.getPos());
     }
 
     public int countBlockTrackersOfType(IBlockTrackEntry type) {
-        return blockTypeCount.getOrDefault(type.getEntryName(), 0);
+        return this.blockTypeCount.getOrDefault(type.getEntryName(), 0);
     }
 
     @Override
@@ -309,7 +310,7 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        blockTargets.values().forEach(t -> t.render(partialTicks));
+        this.blockTargets.values().forEach(t -> t.render(partialTicks));
 
         GlStateManager.enableCull();
         GlStateManager.enableDepth();
@@ -328,9 +329,9 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     @Override
     public void reset() {
-        blockTypeCountPartial.clear();
-        blockTypeCount.clear();
-        blockTrackInfo = null;
+        this.blockTypeCountPartial.clear();
+        this.blockTypeCount.clear();
+        this.blockTrackInfo = null;
     }
 
     @Override
@@ -352,30 +353,30 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     @Override
     public GuiAnimatedStat getAnimatedStat() {
-        if (blockTrackInfo == null) {
+        if (this.blockTrackInfo == null) {
             GuiAnimatedStat.StatIcon icon = GuiAnimatedStat.StatIcon.of(CraftingRegistrator.getUpgrade(EnumUpgrade.BLOCK_TRACKER));
-            blockTrackInfo = new GuiAnimatedStat(null, "Current tracked blocks:",
+            this.blockTrackInfo = new GuiAnimatedStat(null, "Current tracked blocks:",
                     icon, 0x3000AA00, null, ArmorHUDLayout.INSTANCE.blockTrackerStat);
-            blockTrackInfo.setMinDimensionsAndReset(0, 0);
+            this.blockTrackInfo.setMinDimensionsAndReset(0, 0);
         }
-        return blockTrackInfo;
+        return this.blockTrackInfo;
 
     }
 
     public void hack() {
-        for (RenderBlockTarget target : blockTargets.values()) {
+        for (RenderBlockTarget target : this.blockTargets.values()) {
             target.hack();
         }
     }
 
     public RenderBlockTarget getTargetForCoord(BlockPos pos) {
-        return blockTargets.get(pos);
+        return this.blockTargets.get(pos);
     }
 
     public boolean scroll(MouseEvent event) {
-        for (RenderBlockTarget target : blockTargets.values()) {
+        for (RenderBlockTarget target : this.blockTargets.values()) {
             if (target.scroll(event)) {
-                getAnimatedStat().handleMouseWheel(event.getDwheel());
+                this.getAnimatedStat().handleMouseWheel(event.getDwheel());
                 return true;
             }
         }
@@ -384,6 +385,6 @@ public class BlockTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     @Override
     public void onResolutionChanged() {
-        blockTrackInfo = null;
+        this.blockTrackInfo = null;
     }
 }

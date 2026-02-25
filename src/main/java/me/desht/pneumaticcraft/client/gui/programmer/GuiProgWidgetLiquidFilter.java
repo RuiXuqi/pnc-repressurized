@@ -29,8 +29,8 @@ public class GuiProgWidgetLiquidFilter extends GuiProgWidgetOptionBase<ProgWidge
 
     public GuiProgWidgetLiquidFilter(ProgWidgetLiquidFilter widget, GuiProgrammer guiProgrammer) {
         super(widget, guiProgrammer);
-        xSize = 176;
-        ySize = 166;
+        this.xSize = 176;
+        this.ySize = 166;
     }
 
     @Override
@@ -42,24 +42,24 @@ public class GuiProgWidgetLiquidFilter extends GuiProgWidgetOptionBase<ProgWidge
     public void initGui() {
         super.initGui();
 
-        mainFilter = new WidgetFluidFilter(-1, guiLeft + 124, guiTop + 25).setFluid(widget.getFluid());
-        addWidget(mainFilter);
+        this.mainFilter = new WidgetFluidFilter(-1, this.guiLeft + 124, this.guiTop + 25).setFluid(this.widget.getFluid());
+        this.addWidget(this.mainFilter);
 
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
-                addWidget(new WidgetFluidFilter(x + y * GRID_WIDTH, guiLeft + 8 + x * 18, guiTop + 52 + y * 18));
+                this.addWidget(new WidgetFluidFilter(x + y * GRID_WIDTH, this.guiLeft + 8 + x * 18, this.guiTop + 52 + y * 18));
             }
         }
 
-        searchField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, guiLeft + 10, guiTop + 30, 90, 10);
-        addWidget(searchField);
-        searchField.setFocused(true);
+        this.searchField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, this.guiLeft + 10, this.guiTop + 30, 90, 10);
+        this.addWidget(this.searchField);
+        this.searchField.setFocused(true);
 
-        scrollbar = new WidgetVerticalScrollbar(guiLeft + 155, guiTop + 47, 112);
-        scrollbar.setListening(true);
-        addWidget(scrollbar);
+        this.scrollbar = new WidgetVerticalScrollbar(this.guiLeft + 155, this.guiTop + 47, 112);
+        this.scrollbar.setListening(true);
+        this.addWidget(this.scrollbar);
 
-        addValidFluids();
+        this.addValidFluids();
     }
 
     private void addValidFluids() {
@@ -67,16 +67,16 @@ public class GuiProgWidgetLiquidFilter extends GuiProgWidgetOptionBase<ProgWidge
         List<Fluid> fluids = new ArrayList<>();
 
         for (Fluid fluid : FluidRegistry.getRegisteredFluids().values()) {
-            if (fluid.getLocalizedName(new FluidStack(fluid, 1)).toLowerCase().contains(searchField.getText())) {
+            if (fluid.getLocalizedName(new FluidStack(fluid, 1)).toLowerCase().contains(this.searchField.getText())) {
                 fluids.add(fluid);
             }
         }
         fluids.sort(Comparator.comparing(Fluid::getName));
 
-        scrollbar.setStates(Math.max(0, (fluids.size() - GRID_WIDTH * GRID_HEIGHT + GRID_WIDTH - 1) / GRID_WIDTH));
+        this.scrollbar.setStates(Math.max(0, (fluids.size() - GRID_WIDTH * GRID_HEIGHT + GRID_WIDTH - 1) / GRID_WIDTH));
 
-        int offset = scrollbar.getState() * GRID_WIDTH;
-        for (IGuiWidget widget : widgets) {
+        int offset = this.scrollbar.getState() * GRID_WIDTH;
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getID() >= 0 && widget instanceof WidgetFluidFilter) {
                 int idWithOffset = widget.getID() + offset;
                 ((WidgetFluidFilter) widget).setFluid(idWithOffset >= 0 && idWithOffset < fluids.size() ? fluids.get(idWithOffset) : null);
@@ -87,26 +87,26 @@ public class GuiProgWidgetLiquidFilter extends GuiProgWidgetOptionBase<ProgWidge
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (lastScroll != scrollbar.getState()) {
-            lastScroll = scrollbar.getState();
-            addValidFluids();
+        if (this.lastScroll != this.scrollbar.getState()) {
+            this.lastScroll = this.scrollbar.getState();
+            this.addValidFluids();
         }
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
-        addValidFluids();
+        this.addValidFluids();
     }
 
     @Override
     public void actionPerformed(IGuiWidget widget) {
-        if (widget == mainFilter) {
+        if (widget == this.mainFilter) {
             ((WidgetFluidFilter) widget).setFluid(null);
         } else if (widget instanceof WidgetFluidFilter) {
-            mainFilter.setFluid(((WidgetFluidFilter) widget).getFluid());
+            this.mainFilter.setFluid(((WidgetFluidFilter) widget).getFluid());
         }
-        this.widget.setFluid(mainFilter.getFluid());
+        this.widget.setFluid(this.mainFilter.getFluid());
         super.actionPerformed(widget);
     }
 }

@@ -41,7 +41,8 @@ public class ItemGPSTool extends ItemPneumatic implements IPositionProvider {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (handIn != EnumHand.MAIN_HAND) return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+        if (handIn != EnumHand.MAIN_HAND)
+            return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
         ItemStack stack = playerIn.getHeldItemMainhand();
         if (worldIn.isRemote) {
             BlockPos pos = getGPSLocation(stack);

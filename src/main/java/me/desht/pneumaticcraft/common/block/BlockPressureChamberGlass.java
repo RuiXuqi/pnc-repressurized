@@ -43,7 +43,7 @@ public class BlockPressureChamberGlass extends BlockPressureChamberWallBase {
 
     BlockPressureChamberGlass() {
         super("pressure_chamber_glass");
-        setResistance(20000.f);
+        this.setResistance(20000.f);
     }
 
     private boolean isGlass(IBlockAccess world, BlockPos pos) {
@@ -53,7 +53,7 @@ public class BlockPressureChamberGlass extends BlockPressureChamberWallBase {
     @Override
     protected BlockStateContainer createBlockState() {
         IProperty[] listedProperties = new IProperty[0]; // no listed properties
-        IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[] { DOWN, UP, NORTH, SOUTH, WEST, EAST };
+        IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{DOWN, UP, NORTH, SOUTH, WEST, EAST};
         return new ExtendedBlockState(this, listedProperties, unlistedProperties);
     }
 
@@ -62,46 +62,49 @@ public class BlockPressureChamberGlass extends BlockPressureChamberWallBase {
         IExtendedBlockState extendedBlockState = (IExtendedBlockState) state;
 
         return extendedBlockState
-                .withProperty(DOWN, getTextureIndex(world, pos, EnumFacing.DOWN))
-                .withProperty(UP, getTextureIndex(world, pos, EnumFacing.UP))
-                .withProperty(NORTH, getTextureIndex(world, pos, EnumFacing.NORTH))
-                .withProperty(SOUTH, getTextureIndex(world, pos, EnumFacing.SOUTH))
-                .withProperty(WEST, getTextureIndex(world, pos, EnumFacing.WEST))
-                .withProperty(EAST, getTextureIndex(world, pos, EnumFacing.EAST));
+                .withProperty(DOWN, this.getTextureIndex(world, pos, EnumFacing.DOWN))
+                .withProperty(UP, this.getTextureIndex(world, pos, EnumFacing.UP))
+                .withProperty(NORTH, this.getTextureIndex(world, pos, EnumFacing.NORTH))
+                .withProperty(SOUTH, this.getTextureIndex(world, pos, EnumFacing.SOUTH))
+                .withProperty(WEST, this.getTextureIndex(world, pos, EnumFacing.WEST))
+                .withProperty(EAST, this.getTextureIndex(world, pos, EnumFacing.EAST));
     }
 
     private int getTextureIndex(IBlockAccess world, BlockPos pos, EnumFacing face) {
         boolean[] bitMatrix = new boolean[8];
         switch (face) {
-            case DOWN:case UP:
-                bitMatrix[0] = isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, -1));
-                bitMatrix[1] = isGlass(world, pos.add(0, 0, -1));
-                bitMatrix[2] = isGlass(world, pos.add(face == EnumFacing.UP ? 1 : -1,  0, -1));
-                bitMatrix[3] = isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, 0));
-                bitMatrix[4] = isGlass(world, pos.add(face == EnumFacing.UP ? 1 : - 1, 0, 0));
-                bitMatrix[5] = isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, 1));
-                bitMatrix[6] = isGlass(world, pos.add(0, 0, 1));
-                bitMatrix[7] = isGlass(world, pos.add(face == EnumFacing.UP ? 1 : - 1, 0, 1));
+            case DOWN:
+            case UP:
+                bitMatrix[0] = this.isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, -1));
+                bitMatrix[1] = this.isGlass(world, pos.add(0, 0, -1));
+                bitMatrix[2] = this.isGlass(world, pos.add(face == EnumFacing.UP ? 1 : -1, 0, -1));
+                bitMatrix[3] = this.isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, 0));
+                bitMatrix[4] = this.isGlass(world, pos.add(face == EnumFacing.UP ? 1 : -1, 0, 0));
+                bitMatrix[5] = this.isGlass(world, pos.add(face == EnumFacing.DOWN ? 1 : -1, 0, 1));
+                bitMatrix[6] = this.isGlass(world, pos.add(0, 0, 1));
+                bitMatrix[7] = this.isGlass(world, pos.add(face == EnumFacing.UP ? 1 : -1, 0, 1));
                 break;
-            case NORTH:case SOUTH:
-                bitMatrix[0] = isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, 1, 0));
-                bitMatrix[1] = isGlass(world, pos.add(0, 1, 0));
-                bitMatrix[2] = isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, 1, 0));
-                bitMatrix[3] = isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, 0, 0));
-                bitMatrix[4] = isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, 0, 0));
-                bitMatrix[5] = isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, -1, 0));
-                bitMatrix[6] = isGlass(world, pos.add(0, -1, 0));
-                bitMatrix[7] = isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, -1, 0));
+            case NORTH:
+            case SOUTH:
+                bitMatrix[0] = this.isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, 1, 0));
+                bitMatrix[1] = this.isGlass(world, pos.add(0, 1, 0));
+                bitMatrix[2] = this.isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, 1, 0));
+                bitMatrix[3] = this.isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, 0, 0));
+                bitMatrix[4] = this.isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, 0, 0));
+                bitMatrix[5] = this.isGlass(world, pos.add(face == EnumFacing.NORTH ? 1 : -1, -1, 0));
+                bitMatrix[6] = this.isGlass(world, pos.add(0, -1, 0));
+                bitMatrix[7] = this.isGlass(world, pos.add(face == EnumFacing.SOUTH ? 1 : -1, -1, 0));
                 break;
-            case WEST:case EAST:
-                bitMatrix[0] = isGlass(world, pos.add(0, 1, face == EnumFacing.EAST ? 1 : -1));
-                bitMatrix[1] = isGlass(world, pos.add(0, 1, 0));
-                bitMatrix[2] = isGlass(world, pos.add(0, 1, face == EnumFacing.WEST ? 1 : -1));
-                bitMatrix[3] = isGlass(world, pos.add(0, 0, face == EnumFacing.EAST ? 1 : -1));
-                bitMatrix[4] = isGlass(world, pos.add(0, 0, face == EnumFacing.WEST ? 1 : -1));
-                bitMatrix[5] = isGlass(world, pos.add(0, -1, face == EnumFacing.EAST ? 1 : -1));
-                bitMatrix[6] = isGlass(world, pos.add(0, -1, 0));
-                bitMatrix[7] = isGlass(world, pos.add(0, -1, face == EnumFacing.WEST ? 1 : -1));
+            case WEST:
+            case EAST:
+                bitMatrix[0] = this.isGlass(world, pos.add(0, 1, face == EnumFacing.EAST ? 1 : -1));
+                bitMatrix[1] = this.isGlass(world, pos.add(0, 1, 0));
+                bitMatrix[2] = this.isGlass(world, pos.add(0, 1, face == EnumFacing.WEST ? 1 : -1));
+                bitMatrix[3] = this.isGlass(world, pos.add(0, 0, face == EnumFacing.EAST ? 1 : -1));
+                bitMatrix[4] = this.isGlass(world, pos.add(0, 0, face == EnumFacing.WEST ? 1 : -1));
+                bitMatrix[5] = this.isGlass(world, pos.add(0, -1, face == EnumFacing.EAST ? 1 : -1));
+                bitMatrix[6] = this.isGlass(world, pos.add(0, -1, 0));
+                bitMatrix[7] = this.isGlass(world, pos.add(0, -1, face == EnumFacing.WEST ? 1 : -1));
                 break;
         }
 

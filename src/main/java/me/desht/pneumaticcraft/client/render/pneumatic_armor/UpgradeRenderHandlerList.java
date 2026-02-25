@@ -29,6 +29,7 @@ public class UpgradeRenderHandlerList {
 
     // convenience
     public static final EntityEquipmentSlot[] ARMOR_SLOTS = new EntityEquipmentSlot[4];
+
     static {
         ARMOR_SLOTS[0] = EntityEquipmentSlot.HEAD;
         ARMOR_SLOTS[1] = EntityEquipmentSlot.CHEST;
@@ -37,51 +38,51 @@ public class UpgradeRenderHandlerList {
     }
 
     private UpgradeRenderHandlerList() {
-        upgradeRenderers = new ArrayList<>(4);
+        this.upgradeRenderers = new ArrayList<>(4);
         for (int i = 0; i < 4; i++) {
-            upgradeRenderers.add(new ArrayList<>());
+            this.upgradeRenderers.add(new ArrayList<>());
         }
-        addUpgradeRenderer(new MainHelmetHandler());  // always keep this first
-        addUpgradeRenderer(new BlockTrackUpgradeHandler());
-        addUpgradeRenderer(new EntityTrackUpgradeHandler());
-        addUpgradeRenderer(new SearchUpgradeHandler());
-        addUpgradeRenderer(new CoordTrackUpgradeHandler());
-        addUpgradeRenderer(new DroneDebugUpgradeHandler());
-        addUpgradeRenderer(new NightVisionUpgradeHandler());
-        addUpgradeRenderer(new ScubaUpgradeHandler());
+        this.addUpgradeRenderer(new MainHelmetHandler());  // always keep this first
+        this.addUpgradeRenderer(new BlockTrackUpgradeHandler());
+        this.addUpgradeRenderer(new EntityTrackUpgradeHandler());
+        this.addUpgradeRenderer(new SearchUpgradeHandler());
+        this.addUpgradeRenderer(new CoordTrackUpgradeHandler());
+        this.addUpgradeRenderer(new DroneDebugUpgradeHandler());
+        this.addUpgradeRenderer(new NightVisionUpgradeHandler());
+        this.addUpgradeRenderer(new ScubaUpgradeHandler());
 
-        addUpgradeRenderer(new MagnetUpgradeHandler());
-        addUpgradeRenderer(new ChargingUpgradeHandler());
-        addUpgradeRenderer(new ChestplateLauncherHandler());
-        addUpgradeRenderer(new AirConUpgradeHandler());
+        this.addUpgradeRenderer(new MagnetUpgradeHandler());
+        this.addUpgradeRenderer(new ChargingUpgradeHandler());
+        this.addUpgradeRenderer(new ChestplateLauncherHandler());
+        this.addUpgradeRenderer(new AirConUpgradeHandler());
 
-        addUpgradeRenderer(new RunSpeedUpgradeHandler());
-        addUpgradeRenderer(new JumpBoostUpgradeHandler());
+        this.addUpgradeRenderer(new RunSpeedUpgradeHandler());
+        this.addUpgradeRenderer(new JumpBoostUpgradeHandler());
 
-        addUpgradeRenderer(new JetBootsUpgradeHandler());
-        addUpgradeRenderer(new StepAssistUpgradeHandler());
-        addUpgradeRenderer(new KickUpgradeHandler());
+        this.addUpgradeRenderer(new JetBootsUpgradeHandler());
+        this.addUpgradeRenderer(new StepAssistUpgradeHandler());
+        this.addUpgradeRenderer(new KickUpgradeHandler());
     }
 
     public void addUpgradeRenderer(IUpgradeRenderHandler handler) {
-        upgradeRenderers.get(handler.getEquipmentSlot().getIndex()).add(handler);
-        classMap.put(handler.getClass(), handler);
+        this.upgradeRenderers.get(handler.getEquipmentSlot().getIndex()).add(handler);
+        this.classMap.put(handler.getClass(), handler);
     }
 
     public <T extends IUpgradeRenderHandler> T getRenderHandler(Class<T> clazz) {
-        return (T) classMap.get(clazz);
+        return (T) this.classMap.get(clazz);
     }
 
     public List<IUpgradeRenderHandler> getHandlersForSlot(EntityEquipmentSlot slot) {
-        return upgradeRenderers.get(slot.getIndex());
+        return this.upgradeRenderers.get(slot.getIndex());
     }
 
     public float getAirUsage(EntityPlayer player, EntityEquipmentSlot slot, boolean countDisabled) {
         float totalUsage = 0;
-        for (int i = 0; i < upgradeRenderers.get(slot.getIndex()).size(); i++) {
+        for (int i = 0; i < this.upgradeRenderers.get(slot.getIndex()).size(); i++) {
             CommonArmorHandler handler = CommonArmorHandler.getHandlerForPlayer(player);
             if (handler.isUpgradeRendererInserted(slot, i) && (countDisabled || handler.isUpgradeRendererEnabled(slot, i)))
-                totalUsage += upgradeRenderers.get(slot.getIndex()).get(i).getEnergyUsage(handler.getUpgradeCount(slot, IItemRegistry.EnumUpgrade.RANGE), player);
+                totalUsage += this.upgradeRenderers.get(slot.getIndex()).get(i).getEnergyUsage(handler.getUpgradeCount(slot, IItemRegistry.EnumUpgrade.RANGE), player);
         }
         return totalUsage;
     }

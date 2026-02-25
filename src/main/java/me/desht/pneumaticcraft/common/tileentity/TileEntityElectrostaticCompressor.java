@@ -52,15 +52,15 @@ public class TileEntityElectrostaticCompressor extends TileEntityPneumaticBase i
 
     @Override
     public void update() {
-        if ((getWorld().getTotalWorldTime() & 0x1f) == 0) {  // every 32 ticks
+        if ((this.getWorld().getTotalWorldTime() & 0x1f) == 0) {  // every 32 ticks
             int max = PneumaticValues.PRODUCTION_ELECTROSTATIC_COMPRESSOR / PneumaticValues.MAX_REDIRECTION_PER_IRON_BAR;
-            for (ironBarsBeneath = 0; ironBarsBeneath < max; ironBarsBeneath++) {
-                if (!isValidGridBlock(getWorld().getBlockState(getPos().down(ironBarsBeneath + 1)).getBlock())) {
+            for (this.ironBarsBeneath = 0; this.ironBarsBeneath < max; this.ironBarsBeneath++) {
+                if (!isValidGridBlock(this.getWorld().getBlockState(this.getPos().down(this.ironBarsBeneath + 1)).getBlock())) {
                     break;
                 }
             }
-            for (ironBarsAbove = 0; ironBarsAbove < MAX_BARS_ABOVE; ironBarsAbove++) {
-                if (!isValidGridBlock(getWorld().getBlockState(getPos().up(ironBarsAbove + 1)).getBlock())) {
+            for (this.ironBarsAbove = 0; this.ironBarsAbove < MAX_BARS_ABOVE; this.ironBarsAbove++) {
+                if (!isValidGridBlock(this.getWorld().getBlockState(this.getPos().up(this.ironBarsAbove + 1)).getBlock())) {
                     break;
                 }
             }
@@ -68,52 +68,52 @@ public class TileEntityElectrostaticCompressor extends TileEntityPneumaticBase i
 
         super.update();
 
-        maybeLightningStrike();
+        this.maybeLightningStrike();
 
-        if (!getWorld().isRemote) {
-            if (lastRedstoneState != shouldEmitRedstone()) {
-                lastRedstoneState = !lastRedstoneState;
-                updateNeighbours();
+        if (!this.getWorld().isRemote) {
+            if (this.lastRedstoneState != this.shouldEmitRedstone()) {
+                this.lastRedstoneState = !this.lastRedstoneState;
+                this.updateNeighbours();
             }
-            struckByLightningCooldown--;
+            this.struckByLightningCooldown--;
         }
     }
 
     public int getStrikeChance() {
         int strikeChance = ConfigHandler.machineProperties.electrostaticLightningChance;
-        if (getWorld().isRaining()) strikeChance *= 0.5;  // slightly more likely if raining
-        if (getWorld().isThundering()) strikeChance *= 0.2; // much more likely if thundering
-        strikeChance *= (1f - (0.02f * ironBarsAbove));
+        if (this.getWorld().isRaining()) strikeChance *= 0.5;  // slightly more likely if raining
+        if (this.getWorld().isThundering()) strikeChance *= 0.2; // much more likely if thundering
+        strikeChance *= (1f - (0.02f * this.ironBarsAbove));
         return strikeChance;
     }
 
     private void maybeLightningStrike() {
-        Random rnd = getWorld().rand;
-        if (rnd.nextInt(getStrikeChance()) == 0) {
+        Random rnd = this.getWorld().rand;
+        if (rnd.nextInt(this.getStrikeChance()) == 0) {
             int dist = rnd.nextInt(6);
-            float angle = rnd.nextFloat() * (float)Math.PI;
-            int x = (int)(getPos().getX() + dist * MathHelper.sin(angle));
-            int z = (int)(getPos().getZ() + dist * MathHelper.cos(angle));
-            for (int y = getPos().getY() + 5; y > getPos().getY() - 5; y--) {
+            float angle = rnd.nextFloat() * (float) Math.PI;
+            int x = (int) (this.getPos().getX() + dist * MathHelper.sin(angle));
+            int z = (int) (this.getPos().getZ() + dist * MathHelper.cos(angle));
+            for (int y = this.getPos().getY() + 5; y > this.getPos().getY() - 5; y--) {
                 BlockPos hitPos = new BlockPos(x, y, z);
-                IBlockState state = getWorld().getBlockState(hitPos);
+                IBlockState state = this.getWorld().getBlockState(hitPos);
                 if (state.getBlock() instanceof BlockElectrostaticCompressor || state.getBlock() == Blocks.IRON_BARS) {
                     Set<BlockPos> posSet = new HashSet<>();
-                    getElectrostaticGrid(posSet, getWorld(), hitPos, null);
+                    this.getElectrostaticGrid(posSet, this.getWorld(), hitPos, null);
                     List<TileEntityElectrostaticCompressor> compressors = posSet.stream()
-                            .filter(pos -> world.getBlockState(pos).getBlock() == Blockss.ELECTROSTATIC_COMPRESSOR)
-                            .map(pos -> world.getTileEntity(pos))
+                            .filter(pos -> this.world.getBlockState(pos).getBlock() == Blockss.ELECTROSTATIC_COMPRESSOR)
+                            .map(pos -> this.world.getTileEntity(pos))
                             .filter(te -> te instanceof TileEntityElectrostaticCompressor)
                             .map(te -> (TileEntityElectrostaticCompressor) te)
                             .collect(Collectors.toList());
-                    EntityLightningBolt bolt = new EntityLightningBolt(getWorld(), x, y, z, true);
-                    getWorld().spawnEntity(bolt);
+                    EntityLightningBolt bolt = new EntityLightningBolt(this.getWorld(), x, y, z, true);
+                    this.getWorld().spawnEntity(bolt);
                     for (TileEntityElectrostaticCompressor compressor : compressors) {
                         compressor.addAir(PneumaticValues.PRODUCTION_ELECTROSTATIC_COMPRESSOR / compressors.size());
                         compressor.onStruckByLightning();
                     }
-                    AxisAlignedBB box = new AxisAlignedBB(getPos()).grow(16, 16, 16);
-                    for (EntityLivingBase entity : getWorld().getEntitiesWithinAABB(EntityLivingBase.class, box, EntitySelectors.IS_ALIVE)) {
+                    AxisAlignedBB box = new AxisAlignedBB(this.getPos()).grow(16, 16, 16);
+                    for (EntityLivingBase entity : this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, box, EntitySelectors.IS_ALIVE)) {
                         if (posSet.contains(entity.getPosition()) || posSet.contains(entity.getPosition().down())) {
                             if (!net.minecraftforge.event.ForgeEventFactory.onEntityStruckByLightning(entity, bolt)) {
                                 entity.onStruckByLightning(bolt);
@@ -133,29 +133,29 @@ public class TileEntityElectrostaticCompressor extends TileEntityPneumaticBase i
     }
 
     private boolean shouldEmitRedstone() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return false;
             case 1:
-                return struckByLightningCooldown > 0;
+                return this.struckByLightningCooldown > 0;
         }
         return false;
     }
 
     public void onStruckByLightning() {
-        struckByLightningCooldown = 10;
-        if (getPressure() > PneumaticValues.DANGER_PRESSURE_ELECTROSTATIC_COMPRESSOR) {
-            int maxRedirection = PneumaticValues.MAX_REDIRECTION_PER_IRON_BAR * ironBarsBeneath;
-            int tooMuchAir = (int) ((getPressure() - PneumaticValues.DANGER_PRESSURE_ELECTROSTATIC_COMPRESSOR) * getAirHandler(null).getVolume());
-            addAir(-Math.min(maxRedirection, tooMuchAir));
+        this.struckByLightningCooldown = 10;
+        if (this.getPressure() > PneumaticValues.DANGER_PRESSURE_ELECTROSTATIC_COMPRESSOR) {
+            int maxRedirection = PneumaticValues.MAX_REDIRECTION_PER_IRON_BAR * this.ironBarsBeneath;
+            int tooMuchAir = (int) ((this.getPressure() - PneumaticValues.DANGER_PRESSURE_ELECTROSTATIC_COMPRESSOR) * this.getAirHandler(null).getVolume());
+            this.addAir(-Math.min(maxRedirection, tooMuchAir));
         }
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 1) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 1) this.redstoneMode = 0;
         }
     }
 
@@ -167,19 +167,19 @@ public class TileEntityElectrostaticCompressor extends TileEntityPneumaticBase i
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        redstoneMode = nbtTagCompound.getInteger("redstoneMode");
+        this.redstoneMode = nbtTagCompound.getInteger("redstoneMode");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setInteger("redstoneMode", redstoneMode);
+        nbtTagCompound.setInteger("redstoneMode", this.redstoneMode);
         return nbtTagCompound;
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
@@ -201,7 +201,7 @@ public class TileEntityElectrostaticCompressor extends TileEntityPneumaticBase i
             Block block = world.getBlockState(newPos).getBlock();
             if ((isValidGridBlock(block) || block == Blockss.ELECTROSTATIC_COMPRESSOR)
                     && set.size() < MAX_ELECTROSTATIC_GRID_SIZE && set.add(newPos)) {
-                getElectrostaticGrid(set, world, newPos, d.getOpposite());
+                this.getElectrostaticGrid(set, world, newPos, d.getOpposite());
             }
         }
     }

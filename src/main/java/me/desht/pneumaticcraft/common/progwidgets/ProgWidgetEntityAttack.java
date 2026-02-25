@@ -28,7 +28,7 @@ public class ProgWidgetEntityAttack extends ProgWidget implements IAreaProvider,
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) {
+        if (this.getConnectedParameters()[0] == null) {
             curInfo.add("gui.progWidget.area.error.noArea");
         }
         EntityFilterPair.addErrors(this, curInfo);
@@ -71,23 +71,23 @@ public class ProgWidgetEntityAttack extends ProgWidget implements IAreaProvider,
 
     @Override
     public List<Entity> getValidEntities(World world) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.getValidEntities(world);
+        return this.entityFilters.getValidEntities(world);
     }
 
     @Override
     public boolean isEntityValid(Entity entity) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.isEntityValid(entity);
+        return this.entityFilters.isEntityValid(entity);
     }
 
     @Override
     public void getArea(Set<BlockPos> area) {
-        getArea(area, (ProgWidgetArea) getConnectedParameters()[0], (ProgWidgetArea) getConnectedParameters()[2]);
+        getArea(area, (ProgWidgetArea) this.getConnectedParameters()[0], (ProgWidgetArea) this.getConnectedParameters()[2]);
     }
 
     public static void getArea(Set<BlockPos> area, ProgWidgetArea whitelistWidget, ProgWidgetArea blacklistWidget) {

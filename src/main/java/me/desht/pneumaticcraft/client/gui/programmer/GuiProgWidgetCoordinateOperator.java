@@ -27,24 +27,24 @@ public class GuiProgWidgetCoordinateOperator extends GuiProgWidgetAreaShow<ProgW
         List<GuiRadioButton> radioButtons = new ArrayList<>();
         for (int i = 0; i < EnumOperator.values().length; i++) {
             String key = EnumOperator.values()[i].getTranslationKey();
-            GuiRadioButton radioButton = new GuiRadioButton(i, guiLeft + 7, guiTop + 42 + 12 * i, 0xFF404040, I18n.format(key));
+            GuiRadioButton radioButton = new GuiRadioButton(i, this.guiLeft + 7, this.guiTop + 42 + 12 * i, 0xFF404040, I18n.format(key));
             radioButtons.add(radioButton);
-            radioButton.checked = widget.getOperator().ordinal() == i;
+            radioButton.checked = this.widget.getOperator().ordinal() == i;
             radioButton.otherChoices = radioButtons;
             radioButton.setTooltip(I18n.format(key + ".hint"));
-            addWidget(radioButton);
+            this.addWidget(radioButton);
         }
 
-        variableField = new WidgetComboBox(fontRenderer, guiLeft + 7, guiTop + 100, 80, fontRenderer.FONT_HEIGHT + 1);
-        variableField.setElements(guiProgrammer.te.getAllVariables());
-        addWidget(variableField);
-        variableField.setText(widget.getVariable());
+        this.variableField = new WidgetComboBox(this.fontRenderer, this.guiLeft + 7, this.guiTop + 100, 80, this.fontRenderer.FONT_HEIGHT + 1);
+        this.variableField.setElements(this.guiProgrammer.te.getAllVariables());
+        this.addWidget(this.variableField);
+        this.variableField.setText(this.widget.getVariable());
     }
 
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget.getID() >= 0 && guiWidget.getID() < EnumOperator.values().length) {
-            widget.setOperator(EnumOperator.values()[guiWidget.getID()]);
+            this.widget.setOperator(EnumOperator.values()[guiWidget.getID()]);
         }
         super.actionPerformed(guiWidget);
     }
@@ -52,7 +52,7 @@ public class GuiProgWidgetCoordinateOperator extends GuiProgWidgetAreaShow<ProgW
     @Override
     public void keyTyped(char chr, int keyCode) throws IOException {
         if (keyCode == 1) {
-            widget.setVariable(variableField.getText());
+            this.widget.setVariable(this.variableField.getText());
         }
         super.keyTyped(chr, keyCode);
     }
@@ -60,7 +60,7 @@ public class GuiProgWidgetCoordinateOperator extends GuiProgWidgetAreaShow<ProgW
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString(I18n.format("gui.progWidget.coordinate.variableName"), guiLeft + 7, guiTop + 88, 0xFF404060);
-        fontRenderer.drawString(I18n.format("gui.progWidget.coordinateOperator.operator"), guiLeft + 7, guiTop + 30, 0xFF404060);
+        this.fontRenderer.drawString(I18n.format("gui.progWidget.coordinate.variableName"), this.guiLeft + 7, this.guiTop + 88, 0xFF404060);
+        this.fontRenderer.drawString(I18n.format("gui.progWidget.coordinateOperator.operator"), this.guiLeft + 7, this.guiTop + 30, 0xFF404060);
     }
 }

@@ -27,8 +27,8 @@ public class EntityInRangeSensor extends EntityPollSensor {
 
     @Override
     public int getRedstoneValue(List<Entity> entities, String textboxText) {
-        if (filter == null) {
-            filter = new EntityFilter(textboxText);
+        if (this.filter == null) {
+            this.filter = new EntityFilter(textboxText);
         }
 
         int entitiesFound = 0;
@@ -36,7 +36,7 @@ public class EntityInRangeSensor extends EntityPollSensor {
             return Math.min(15, entities.size());
         } else {
             for (Entity entity : entities) {
-                if (filter.test(entity)) entitiesFound++;
+                if (this.filter.test(entity)) entitiesFound++;
             }
         }
         return Math.min(15, entitiesFound);
@@ -67,6 +67,6 @@ public class EntityInRangeSensor extends EntityPollSensor {
 
     @Override
     public void notifyTextChange(String newText) {
-        filter = new EntityFilter(newText);
+        this.filter = new EntityFilter(newText);
     }
 }

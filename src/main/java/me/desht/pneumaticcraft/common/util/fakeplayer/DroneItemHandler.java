@@ -25,7 +25,7 @@ public class DroneItemHandler extends ItemStackHandler {
             // i.e. the chunk is still being loaded.  Initializing a player at this stage
             // can cause an endless loop (player constructor tries to find a random spawn point,
             // which can lead to more chunk creation)
-            heldItemChanged = true;
+            this.heldItemChanged = true;
         }
     }
 
@@ -34,17 +34,17 @@ public class DroneItemHandler extends ItemStackHandler {
      * player has the appropriate attributes based on the held item, and can be overridden for extra functionality.
      */
     public void updateHeldItem() {
-        if (heldItemChanged) {
-            ItemStack newStack = getStackInSlot(0);
-            if (!oldStack.isEmpty()) {
-                holder.getFakePlayer().getAttributeMap().removeAttributeModifiers(oldStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
+        if (this.heldItemChanged) {
+            ItemStack newStack = this.getStackInSlot(0);
+            if (!this.oldStack.isEmpty()) {
+                this.holder.getFakePlayer().getAttributeMap().removeAttributeModifiers(this.oldStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
             }
             if (!newStack.isEmpty()) {
-                holder.getFakePlayer().getAttributeMap().applyAttributeModifiers(newStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
+                this.holder.getFakePlayer().getAttributeMap().applyAttributeModifiers(newStack.getAttributeModifiers(EntityEquipmentSlot.MAINHAND));
             }
-            oldStack = newStack.copy();
+            this.oldStack = newStack.copy();
 
-            heldItemChanged = false;
+            this.heldItemChanged = false;
         }
     }
 }

@@ -38,83 +38,83 @@ public class GuiProgWidgetArea extends GuiProgWidgetAreaShow<ProgWidgetArea> {
     private WidgetComboBox variableField2;
 
     private final List<AreaType> allAreaTypes = ProgWidgetArea.getAllAreaTypes();
-    private final List<Pair<AreaTypeWidget,IGuiWidget>> areaTypeValueWidgets = new ArrayList<>();
+    private final List<Pair<AreaTypeWidget, IGuiWidget>> areaTypeValueWidgets = new ArrayList<>();
     private final List<IGuiWidget> areaTypeStaticWidgets = new ArrayList<>();
 
     public GuiProgWidgetArea(ProgWidgetArea widget, GuiProgrammer guiProgrammer) {
         super(widget, guiProgrammer);
-        xSize = 256;
+        this.xSize = 256;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        addLabel(I18n.format("gui.progWidget.area.point1"), guiLeft + 50, guiTop + 10);
-        addLabel(I18n.format("gui.progWidget.area.point2"), guiLeft + 177, guiTop + 10);
-        addLabel(I18n.format("gui.progWidget.area.type"), guiLeft + 4, guiTop + 50);
+        this.addLabel(I18n.format("gui.progWidget.area.point1"), this.guiLeft + 50, this.guiTop + 10);
+        this.addLabel(I18n.format("gui.progWidget.area.point2"), this.guiLeft + 177, this.guiTop + 10);
+        this.addLabel(I18n.format("gui.progWidget.area.type"), this.guiLeft + 4, this.guiTop + 50);
 
         boolean advancedMode = ConfigHandler.getProgrammerDifficulty() == 2;
-        GuiButtonSpecial gpsButton1 = new GuiButtonSpecial(0, guiLeft + (advancedMode ? 6 : 55), guiTop + 20, 20, 20, "");
-        GuiButtonSpecial gpsButton2 = new GuiButtonSpecial(1, guiLeft + (advancedMode ? 133 : 182), guiTop + 20, 20, 20, "");
+        GuiButtonSpecial gpsButton1 = new GuiButtonSpecial(0, this.guiLeft + (advancedMode ? 6 : 55), this.guiTop + 20, 20, 20, "");
+        GuiButtonSpecial gpsButton2 = new GuiButtonSpecial(1, this.guiLeft + (advancedMode ? 133 : 182), this.guiTop + 20, 20, 20, "");
         gpsButton1.setRenderStacks(new ItemStack(Itemss.GPS_TOOL));
         gpsButton2.setRenderStacks(new ItemStack(Itemss.GPS_TOOL));
-        buttonList.add(gpsButton1);
-        buttonList.add(gpsButton2);
+        this.buttonList.add(gpsButton1);
+        this.buttonList.add(gpsButton2);
 
-        variableField1 = new WidgetComboBox(fontRenderer, guiLeft + 28, guiTop + 25, 88, fontRenderer.FONT_HEIGHT + 1);
-        variableField2 = new WidgetComboBox(fontRenderer, guiLeft + 155, guiTop + 25, 88, fontRenderer.FONT_HEIGHT + 1);
-        Set<String> variables = guiProgrammer == null ? Collections.emptySet() : guiProgrammer.te.getAllVariables();
-        variableField1.setElements(variables);
-        variableField2.setElements(variables);
-        variableField1.setText(widget.getCoord1Variable());
-        variableField2.setText(widget.getCoord2Variable());
+        this.variableField1 = new WidgetComboBox(this.fontRenderer, this.guiLeft + 28, this.guiTop + 25, 88, this.fontRenderer.FONT_HEIGHT + 1);
+        this.variableField2 = new WidgetComboBox(this.fontRenderer, this.guiLeft + 155, this.guiTop + 25, 88, this.fontRenderer.FONT_HEIGHT + 1);
+        Set<String> variables = this.guiProgrammer == null ? Collections.emptySet() : this.guiProgrammer.te.getAllVariables();
+        this.variableField1.setElements(variables);
+        this.variableField2.setElements(variables);
+        this.variableField1.setText(this.widget.getCoord1Variable());
+        this.variableField2.setText(this.widget.getCoord2Variable());
 
         if (advancedMode) {
-            addWidget(variableField1);
-            addWidget(variableField2);
+            this.addWidget(this.variableField1);
+            this.addWidget(this.variableField2);
         }
 
         final int widgetsPerColumn = 5;
         List<GuiRadioButton> radioButtons = new ArrayList<>();
-        for (int i = 0; i < allAreaTypes.size(); i++) {
-            AreaType areaType = allAreaTypes.get(i);
-            GuiRadioButton radioButton = new GuiRadioButton(i, guiLeft + widgetsPerColumn + i / widgetsPerColumn * 80, guiTop + 60 + i % widgetsPerColumn * 12, 0xFF404040, areaType.getName());
-            if(widget.type.getClass() == areaType.getClass()){
-                allAreaTypes.set(i, widget.type);
+        for (int i = 0; i < this.allAreaTypes.size(); i++) {
+            AreaType areaType = this.allAreaTypes.get(i);
+            GuiRadioButton radioButton = new GuiRadioButton(i, this.guiLeft + widgetsPerColumn + i / widgetsPerColumn * 80, this.guiTop + 60 + i % widgetsPerColumn * 12, 0xFF404040, areaType.getName());
+            if (this.widget.type.getClass() == areaType.getClass()) {
+                this.allAreaTypes.set(i, this.widget.type);
                 radioButton.checked = true;
             }
 
-            addWidget(radioButton);
+            this.addWidget(radioButton);
             radioButtons.add(radioButton);
             radioButton.otherChoices = radioButtons;
         }
-        
+
         //typeInfoField.setTooltip(I18n.format("gui.progWidget.area.extraInfo.tooltip"));
         //addWidget(new WidgetLabel(guiLeft + 160, guiTop + 100, I18n.format("gui.progWidget.area.extraInfo")));
-        switchToWidgets(widget.type);
-        
-        if (invSearchGui != null) {
-            ItemStack stack = invSearchGui.getSearchStack();
+        this.switchToWidgets(this.widget.type);
+
+        if (this.invSearchGui != null) {
+            ItemStack stack = this.invSearchGui.getSearchStack();
             if (stack.getItem() instanceof IPositionProvider) {
                 List<BlockPos> posList = ((IPositionProvider) stack.getItem()).getStoredPositions(stack);
                 if (!posList.isEmpty()) {
                     BlockPos pos = posList.get(0);
                     if (pos != null) {
-                        if (pointSearched == 0) {
-                            widget.x1 = pos.getX();
-                            widget.y1 = pos.getY();
-                            widget.z1 = pos.getZ();
+                        if (this.pointSearched == 0) {
+                            this.widget.x1 = pos.getX();
+                            this.widget.y1 = pos.getY();
+                            this.widget.z1 = pos.getZ();
                         } else {
-                            widget.x2 = pos.getX();
-                            widget.y2 = pos.getY();
-                            widget.z2 = pos.getZ();
+                            this.widget.x2 = pos.getX();
+                            this.widget.y2 = pos.getY();
+                            this.widget.z2 = pos.getZ();
                         }
                     } else {
-                        if (pointSearched == 0) {
-                            widget.x1 = widget.y1 = widget.z1 = 0;
+                        if (this.pointSearched == 0) {
+                            this.widget.x1 = this.widget.y1 = this.widget.z1 = 0;
                         } else {
-                            widget.x2 = widget.y2 = widget.z2 = 0;
+                            this.widget.x2 = this.widget.y2 = this.widget.z2 = 0;
                         }
                     }
                 }
@@ -122,83 +122,83 @@ public class GuiProgWidgetArea extends GuiProgWidgetAreaShow<ProgWidgetArea> {
         }
 
         List<String> b1List = Lists.newArrayList(I18n.format("gui.progWidget.area.selectGPS1"));
-        if (widget.x1 != 0 || widget.y1 != 0 || widget.z1 != 0) {
-            b1List.add(String.format(TextFormatting.GRAY + "[Current] %d, %d, %d", widget.x1, widget.y1, widget.z1));
+        if (this.widget.x1 != 0 || this.widget.y1 != 0 || this.widget.z1 != 0) {
+            b1List.add(String.format(TextFormatting.GRAY + "[Current] %d, %d, %d", this.widget.x1, this.widget.y1, this.widget.z1));
         }
         gpsButton1.setTooltipText(b1List);
 
         List<String> b2List = Lists.newArrayList(I18n.format("gui.progWidget.area.selectGPS2"));
-        if (widget.x2 != 0 || widget.y2 != 0 || widget.z2 != 0) {
-            b2List.add(String.format(TextFormatting.GRAY + "[Current] %d, %d, %d", widget.x2, widget.y2, widget.z2));
+        if (this.widget.x2 != 0 || this.widget.y2 != 0 || this.widget.z2 != 0) {
+            b2List.add(String.format(TextFormatting.GRAY + "[Current] %d, %d, %d", this.widget.x2, this.widget.y2, this.widget.z2));
         }
         gpsButton2.setTooltipText(b2List);
     }
-    
-    private void switchToWidgets(AreaType type){
-        saveWidgets();
-        
-        areaTypeValueWidgets.forEach(p -> removeWidget(p.getRight()));
-        areaTypeStaticWidgets.forEach(this::removeWidget);
-        
-        areaTypeValueWidgets.clear();
-        areaTypeStaticWidgets.clear();
-        
-        int curY = guiTop + 60;
-        int x = guiLeft + 150;
+
+    private void switchToWidgets(AreaType type) {
+        this.saveWidgets();
+
+        this.areaTypeValueWidgets.forEach(p -> this.removeWidget(p.getRight()));
+        this.areaTypeStaticWidgets.forEach(this::removeWidget);
+
+        this.areaTypeValueWidgets.clear();
+        this.areaTypeStaticWidgets.clear();
+
+        int curY = this.guiTop + 60;
+        int x = this.guiLeft + 150;
         List<AreaTypeWidget> widgets = new ArrayList<>();
         type.addUIWidgets(widgets);
-        for(AreaTypeWidget widget : widgets){
+        for (AreaTypeWidget widget : widgets) {
             WidgetLabel titleWidget = new WidgetLabel(x, curY, I18n.format(widget.title));
-            addWidget(titleWidget);
-            areaTypeStaticWidgets.add(titleWidget);
-            curY += fontRenderer.FONT_HEIGHT + 1;
-            
-            if(widget instanceof AreaTypeWidgetInteger){
-                AreaTypeWidgetInteger intWidget = (AreaTypeWidgetInteger)widget;
-                WidgetTextFieldNumber intField = new WidgetTextFieldNumber(fontRenderer, x, curY, 40, fontRenderer.FONT_HEIGHT + 1);
+            this.addWidget(titleWidget);
+            this.areaTypeStaticWidgets.add(titleWidget);
+            curY += this.fontRenderer.FONT_HEIGHT + 1;
+
+            if (widget instanceof AreaTypeWidgetInteger) {
+                AreaTypeWidgetInteger intWidget = (AreaTypeWidgetInteger) widget;
+                WidgetTextFieldNumber intField = new WidgetTextFieldNumber(this.fontRenderer, x, curY, 40, this.fontRenderer.FONT_HEIGHT + 1);
                 intField.setValue(intWidget.readAction.get());
-                addWidget(intField);
-                areaTypeValueWidgets.add(new ImmutablePair<>(widget, intField));
-                
-                curY += fontRenderer.FONT_HEIGHT + 20;
-            }else if(widget instanceof AreaTypeWidgetEnum<?>){
-                AreaTypeWidgetEnum<?> enumWidget = (AreaTypeWidgetEnum<?>)widget;                
-                WidgetComboBox enumCbb = new WidgetComboBox(fontRenderer, x, curY, 80, fontRenderer.FONT_HEIGHT + 1).setFixedOptions();
-                enumCbb.setElements(getEnumNames(enumWidget.enumClass));
+                this.addWidget(intField);
+                this.areaTypeValueWidgets.add(new ImmutablePair<>(widget, intField));
+
+                curY += this.fontRenderer.FONT_HEIGHT + 20;
+            } else if (widget instanceof AreaTypeWidgetEnum<?>) {
+                AreaTypeWidgetEnum<?> enumWidget = (AreaTypeWidgetEnum<?>) widget;
+                WidgetComboBox enumCbb = new WidgetComboBox(this.fontRenderer, x, curY, 80, this.fontRenderer.FONT_HEIGHT + 1).setFixedOptions();
+                enumCbb.setElements(this.getEnumNames(enumWidget.enumClass));
                 enumCbb.setText(enumWidget.readAction.get().toString());
-                addWidget(enumCbb);
-                areaTypeValueWidgets.add(new ImmutablePair<>(widget, enumCbb));
-                
-                curY += fontRenderer.FONT_HEIGHT + 20;
-            }else{
+                this.addWidget(enumCbb);
+                this.areaTypeValueWidgets.add(new ImmutablePair<>(widget, enumCbb));
+
+                curY += this.fontRenderer.FONT_HEIGHT + 20;
+            } else {
                 throw new IllegalStateException("Invalid widget type: " + widget.getClass());
             }
         }
     }
-    
-    private void saveWidgets(){
-        for(Pair<AreaTypeWidget, IGuiWidget> entry : areaTypeValueWidgets){
+
+    private void saveWidgets() {
+        for (Pair<AreaTypeWidget, IGuiWidget> entry : this.areaTypeValueWidgets) {
             AreaTypeWidget widget = entry.getLeft();
             IGuiWidget guiWidget = entry.getRight();
-            if(widget instanceof AreaTypeWidgetInteger){
-                AreaTypeWidgetInteger intWidget = (AreaTypeWidgetInteger)widget;
-                intWidget.writeAction.accept(((WidgetTextFieldNumber)guiWidget).getValue());
-            }else if(widget instanceof AreaTypeWidgetEnum<?>){
+            if (widget instanceof AreaTypeWidgetInteger) {
+                AreaTypeWidgetInteger intWidget = (AreaTypeWidgetInteger) widget;
+                intWidget.writeAction.accept(((WidgetTextFieldNumber) guiWidget).getValue());
+            } else if (widget instanceof AreaTypeWidgetEnum<?>) {
                 @SuppressWarnings("unchecked")
-                AreaTypeWidgetEnum<Enum<?>> enumWidget = (AreaTypeWidgetEnum<Enum<?>>)widget;
-                WidgetComboBox cbb = (WidgetComboBox)guiWidget;
-                List<String> enumNames = getEnumNames(enumWidget.enumClass);
+                AreaTypeWidgetEnum<Enum<?>> enumWidget = (AreaTypeWidgetEnum<Enum<?>>) widget;
+                WidgetComboBox cbb = (WidgetComboBox) guiWidget;
+                List<String> enumNames = this.getEnumNames(enumWidget.enumClass);
                 Object[] enumValues = enumWidget.enumClass.getEnumConstants();
                 Object selectedValue = enumValues[enumNames.indexOf(cbb.getText())];
-                enumWidget.writeAction.accept((Enum<?>)selectedValue); 
+                enumWidget.writeAction.accept((Enum<?>) selectedValue);
             }
         }
     }
-    
-    private List<String> getEnumNames(Class<?> enumClass){
+
+    private List<String> getEnumNames(Class<?> enumClass) {
         Object[] enumValues = enumClass.getEnumConstants();
         List<String> enumNames = new ArrayList<>();
-        for(Object enumValue : enumValues){
+        for (Object enumValue : enumValues) {
             enumNames.add(enumValue.toString());
         }
         return enumNames;
@@ -207,9 +207,9 @@ public class GuiProgWidgetArea extends GuiProgWidgetAreaShow<ProgWidgetArea> {
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget instanceof GuiRadioButton) {
-            AreaType areaType = allAreaTypes.get(guiWidget.getID());
-            widget.type = areaType; 
-            switchToWidgets(areaType);
+            AreaType areaType = this.allAreaTypes.get(guiWidget.getID());
+            this.widget.type = areaType;
+            this.switchToWidgets(areaType);
         }
         super.actionPerformed(guiWidget);
     }
@@ -217,20 +217,20 @@ public class GuiProgWidgetArea extends GuiProgWidgetAreaShow<ProgWidgetArea> {
     @Override
     public void actionPerformed(GuiButton button) throws IOException {
         if (button.id == 0 || button.id == 1) {
-            invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
-            invSearchGui.setStackPredicate(itemStack -> itemStack.getItem() instanceof IPositionProvider);
+            this.invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
+            this.invSearchGui.setStackPredicate(itemStack -> itemStack.getItem() instanceof IPositionProvider);
             ItemStack gps = new ItemStack(Itemss.GPS_TOOL);
             if (button.id == 0) {
-                ItemGPSTool.setGPSLocation(gps, new BlockPos(widget.x1, widget.y1, widget.z1));
+                ItemGPSTool.setGPSLocation(gps, new BlockPos(this.widget.x1, this.widget.y1, this.widget.z1));
             } else {
-                ItemGPSTool.setGPSLocation(gps, new BlockPos(widget.x2, widget.y2, widget.z2));
+                ItemGPSTool.setGPSLocation(gps, new BlockPos(this.widget.x2, this.widget.y2, this.widget.z2));
             }
-            invSearchGui.setSearchStack(ItemGPSTool.getGPSLocation(gps) != null ? gps : ItemStack.EMPTY);
-            FMLClientHandler.instance().showGuiScreen(invSearchGui);
-            pointSearched = button.id;
+            this.invSearchGui.setSearchStack(ItemGPSTool.getGPSLocation(gps) != null ? gps : ItemStack.EMPTY);
+            FMLClientHandler.instance().showGuiScreen(this.invSearchGui);
+            this.pointSearched = button.id;
         }
         if (button.id == 1000) { //When the area is going to be displayed.
-            saveWidgets();
+            this.saveWidgets();
         }
         super.actionPerformed(button);
     }
@@ -241,12 +241,12 @@ public class GuiProgWidgetArea extends GuiProgWidgetAreaShow<ProgWidgetArea> {
     }
 
     @Override
-    public void onGuiClosed(){
+    public void onGuiClosed() {
         super.onGuiClosed();
-        
-        widget.setCoord1Variable(variableField1.getText());
-        widget.setCoord2Variable(variableField2.getText());
-        saveWidgets();
+
+        this.widget.setCoord1Variable(this.variableField1.getText());
+        this.widget.setCoord2Variable(this.variableField2.getText());
+        this.saveWidgets();
     }
 
 }

@@ -25,15 +25,15 @@ public class PacketSetLogisticsMinAmounts extends LocationIntPacket<PacketSetLog
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeInt(minItems);
-        buf.writeInt(minFluid);
+        buf.writeInt(this.minItems);
+        buf.writeInt(this.minFluid);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        minItems = buf.readInt();
-        minFluid = buf.readInt();
+        this.minItems = buf.readInt();
+        this.minFluid = buf.readInt();
     }
 
     @Override
@@ -45,13 +45,13 @@ public class PacketSetLogisticsMinAmounts extends LocationIntPacket<PacketSetLog
         if (message.pos.equals(BlockPos.ORIGIN)) {
             // frame in hand
             if (player.openContainer instanceof ContainerLogistics) {
-                setMinAmounts(((ContainerLogistics) player.openContainer).logistics, message.minItems, message.minFluid);
+                this.setMinAmounts(((ContainerLogistics) player.openContainer).logistics, message.minItems, message.minFluid);
             }
         } else {
             // frame in world
             SemiBlockLogistics semiBlock = SemiBlockManager.getInstance(player.world)
                     .getSemiBlock(SemiBlockLogistics.class, player.world, message.pos);
-            setMinAmounts(semiBlock, message.minItems, message.minFluid);
+            this.setMinAmounts(semiBlock, message.minItems, message.minFluid);
         }
     }
 

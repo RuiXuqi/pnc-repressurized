@@ -50,11 +50,11 @@ public class PacketAmadronTradeAddStatic extends AbstractPacket<PacketAmadronTra
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        trade = AmadronOffer.readFromBuf(buf);
+        this.trade = AmadronOffer.readFromBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        trade.writeToBuf(buf);
+        this.trade.writeToBuf(buf);
     }
 }

@@ -22,7 +22,7 @@ public class HeatBehaviourCustomTransition extends HeatBehaviourTransition {
     public void initialize(String id, IHeatExchangerLogic connectedHeatLogic, World world, BlockPos pos, EnumFacing direction) {
         super.initialize(id, connectedHeatLogic, world, pos, direction);
 
-        heatEntry = BlockHeatPropertiesConfig.INSTANCE.getCustomHeatEntry(getBlockState());
+        this.heatEntry = BlockHeatPropertiesConfig.INSTANCE.getCustomHeatEntry(this.getBlockState());
     }
 
     @Override
@@ -34,71 +34,71 @@ public class HeatBehaviourCustomTransition extends HeatBehaviourTransition {
     public boolean isApplicable() {
         if (!super.isApplicable()) return false;
 
-        BlockHeatPropertiesConfig.CustomHeatEntry entry = getHeatEntry();
-        return getHeatEntry() != null && getHeatEntry().getTotalHeat() != 0;
+        BlockHeatPropertiesConfig.CustomHeatEntry entry = this.getHeatEntry();
+        return this.getHeatEntry() != null && this.getHeatEntry().getTotalHeat() != 0;
     }
 
     @Override
     protected int getMaxExchangedHeat() {
-        return getHeatEntry().getTotalHeat();
+        return this.getHeatEntry().getTotalHeat();
     }
 
     @Override
     protected boolean transformBlockHot() {
-        IBlockState hot = getHeatEntry().getTransformHot();
+        IBlockState hot = this.getHeatEntry().getTransformHot();
         if (hot == null) return false;
-        if (getFluid() != null) {
-            transformFluidBlocks(hot, getHeatEntry().getTransformHotFlowing());
+        if (this.getFluid() != null) {
+            this.transformFluidBlocks(hot, this.getHeatEntry().getTransformHotFlowing());
             return true;
         } else {
-            return getWorld().setBlockState(getPos(), hot);
+            return this.getWorld().setBlockState(this.getPos(), hot);
         }
     }
 
     @Override
     protected boolean transformBlockCold() {
-        IBlockState cold = getHeatEntry().getTransformCold();
+        IBlockState cold = this.getHeatEntry().getTransformCold();
         if (cold == null) return false;
-        if (getFluid() != null) {
-            transformFluidBlocks(cold, getHeatEntry().getTransformColdFlowing());
+        if (this.getFluid() != null) {
+            this.transformFluidBlocks(cold, this.getHeatEntry().getTransformColdFlowing());
             return true;
         } else {
-            return getWorld().setBlockState(getPos(), cold);
+            return this.getWorld().setBlockState(this.getPos(), cold);
         }
     }
 
     private BlockHeatPropertiesConfig.CustomHeatEntry getHeatEntry() {
-        return heatEntry;
+        return this.heatEntry;
     }
 
     /**
      * Transform a fluid block into some other block, following flowing fluids back to the source block where
      * necessary.
      *
-     * @param turningBlockSource blockstate to transform the source block to
+     * @param turningBlockSource  blockstate to transform the source block to
      * @param turningBlockFlowing blockstate to transform any flowing blocks to
      */
     private void transformFluidBlocks(IBlockState turningBlockSource, IBlockState turningBlockFlowing) {
-        if (FluidUtils.isSourceBlock(getWorld(), getPos())) {
-            getWorld().setBlockState(getPos(), turningBlockSource);
+        if (FluidUtils.isSourceBlock(this.getWorld(), this.getPos())) {
+            this.getWorld().setBlockState(this.getPos(), turningBlockSource);
         } else {
             Set<BlockPos> traversed = new HashSet<>();
             Stack<BlockPos> pending = new Stack<>();
-            pending.push(getPos());
-            traversed.add(getPos());
+            pending.push(this.getPos());
+            traversed.add(this.getPos());
             while (!pending.isEmpty()) {
                 BlockPos pos = pending.pop();
                 for (EnumFacing d : EnumFacing.VALUES) {
                     BlockPos newPos = pos.offset(d);
-                    Block checkingBlock = getWorld().getBlockState(newPos).getBlock();
-                    if (blocksSame(checkingBlock, getBlockState().getBlock()) && traversed.add(newPos)) {
-                        if (FluidUtils.isSourceBlock(getWorld(), newPos)) {
-                            getWorld().setBlockState(newPos, turningBlockSource);
-                            onTransition(newPos);
+                    Block checkingBlock = this.getWorld().getBlockState(newPos).getBlock();
+                    if (this.blocksSame(checkingBlock, this.getBlockState().getBlock()) && traversed.add(newPos)) {
+                        if (FluidUtils.isSourceBlock(this.getWorld(), newPos)) {
+                            this.getWorld().setBlockState(newPos, turningBlockSource);
+                            this.onTransition(newPos);
                             return;
                         } else {
-                            getWorld().setBlockState(newPos, turningBlockFlowing);
-                            onTransition(newPos);
+                            this.getWorld().setBlockState(newPos, turningBlockFlowing);
+                            this.onTransition(newPos);
                             pending.push(newPos);
                         }
                     }

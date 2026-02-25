@@ -26,7 +26,7 @@ public class ItemAssemblyProgram extends ItemPneumaticSubtyped {
 
     public ItemAssemblyProgram() {
         super("assembly_program");
-        setHasSubtypes(true);
+        this.setHasSubtypes(true);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ItemAssemblyProgram extends ItemPneumaticSubtyped {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             for (int i = 0; i < PROGRAMS_AMOUNT; i++) {
                 items.add(new ItemStack(this, 1, i));
             }
@@ -54,13 +54,13 @@ public class ItemAssemblyProgram extends ItemPneumaticSubtyped {
         infoList.add("Required Machines:");
         infoList.add("\u2022 " + Blockss.ASSEMBLY_CONTROLLER.getLocalizedName());
 
-        if (referencePrograms == null) {
-            referencePrograms = new AssemblyProgram[PROGRAMS_AMOUNT];
+        if (this.referencePrograms == null) {
+            this.referencePrograms = new AssemblyProgram[PROGRAMS_AMOUNT];
             for (int i = 0; i < PROGRAMS_AMOUNT; i++) {
-                referencePrograms[i] = getProgramFromItem(i);
+                this.referencePrograms[i] = getProgramFromItem(i);
             }
         }
-        AssemblyProgram program = referencePrograms[Math.min(stack.getItemDamage(), PROGRAMS_AMOUNT - 1)];
+        AssemblyProgram program = this.referencePrograms[Math.min(stack.getItemDamage(), PROGRAMS_AMOUNT - 1)];
         AssemblyProgram.EnumMachine[] requiredMachines = program.getRequiredMachines();
         for (AssemblyProgram.EnumMachine machine : requiredMachines) {
             switch (machine) {

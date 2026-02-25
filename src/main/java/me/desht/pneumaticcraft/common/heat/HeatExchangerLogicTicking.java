@@ -28,24 +28,24 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void initializeAsHull(World world, BlockPos pos, EnumFacing... validSides) {
-        if (ambientTemperature < 0) {
-            initializeAmbientTemperature(world, pos);
+        if (this.ambientTemperature < 0) {
+            this.initializeAmbientTemperature(world, pos);
         }
 
         if (world.isRemote) return;
 
-        for (IHeatExchangerLogic logic : hullExchangers) {
-            removeConnectedExchanger(logic);
+        for (IHeatExchangerLogic logic : this.hullExchangers) {
+            this.removeConnectedExchanger(logic);
         }
-        hullExchangers.clear();
-        newBehaviours = new ArrayList<>();
+        this.hullExchangers.clear();
+        this.newBehaviours = new ArrayList<>();
         for (EnumFacing dir : EnumFacing.VALUES) {
-            if (isSideValid(validSides, dir)) {
-                HeatBehaviourManager.getInstance().addHeatBehaviours(world, pos.offset(dir), dir, this, newBehaviours);
+            if (this.isSideValid(validSides, dir)) {
+                HeatBehaviourManager.getInstance().addHeatBehaviours(world, pos.offset(dir), dir, this, this.newBehaviours);
                 IHeatExchangerLogic logic = HeatExchangerManager.getInstance().getLogic(world, pos.offset(dir), dir.getOpposite());
                 if (logic != null) {
-                    hullExchangers.add(logic);
-                    addConnectedExchanger(logic);
+                    this.hullExchangers.add(logic);
+                    this.addConnectedExchanger(logic);
                 }
             }
         }
@@ -61,7 +61,7 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void addConnectedExchanger(IHeatExchangerLogic exchanger) {
-        connectedExchangers.add(exchanger);
+        this.connectedExchangers.add(exchanger);
         if (!isAddingOrRemovingLogic) {
             isAddingOrRemovingLogic = true;
             exchanger.addConnectedExchanger(this);
@@ -71,7 +71,7 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void removeConnectedExchanger(IHeatExchangerLogic exchanger) {
-        connectedExchangers.remove(exchanger);
+        this.connectedExchangers.remove(exchanger);
         if (!isAddingOrRemovingLogic) {
             isAddingOrRemovingLogic = true;
             exchanger.removeConnectedExchanger(this);
@@ -81,16 +81,18 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void initializeAmbientTemperature(World world, BlockPos pos) {
-        ambientTemperature = HeatExchangerLogicAmbient.atPosition(world, pos).getAmbientTemperature();
+        this.ambientTemperature = HeatExchangerLogicAmbient.atPosition(world, pos).getAmbientTemperature();
     }
 
     @Override
     public double getTemperature() {
-        return temperature;
+        return this.temperature;
     }
 
     @Override
-    public int getTemperatureAsInt() { return temperatureInt; }
+    public int getTemperatureAsInt() {
+        return this.temperatureInt;
+    }
 
     @Override
     public void setTemperature(double temperature) {
@@ -105,24 +107,24 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public double getThermalResistance() {
-        return thermalResistance;
+        return this.thermalResistance;
     }
 
     @Override
     public void setThermalCapacity(double capacity) {
-        thermalCapacity = capacity;
+        this.thermalCapacity = capacity;
     }
 
     @Override
     public double getThermalCapacity() {
-        return thermalCapacity;
+        return this.thermalCapacity;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setDouble("temperature", temperature);
+        tag.setDouble("temperature", this.temperature);
         NBTTagList tagList = new NBTTagList();
-        for (HeatBehaviour behaviour : behaviours) {
+        for (HeatBehaviour behaviour : this.behaviours) {
             NBTTagCompound t = new NBTTagCompound();
             t.setString("id", behaviour.getId());
             behaviour.writeToNBT(t);
@@ -133,41 +135,41 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        temperature = tag.getDouble("temperature");
-        behaviours.clear();
+        this.temperature = tag.getDouble("temperature");
+        this.behaviours.clear();
         NBTTagList tagList = tag.getTagList("behaviours", 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound t = tagList.getCompoundTagAt(i);
             HeatBehaviour behaviour = HeatBehaviourManager.getInstance().getNewBehaviourForId(t.getString("id"));
             if (behaviour != null) {
                 behaviour.readFromNBT(t);
-                behaviours.add(behaviour);
+                this.behaviours.add(behaviour);
             }
         }
     }
 
     @Override
     public void update() {
-        temperatureInt = (int) temperature;
+        this.temperatureInt = (int) this.temperature;
 
-        if (getThermalCapacity() < 0.1D) {
-            setTemperature(ambientTemperature);
+        if (this.getThermalCapacity() < 0.1D) {
+            this.setTemperature(this.ambientTemperature);
             return;
         }
-        if (newBehaviours != null) {
-            List<HeatBehaviour> oldBehaviours = behaviours;
-            behaviours = newBehaviours;
-            newBehaviours = null;
+        if (this.newBehaviours != null) {
+            List<HeatBehaviour> oldBehaviours = this.behaviours;
+            this.behaviours = this.newBehaviours;
+            this.newBehaviours = null;
             for (HeatBehaviour oldBehaviour : oldBehaviours) {//Transfer over equal heat behaviour's info.
-                int equalBehaviourIndex = behaviours.indexOf(oldBehaviour);
+                int equalBehaviourIndex = this.behaviours.indexOf(oldBehaviour);
                 if (equalBehaviourIndex >= 0) {
                     NBTTagCompound tag = new NBTTagCompound();
                     oldBehaviour.writeToNBT(tag);
-                    behaviours.get(equalBehaviourIndex).readFromNBT(tag);
+                    this.behaviours.get(equalBehaviourIndex).readFromNBT(tag);
                 }
             }
         }
-        Iterator<HeatBehaviour> iterator = behaviours.iterator();
+        Iterator<HeatBehaviour> iterator = this.behaviours.iterator();
         while (iterator.hasNext()) {
             HeatBehaviour behaviour = iterator.next();
             // upon loading from NBT the world is null. gets initialized once 'initializeAsHull' is invoked.
@@ -179,15 +181,15 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
                 }
             }
         }
-        for (IHeatExchangerLogic logic : connectedExchangers) {
+        for (IHeatExchangerLogic logic : this.connectedExchangers) {
             // Counting the connected ticking heat exchangers here is important, since they will all tick;
             // this count acts as a divider so the total heat dispersal is constant
-            exchange(logic, this, getTickingHeatExchangers());
+            exchange(logic, this, this.getTickingHeatExchangers());
         }
     }
 
     public double getAmbientTemperature() {
-        return ambientTemperature;
+        return this.ambientTemperature;
     }
 
     public static void exchange(IHeatExchangerLogic logic, IHeatExchangerLogic logic2) {
@@ -215,7 +217,7 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     private int getTickingHeatExchangers() {
         int tickingHeatExchangers = 1;
-        for (IHeatExchangerLogic logic : connectedExchangers) {
+        for (IHeatExchangerLogic logic : this.connectedExchangers) {
             if (logic instanceof HeatExchangerLogicTicking) tickingHeatExchangers++;
         }
         return tickingHeatExchangers;
@@ -223,7 +225,7 @@ public class HeatExchangerLogicTicking implements IHeatExchangerLogic {
 
     @Override
     public void addHeat(double amount) {
-        setTemperature(MathHelper.clamp(temperature + amount / getThermalCapacity(), 0, 2273));
+        this.setTemperature(MathHelper.clamp(this.temperature + amount / this.getThermalCapacity(), 0, 2273));
     }
 
 }

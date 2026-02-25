@@ -21,13 +21,13 @@ public class DramaSplash {
 
     private DramaSplash() {
         try {
-            splashSite = new URL("http://mc-drama.herokuapp.com/raw");
+            this.splashSite = new URL("http://mc-drama.herokuapp.com/raw");
         } catch (MalformedURLException e) {
             e.printStackTrace();
-            splashSite = null;
+            this.splashSite = null;
         }
-        dramaFifo = new ConcurrentLinkedQueue<>();
-        fetchMoreSplash();
+        this.dramaFifo = new ConcurrentLinkedQueue<>();
+        this.fetchMoreSplash();
     }
 
     public static DramaSplash getInstance() {
@@ -38,18 +38,18 @@ public class DramaSplash {
     }
 
     public String getSplash() {
-        String res =  dramaFifo.poll();
-        if (dramaFifo.size() < MIN_SIZE) {
-            fetchMoreSplash();
+        String res = this.dramaFifo.poll();
+        if (this.dramaFifo.size() < MIN_SIZE) {
+            this.fetchMoreSplash();
         }
         return res == null ? "" : res;
     }
 
     private void fetchMoreSplash() {
-        if (grabberThread == null && splashSite != null) {
-            grabberThread = new Thread(new SplashGrabber());
-            grabberThread.start();
-            PneumaticCraftRepressurized.logger.info("Started splash fetcher: thread " + grabberThread.getName());
+        if (this.grabberThread == null && this.splashSite != null) {
+            this.grabberThread = new Thread(new SplashGrabber());
+            this.grabberThread.start();
+            PneumaticCraftRepressurized.logger.info("Started splash fetcher: thread " + this.grabberThread.getName());
         }
     }
 
@@ -57,10 +57,10 @@ public class DramaSplash {
         @Override
         public void run() {
             try {
-                while (dramaFifo.size() < MAX_SIZE) {
-                    String s = IOUtils.toString(splashSite, StandardCharsets.UTF_8);
-                    dramaFifo.offer(s);
-                    if (dramaFifo.size() >= MIN_SIZE) {
+                while (DramaSplash.this.dramaFifo.size() < MAX_SIZE) {
+                    String s = IOUtils.toString(DramaSplash.this.splashSite, StandardCharsets.UTF_8);
+                    DramaSplash.this.dramaFifo.offer(s);
+                    if (DramaSplash.this.dramaFifo.size() >= MIN_SIZE) {
                         try {
                             Thread.sleep(SLEEP_TIME);
                         } catch (InterruptedException e) {
@@ -71,8 +71,8 @@ public class DramaSplash {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            grabberThread = null;
-            PneumaticCraftRepressurized.logger.info("Finished fetching splash: " + dramaFifo.size() + " texts in queue");
+            DramaSplash.this.grabberThread = null;
+            PneumaticCraftRepressurized.logger.info("Finished fetching splash: " + DramaSplash.this.dramaFifo.size() + " texts in queue");
         }
     }
 }

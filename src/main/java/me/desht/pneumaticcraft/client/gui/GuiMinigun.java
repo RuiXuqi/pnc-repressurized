@@ -25,23 +25,23 @@ public class GuiMinigun extends GuiPneumaticInventoryItem {
     public void initGui() {
         super.initGui();
 
-        addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tooltip.item.minigun");
+        this.addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tooltip.item.minigun");
 
-        Set<Item> upgrades = ((IUpgradeAcceptor)itemStack.getItem()).getApplicableUpgrades();
+        Set<Item> upgrades = ((IUpgradeAcceptor) this.itemStack.getItem()).getApplicableUpgrades();
         List<Item> upgrades1 = upgrades.stream().sorted(Comparator.comparing(Item::getTranslationKey)).collect(Collectors.toList());
 
         for (int i = 0; i < upgrades1.size(); i++) {
             Item upgrade = upgrades1.get(i);
             if (upgrade instanceof ItemMachineUpgrade) {
-                addUpgradeStat(((ItemMachineUpgrade) upgrade).getUpgradeType(), i <= upgrades1.size() / 2);
+                this.addUpgradeStat(((ItemMachineUpgrade) upgrade).getUpgradeType(), i <= upgrades1.size() / 2);
             }
         }
     }
 
     private void addUpgradeStat(EnumUpgrade upgrade, boolean leftSided) {
         ItemStack stack = CraftingRegistrator.getUpgrade(upgrade);
-        String key ="gui.tab.info.item.minigun." + upgrade.getName() + "Upgrade";
-        addAnimatedStat(stack.getDisplayName(), stack, 0xFF4040FF, leftSided).setText(key);
+        String key = "gui.tab.info.item.minigun." + upgrade.getName() + "Upgrade";
+        this.addAnimatedStat(stack.getDisplayName(), stack, 0xFF4040FF, leftSided).setText(key);
     }
 
     @Override

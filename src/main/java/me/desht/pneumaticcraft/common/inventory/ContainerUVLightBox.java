@@ -9,11 +9,11 @@ public class ContainerUVLightBox extends ContainerPneumaticBase<TileEntityUVLigh
     public ContainerUVLightBox(InventoryPlayer inventoryPlayer, TileEntityUVLightBox te) {
         super(te);
 
-        addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.EMPTY_PCB, 0, 71, 36));
+        this.addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.EMPTY_PCB, 0, 71, 36));
 
-        addUpgradeSlots(21, 29);
+        this.addUpgradeSlots(21, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
 
     }
 

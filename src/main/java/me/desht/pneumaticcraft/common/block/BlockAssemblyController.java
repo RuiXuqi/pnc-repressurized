@@ -24,13 +24,13 @@ public class BlockAssemblyController extends BlockPneumaticCraftModeled {
             1f, BBConstants.ASSEMBLY_BASE_HEIGHT, 1f
     );
     private static final AxisAlignedBB LEG_BOUNDS = new AxisAlignedBB(
-            7/16f, 2/16f, 7/16f,
-            9/16f, 12/16f, 9/16f
+            7 / 16f, 2 / 16f, 7 / 16f,
+            9 / 16f, 12 / 16f, 9 / 16f
     );
 
     BlockAssemblyController() {
         super(Material.IRON, "assembly_controller");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Override

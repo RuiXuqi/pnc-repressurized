@@ -23,40 +23,40 @@ public class TileEntityAssemblyDrill extends TileEntityAssemblyRobot {
 
     @Override
     public void update() {
-        oldDrillRotation = drillRotation;
+        this.oldDrillRotation = this.drillRotation;
         super.update();
-        if (isDrillOn) {
-            drillSpeed = Math.min(drillSpeed + TileEntityConstants.ASSEMBLY_DRILL_ACCELERATION * speed, TileEntityConstants.ASSEMBLY_DRILL_MAX_SPEED);
+        if (this.isDrillOn) {
+            this.drillSpeed = Math.min(this.drillSpeed + TileEntityConstants.ASSEMBLY_DRILL_ACCELERATION * this.speed, TileEntityConstants.ASSEMBLY_DRILL_MAX_SPEED);
         } else {
-            drillSpeed = Math.max(drillSpeed - TileEntityConstants.ASSEMBLY_DRILL_ACCELERATION, 0);
+            this.drillSpeed = Math.max(this.drillSpeed - TileEntityConstants.ASSEMBLY_DRILL_ACCELERATION, 0);
         }
-        drillRotation += drillSpeed;
-        while (drillRotation >= 360) {
-            drillRotation -= 360;
+        this.drillRotation += this.drillSpeed;
+        while (this.drillRotation >= 360) {
+            this.drillRotation -= 360;
         }
 
-        if (!getWorld().isRemote && drillStep > 0) {
-            EnumFacing[] platformDirection = getPlatformDirection();
-            if (platformDirection == null) drillStep = 1;
-            switch (drillStep) {
+        if (!this.getWorld().isRemote && this.drillStep > 0) {
+            EnumFacing[] platformDirection = this.getPlatformDirection();
+            if (platformDirection == null) this.drillStep = 1;
+            switch (this.drillStep) {
                 case 1:
-                    slowMode = false;
-                    gotoHomePosition();
+                    this.slowMode = false;
+                    this.gotoHomePosition();
                     break;
                 case 2:
-                    hoverOverNeighbour(platformDirection[0], platformDirection[1]);
+                    this.hoverOverNeighbour(platformDirection[0], platformDirection[1]);
                     break;
                 case 3:
-                    isDrillOn = true;
+                    this.isDrillOn = true;
                     break;
                 case 4:
-                    slowMode = true;
-                    gotoNeighbour(platformDirection[0], platformDirection[1]);
+                    this.slowMode = true;
+                    this.gotoNeighbour(platformDirection[0], platformDirection[1]);
                     break;
                 case 5:
-                    hoverOverNeighbour(platformDirection[0], platformDirection[1]);
-                    isDrillOn = false;
-                    TileEntity te = getTileEntityForCurrentDirection();
+                    this.hoverOverNeighbour(platformDirection[0], platformDirection[1]);
+                    this.isDrillOn = false;
+                    TileEntity te = this.getTileEntityForCurrentDirection();
                     if (te instanceof TileEntityAssemblyPlatform) {
                         TileEntityAssemblyPlatform platform = (TileEntityAssemblyPlatform) te;
                         ItemStack output = getDrilledOutputForItem(platform.getHeldStack());
@@ -66,45 +66,45 @@ public class TileEntityAssemblyDrill extends TileEntityAssemblyRobot {
                     }
                     break;
                 case 6:
-                    slowMode = false;
-                    gotoHomePosition();
+                    this.slowMode = false;
+                    this.gotoHomePosition();
                     break;
             }
-            if (isDoneInternal()) {
-                drillStep++;
-                if (drillStep > 6) drillStep = 0;
+            if (this.isDoneInternal()) {
+                this.drillStep++;
+                if (this.drillStep > 6) this.drillStep = 0;
             }
         }
 
     }
 
     public void goDrilling() {
-        if (drillStep == 0) {
-            drillStep = 1;
-            markDirty();
+        if (this.drillStep == 0) {
+            this.drillStep = 1;
+            this.markDirty();
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("drill", isDrillOn);
-        tag.setFloat("drillSpeed", drillSpeed);
-        tag.setInteger("drillStep", drillStep);
+        tag.setBoolean("drill", this.isDrillOn);
+        tag.setFloat("drillSpeed", this.drillSpeed);
+        tag.setInteger("drillStep", this.drillStep);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        isDrillOn = tag.getBoolean("drill");
-        drillSpeed = tag.getFloat("drillSpeed");
-        drillStep = tag.getInteger("drillStep");
+        this.isDrillOn = tag.getBoolean("drill");
+        this.drillSpeed = tag.getFloat("drillSpeed");
+        this.drillStep = tag.getInteger("drillStep");
     }
 
     @Override
     public boolean isIdle() {
-        return drillStep == 0 && isDoneInternal();
+        return this.drillStep == 0 && this.isDoneInternal();
     }
 
     @Override
@@ -114,7 +114,7 @@ public class TileEntityAssemblyDrill extends TileEntityAssemblyRobot {
 
     private boolean isDoneInternal() {
         if (super.isDoneMoving()) {
-            return isDrillOn ? drillSpeed > TileEntityConstants.ASSEMBLY_DRILL_MAX_SPEED - 1F : PneumaticCraftUtils.areFloatsEqual(drillSpeed, 0F);
+            return this.isDrillOn ? this.drillSpeed > TileEntityConstants.ASSEMBLY_DRILL_MAX_SPEED - 1F : PneumaticCraftUtils.areFloatsEqual(this.drillSpeed, 0F);
         } else {
             return false;
         }
@@ -134,10 +134,10 @@ public class TileEntityAssemblyDrill extends TileEntityAssemblyRobot {
 
     @Override
     public boolean reset() {
-        if (isIdle()) return true;
+        if (this.isIdle()) return true;
         else {
-            isDrillOn = false;
-            drillStep = 6;
+            this.isDrillOn = false;
+            this.drillStep = 6;
             return false;
         }
     }

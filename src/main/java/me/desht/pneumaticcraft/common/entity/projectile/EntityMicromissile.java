@@ -58,20 +58,20 @@ public class EntityMicromissile extends EntityThrowable {
 
         if (iStack.hasTagCompound()) {
             NBTTagCompound tag = iStack.getTagCompound();
-            entityFilter = EntityFilter.fromString(tag.getString(ItemMicromissiles.NBT_FILTER));
-            fireMode = FireMode.fromString(tag.getString(ItemMicromissiles.NBT_FIRE_MODE));
-            switch (fireMode) {
+            this.entityFilter = EntityFilter.fromString(tag.getString(ItemMicromissiles.NBT_FILTER));
+            this.fireMode = FireMode.fromString(tag.getString(ItemMicromissiles.NBT_FIRE_MODE));
+            switch (this.fireMode) {
                 case SMART:
-                    accel = Math.max(1.02f, 1.0f + tag.getFloat(ItemMicromissiles.NBT_TOP_SPEED) / 10f);
-                    maxVelocitySq = (float) Math.pow(0.25 + tag.getFloat(ItemMicromissiles.NBT_TOP_SPEED) * 3.75f, 2);
-                    turnSpeed = 0.4f * tag.getFloat(ItemMicromissiles.NBT_TURN_SPEED);
-                    explosionPower = Math.max(1f, 5 * tag.getFloat(ItemMicromissiles.NBT_DAMAGE));
+                    this.accel = Math.max(1.02f, 1.0f + tag.getFloat(ItemMicromissiles.NBT_TOP_SPEED) / 10f);
+                    this.maxVelocitySq = (float) Math.pow(0.25 + tag.getFloat(ItemMicromissiles.NBT_TOP_SPEED) * 3.75f, 2);
+                    this.turnSpeed = 0.4f * tag.getFloat(ItemMicromissiles.NBT_TURN_SPEED);
+                    this.explosionPower = Math.max(1f, 5 * tag.getFloat(ItemMicromissiles.NBT_DAMAGE));
                     break;
                 case DUMB:
-                    accel = 1.02f;
-                    maxVelocitySq = 2f;
-                    turnSpeed = 0f;
-                    explosionPower = 3f;
+                    this.accel = 1.02f;
+                    this.maxVelocitySq = 2f;
+                    this.turnSpeed = 0f;
+                    this.explosionPower = 3f;
                     break;
             }
         }
@@ -86,24 +86,24 @@ public class EntityMicromissile extends EntityThrowable {
     protected void entityInit() {
         super.entityInit();
 
-        dataManager.register(TARGET_ID, 0);
-        dataManager.register(MAX_VEL_SQ, 0.5f);
-        dataManager.register(ACCEL, 1.05f);
-        dataManager.register(TURN_SPEED, 0.4f);
+        this.dataManager.register(TARGET_ID, 0);
+        this.dataManager.register(MAX_VEL_SQ, 0.5f);
+        this.dataManager.register(ACCEL, 1.05f);
+        this.dataManager.register(TURN_SPEED, 0.4f);
     }
 
     @Override
     public void notifyDataManagerChange(DataParameter<?> key) {
-        if (getEntityWorld().isRemote) {
+        if (this.getEntityWorld().isRemote) {
             if (key.equals(MAX_VEL_SQ)) {
-                maxVelocitySq = dataManager.get(MAX_VEL_SQ);
+                this.maxVelocitySq = this.dataManager.get(MAX_VEL_SQ);
             } else if (key.equals(TARGET_ID)) {
-                int id = dataManager.get(TARGET_ID);
-                targetEntity = id > 0 ? getEntityWorld().getEntityByID(dataManager.get(TARGET_ID)) : null;
+                int id = this.dataManager.get(TARGET_ID);
+                this.targetEntity = id > 0 ? this.getEntityWorld().getEntityByID(this.dataManager.get(TARGET_ID)) : null;
             } else if (key.equals(ACCEL)) {
-                accel = dataManager.get(ACCEL);
+                this.accel = this.dataManager.get(ACCEL);
             } else if (key.equals(TURN_SPEED)) {
-                turnSpeed = dataManager.get(TURN_SPEED);
+                this.turnSpeed = this.dataManager.get(TURN_SPEED);
             }
         }
     }
@@ -112,88 +112,88 @@ public class EntityMicromissile extends EntityThrowable {
     public void onUpdate() {
         super.onUpdate();
 
-        if (ticksExisted == 1) {
-            if (getEntityWorld().isRemote) {
-                getEntityWorld().playSound(posX, posY, posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1.0f, 0.8f, true);
+        if (this.ticksExisted == 1) {
+            if (this.getEntityWorld().isRemote) {
+                this.getEntityWorld().playSound(this.posX, this.posY, this.posZ, SoundEvents.ENTITY_FIREWORK_LAUNCH, SoundCategory.PLAYERS, 1.0f, 0.8f, true);
             } else {
-                dataManager.set(MAX_VEL_SQ, maxVelocitySq);
-                dataManager.set(ACCEL, accel);
-                dataManager.set(TURN_SPEED, turnSpeed);
+                this.dataManager.set(MAX_VEL_SQ, this.maxVelocitySq);
+                this.dataManager.set(ACCEL, this.accel);
+                this.dataManager.set(TURN_SPEED, this.turnSpeed);
             }
         }
 
-        if (ticksExisted > ConfigHandler.microMissile.lifetime) {
-            outOfFuel = true;
+        if (this.ticksExisted > ConfigHandler.microMissile.lifetime) {
+            this.outOfFuel = true;
         }
 
-        if (!outOfFuel) {
+        if (!this.outOfFuel) {
             // negate default slowdown of projectiles applied in superclass
             if (this.isInWater()) {
-                motionX *= 1.25;
-                motionY *= 1.25;
-                motionZ *= 1.25;
+                this.motionX *= 1.25;
+                this.motionY *= 1.25;
+                this.motionZ *= 1.25;
             } else {
-                motionX *= 1 / 0.99;
-                motionY *= 1 / 0.99;
-                motionZ *= 1 / 0.99;
+                this.motionX *= 1 / 0.99;
+                this.motionY *= 1 / 0.99;
+                this.motionZ *= 1 / 0.99;
             }
 
-            if ((targetEntity == null || targetEntity.isDead) && fireMode == FireMode.SMART && !getEntityWorld().isRemote && (ticksExisted & 0x3) == 0) {
-                targetEntity = tryFindNewTarget();
+            if ((this.targetEntity == null || this.targetEntity.isDead) && this.fireMode == FireMode.SMART && !this.getEntityWorld().isRemote && (this.ticksExisted & 0x3) == 0) {
+                this.targetEntity = this.tryFindNewTarget();
             }
 
-            if (targetEntity != null) {
+            if (this.targetEntity != null) {
                 // turn toward the target
-                Vec3d diff = targetEntity.getPositionVector().add(0, targetEntity.getEyeHeight(), 0).subtract(getPositionVector()).normalize().scale(turnSpeed);
-                motionX += diff.x;
-                motionY += diff.y;
-                motionZ += diff.z;
+                Vec3d diff = this.targetEntity.getPositionVector().add(0, this.targetEntity.getEyeHeight(), 0).subtract(this.getPositionVector()).normalize().scale(this.turnSpeed);
+                this.motionX += diff.x;
+                this.motionY += diff.y;
+                this.motionZ += diff.z;
             }
 
             // accelerate up to max velocity but cap there
-            double velSq = motionX * motionX + motionY * motionY + motionZ * motionZ;
-            double mul = velSq > maxVelocitySq ? maxVelocitySq / velSq : accel;
-            motionX *= mul;
-            motionY *= mul;
-            motionZ *= mul;
+            double velSq = this.motionX * this.motionX + this.motionY * this.motionY + this.motionZ * this.motionZ;
+            double mul = velSq > this.maxVelocitySq ? this.maxVelocitySq / velSq : this.accel;
+            this.motionX *= mul;
+            this.motionY *= mul;
+            this.motionZ *= mul;
 
-            if (getEntityWorld().isRemote) {
-                PneumaticCraftRepressurized.proxy.playCustomParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, getEntityWorld(), posX, posY, posZ, -motionX/2, -motionY/2, -motionZ/2);
+            if (this.getEntityWorld().isRemote) {
+                PneumaticCraftRepressurized.proxy.playCustomParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, this.getEntityWorld(), this.posX, this.posY, this.posZ, -this.motionX / 2, -this.motionY / 2, -this.motionZ / 2);
             }
         }
     }
 
     private Entity tryFindNewTarget() {
-        AxisAlignedBB aabb = new AxisAlignedBB(posX, posY, posZ, posX, posY, posZ).grow(SEEK_RANGE);
-        List<Entity> l = getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, aabb, EntitySelectors.IS_ALIVE);
+        AxisAlignedBB aabb = new AxisAlignedBB(this.posX, this.posY, this.posZ, this.posX, this.posY, this.posZ).grow(SEEK_RANGE);
+        List<Entity> l = this.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, aabb, EntitySelectors.IS_ALIVE);
         l.sort(new TargetSorter());
         Entity tgt = null;
         // find the closest entity which matches this missile's entity filter
         for (Entity e : l) {
-            if (isValidTarget(e) && e.getDistanceSq(this) < SEEK_RANGE * SEEK_RANGE) {
-                RayTraceResult res = getEntityWorld().rayTraceBlocks(getPositionVector(), e.getPositionVector().add(0, e.getEyeHeight(), 0), false, false, true);
+            if (this.isValidTarget(e) && e.getDistanceSq(this) < SEEK_RANGE * SEEK_RANGE) {
+                RayTraceResult res = this.getEntityWorld().rayTraceBlocks(this.getPositionVector(), e.getPositionVector().add(0, e.getEyeHeight(), 0), false, false, true);
                 if (res == null || res.typeOfHit == RayTraceResult.Type.MISS || res.typeOfHit == RayTraceResult.Type.ENTITY) {
                     tgt = e;
                     break;
                 }
             }
         }
-        dataManager.set(TARGET_ID, tgt == null ? 0 : tgt.getEntityId());
+        this.dataManager.set(TARGET_ID, tgt == null ? 0 : tgt.getEntityId());
         return tgt;
     }
 
     public boolean isValidTarget(Entity e) {
         // never target the player who fired the missile or any of their pets/drones
-        if (thrower != null) {
-            if (e.equals(thrower)
-                    || e instanceof EntityTameable && thrower.equals(((EntityTameable) e).getOwner())
-                    || e instanceof EntityDrone && thrower.getUniqueID().toString().equals(((EntityDrone) e).getOwnerUUID())
-                    || e instanceof EntityHorse && thrower.getUniqueID().equals(((EntityHorse) e).getOwnerUniqueId())) {
+        if (this.thrower != null) {
+            if (e.equals(this.thrower)
+                    || e instanceof EntityTameable && this.thrower.equals(((EntityTameable) e).getOwner())
+                    || e instanceof EntityDrone && this.thrower.getUniqueID().toString().equals(((EntityDrone) e).getOwnerUUID())
+                    || e instanceof EntityHorse && this.thrower.getUniqueID().equals(((EntityHorse) e).getOwnerUniqueId())) {
                 return false;
             }
         }
 
-        if (entityFilter != null && !entityFilter.test(e)) {
+        if (this.entityFilter != null && !this.entityFilter.test(e)) {
             return false;
         }
 
@@ -202,14 +202,14 @@ public class EntityMicromissile extends EntityThrowable {
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        if (ticksExisted > 5 && !getEntityWorld().isRemote && !isDead) {
-            explode();
+        if (this.ticksExisted > 5 && !this.getEntityWorld().isRemote && !this.isDead) {
+            this.explode();
         }
     }
 
     private void explode() {
-        setDead();
-        getEntityWorld().createExplosion(this, posX, posY, posZ, ConfigHandler.microMissile.baseExplosionDamage * explosionPower, ConfigHandler.microMissile.damageTerrain);
+        this.setDead();
+        this.getEntityWorld().createExplosion(this, this.posX, this.posY, this.posZ, ConfigHandler.microMissile.baseExplosionDamage * this.explosionPower, ConfigHandler.microMissile.damageTerrain);
     }
 
     @Override
@@ -217,7 +217,7 @@ public class EntityMicromissile extends EntityThrowable {
         float x = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
         float y = -MathHelper.sin(pitch * 0.017453292F);
         float z = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
-        this.shoot((double)x, (double)y, (double)z, velocity, 0f);
+        this.shoot(x, y, z, velocity, 0f);
         this.motionX += entityThrower.motionX;
         this.motionZ += entityThrower.motionZ;
     }
@@ -233,54 +233,54 @@ public class EntityMicromissile extends EntityThrowable {
         this.motionZ = z;
 
         float f1 = MathHelper.sqrt(x * x + z * z);
-        this.rotationYaw = (float)(MathHelper.atan2(x, z) * (180D / Math.PI));
-        this.rotationPitch = (float)(MathHelper.atan2(y, (double)f1) * (180D / Math.PI));
+        this.rotationYaw = (float) (MathHelper.atan2(x, z) * (180D / Math.PI));
+        this.rotationPitch = (float) (MathHelper.atan2(y, f1) * (180D / Math.PI));
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
     }
 
     @Override
     protected float getGravityVelocity() {
-        return outOfFuel ? super.getGravityVelocity() : 0f;
+        return this.outOfFuel ? super.getGravityVelocity() : 0f;
     }
 
     @Override
     public boolean hasNoGravity() {
-        return !outOfFuel;
+        return !this.outOfFuel;
     }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
-        compound.setFloat("turnSpeed", turnSpeed);
-        compound.setFloat("explosionScaling", explosionPower);
-        compound.setFloat("topSpeedSq", maxVelocitySq);
-        compound.setString("filter", entityFilter.toString());
+        compound.setFloat("turnSpeed", this.turnSpeed);
+        compound.setFloat("explosionScaling", this.explosionPower);
+        compound.setFloat("topSpeedSq", this.maxVelocitySq);
+        compound.setString("filter", this.entityFilter.toString());
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        turnSpeed = compound.getFloat("turnSpeed");
-        explosionPower = compound.getFloat("explosionScaling");
-        maxVelocitySq = compound.getFloat("topSpeedSq");
-        entityFilter = EntityFilter.fromString(compound.getString("filter"));
+        this.turnSpeed = compound.getFloat("turnSpeed");
+        this.explosionPower = compound.getFloat("explosionScaling");
+        this.maxVelocitySq = compound.getFloat("topSpeedSq");
+        this.entityFilter = EntityFilter.fromString(compound.getString("filter"));
     }
 
     public void setTarget(Entity target) {
-        targetEntity = target;
+        this.targetEntity = target;
     }
 
     private class TargetSorter implements Comparator<Entity> {
         private final Vec3d vec;
 
         TargetSorter() {
-            vec = new Vec3d(posX, posY, posZ);
+            this.vec = new Vec3d(EntityMicromissile.this.posX, EntityMicromissile.this.posY, EntityMicromissile.this.posZ);
         }
 
         @Override
         public int compare(Entity e1, Entity e2) {
-            return Double.compare(vec.squareDistanceTo(e1.getPositionVector()), vec.squareDistanceTo(e2.getPositionVector()));
+            return Double.compare(this.vec.squareDistanceTo(e1.getPositionVector()), this.vec.squareDistanceTo(e2.getPositionVector()));
         }
     }
 }

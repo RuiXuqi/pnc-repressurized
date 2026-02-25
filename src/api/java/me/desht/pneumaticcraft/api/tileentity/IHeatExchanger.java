@@ -10,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
  * only can give off a constant resistance/temperature (like Lava and Ice).
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  */
 public interface IHeatExchanger {
 

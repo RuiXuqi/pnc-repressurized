@@ -30,7 +30,7 @@ public class GuiAirCompressor extends GuiPneumaticContainerBase<TileEntityAirCom
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 28, 19, 4210752);
     }
 
     @Override
@@ -38,14 +38,14 @@ public class GuiAirCompressor extends GuiPneumaticContainerBase<TileEntityAirCom
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        bindGuiTexture();
+        this.bindGuiTexture();
 
-        int i1 = te.getBurnTimeRemainingScaled(12);
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int i1 = this.te.getBurnTimeRemainingScaled(12);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        if (te.burnTime >= te.curFuelUsage)
-            drawTexturedModalRect(xStart + getFuelSlotXOffset(), yStart + 38 + 12 - i1, 176, 12 - i1, 14, i1 + 2);
+        if (this.te.burnTime >= this.te.curFuelUsage)
+            this.drawTexturedModalRect(xStart + this.getFuelSlotXOffset(), yStart + 38 + 12 - i1, 176, 12 - i1, 14, i1 + 2);
     }
 
     protected int getFuelSlotXOffset() {
@@ -55,20 +55,20 @@ public class GuiAirCompressor extends GuiPneumaticContainerBase<TileEntityAirCom
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        if (te.getBurnTimeRemainingScaled(12) > 0 || TileEntityFurnace.isItemFuel(te.getPrimaryInventory().getStackInSlot(0)) && te.redstoneAllows()) {
+        if (this.te.getBurnTimeRemainingScaled(12) > 0 || TileEntityFurnace.isItemFuel(this.te.getPrimaryInventory().getStackInSlot(0)) && this.te.redstoneAllows()) {
             pressureStatText.add("\u00a77Currently producing:");
-            pressureStatText.add("\u00a70" + (double) Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
+            pressureStatText.add("\u00a70" + (double) Math.round(this.te.getBaseProduction() * this.te.getEfficiency() * this.te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
         }
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (te.burnTime <= 0 && !TileEntityFurnace.isItemFuel(te.getPrimaryInventory().getStackInSlot(0))) {
+        if (this.te.burnTime <= 0 && !TileEntityFurnace.isItemFuel(this.te.getPrimaryInventory().getStackInSlot(0))) {
             textList.add("\u00a77No fuel!");
             textList.add("\u00a70Insert any burnable item.");
         }
-        List<Pair<EnumFacing, IAirHandler>> teSurrounding = te.getAirHandler(null).getConnectedPneumatics();
+        List<Pair<EnumFacing, IAirHandler>> teSurrounding = this.te.getAirHandler(null).getConnectedPneumatics();
         if (teSurrounding.isEmpty()) {
             textList.add("\u00a77Air leaking!");
             textList.add("\u00a70Add pipes / machines");

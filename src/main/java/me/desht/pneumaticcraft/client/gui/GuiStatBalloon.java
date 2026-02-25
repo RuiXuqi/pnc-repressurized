@@ -23,7 +23,7 @@ public class GuiStatBalloon {
 
     public void render() {
         FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRenderer;
-        fontRenderer.drawString(text, x, y, -90);
+        fontRenderer.drawString(this.text, this.x, this.y, -90);
     }
 
 }

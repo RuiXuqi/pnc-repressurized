@@ -35,26 +35,26 @@ public class ItemIngredient {
     }
 
     public ItemStack getSingleStack() {
-        return oredictKey != null ?
-                ItemHandlerHelper.copyStackWithSize(OreDictionary.getOres(oredictKey).get(0), amount) :
-                stack;
+        return this.oredictKey != null ?
+                ItemHandlerHelper.copyStackWithSize(OreDictionary.getOres(this.oredictKey).get(0), this.amount) :
+                this.stack;
     }
 
     public NonNullList<ItemStack> getStacks() {
-        NonNullList<ItemStack> res = oredictKey != null ? OreDictionary.getOres(oredictKey) : NonNullList.from(ItemStack.EMPTY, stack);
-        if (oredictKey != null) {
-            res.forEach(stack -> stack.setCount(amount));
+        NonNullList<ItemStack> res = this.oredictKey != null ? OreDictionary.getOres(this.oredictKey) : NonNullList.from(ItemStack.EMPTY, this.stack);
+        if (this.oredictKey != null) {
+            res.forEach(stack -> stack.setCount(this.amount));
         }
         return res;
     }
 
     public int getItemAmount() {
-        return oredictKey != null ? amount : stack.getCount();
+        return this.oredictKey != null ? this.amount : this.stack.getCount();
     }
 
     public boolean isItemEqual(ItemStack stack) {
-        if (oredictKey != null) {
-            for (ItemStack s : OreDictionary.getOres(oredictKey)) {
+        if (this.oredictKey != null) {
+            for (ItemStack s : OreDictionary.getOres(this.oredictKey)) {
                 if (OreDictionary.itemMatches(s, stack, false))
                     return true;
             }
@@ -70,6 +70,6 @@ public class ItemIngredient {
     }
 
     public String getTooltipKey() {
-        return tooltipKey;
+        return this.tooltipKey;
     }
 }

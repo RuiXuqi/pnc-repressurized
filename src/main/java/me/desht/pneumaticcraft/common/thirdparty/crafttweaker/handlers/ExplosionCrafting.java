@@ -54,27 +54,27 @@ public class ExplosionCrafting {
 
         @Override
         public void apply() {
-            addRecipes();
+            this.addRecipes();
             super.apply();
         }
 
         private void addRecipes() {
-            for (ExplosionCraftingRecipe r : recipes) {
-                if (Helper.matches(output,  Helper.toIItemStack(r.getOutput()))) {
-                    entries.add(r);
+            for (ExplosionCraftingRecipe r : this.recipes) {
+                if (Helper.matches(this.output, Helper.toIItemStack(r.getOutput()))) {
+                    this.entries.add(r);
                 }
             }
 
-            if (entries.isEmpty()) {
-                Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", name, Helper.getStackDescription(output)));
+            if (this.entries.isEmpty()) {
+                Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", this.name, Helper.getStackDescription(this.output)));
             } else {
-                Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", entries.size(), name, Helper.getStackDescription(output)));
+                Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", this.entries.size(), this.name, Helper.getStackDescription(this.output)));
             }
         }
 
         @Override
         public String describe() {
-            return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(output));
+            return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(this.output));
         }
     }
 }

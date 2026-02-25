@@ -35,5 +35,5 @@ public interface IProxy {
 
     int particleLevel();
 
-    Pair<Integer,Integer> getScaledScreenSize();
+    Pair<Integer, Integer> getScaledScreenSize();
 }

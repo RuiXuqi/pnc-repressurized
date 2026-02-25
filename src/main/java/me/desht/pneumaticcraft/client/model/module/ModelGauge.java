@@ -16,35 +16,35 @@ public class ModelGauge extends ModelModuleBase {
     private final ModulePressureGauge gaugeModule;
 
     public ModelGauge(ModulePressureGauge gaugeModule) {
-        textureWidth = 64;
-        textureHeight = 32;
+        this.textureWidth = 64;
+        this.textureHeight = 32;
 
-        shape1 = new ModelRenderer(this, 0, 0);
-        shape1.addBox(0F, 0F, 0F, 3, 3, 3);
-        shape1.setRotationPoint(-1.5F, 14.5F, 2F);
-        shape1.setTextureSize(64, 32);
-        shape1.mirror = true;
-        setRotation(shape1, 0F, 0F, 0F);
-        shape2 = new ModelRenderer(this, 0, 6);
-        shape2.addBox(0F, 0F, 0F, 8, 8, 1);
-        shape2.setRotationPoint(-4F, 12F, 5F);
-        shape2.setTextureSize(64, 32);
-        shape2.mirror = true;
-        setRotation(shape2, 0F, 0F, 0F);
+        this.shape1 = new ModelRenderer(this, 0, 0);
+        this.shape1.addBox(0F, 0F, 0F, 3, 3, 3);
+        this.shape1.setRotationPoint(-1.5F, 14.5F, 2F);
+        this.shape1.setTextureSize(64, 32);
+        this.shape1.mirror = true;
+        this.setRotation(this.shape1, 0F, 0F, 0F);
+        this.shape2 = new ModelRenderer(this, 0, 6);
+        this.shape2.addBox(0F, 0F, 0F, 8, 8, 1);
+        this.shape2.setRotationPoint(-4F, 12F, 5F);
+        this.shape2.setTextureSize(64, 32);
+        this.shape2.mirror = true;
+        this.setRotation(this.shape2, 0F, 0F, 0F);
         this.gaugeModule = gaugeModule;
     }
 
     @Override
     protected void renderDynamic(float scale, float partialTicks) {
-        if (gaugeModule != null && gaugeModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
-        shape1.render(scale);
-        shape2.render(scale);
+        if (this.gaugeModule != null && this.gaugeModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
+        this.shape1.render(scale);
+        this.shape2.render(scale);
 
         float pressure = 0f;
         float dangerPressure = 5f;
         float critPressure = 7f;
-        if (gaugeModule != null && gaugeModule.getTube() instanceof TileEntityPneumaticBase) {
-            TileEntityPneumaticBase base = (TileEntityPneumaticBase) gaugeModule.getTube();
+        if (this.gaugeModule != null && this.gaugeModule.getTube() instanceof TileEntityPneumaticBase) {
+            TileEntityPneumaticBase base = (TileEntityPneumaticBase) this.gaugeModule.getTube();
             pressure = base.getPressure();
             critPressure = base.criticalPressure;
             dangerPressure = base.dangerPressure;

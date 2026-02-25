@@ -8,9 +8,9 @@ public class ContainerElevator extends ContainerPneumaticBase<TileEntityElevator
     public ContainerElevator(InventoryPlayer inventoryPlayer, TileEntityElevatorBase te) {
         super(te);
 
-        addUpgradeSlots(23, 29);
+        this.addUpgradeSlots(23, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
 
     }
 

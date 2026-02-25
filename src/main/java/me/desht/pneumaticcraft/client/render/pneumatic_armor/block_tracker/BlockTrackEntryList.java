@@ -17,18 +17,18 @@ public class BlockTrackEntryList {
 
     // initialize default Block Track Entries.
     private BlockTrackEntryList() {
-        trackList.add(new BlockTrackEntryHackable());
-        trackList.add(new BlockTrackEntryInventory());
-        trackList.add(new BlockTrackEntryFluid());
-        trackList.add(new BlockTrackEntryEndPortalFrame());
-        trackList.add(new BlockTrackEntryMobSpawner());
-        trackList.add(new BlockTrackEntrySimple());
-        trackList.add(new BlockTrackEntryEnergy());
+        this.trackList.add(new BlockTrackEntryHackable());
+        this.trackList.add(new BlockTrackEntryInventory());
+        this.trackList.add(new BlockTrackEntryFluid());
+        this.trackList.add(new BlockTrackEntryEndPortalFrame());
+        this.trackList.add(new BlockTrackEntryMobSpawner());
+        this.trackList.add(new BlockTrackEntrySimple());
+        this.trackList.add(new BlockTrackEntryEnergy());
     }
 
     public List<IBlockTrackEntry> getEntriesForCoordinate(IBlockAccess blockAccess, BlockPos pos, TileEntity te) {
         List<IBlockTrackEntry> blockTrackers = new ArrayList<>();
-        for (IBlockTrackEntry entry : trackList) {
+        for (IBlockTrackEntry entry : this.trackList) {
             if (GuiKeybindCheckBox.fromKeyBindingName(entry.getEntryName()).checked && entry.shouldTrackWithThisEntry(blockAccess, pos, blockAccess.getBlockState(pos), te))
                 blockTrackers.add(entry);
         }

@@ -19,20 +19,20 @@ public enum PlasticMixerRegistry {
 
     public void addPlasticMixerRecipe(@Nonnull FluidStack fluid, @Nonnull ItemStack stack, int temperature, boolean allowMelting, boolean allowSolidifying, boolean useDye, int meta) {
         if (fluid.amount > 0 && !stack.isEmpty()) {
-            recipes.add(new PlasticMixerRecipe(fluid, ItemHandlerHelper.copyStackWithSize(stack, 1), temperature, allowMelting, allowSolidifying, useDye, meta));
-            validItems.put(stack.getItem(), allowMelting);
-            validFluids.add(fluid.getFluid().getName());
+            this.recipes.add(new PlasticMixerRecipe(fluid, ItemHandlerHelper.copyStackWithSize(stack, 1), temperature, allowMelting, allowSolidifying, useDye, meta));
+            this.validItems.put(stack.getItem(), allowMelting);
+            this.validFluids.add(fluid.getFluid().getName());
         } else {
-            recipes.removeIf(record -> record.getFluidStack().getFluid() == fluid.getFluid());
-            validItems.remove(stack.getItem());
-            validFluids.remove(fluid.getFluid().getName());
+            this.recipes.removeIf(record -> record.getFluidStack().getFluid() == fluid.getFluid());
+            this.validItems.remove(stack.getItem());
+            this.validFluids.remove(fluid.getFluid().getName());
         }
     }
 
     public PlasticMixerRecipe getRecipe(FluidStack input) {
         if (input == null || input.amount == 0) return null;
 
-        for (PlasticMixerRecipe recipe : recipes) {
+        for (PlasticMixerRecipe recipe : this.recipes) {
             if (recipe.allowSolidifying && recipe.fluidStack.getFluid() == input.getFluid() && recipe.fluidStack.amount <= input.amount) {
                 return recipe;
             }
@@ -42,7 +42,7 @@ public enum PlasticMixerRegistry {
     }
 
     public PlasticMixerRecipe getRecipe(ItemStack stack) {
-        for (PlasticMixerRecipe recipe : recipes) {
+        for (PlasticMixerRecipe recipe : this.recipes) {
             if (recipe.allowMelting && stack.getItem() == recipe.itemStack.getItem()) {
                 return recipe;
             }
@@ -51,24 +51,26 @@ public enum PlasticMixerRegistry {
     }
 
     public void clear() {
-        recipes.clear();
-        validFluids.clear();
-        validItems.clear();
+        this.recipes.clear();
+        this.validFluids.clear();
+        this.validItems.clear();
     }
 
     public Iterable<? extends PlasticMixerRecipe> allRecipes() {
-        return recipes;
+        return this.recipes;
     }
 
     public boolean isValidInputItem(ItemStack stack) {
-        return validItems.getOrDefault(stack.getItem(), false);
+        return this.validItems.getOrDefault(stack.getItem(), false);
     }
 
     public boolean isValidOutputItem(ItemStack stack) {
-        return validItems.containsKey(stack.getItem());
+        return this.validItems.containsKey(stack.getItem());
     }
 
-    public boolean isValidFluid(FluidStack stack) { return validFluids.contains(stack.getFluid().getName()); }
+    public boolean isValidFluid(FluidStack stack) {
+        return this.validFluids.contains(stack.getFluid().getName());
+    }
 
     public static class PlasticMixerRecipe {
         private final FluidStack fluidStack;
@@ -90,35 +92,35 @@ public enum PlasticMixerRegistry {
         }
 
         public FluidStack getFluidStack() {
-            return fluidStack;
+            return this.fluidStack;
         }
 
         public ItemStack getItemStack() {
-            return itemStack;
+            return this.itemStack;
         }
 
         public boolean allowMelting() {
-            return allowMelting;
+            return this.allowMelting;
         }
 
         public boolean allowSolidifying() {
-            return allowSolidifying;
+            return this.allowSolidifying;
         }
 
         public int getTemperature() {
-            return temperature;
+            return this.temperature;
         }
 
         public boolean useDye() {
-            return useDye;
+            return this.useDye;
         }
 
         public int getMeta() {
-            return meta;
+            return this.meta;
         }
 
         public int getNumSubTypes() {
-            Item item = getItemStack().getItem();
+            Item item = this.getItemStack().getItem();
             if (item.getCreativeTab() == null) return 1;
             NonNullList<ItemStack> subs = NonNullList.create();
             item.getSubItems(item.getCreativeTab(), subs);

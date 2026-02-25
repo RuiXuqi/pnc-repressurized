@@ -89,15 +89,17 @@ public interface IAirHandler extends IManoMeasurable, IUpgradeAcceptor {
      * @return the explosion pressure for the TE
      */
     float getMaxPressure();
-    
+
     /**
      * Returns the minimal pressure this machine could explode at.
+     *
      * @return the danger pressure
      */
     float getDangerPressure();
-    
+
     /**
      * Returns the maximum pressure this machine could explode at.
+     *
      * @return the critical pressure
      */
     float getCriticalPressure();

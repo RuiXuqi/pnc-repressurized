@@ -44,7 +44,7 @@ public class RenderItemMinigun extends TileEntityItemStackRenderer {
                         GlStateManager.translate(0, -1.9, -0.05);
                     }
                 }
-                model.renderMinigun(minigun, 1 / 16F, partialTicks, false);
+                this.model.renderMinigun(minigun, 1 / 16F, partialTicks, false);
                 GlStateManager.popMatrix();
             }
         }

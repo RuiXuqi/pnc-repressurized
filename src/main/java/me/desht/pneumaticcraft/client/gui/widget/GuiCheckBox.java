@@ -37,17 +37,17 @@ public class GuiCheckBox extends Gui implements IGuiWidget {
 
     @Override
     public int getID() {
-        return id;
+        return this.id;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        if (visible) {
-            drawRect(x, y, x + CHECKBOX_WIDTH, y + CHECKBOX_HEIGHT, enabled ? 0xFFA0A0A0 : 0xFF999999);
-            drawRect(x + 1, y + 1, x + CHECKBOX_WIDTH - 1, y + CHECKBOX_HEIGHT - 1, enabled ? 0xFF202020 : 0xFFAAAAAA);
-            if (checked) {
+        if (this.visible) {
+            drawRect(this.x, this.y, this.x + CHECKBOX_WIDTH, this.y + CHECKBOX_HEIGHT, this.enabled ? 0xFFA0A0A0 : 0xFF999999);
+            drawRect(this.x + 1, this.y + 1, this.x + CHECKBOX_WIDTH - 1, this.y + CHECKBOX_HEIGHT - 1, this.enabled ? 0xFF202020 : 0xFFAAAAAA);
+            if (this.checked) {
                 GlStateManager.disableTexture2D();
-                if (enabled) {
+                if (this.enabled) {
                     GlStateManager.color(0.5f, 1, 0.5f, 1);
                 } else {
                     GlStateManager.color(0.8f, 0.8f, 0.8f, 1);
@@ -55,27 +55,27 @@ public class GuiCheckBox extends Gui implements IGuiWidget {
                 BufferBuilder wr = Tessellator.getInstance().getBuffer();
                 GlStateManager.glLineWidth(2);
                 wr.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-                wr.pos(x + 2, y + 5, zLevel).endVertex();
-                wr.pos(x + 5, y + 7, zLevel).endVertex();
-                wr.pos(x + 8, y + 3, zLevel).endVertex();
+                wr.pos(this.x + 2, this.y + 5, this.zLevel).endVertex();
+                wr.pos(this.x + 5, this.y + 7, this.zLevel).endVertex();
+                wr.pos(this.x + 8, this.y + 3, this.zLevel).endVertex();
                 Tessellator.getInstance().draw();
                 GlStateManager.enableTexture2D();
                 GlStateManager.color(0.25f, 0.25f, 0.25f, 1);
             }
-            Minecraft.getMinecraft().fontRenderer.drawString(I18n.format(text), x + 3 + CHECKBOX_WIDTH, y + CHECKBOX_HEIGHT / 2 - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT / 2, enabled ? color : 0xFF888888);
+            Minecraft.getMinecraft().fontRenderer.drawString(I18n.format(this.text), this.x + 3 + CHECKBOX_WIDTH, this.y + CHECKBOX_HEIGHT / 2 - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT / 2, this.enabled ? this.color : 0xFF888888);
         }
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, CHECKBOX_WIDTH + Minecraft.getMinecraft().fontRenderer.getStringWidth(I18n.format(text)), CHECKBOX_HEIGHT);
+        return new Rectangle(this.x, this.y, CHECKBOX_WIDTH + Minecraft.getMinecraft().fontRenderer.getStringWidth(I18n.format(this.text)), CHECKBOX_HEIGHT);
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
-        if (enabled) {
-            checked = !checked;
-            if (listener != null) listener.actionPerformed(this);
+        if (this.enabled) {
+            this.checked = !this.checked;
+            if (this.listener != null) this.listener.actionPerformed(this);
         }
     }
 
@@ -99,11 +99,11 @@ public class GuiCheckBox extends Gui implements IGuiWidget {
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTooltip, boolean shiftPressed) {
-        if (visible) curTooltip.addAll(tooltip);
+        if (this.visible) curTooltip.addAll(this.tooltip);
     }
 
     public String getTooltip() {
-        return tooltip.size() > 0 ? tooltip.get(0) : "";
+        return this.tooltip.size() > 0 ? this.tooltip.get(0) : "";
     }
 
     @Override
@@ -113,7 +113,7 @@ public class GuiCheckBox extends Gui implements IGuiWidget {
 
     @Override
     public void setListener(IWidgetListener gui) {
-        listener = gui;
+        this.listener = gui;
     }
 
     public GuiCheckBox setChecked(boolean checked) {

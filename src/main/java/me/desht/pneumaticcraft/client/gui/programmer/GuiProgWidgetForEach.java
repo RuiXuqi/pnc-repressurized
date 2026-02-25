@@ -20,17 +20,17 @@ public class GuiProgWidgetForEach extends GuiProgWidgetAreaShow {
     public void initGui() {
         super.initGui();
 
-        variableField = new WidgetComboBox(fontRenderer, guiLeft + 10, guiTop + 42, 160, fontRenderer.FONT_HEIGHT + 1);
-        variableField.setElements(guiProgrammer.te.getAllVariables());
-        addWidget(variableField);
-        variableField.setText(((IVariableSetWidget) widget).getVariable());
-        variableField.setFocused(true);
+        this.variableField = new WidgetComboBox(this.fontRenderer, this.guiLeft + 10, this.guiTop + 42, 160, this.fontRenderer.FONT_HEIGHT + 1);
+        this.variableField.setElements(this.guiProgrammer.te.getAllVariables());
+        this.addWidget(this.variableField);
+        this.variableField.setText(((IVariableSetWidget) this.widget).getVariable());
+        this.variableField.setFocused(true);
     }
 
     @Override
     public void keyTyped(char chr, int keyCode) throws IOException {
         if (keyCode == 1) {
-            ((IVariableSetWidget) widget).setVariable(variableField.getText());
+            ((IVariableSetWidget) this.widget).setVariable(this.variableField.getText());
         }
         super.keyTyped(chr, keyCode);
     }
@@ -38,6 +38,6 @@ public class GuiProgWidgetForEach extends GuiProgWidgetAreaShow {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString(I18n.format("gui.progWidget.coordinate.variableName"), guiLeft + 10, guiTop + 30, 0xFF000000);
+        this.fontRenderer.drawString(I18n.format("gui.progWidget.coordinate.variableName"), this.guiLeft + 10, this.guiTop + 30, 0xFF000000);
     }
 }

@@ -24,27 +24,27 @@ public class RenderDroneAI {
 
     public RenderDroneAI(EntityDrone drone) {
         this.drone = drone;
-        entityItem = new EntityItem(drone.world);
-        update();
+        this.entityItem = new EntityItem(drone.world);
+        this.update();
     }
 
     public void update() {
-        entityItem.age += 4;
-        BlockPos lastPos = pos;
-        pos = drone.getTargetedBlock();
-        if (pos != null) {
+        this.entityItem.age += 4;
+        BlockPos lastPos = this.pos;
+        this.pos = this.drone.getTargetedBlock();
+        if (this.pos != null) {
             if (lastPos == null) {
-                oldPos = pos;
-            } else if (!pos.equals(lastPos)) {
-                progress = 0;
-                oldPos = lastPos;
+                this.oldPos = this.pos;
+            } else if (!this.pos.equals(lastPos)) {
+                this.progress = 0;
+                this.oldPos = lastPos;
             }
         } else {
-            oldPos = null;
+            this.oldPos = null;
         }
-        progress = Math.min((float) Math.PI, progress + 0.1F);
+        this.progress = Math.min((float) Math.PI, this.progress + 0.1F);
 
-        Iterator<Pair<RenderCoordWireframe, Integer>> iterator = blackListWireframes.iterator();
+        Iterator<Pair<RenderCoordWireframe, Integer>> iterator = this.blackListWireframes.iterator();
         while (iterator.hasNext()) {
             Pair<RenderCoordWireframe, Integer> wireframe = iterator.next();
             wireframe.getKey().ticksExisted++;
@@ -56,15 +56,15 @@ public class RenderDroneAI {
     }
 
     public void render(float partialTicks) {
-        for (Pair<RenderCoordWireframe, Integer> wireframe : blackListWireframes) {
+        for (Pair<RenderCoordWireframe, Integer> wireframe : this.blackListWireframes) {
             wireframe.getKey().render(partialTicks);
         }
 
-        if (pos != null) {
-            int color = ItemPlastic.getColour(drone.getActiveProgram());
-            double x = getInterpolated(pos.getX(), oldPos.getX(), partialTicks);
-            double y = getInterpolated(pos.getY(), oldPos.getY(), partialTicks);
-            double z = getInterpolated(pos.getZ(), oldPos.getZ(), partialTicks);
+        if (this.pos != null) {
+            int color = ItemPlastic.getColour(this.drone.getActiveProgram());
+            double x = this.getInterpolated(this.pos.getX(), this.oldPos.getX(), partialTicks);
+            double y = this.getInterpolated(this.pos.getY(), this.oldPos.getY(), partialTicks);
+            double z = this.getInterpolated(this.pos.getZ(), this.oldPos.getZ(), partialTicks);
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
             GlStateManager.pushMatrix();
@@ -88,12 +88,12 @@ public class RenderDroneAI {
     }
 
     private double getInterpolated(double newPos, double oldPos, float partialTicks) {
-        double cosProgress = 0.5 - 0.5 * MathHelper.cos((float) Math.min(Math.PI, progress + partialTicks * 0.1F));
+        double cosProgress = 0.5 - 0.5 * MathHelper.cos((float) Math.min(Math.PI, this.progress + partialTicks * 0.1F));
         return oldPos + (newPos - oldPos) * cosProgress;
     }
 
     public void addBlackListEntry(World world, BlockPos pos) {
-        blackListWireframes.add(new MutablePair<>(new RenderCoordWireframe(world, pos), 60));
+        this.blackListWireframes.add(new MutablePair<>(new RenderCoordWireframe(world, pos), 60));
     }
 
     private static float[] colorToRGBA(int color) {

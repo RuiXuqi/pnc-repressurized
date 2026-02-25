@@ -18,7 +18,7 @@ public abstract class ProgWidgetDroneEvaluation extends ProgWidgetConditionBase 
 
     @Override
     public boolean isAndFunction() {
-        return isAndFunction;
+        return this.isAndFunction;
     }
 
     @Override
@@ -29,7 +29,7 @@ public abstract class ProgWidgetDroneEvaluation extends ProgWidgetConditionBase 
     @Override
     public boolean evaluate(IDroneBase drone, IProgWidget widget) {
 //        int count = getCount(drone, widget);
-        return getOperator().evaluate(getCount(drone, widget), getRequiredCount());
+        return this.getOperator().evaluate(this.getCount(drone, widget), this.getRequiredCount());
 //        return getOperator() == Operator.EQUALS ? count == getRequiredCount() : count >= getRequiredCount();
     }
 
@@ -51,17 +51,17 @@ public abstract class ProgWidgetDroneEvaluation extends ProgWidgetConditionBase 
 
     @Override
     public int getRequiredCount() {
-        return requiredCount;
+        return this.requiredCount;
     }
 
     @Override
     public void setRequiredCount(int count) {
-        requiredCount = count;
+        this.requiredCount = count;
     }
 
     @Override
     public Operator getOperator() {
-        return operator;
+        return this.operator;
     }
 
     @Override
@@ -72,17 +72,17 @@ public abstract class ProgWidgetDroneEvaluation extends ProgWidgetConditionBase 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("isAndFunction", isAndFunction);
-        tag.setByte("operator", (byte) operator.ordinal());
-        tag.setInteger("requiredCount", requiredCount);
+        tag.setBoolean("isAndFunction", this.isAndFunction);
+        tag.setByte("operator", (byte) this.operator.ordinal());
+        tag.setInteger("requiredCount", this.requiredCount);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        isAndFunction = tag.getBoolean("isAndFunction");
-        operator = ICondition.Operator.values()[tag.getByte("operator")];
-        requiredCount = tag.getInteger("requiredCount");
+        this.isAndFunction = tag.getBoolean("isAndFunction");
+        this.operator = ICondition.Operator.values()[tag.getByte("operator")];
+        this.requiredCount = tag.getInteger("requiredCount");
     }
 
     @Override
@@ -98,8 +98,8 @@ public abstract class ProgWidgetDroneEvaluation extends ProgWidgetConditionBase 
 
     @Override
     public String getExtraStringInfo() {
-        String anyAll = I18n.format(isAndFunction() ? "gui.progWidget.condition.all" : "gui.progWidget.condition.any");
-        return anyAll + " " + getOperator().toString() + " " + getRequiredCount();
+        String anyAll = I18n.format(this.isAndFunction() ? "gui.progWidget.condition.all" : "gui.progWidget.condition.any");
+        return anyAll + " " + this.getOperator().toString() + " " + this.getRequiredCount();
     }
 
 }

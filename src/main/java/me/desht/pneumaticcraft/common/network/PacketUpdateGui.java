@@ -26,8 +26,8 @@ public class PacketUpdateGui extends AbstractPacket<PacketUpdateGui> {
 
     public PacketUpdateGui(int syncId, SyncedField syncField) {
         this.syncId = syncId;
-        value = syncField.getValue();
-        type = getType(syncField);
+        this.value = syncField.getValue();
+        this.type = getType(syncField);
     }
 
     public static byte getType(SyncedField syncedField) {
@@ -121,16 +121,16 @@ public class PacketUpdateGui extends AbstractPacket<PacketUpdateGui> {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        syncId = buf.readInt();
-        type = buf.readByte();
-        value = readField(buf, type);
+        this.syncId = buf.readInt();
+        this.type = buf.readByte();
+        this.value = readField(buf, this.type);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(syncId);
-        buf.writeByte(type);
-        writeField(buf, value, type);
+        buf.writeInt(this.syncId);
+        buf.writeByte(this.type);
+        writeField(buf, this.value, this.type);
     }
 
     @Override

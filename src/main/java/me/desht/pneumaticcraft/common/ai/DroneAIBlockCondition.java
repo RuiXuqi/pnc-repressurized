@@ -15,7 +15,7 @@ public abstract class DroneAIBlockCondition extends DroneAIBlockInteraction {
     @Override
     public boolean shouldExecute() {
         if (super.shouldExecute()) {
-            result = ((ICondition) widget).isAndFunction();//set the initial value, so it can be modified by the 'evaluate' method later.
+            this.result = ((ICondition) this.widget).isAndFunction();//set the initial value, so it can be modified by the 'evaluate' method later.
             return true;
         } else {
             return false;
@@ -24,24 +24,24 @@ public abstract class DroneAIBlockCondition extends DroneAIBlockInteraction {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        if (evaluate(pos) != ((ICondition) widget).isAndFunction()) {
-            result = !result;
-            if (result) {
-                drone.addDebugEntry("gui.progWidget.blockCondition.debug.blockMatches", pos);
+        if (this.evaluate(pos) != ((ICondition) this.widget).isAndFunction()) {
+            this.result = !this.result;
+            if (this.result) {
+                this.drone.addDebugEntry("gui.progWidget.blockCondition.debug.blockMatches", pos);
             } else {
-                drone.addDebugEntry("gui.progWidget.blockCondition.debug.blockDoesNotMatch", pos);
+                this.drone.addDebugEntry("gui.progWidget.blockCondition.debug.blockDoesNotMatch", pos);
             }
-            abort();
+            this.abort();
         }
         return false;
     }
 
     @Override
     protected void addEndingDebugEntry() {
-        if (result) {
-            drone.addDebugEntry("gui.progWidget.blockCondition.debug.allBlocksMatch");
+        if (this.result) {
+            this.drone.addDebugEntry("gui.progWidget.blockCondition.debug.allBlocksMatch");
         } else {
-            drone.addDebugEntry("gui.progWidget.blockCondition.debug.noBlocksMatch");
+            this.drone.addDebugEntry("gui.progWidget.blockCondition.debug.noBlocksMatch");
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class DroneAIBlockCondition extends DroneAIBlockInteraction {
     }
 
     public boolean getResult() {
-        return result;
+        return this.result;
     }
 
 }

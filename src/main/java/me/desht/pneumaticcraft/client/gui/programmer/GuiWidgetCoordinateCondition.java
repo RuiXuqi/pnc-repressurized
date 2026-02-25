@@ -22,22 +22,22 @@ public class GuiWidgetCoordinateCondition extends GuiProgWidgetOptionBase<ProgWi
     @Override
     public void initGui() {
         super.initGui();
-        checkingAxis[0] = new GuiCheckBox(0, guiLeft + 10, guiTop + 30, 0xFF404040, "X");
-        checkingAxis[1] = new GuiCheckBox(1, guiLeft + 10, guiTop + 42, 0xFF404040, "Y");
-        checkingAxis[2] = new GuiCheckBox(2, guiLeft + 10, guiTop + 54, 0xFF404040, "Z");
+        this.checkingAxis[0] = new GuiCheckBox(0, this.guiLeft + 10, this.guiTop + 30, 0xFF404040, "X");
+        this.checkingAxis[1] = new GuiCheckBox(1, this.guiLeft + 10, this.guiTop + 42, 0xFF404040, "Y");
+        this.checkingAxis[2] = new GuiCheckBox(2, this.guiLeft + 10, this.guiTop + 54, 0xFF404040, "Z");
         for (int i = 0; i < 3; i++) {
-            checkingAxis[i] = new GuiCheckBox(i, guiLeft + 10, guiTop + 30 + i * 12, 0xFF404040, i == 0 ? "X" : i == 1 ? "Y" : "Z");
-            addWidget(checkingAxis[i]);
-            checkingAxis[i].setChecked(widget.checkingAxis[i]);
+            this.checkingAxis[i] = new GuiCheckBox(i, this.guiLeft + 10, this.guiTop + 30 + i * 12, 0xFF404040, i == 0 ? "X" : i == 1 ? "Y" : "Z");
+            this.addWidget(this.checkingAxis[i]);
+            this.checkingAxis[i].setChecked(this.widget.checkingAxis[i]);
         }
 
-        radioButtons = new ArrayList<>();
+        this.radioButtons = new ArrayList<>();
         for (int i = 0; i < ICondition.Operator.values().length; i++) {
-            GuiRadioButton radioButton = new GuiRadioButton(3 + i, guiLeft + 80, guiTop + 30 + i * 12, 0xFF404040, ICondition.Operator.values()[i].toString());
-            radioButton.checked = widget.getOperator().ordinal() == i;
-            addWidget(radioButton);
-            radioButtons.add(radioButton);
-            radioButton.otherChoices = radioButtons;
+            GuiRadioButton radioButton = new GuiRadioButton(3 + i, this.guiLeft + 80, this.guiTop + 30 + i * 12, 0xFF404040, ICondition.Operator.values()[i].toString());
+            radioButton.checked = this.widget.getOperator().ordinal() == i;
+            this.addWidget(radioButton);
+            this.radioButtons.add(radioButton);
+            radioButton.otherChoices = this.radioButtons;
         }
     }
 
@@ -45,17 +45,17 @@ public class GuiWidgetCoordinateCondition extends GuiProgWidgetOptionBase<ProgWi
     public void actionPerformed(IGuiWidget w) {
         super.actionPerformed(w);
         for (int i = 0; i < 3; i++) {
-            widget.checkingAxis[i] = checkingAxis[i].checked;
+            this.widget.checkingAxis[i] = this.checkingAxis[i].checked;
         }
         for (int i = 0; i < ICondition.Operator.values().length; i++) {
-            if (radioButtons.get(i).checked) widget.setOperator(Operator.values()[i]);
+            if (this.radioButtons.get(i).checked) this.widget.setOperator(Operator.values()[i]);
         }
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        String condition = widget.getCondition();
-        fontRenderer.drawString(condition, width / 2 - fontRenderer.getStringWidth(condition) / 2, guiTop + 70, 0xFF404060);
+        String condition = this.widget.getCondition();
+        this.fontRenderer.drawString(condition, this.width / 2 - this.fontRenderer.getStringWidth(condition) / 2, this.guiTop + 70, 0xFF404060);
     }
 }

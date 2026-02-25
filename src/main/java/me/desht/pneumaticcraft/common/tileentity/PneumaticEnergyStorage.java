@@ -9,11 +9,11 @@ public class PneumaticEnergyStorage extends EnergyStorage {
     }
 
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("Energy", energy);
+        tag.setInteger("Energy", this.energy);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
-        energy = tag.getInteger("Energy");
+        this.energy = tag.getInteger("Energy");
     }
 
     public void setCapacity(int capacity) {

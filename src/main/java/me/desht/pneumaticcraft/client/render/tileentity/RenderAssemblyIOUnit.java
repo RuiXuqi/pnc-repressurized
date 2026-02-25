@@ -12,7 +12,7 @@ public class RenderAssemblyIOUnit extends AbstractModelRenderer<TileEntityAssemb
     private final ModelAssemblyIOUnit model;
 
     public RenderAssemblyIOUnit() {
-        model = new ModelAssemblyIOUnit();
+        this.model = new ModelAssemblyIOUnit();
     }
 
     @Override
@@ -37,10 +37,10 @@ public class RenderAssemblyIOUnit extends AbstractModelRenderer<TileEntityAssemb
             RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
             boolean fancySetting = renderManager.options.fancyGraphics;
             renderManager.options.fancyGraphics = true;
-            model.renderModel(0.0625F, renderAngles, te.oldClawProgress + (te.clawProgress - te.oldClawProgress) * partialTicks, ghostEntityItem);
+            this.model.renderModel(0.0625F, renderAngles, te.oldClawProgress + (te.clawProgress - te.oldClawProgress) * partialTicks, ghostEntityItem);
             renderManager.options.fancyGraphics = fancySetting;
         } else {
-            model.renderModel(0.0625F, new float[]{0, 0, 35, 55, 0}, 0, null);
+            this.model.renderModel(0.0625F, new float[]{0, 0, 35, 55, 0}, 0, null);
         }
     }
 }

@@ -84,22 +84,22 @@ public class PneumaticCraftAPIHandler implements IPneumaticCraftInterface {
     public void registerXPLiquid(Fluid fluid, int liquidToPointRatio) {
         Validate.notNull(fluid, "Fluid may not be null!");
         if (liquidToPointRatio <= 0) {
-            liquidXPs.remove(fluid);
-            availableLiquidXPs.remove(fluid);
+            this.liquidXPs.remove(fluid);
+            this.availableLiquidXPs.remove(fluid);
         } else {
-            liquidXPs.put(fluid, liquidToPointRatio);
-            availableLiquidXPs.add(fluid);
+            this.liquidXPs.put(fluid, liquidToPointRatio);
+            this.availableLiquidXPs.add(fluid);
         }
     }
 
     @Override
     @Deprecated
     public void registerRefineryInput(Fluid fluid) {
-    	// Register old refinery mapping for compatibility 
-    	PneumaticRecipeRegistry registry = PneumaticRecipeRegistry.getInstance();
-    	registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 4), new FluidStack(Fluids.LPG, 2));
-    	registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 2), new FluidStack(Fluids.KEROSENE, 3), new FluidStack(Fluids.LPG, 2));
-    	registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 2), new FluidStack(Fluids.KEROSENE, 3), new FluidStack(Fluids.GASOLINE, 3), new FluidStack(Fluids.LPG, 2));
+        // Register old refinery mapping for compatibility 
+        PneumaticRecipeRegistry registry = PneumaticRecipeRegistry.getInstance();
+        registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 4), new FluidStack(Fluids.LPG, 2));
+        registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 2), new FluidStack(Fluids.KEROSENE, 3), new FluidStack(Fluids.LPG, 2));
+        registry.registerRefineryRecipe(new FluidStack(fluid, 10), new FluidStack(Fluids.DIESEL, 2), new FluidStack(Fluids.KEROSENE, 3), new FluidStack(Fluids.GASOLINE, 3), new FluidStack(Fluids.LPG, 2));
     }
 
     @Override
@@ -112,11 +112,11 @@ public class PneumaticCraftAPIHandler implements IPneumaticCraftInterface {
     public void registerFuel(Fluid fluid, int mLPerBucket) {
         Validate.notNull(fluid);
         Validate.isTrue(mLPerBucket >= 0, "mlPerBucket can't be < 0!");
-        if (liquidFuels.containsKey(fluid.getName())) {
-            Log.info("Overriding liquid fuel entry " + fluid.getLocalizedName(new FluidStack(fluid, 1)) + " (" + fluid.getName() + ") with a fuel value of " + mLPerBucket + " (previously " + liquidFuels.get(fluid.getName()) + ")");
-            if (mLPerBucket == 0) liquidFuels.remove(fluid.getName());
+        if (this.liquidFuels.containsKey(fluid.getName())) {
+            Log.info("Overriding liquid fuel entry " + fluid.getLocalizedName(new FluidStack(fluid, 1)) + " (" + fluid.getName() + ") with a fuel value of " + mLPerBucket + " (previously " + this.liquidFuels.get(fluid.getName()) + ")");
+            if (mLPerBucket == 0) this.liquidFuels.remove(fluid.getName());
         }
-        if (mLPerBucket > 0) liquidFuels.put(fluid.getName(), mLPerBucket);
+        if (mLPerBucket > 0) this.liquidFuels.put(fluid.getName(), mLPerBucket);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class PneumaticCraftAPIHandler implements IPneumaticCraftInterface {
     }
 
     @Override
-    public IHarvestRegistry getHarvestRegistry(){
+    public IHarvestRegistry getHarvestRegistry() {
         return HarvestRegistry.getInstance();
     }
 }

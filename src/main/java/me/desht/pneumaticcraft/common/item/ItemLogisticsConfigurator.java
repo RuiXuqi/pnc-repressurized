@@ -25,8 +25,8 @@ public class ItemLogisticsConfigurator extends ItemPressurizable {
         ItemStack stack = player.getHeldItem(hand);
         if (!world.isRemote && stack.getMaxDamage() - stack.getItemDamage() >= 100) {
             List<ISemiBlock> semiBlocks = SemiBlockManager.getInstance(world).getSemiBlocksAsList(world, pos);
-            
-            if(semiBlocks.isEmpty()){
+
+            if (semiBlocks.isEmpty()) {
                 pos = pos.offset(side);
                 semiBlocks = SemiBlockManager.getInstance(world).getSemiBlocksAsList(world, pos);
             }
@@ -42,7 +42,7 @@ public class ItemLogisticsConfigurator extends ItemPressurizable {
                 } else {
                     //TODO raytrace?
                     if (semiBlocks.stream().anyMatch(s -> s.onRightClickWithConfigurator(player, side))) {
-                        addAir(stack, -PneumaticValues.USAGE_LOGISTICS_CONFIGURATOR);
+                        this.addAir(stack, -PneumaticValues.USAGE_LOGISTICS_CONFIGURATOR);
                         return EnumActionResult.SUCCESS;
                     }
                 }

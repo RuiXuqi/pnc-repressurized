@@ -39,11 +39,11 @@ public class EntityProgrammableController extends EntityDroneBase {
 
     @Override
     public void onUpdate() {
-        if (controller != null) {
-            if (controller.isInvalid()) setDead();
-            if (digLaser != null) digLaser.update();
-            oldPropRotation = propRotation;
-            propRotation += 1;
+        if (this.controller != null) {
+            if (this.controller.isInvalid()) this.setDead();
+            if (this.digLaser != null) this.digLaser.update();
+            this.oldPropRotation = this.propRotation;
+            this.propRotation += 1;
         }
     }
 
@@ -59,11 +59,11 @@ public class EntityProgrammableController extends EntityDroneBase {
 
     @Override
     protected BlockPos getDugBlock() {
-        return controller == null ? null : controller.getDugPosition();
+        return this.controller == null ? null : this.controller.getDugPosition();
     }
 
     @Override
     public ItemStack getDroneHeldItem() {
-        return controller == null ? ItemStack.EMPTY : controller.getFakePlayer().getHeldItemMainhand();
+        return this.controller == null ? ItemStack.EMPTY : this.controller.getFakePlayer().getHeldItemMainhand();
     }
 }

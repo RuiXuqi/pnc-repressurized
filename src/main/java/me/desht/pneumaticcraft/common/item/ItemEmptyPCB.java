@@ -21,18 +21,18 @@ import java.util.List;
 public class ItemEmptyPCB extends ItemNonDespawning {
     public ItemEmptyPCB() {
         super("empty_pcb");
-        setMaxDamage(100);
-        setNoRepair();
-        setHasSubtypes(true);
+        this.setMaxDamage(100);
+        this.setNoRepair();
+        this.setHasSubtypes(true);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             ItemStack stack = new ItemStack(this, 1, 0);
             items.add(stack);
-            items.add(new ItemStack(this, 1, getMaxDamage(stack)));
+            items.add(new ItemStack(this, 1, this.getMaxDamage(stack)));
         }
     }
 
@@ -45,7 +45,7 @@ public class ItemEmptyPCB extends ItemNonDespawning {
             infoList.add(I18n.format("gui.tooltip.item.uvLightBox.putInLightBox"));
         }
         if (stack.hasTagCompound()) {
-            infoList.add(I18n.format("gui.tooltip.item.uvLightBox.etchProgress",stack.getTagCompound().getInteger("etchProgress")));
+            infoList.add(I18n.format("gui.tooltip.item.uvLightBox.etchProgress", stack.getTagCompound().getInteger("etchProgress")));
         } else if (stack.getItemDamage() < 100) {
             infoList.add(I18n.format("gui.tooltip.item.uvLightBox.putInAcid"));
         }

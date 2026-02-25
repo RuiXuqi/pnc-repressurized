@@ -11,7 +11,7 @@ import org.lwjgl.input.Mouse;
 
 public class WidgetVerticalScrollbar extends WidgetBase {
     private static final ResourceLocation SCROLL_TEXTURE = new ResourceLocation(Textures.GUI_LOCATION + "widget/vertical_scrollbar.png");
-    
+
     public float currentScroll;
     private int states;
     private boolean listening;
@@ -33,17 +33,17 @@ public class WidgetVerticalScrollbar extends WidgetBase {
     }
 
     public WidgetVerticalScrollbar setCurrentState(int state) {
-        Validate.isTrue(state >= 0 && state <= states, "State " + state + " out of range! Valid range [1 - " + states + "] inclusive");
-        currentScroll = (float) state / states;
+        Validate.isTrue(state >= 0 && state <= this.states, "State " + state + " out of range! Valid range [1 - " + this.states + "] inclusive");
+        this.currentScroll = (float) state / this.states;
         return this;
     }
 
     @Override
     public void handleMouseInput() {
-        if (listening) {
+        if (this.listening) {
             int wheel = -Mouse.getDWheel();
             wheel = MathHelper.clamp(wheel, -1, 1);
-            currentScroll += (float) wheel / states;
+            this.currentScroll += (float) wheel / this.states;
         }
     }
 
@@ -53,40 +53,40 @@ public class WidgetVerticalScrollbar extends WidgetBase {
     }
 
     public int getState() {
-        float scroll = currentScroll;
-        scroll += 0.5F / states;
-        return MathHelper.clamp((int) (scroll * states), 0, states);
+        float scroll = this.currentScroll;
+        scroll += 0.5F / this.states;
+        return MathHelper.clamp((int) (scroll * this.states), 0, this.states);
     }
 
     public WidgetVerticalScrollbar setEnabled(boolean enabled) {
         this.enabled = enabled;
-        if (!enabled) wasClicking = false;
+        if (!enabled) this.wasClicking = false;
         return this;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
         GlStateManager.color(1, 1, 1, 1);
-        if (!Mouse.isButtonDown(0)) dragging = false;
-        if (!wasClicking && Mouse.isButtonDown(0) && getBounds().contains(mouseX, mouseY)) {
-            dragging = true;
+        if (!Mouse.isButtonDown(0)) this.dragging = false;
+        if (!this.wasClicking && Mouse.isButtonDown(0) && this.getBounds().contains(mouseX, mouseY)) {
+            this.dragging = true;
         }
-        if (!enabled) dragging = false;
-        wasClicking = Mouse.isButtonDown(0);
-        if (dragging) currentScroll = (float) (mouseY - 7 - getBounds().y) / (getBounds().height - 17);
-        currentScroll = MathHelper.clamp(currentScroll, 0, 1);
+        if (!this.enabled) this.dragging = false;
+        this.wasClicking = Mouse.isButtonDown(0);
+        if (this.dragging) this.currentScroll = (float) (mouseY - 7 - this.getBounds().y) / (this.getBounds().height - 17);
+        this.currentScroll = MathHelper.clamp(this.currentScroll, 0, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(SCROLL_TEXTURE);
-        Gui.drawModalRectWithCustomSizedTexture(x, y, 12, 0, getBounds().width, 1, 26, 15);
-        for (int i = 0; i < getBounds().height - 2; i++)
-            Gui.drawModalRectWithCustomSizedTexture(x, y + 1 + i, 12, 1, getBounds().width, 1, 26, 15);
-        Gui.drawModalRectWithCustomSizedTexture(x, y + getBounds().height - 1, 12, 14, getBounds().width, 1, 26, 15);
+        Gui.drawModalRectWithCustomSizedTexture(this.x, this.y, 12, 0, this.getBounds().width, 1, 26, 15);
+        for (int i = 0; i < this.getBounds().height - 2; i++)
+            Gui.drawModalRectWithCustomSizedTexture(this.x, this.y + 1 + i, 12, 1, this.getBounds().width, 1, 26, 15);
+        Gui.drawModalRectWithCustomSizedTexture(this.x, this.y + this.getBounds().height - 1, 12, 14, this.getBounds().width, 1, 26, 15);
 
-        if (!enabled) GlStateManager.color(0.6F, 0.6F, 0.6F, 1);
-        Gui.drawModalRectWithCustomSizedTexture(x + 1, y + 1 + (int) ((getBounds().height - 17) * currentScroll), 0, 0, 12, 15, 26, 15);
+        if (!this.enabled) GlStateManager.color(0.6F, 0.6F, 0.6F, 1);
+        Gui.drawModalRectWithCustomSizedTexture(this.x + 1, this.y + 1 + (int) ((this.getBounds().height - 17) * this.currentScroll), 0, 0, 12, 15, 26, 15);
         GlStateManager.color(1, 1, 1, 1);
     }
 
     public boolean isDragging() {
-        return dragging;
+        return this.dragging;
     }
 }

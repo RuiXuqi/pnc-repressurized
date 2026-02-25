@@ -67,30 +67,30 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
 
         ItemStack helmetStack = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
         String filterStr = helmetStack.isEmpty() ? "" : ItemPneumaticArmor.getEntityFilter(helmetStack);
-        if (!entityFilter.toString().equals(filterStr)) {
+        if (!this.entityFilter.toString().equals(filterStr)) {
             EntityFilter newFilter = EntityFilter.fromString(filterStr);
             if (newFilter != null) {
-                entityFilter = newFilter;
+                this.entityFilter = newFilter;
             }
         }
 
         double entityTrackRange = ENTITY_TRACKING_RANGE + rangeUpgrades * PneumaticValues.RANGE_UPGRADE_HELMET_RANGE_INCREASE;
         AxisAlignedBB bbBox = getAABBFromRange(player, rangeUpgrades);
         List<Entity> entities = player.world.getEntitiesWithinAABB(Entity.class, bbBox,
-                new EntityTrackerSelector(player, entityFilter, entityTrackRange));
+                new EntityTrackerSelector(player, this.entityFilter, entityTrackRange));
         for (Entity entity : entities) {
-            RenderEntityTarget target = targets.get(entity.getEntityId());
+            RenderEntityTarget target = this.targets.get(entity.getEntityId());
             if (target != null) {
                 target.ticksExisted = Math.abs(target.ticksExisted); // cancel lost targets
             } else {
-                targets.put(entity.getEntityId(), new RenderEntityTarget(entity));
+                this.targets.put(entity.getEntityId(), new RenderEntityTarget(entity));
             }
         }
 
         List<Integer> toRemove = new ArrayList<>();
-        for (Map.Entry<Integer, RenderEntityTarget> entry : targets.entrySet()) {
+        for (Map.Entry<Integer, RenderEntityTarget> entry : this.targets.entrySet()) {
             RenderEntityTarget target = entry.getValue();
-            if (target.entity.isDead || player.getDistance(target.entity) > entityTrackRange + 5 || !entityFilter.test(target.entity)) {
+            if (target.entity.isDead || player.getDistance(target.entity) > entityTrackRange + 5 || !this.entityFilter.test(target.entity)) {
                 if (target.ticksExisted > 0) {
                     target.ticksExisted = -60;
                 } else if (target.ticksExisted == -1) {
@@ -98,18 +98,18 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
                 }
             }
         }
-        toRemove.forEach(targets::remove);
+        toRemove.forEach(this.targets::remove);
 
-        if (targets.size() > ENTITY_TRACK_THRESHOLD) {
-            if (!shouldStopSpamOnEntityTracking) {
-                shouldStopSpamOnEntityTracking = true;
+        if (this.targets.size() > ENTITY_TRACK_THRESHOLD) {
+            if (!this.shouldStopSpamOnEntityTracking) {
+                this.shouldStopSpamOnEntityTracking = true;
                 HUDHandler.instance().addMessage(new ArmorMessage("Stopped spam on Entity Tracker", new ArrayList<>(), 60, 0x7700AA00));
             }
         } else {
-            shouldStopSpamOnEntityTracking = false;
+            this.shouldStopSpamOnEntityTracking = false;
         }
         List<String> text = new ArrayList<>();
-        for (RenderEntityTarget target : targets.values()) {
+        for (RenderEntityTarget target : this.targets.values()) {
             boolean wasNegative = target.ticksExisted < 0;
             target.ticksExisted += CommonArmorHandler.getHandlerForPlayer(player).getSpeedFromUpgrades(EntityEquipmentSlot.HEAD);
             if (target.ticksExisted >= 0 && wasNegative) target.ticksExisted = -1;
@@ -124,9 +124,9 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
             }
         }
         if (text.size() == 0) {
-            text.add("Filter mode: " + (entityFilter.toString().isEmpty() ? "None" : entityFilter.toString()));
+            text.add("Filter mode: " + (this.entityFilter.toString().isEmpty() ? "None" : this.entityFilter.toString()));
         }
-        entityTrackInfo.setText(text);
+        this.entityTrackInfo.setText(text);
     }
 
     static AxisAlignedBB getAABBFromRange(EntityPlayer player, int rangeUpgrades) {
@@ -138,7 +138,7 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void render3D(float partialTicks) {
-        targets.values().forEach(target -> target.render(partialTicks, shouldStopSpamOnEntityTracking));
+        this.targets.values().forEach(target -> target.render(partialTicks, this.shouldStopSpamOnEntityTracking));
     }
 
     @Override
@@ -154,7 +154,7 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void reset() {
-        targets.clear();
+        this.targets.clear();
     }
 
     @Override
@@ -176,34 +176,34 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public GuiAnimatedStat getAnimatedStat() {
-        if (entityTrackInfo == null) {
+        if (this.entityTrackInfo == null) {
             GuiAnimatedStat.StatIcon icon = GuiAnimatedStat.StatIcon.of(CraftingRegistrator.getUpgrade(EnumUpgrade.ENTITY_TRACKER));
-            entityTrackInfo = new GuiAnimatedStat(null, "Current tracked entities:", icon,
-                     0x3000AA00, null, ArmorHUDLayout.INSTANCE.entityTrackerStat);
-            entityTrackInfo.setMinDimensionsAndReset(0, 0);
+            this.entityTrackInfo = new GuiAnimatedStat(null, "Current tracked entities:", icon,
+                    0x3000AA00, null, ArmorHUDLayout.INSTANCE.entityTrackerStat);
+            this.entityTrackInfo.setMinDimensionsAndReset(0, 0);
         }
-        return entityTrackInfo;
+        return this.entityTrackInfo;
 
     }
 
     public Stream<RenderEntityTarget> getTargetsStream() {
-        return targets.values().stream();
+        return this.targets.values().stream();
     }
 
     public RenderEntityTarget getTargetForEntity(Entity entity) {
-        return getTargetsStream().filter(target -> target.entity == entity).findFirst().orElse(null);
+        return this.getTargetsStream().filter(target -> target.entity == entity).findFirst().orElse(null);
     }
 
     public void hack() {
-        getTargetsStream().forEach(RenderEntityTarget::hack);
+        this.getTargetsStream().forEach(RenderEntityTarget::hack);
     }
 
     public void selectAsDebuggingTarget() {
-        getTargetsStream().forEach(RenderEntityTarget::selectAsDebuggingTarget);
+        this.getTargetsStream().forEach(RenderEntityTarget::selectAsDebuggingTarget);
     }
 
     public boolean scroll(MouseEvent event) {
-        return getTargetsStream().anyMatch(target -> target.scroll(event));
+        return this.getTargetsStream().anyMatch(target -> target.scroll(event));
     }
 
     private class EntityTrackerSelector extends StringFilterEntitySelector {
@@ -213,15 +213,15 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
         private EntityTrackerSelector(EntityPlayer player, EntityFilter filter, double threshold) {
             this.player = player;
             this.threshold = threshold;
-            setFilter(Collections.singletonList(filter));
+            this.setFilter(Collections.singletonList(filter));
         }
 
         @Override
         public boolean apply(Entity entity) {
-            return entity != player
+            return entity != this.player
                     && (entity instanceof EntityLivingBase || entity instanceof EntityHanging)
                     && !entity.isDead
-                    && player.getDistance(entity) < threshold
+                    && this.player.getDistance(entity) < this.threshold
                     && !MinecraftForge.EVENT_BUS.post(new EntityTrackEvent(entity))
                     && super.apply(entity);
         }
@@ -229,6 +229,6 @@ public class EntityTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     @Override
     public void onResolutionChanged() {
-        entityTrackInfo = null;
+        this.entityTrackInfo = null;
     }
 }

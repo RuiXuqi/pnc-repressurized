@@ -50,24 +50,24 @@ public class ModelRedstone extends ModelModuleBase {
 
     @Override
     protected void renderDynamic(float scale, float partialTicks) {
-        if (module.isUpgraded()) RenderUtils.glColorHex(0xFFA0FF60);
+        if (this.module.isUpgraded()) RenderUtils.glColorHex(0xFFA0FF60);
         this.tube_connector.render(scale);
         this.faceplate.render(scale);
 
-        if (!module.isFake()) {
-            int l = module.getRedstoneDirection() == ModuleRedstone.EnumRedstoneDirection.INPUT ? module.getInputLevel() : module.getRedstoneLevel();
+        if (!this.module.isFake()) {
+            int l = this.module.getRedstoneDirection() == ModuleRedstone.EnumRedstoneDirection.INPUT ? this.module.getInputLevel() : this.module.getRedstoneLevel();
             RenderUtils.glColorHex(0xFF300000 | (l * 13 << 16));
             GlStateManager.pushMatrix();
             GlStateManager.translate(0, 0, 5.2f / 16f);
-            GlStateManager.scale(1, 1, 0.25f + 0.75f * (module.lastExtension + (module.extension - module.lastExtension) * partialTicks));
+            GlStateManager.scale(1, 1, 0.25f + 0.75f * (this.module.lastExtension + (this.module.extension - this.module.lastExtension) * partialTicks));
             GlStateManager.translate(0, 0, -5.2f / 16f);
         }
         this.redstone_connector.render(scale);
-        if (!module.isFake()) {
+        if (!this.module.isFake()) {
             GlStateManager.popMatrix();
         }
 
-        RenderUtils.glColorHex(0xFF000000 | ItemDye.DYE_COLORS[module.getColorChannel()]);
+        RenderUtils.glColorHex(0xFF000000 | ItemDye.DYE_COLORS[this.module.getColorChannel()]);
         this.frame1.render(scale);
         this.frame2.render(scale);
         this.frame3.render(scale);

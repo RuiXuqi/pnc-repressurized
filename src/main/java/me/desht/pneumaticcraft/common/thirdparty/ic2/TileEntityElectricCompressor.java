@@ -48,38 +48,38 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     public TileEntityElectricCompressor() {
         super(PneumaticValues.DANGER_PRESSURE_ELECTRIC_COMPRESSOR, PneumaticValues.MAX_PRESSURE_ELECTRIC_COMPRESSOR, PneumaticValues.VOLUME_ELECTRIC_COMPRESSOR, 4);
-        addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
-        addApplicableCustomUpgrade(IC2.overclockerUpgrade, IC2.energyStorageUpgrade, IC2.transformerUpgrade);
-        heatExchanger.setThermalCapacity(100);
+        this.addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
+        this.addApplicableCustomUpgrade(IC2.overclockerUpgrade, IC2.energyStorageUpgrade, IC2.transformerUpgrade);
+        this.heatExchanger.setThermalCapacity(100);
     }
 
     public int getEfficiency() {
-        return HeatUtil.getEfficiency(heatExchanger.getTemperatureAsInt());
+        return HeatUtil.getEfficiency(this.heatExchanger.getTemperatureAsInt());
     }
 
     @Override
     public void update() {
-        redstoneAllows = redstoneAllows();
+        this.redstoneAllows = this.redstoneAllows();
 
-        oldTurbineRotation = turbineRotation;
-        if (outputTimer > 0) {
-            turbineSpeed = Math.min(turbineSpeed + 0.2F, 10);
+        this.oldTurbineRotation = this.turbineRotation;
+        if (this.outputTimer > 0) {
+            this.turbineSpeed = Math.min(this.turbineSpeed + 0.2F, 10);
         } else {
-            turbineSpeed = Math.max(turbineSpeed - 0.2F, 0);
+            this.turbineSpeed = Math.max(this.turbineSpeed - 0.2F, 0);
         }
-        turbineRotation += turbineSpeed;
+        this.turbineRotation += this.turbineSpeed;
 
-        if (!getWorld().isRemote) {
-            lastEnergyProduction = curEnergyProduction;
-            curEnergyProduction = 0;
+        if (!this.getWorld().isRemote) {
+            this.lastEnergyProduction = this.curEnergyProduction;
+            this.curEnergyProduction = 0;
         }
 
         super.update();
 
-        if (!getWorld().isRemote) {
-            outputTimer--;
-            if (outputTimer == 0) {
-                sendDescriptionPacket();
+        if (!this.getWorld().isRemote) {
+            this.outputTimer--;
+            if (this.outputTimer == 0) {
+                this.sendDescriptionPacket();
             }
 
         }
@@ -94,7 +94,7 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     @Override
     public void invalidate() {
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         }
         super.invalidate();
@@ -102,7 +102,7 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     @Override
     public void onChunkUnload() {
-        if (getWorld() != null && !getWorld().isRemote) {
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
             MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
         }
         super.onChunkUnload();
@@ -110,27 +110,27 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     @Override
     public boolean redstoneAllows() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return true;
             case 1:
-                return getWorld().getRedstonePowerFromNeighbors(getPos()) > 0;
+                return this.getWorld().getRedstonePowerFromNeighbors(this.getPos()) > 0;
             case 2:
-                return getWorld().getRedstonePowerFromNeighbors(getPos()) == 0;
+                return this.getWorld().getRedstonePowerFromNeighbors(this.getPos()) == 0;
         }
         return false;
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return side == getRotation() || side == getRotation().getOpposite();
+        return side == this.getRotation() || side == this.getRotation().getOpposite();
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
@@ -143,50 +143,50 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
 
-        redstoneMode = nbtTagCompound.getInteger("redstoneMode");
-        outputTimer = nbtTagCompound.getBoolean("outputTimer") ? 20 : 0;
-        turbineSpeed = nbtTagCompound.getFloat("turbineSpeed");
-        lastEnergyProduction = nbtTagCompound.getInteger("energyProduction");
+        this.redstoneMode = nbtTagCompound.getInteger("redstoneMode");
+        this.outputTimer = nbtTagCompound.getBoolean("outputTimer") ? 20 : 0;
+        this.turbineSpeed = nbtTagCompound.getFloat("turbineSpeed");
+        this.lastEnergyProduction = nbtTagCompound.getInteger("energyProduction");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
 
-        nbtTagCompound.setInteger("redstoneMode", redstoneMode);
-        nbtTagCompound.setBoolean("outputTimer", outputTimer > 0);
-        nbtTagCompound.setFloat("turbineSpeed", turbineSpeed);
-        nbtTagCompound.setInteger("energyProduction", lastEnergyProduction);
+        nbtTagCompound.setInteger("redstoneMode", this.redstoneMode);
+        nbtTagCompound.setBoolean("outputTimer", this.outputTimer > 0);
+        nbtTagCompound.setFloat("turbineSpeed", this.turbineSpeed);
+        nbtTagCompound.setInteger("energyProduction", this.lastEnergyProduction);
 
         return nbtTagCompound;
     }
 
     @Override
     public double getDemandedEnergy() {
-        return redstoneAllows ? Double.MAX_VALUE : 0;
+        return this.redstoneAllows ? Double.MAX_VALUE : 0;
     }
 
     @Override
     public int getSinkTier() {
-        int upgradesInserted = getCustomUpgrades(IC2.transformerUpgrade);
+        int upgradesInserted = this.getCustomUpgrades(IC2.transformerUpgrade);
         return 1 + upgradesInserted;
     }
 
     int getMaxSafeInput() {
-        int upgradesInserted = getCustomUpgrades(IC2.transformerUpgrade);
+        int upgradesInserted = this.getCustomUpgrades(IC2.transformerUpgrade);
         return 32 * (int) Math.pow(4, upgradesInserted);
     }
 
     @Override
     public double injectEnergy(EnumFacing enumFacing, double amount, double voltage) {
         int efficiency = ConfigHandler.machineProperties.electricCompressorEfficiency;
-        int airProduction = (int) (amount / 0.25F * efficiency / 100F * getEfficiency() / 100);
-        heatExchanger.addHeat(amount / 16);
-        addAir(airProduction);
-        curEnergyProduction += airProduction;
-        boolean clientNeedsUpdate = outputTimer <= 0;
-        outputTimer = 20;
-        if (clientNeedsUpdate) sendDescriptionPacket();
+        int airProduction = (int) (amount / 0.25F * efficiency / 100F * this.getEfficiency() / 100);
+        this.heatExchanger.addHeat(amount / 16);
+        this.addAir(airProduction);
+        this.curEnergyProduction += airProduction;
+        boolean clientNeedsUpdate = this.outputTimer <= 0;
+        this.outputTimer = 20;
+        if (clientNeedsUpdate) this.sendDescriptionPacket();
         return 0;
     }
 
@@ -197,12 +197,12 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     @Override
     public EnumFacing getFacing(World world, BlockPos blockPos) {
-        return getRotation();
+        return this.getRotation();
     }
 
     @Override
     public boolean setFacing(World world, BlockPos blockPos, EnumFacing enumFacing, EntityPlayer entityPlayer) {
-        Block b = getBlockType();
+        Block b = this.getBlockType();
         if (b instanceof BlockElectricCompressor) {
             ((BlockElectricCompressor) b).rotateBlock(world, entityPlayer, blockPos, enumFacing, EnumHand.MAIN_HAND);
             return true;
@@ -222,11 +222,11 @@ public class TileEntityElectricCompressor extends TileEntityPneumaticBase implem
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 }

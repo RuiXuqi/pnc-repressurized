@@ -41,9 +41,9 @@ public class ProgWidgetEditSign extends ProgWidgetAreaItemBase implements ISignE
     @Override
     public String[] getLines() {
         List<String> lines = new ArrayList<>();
-        ProgWidgetString textWidget = (ProgWidgetString) getConnectedParameters()[1];
+        ProgWidgetString textWidget = (ProgWidgetString) this.getConnectedParameters()[1];
         while (textWidget != null) {
-            lines.add(new TextVariableParser(textWidget.string, aiManager).parse());
+            lines.add(new TextVariableParser(textWidget.string, this.aiManager).parse());
             textWidget = (ProgWidgetString) textWidget.getConnectedParameters()[0];
         }
         return lines.toArray(new String[0]);

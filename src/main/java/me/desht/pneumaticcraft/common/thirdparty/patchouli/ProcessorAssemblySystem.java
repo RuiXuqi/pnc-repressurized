@@ -14,24 +14,24 @@ public class ProcessorAssemblySystem implements IComponentProcessor {
     @Override
     public void setup(IVariableProvider<String> iVariableProvider) {
         ItemStack result = PatchouliAPI.instance.deserializeItemStack(iVariableProvider.get("item"));
-        recipe = AssemblyRecipe.findRecipeForOutput(result);
+        this.recipe = AssemblyRecipe.findRecipeForOutput(result);
     }
 
     @Override
     public String process(String key) {
-        if (recipe == null) return null;
+        if (this.recipe == null) return null;
 
         switch (key) {
             case "input":
-                return ItemStackUtil.serializeStack(recipe.getInput());
+                return ItemStackUtil.serializeStack(this.recipe.getInput());
             case "output":
-                return ItemStackUtil.serializeStack(recipe.getOutput());
+                return ItemStackUtil.serializeStack(this.recipe.getOutput());
             case "program":
-                return ItemStackUtil.serializeStack(recipe.getProgramStack());
+                return ItemStackUtil.serializeStack(this.recipe.getProgramStack());
             case "name":
-                return recipe.getOutput().getDisplayName();
+                return this.recipe.getOutput().getDisplayName();
             case "desc":
-                return I18n.format("patchouli.processor.assembly.desc", recipe.getOutput().getDisplayName(), recipe.getProgramStack().getDisplayName());
+                return I18n.format("patchouli.processor.assembly.desc", this.recipe.getOutput().getDisplayName(), this.recipe.getProgramStack().getDisplayName());
         }
 
         return null;

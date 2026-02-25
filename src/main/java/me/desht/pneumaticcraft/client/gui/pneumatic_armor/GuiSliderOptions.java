@@ -3,10 +3,10 @@ package me.desht.pneumaticcraft.client.gui.pneumatic_armor;
 import me.desht.pneumaticcraft.api.client.pneumaticHelmet.IGuiScreen;
 import me.desht.pneumaticcraft.api.client.pneumaticHelmet.IOptionPage;
 import me.desht.pneumaticcraft.api.client.pneumaticHelmet.IUpgradeRenderHandler;
-import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import me.desht.pneumaticcraft.common.item.ItemPneumaticArmor;
 import me.desht.pneumaticcraft.common.network.NetworkHandler;
 import me.desht.pneumaticcraft.common.network.PacketUpdateArmorExtraData;
+import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiPageButtonList;
 import net.minecraft.client.gui.GuiSlider;
@@ -40,28 +40,28 @@ public abstract class GuiSliderOptions extends IOptionPage.SimpleToggleableOptio
     protected abstract GuiSlider.FormatHelper getFormatHelper();
 
     public void initGui(IGuiScreen gui) {
-        Pair<Integer,Integer> range = getRange();
+        Pair<Integer, Integer> range = this.getRange();
         int initVal = range.getRight();
         if (Minecraft.getMinecraft().player != null) {
-            ItemStack leggings = Minecraft.getMinecraft().player.getItemStackFromSlot(getSlot());
-            initVal = ItemPneumaticArmor.getIntData(leggings, getTagName(), range.getRight());
+            ItemStack leggings = Minecraft.getMinecraft().player.getItemStackFromSlot(this.getSlot());
+            initVal = ItemPneumaticArmor.getIntData(leggings, this.getTagName(), range.getRight());
         }
-        Point pos = getSliderPos();
-        slider = new GuiSlider(this, 1000, pos.x, pos.y,
-                "slider", range.getLeft(), range.getRight(), initVal, getFormatHelper());
-        gui.getButtonList().add(slider);
+        Point pos = this.getSliderPos();
+        this.slider = new GuiSlider(this, 1000, pos.x, pos.y,
+                "slider", range.getLeft(), range.getRight(), initVal, this.getFormatHelper());
+        gui.getButtonList().add(this.slider);
     }
 
     @Override
     public void updateScreen() {
-        if (pendingVal != null && !slider.isMouseDown) {
+        if (this.pendingVal != null && !this.slider.isMouseDown) {
             // avoid sending a stream of update packets if player is dragging slider
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setInteger(getTagName(), pendingVal);
-            NetworkHandler.sendToServer(new PacketUpdateArmorExtraData(getSlot(), tag));
+            tag.setInteger(this.getTagName(), this.pendingVal);
+            NetworkHandler.sendToServer(new PacketUpdateArmorExtraData(this.getSlot(), tag));
             // also update the clientside handler
-            CommonArmorHandler.getHandlerForPlayer().onDataFieldUpdated(getSlot(), getTagName(), tag.getTag(getTagName()));
-            pendingVal = null;
+            CommonArmorHandler.getHandlerForPlayer().onDataFieldUpdated(this.getSlot(), this.getTagName(), tag.getTag(this.getTagName()));
+            this.pendingVal = null;
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class GuiSliderOptions extends IOptionPage.SimpleToggleableOptio
 
     @Override
     public void setEntryValue(int id, float value) {
-        pendingVal = (int) value;
+        this.pendingVal = (int) value;
     }
 
     @Override

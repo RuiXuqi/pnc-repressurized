@@ -15,12 +15,12 @@ public abstract class GuiTubeModule extends GuiPneumaticScreenBase {
 
     GuiTubeModule(TubeModule module) {
         this.module = module;
-        xSize = 183;
+        this.xSize = 183;
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

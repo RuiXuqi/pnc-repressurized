@@ -18,19 +18,19 @@ public class ItemReinforcedAirCanister extends ItemPneumatic implements IPressur
 
     public ItemReinforcedAirCanister() {
         super("reinforced_air_canister");
-        setMaxStackSize(1);
-        setMaxDamage(MAX_DAMAGE);
-        setNoRepair();
+        this.setMaxStackSize(1);
+        this.setMaxDamage(MAX_DAMAGE);
+        this.setNoRepair();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             ItemStack stack2 = new ItemStack(this);
-            addAir(stack2, PneumaticValues.REINFORCED_AIR_CANISTER_MAX_AIR);
+            this.addAir(stack2, PneumaticValues.REINFORCED_AIR_CANISTER_MAX_AIR);
             ItemStack stack = new ItemStack(this);
-            addAir(stack, 0);
+            this.addAir(stack, 0);
             par3List.add(stack);
             par3List.add(stack2);
         }
@@ -38,7 +38,7 @@ public class ItemReinforcedAirCanister extends ItemPneumatic implements IPressur
 
     @Override
     public int getDamage(ItemStack stack) {
-        return (int) (MAX_DAMAGE * (getPressure(stack) / maxPressure(stack)));
+        return (int) (MAX_DAMAGE * (this.getPressure(stack) / this.maxPressure(stack)));
     }
 
     @Override
@@ -53,13 +53,13 @@ public class ItemReinforcedAirCanister extends ItemPneumatic implements IPressur
 
     @Override
     public double getDurabilityForDisplay(ItemStack stack) {
-        return 1.0 - getPressure(stack) / maxPressure(stack);
+        return 1.0 - this.getPressure(stack) / this.maxPressure(stack);
     }
 
     @Override
     public float getPressure(ItemStack iStack) {
         int currentAir = NBTUtil.getInteger(iStack, NBT_AIR);
-        return (float) currentAir / getVolume(iStack);
+        return (float) currentAir / this.getVolume(iStack);
     }
 
     @Override

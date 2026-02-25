@@ -34,9 +34,9 @@ public interface IHackableEntity {
      * This method is only called when canHack(Entity) returned true.
      * The added lines automatically will be tried to get localized.
      *
-     * @param entity the potential hacking target
+     * @param entity  the potential hacking target
      * @param curInfo a string list to append info to
-     * @param player the player who is looking at the entity
+     * @param player  the player who is looking at the entity
      */
     void addInfo(Entity entity, List<String> curInfo, EntityPlayer player);
 
@@ -45,9 +45,9 @@ public interface IHackableEntity {
      * Things like "Neutralized".
      * The added lines automatically will be tried to get localized.
      *
-     * @param entity the hacked entity
+     * @param entity  the hacked entity
      * @param curInfo a string list to append info to
-     * @param player the player who has hacked the entity
+     * @param player  the player who has hacked the entity
      */
     void addPostHackInfo(Entity entity, List<String> curInfo, EntityPlayer player);
 

@@ -24,15 +24,15 @@ public class GuiRemoteOptionBase<Widget extends ActionWidget> extends GuiPneumat
     public GuiRemoteOptionBase(Widget widget, GuiRemoteEditor guiRemote) {
         this.widget = widget;
         this.guiRemote = guiRemote;
-        xSize = 183;
-        ySize = 202;
+        this.xSize = 183;
+        this.ySize = 202;
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == 1) {
-            onGuiClosed();
-            mc.displayGuiScreen(guiRemote);
+            this.onGuiClosed();
+            this.mc.displayGuiScreen(this.guiRemote);
         } else {
             super.keyTyped(key, keyCode);
         }
@@ -40,7 +40,7 @@ public class GuiRemoteOptionBase<Widget extends ActionWidget> extends GuiPneumat
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
 
     }
@@ -59,65 +59,65 @@ public class GuiRemoteOptionBase<Widget extends ActionWidget> extends GuiPneumat
     public void initGui() {
         super.initGui();
 
-        String title = I18n.format("remote." + widget.getId() + ".name");
-        addLabel(I18n.format("gui.remote.enable"), guiLeft + 10, guiTop + 150);
-        addLabel(title, width / 2 - fontRenderer.getStringWidth(title) / 2, guiTop + 5);
-        addLabel("#", guiLeft + 10, guiTop + 161);
+        String title = I18n.format("remote." + this.widget.getId() + ".name");
+        this.addLabel(I18n.format("gui.remote.enable"), this.guiLeft + 10, this.guiTop + 150);
+        this.addLabel(title, this.width / 2 - this.fontRenderer.getStringWidth(title) / 2, this.guiTop + 5);
+        this.addLabel("#", this.guiLeft + 10, this.guiTop + 161);
 
-        if (widget instanceof IActionWidgetLabeled) {
-            addLabel(I18n.format("gui.remote.text"), guiLeft + 10, guiTop + 20);
-            addLabel(I18n.format("gui.remote.tooltip"), guiLeft + 10, guiTop + 46);
+        if (this.widget instanceof IActionWidgetLabeled) {
+            this.addLabel(I18n.format("gui.remote.text"), this.guiLeft + 10, this.guiTop + 20);
+            this.addLabel(I18n.format("gui.remote.tooltip"), this.guiLeft + 10, this.guiTop + 46);
         }
 
-        addLabel(I18n.format("gui.remote.enableValue"), guiLeft + 10, guiTop + 175);
-        addLabel("X:", guiLeft + 10, guiTop + 186);
-        addLabel("Y:", guiLeft + 67, guiTop + 186);
-        addLabel("Z:", guiLeft + 124, guiTop + 186);
+        this.addLabel(I18n.format("gui.remote.enableValue"), this.guiLeft + 10, this.guiTop + 175);
+        this.addLabel("X:", this.guiLeft + 10, this.guiTop + 186);
+        this.addLabel("Y:", this.guiLeft + 67, this.guiTop + 186);
+        this.addLabel("Z:", this.guiLeft + 124, this.guiTop + 186);
 
-        enableField = new WidgetComboBox(fontRenderer, guiLeft + 18, guiTop + 160, 152, 10);
-        enableField.setElements(((ContainerRemote) guiRemote.inventorySlots).variables);
-        enableField.setText(widget.getEnableVariable());
-        enableField.setTooltip(I18n.format("gui.remote.enable.tooltip"));
-        addWidget(enableField);
+        this.enableField = new WidgetComboBox(this.fontRenderer, this.guiLeft + 18, this.guiTop + 160, 152, 10);
+        this.enableField.setElements(((ContainerRemote) this.guiRemote.inventorySlots).variables);
+        this.enableField.setText(this.widget.getEnableVariable());
+        this.enableField.setTooltip(I18n.format("gui.remote.enable.tooltip"));
+        this.addWidget(this.enableField);
 
         String valueTooltip = I18n.format("gui.remote.enableValue.tooltip");
 
-        xValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 20, guiTop + 185, 38, 10);
-        xValueField.setValue(widget.getEnablingValue().getX());
-        xValueField.setTooltip(valueTooltip);
-        addWidget(xValueField);
+        this.xValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 20, this.guiTop + 185, 38, 10);
+        this.xValueField.setValue(this.widget.getEnablingValue().getX());
+        this.xValueField.setTooltip(valueTooltip);
+        this.addWidget(this.xValueField);
 
-        yValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 78, guiTop + 185, 38, 10);
-        yValueField.setValue(widget.getEnablingValue().getY());
-        yValueField.setTooltip(valueTooltip);
-        addWidget(yValueField);
+        this.yValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 78, this.guiTop + 185, 38, 10);
+        this.yValueField.setValue(this.widget.getEnablingValue().getY());
+        this.yValueField.setTooltip(valueTooltip);
+        this.addWidget(this.yValueField);
 
-        zValueField = new WidgetTextFieldNumber(fontRenderer, guiLeft + 136, guiTop + 185, 38, 10);
-        zValueField.setValue(widget.getEnablingValue().getZ());
-        zValueField.setTooltip(valueTooltip);
-        addWidget(zValueField);
+        this.zValueField = new WidgetTextFieldNumber(this.fontRenderer, this.guiLeft + 136, this.guiTop + 185, 38, 10);
+        this.zValueField.setValue(this.widget.getEnablingValue().getZ());
+        this.zValueField.setTooltip(valueTooltip);
+        this.addWidget(this.zValueField);
 
-        if (widget instanceof IActionWidgetLabeled) {
-            labelField = new WidgetTextField(fontRenderer, guiLeft + 10, guiTop + 30, 160, 10);
-            labelField.setText(((IActionWidgetLabeled) widget).getText());
-            labelField.setTooltip(I18n.format("gui.remote.label.tooltip"));
-            labelField.setMaxStringLength(1000);
-            addWidget(labelField);
+        if (this.widget instanceof IActionWidgetLabeled) {
+            this.labelField = new WidgetTextField(this.fontRenderer, this.guiLeft + 10, this.guiTop + 30, 160, 10);
+            this.labelField.setText(((IActionWidgetLabeled) this.widget).getText());
+            this.labelField.setTooltip(I18n.format("gui.remote.label.tooltip"));
+            this.labelField.setMaxStringLength(1000);
+            this.addWidget(this.labelField);
 
-            tooltipField = new WidgetTextField(fontRenderer, guiLeft + 10, guiTop + 56, 160, 10);
-            tooltipField.setText(((IActionWidgetLabeled) widget).getTooltip());
-            addWidget(tooltipField);
+            this.tooltipField = new WidgetTextField(this.fontRenderer, this.guiLeft + 10, this.guiTop + 56, 160, 10);
+            this.tooltipField.setText(((IActionWidgetLabeled) this.widget).getTooltip());
+            this.addWidget(this.tooltipField);
         }
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        widget.setEnableVariable(enableField.getText());
-        widget.setEnablingValue(xValueField.getValue(), yValueField.getValue(), zValueField.getValue());
-        if (widget instanceof IActionWidgetLabeled) {
-            ((IActionWidgetLabeled) widget).setText(labelField.getText());
-            ((IActionWidgetLabeled) widget).setTooltip(tooltipField.getText());
+        this.widget.setEnableVariable(this.enableField.getText());
+        this.widget.setEnablingValue(this.xValueField.getValue(), this.yValueField.getValue(), this.zValueField.getValue());
+        if (this.widget instanceof IActionWidgetLabeled) {
+            ((IActionWidgetLabeled) this.widget).setText(this.labelField.getText());
+            ((IActionWidgetLabeled) this.widget).setTooltip(this.tooltipField.getText());
         }
     }
 }

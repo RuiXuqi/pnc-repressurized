@@ -1,6 +1,5 @@
 package me.desht.pneumaticcraft.client.gui;
 
-import me.desht.pneumaticcraft.api.tileentity.IHeatExchanger;
 import me.desht.pneumaticcraft.client.gui.widget.WidgetTemperature;
 import me.desht.pneumaticcraft.common.inventory.ContainerThermalCompressor;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityThermalCompressor;
@@ -23,37 +22,37 @@ public class GuiThermalCompressor extends GuiPneumaticContainerBase<TileEntityTh
     public void initGui() {
         super.initGui();
 
-        addWidget(new WidgetTemperatureSided(EnumFacing.NORTH, 63));
-        addWidget(new WidgetTemperatureSided(EnumFacing.SOUTH, 73));
+        this.addWidget(new WidgetTemperatureSided(EnumFacing.NORTH, 63));
+        this.addWidget(new WidgetTemperatureSided(EnumFacing.SOUTH, 73));
 
-        addWidget(new WidgetTemperatureSided(EnumFacing.WEST, 88));
-        addWidget(new WidgetTemperatureSided(EnumFacing.EAST, 98));
+        this.addWidget(new WidgetTemperatureSided(EnumFacing.WEST, 88));
+        this.addWidget(new WidgetTemperatureSided(EnumFacing.EAST, 98));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 28, 19, 4210752);
     }
 
     @Override
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + (int)(xSize * 0.82), yStart + ySize / 4 + 4);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        return new Point(xStart + (int) (this.xSize * 0.82), yStart + this.ySize / 4 + 4);
     }
 
     private int getTemperatureDifferential(EnumFacing side) {
-        return Math.abs(te.getHeatExchangerLogic(side).getTemperatureAsInt()
-                - te.getHeatExchangerLogic(side.getOpposite()).getTemperatureAsInt());
+        return Math.abs(this.te.getHeatExchangerLogic(side).getTemperatureAsInt()
+                - this.te.getHeatExchangerLogic(side.getOpposite()).getTemperatureAsInt());
     }
 
     @Override
     protected void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
 
-        int d = getTemperatureDifferential(EnumFacing.NORTH) + getTemperatureDifferential(EnumFacing.EAST);
+        int d = this.getTemperatureDifferential(EnumFacing.NORTH) + this.getTemperatureDifferential(EnumFacing.EAST);
         if (d == 0) {
             curInfo.add("\u00a7fNo temperature differential");
             curInfo.addAll(PneumaticCraftUtils.convertStringIntoList("\u00a70Place a hot block on any side of the compressor, and a cold block on the opposite side."));
@@ -64,7 +63,7 @@ public class GuiThermalCompressor extends GuiPneumaticContainerBase<TileEntityTh
     protected void addWarnings(List<String> curInfo) {
         super.addWarnings(curInfo);
 
-        int d = getTemperatureDifferential(EnumFacing.NORTH) + getTemperatureDifferential(EnumFacing.EAST);
+        int d = this.getTemperatureDifferential(EnumFacing.NORTH) + this.getTemperatureDifferential(EnumFacing.EAST);
         if (d > 0 && d < 20) {
             curInfo.add("\u00a7fPoor temperature differential");
             curInfo.addAll(PneumaticCraftUtils.convertStringIntoList("\u00a70Place a hot block on any side of the compressor, and a cold block on the opposite side."));
@@ -75,13 +74,13 @@ public class GuiThermalCompressor extends GuiPneumaticContainerBase<TileEntityTh
         private final EnumFacing side;
 
         WidgetTemperatureSided(EnumFacing side, int x) {
-            super(side.getHorizontalIndex(), guiLeft + x, guiTop + 20, 0, 2000, ((IHeatExchanger) te).getHeatExchangerLogic(side));
+            super(side.getHorizontalIndex(), GuiThermalCompressor.this.guiLeft + x, GuiThermalCompressor.this.guiTop + 20, 0, 2000, GuiThermalCompressor.this.te.getHeatExchangerLogic(side));
             this.side = side;
         }
 
         @Override
         public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shift) {
-            curTip.add(StringUtils.capitalize(side.getName()) + " Temperature: " + (logic.getTemperatureAsInt() - 273) + "\u00b0C");
+            curTip.add(StringUtils.capitalize(this.side.getName()) + " Temperature: " + (this.logic.getTemperatureAsInt() - 273) + "\u00b0C");
         }
     }
 }

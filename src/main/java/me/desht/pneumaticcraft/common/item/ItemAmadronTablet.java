@@ -43,12 +43,13 @@ public class ItemAmadronTablet extends ItemPressurizable implements IPositionPro
 
     public ItemAmadronTablet() {
         super("amadron_tablet", PneumaticValues.AIR_CANISTER_MAX_AIR, PneumaticValues.AIR_CANISTER_VOLUME);
-        setMaxStackSize(1);
+        this.setMaxStackSize(1);
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (handIn != EnumHand.MAIN_HAND) return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+        if (handIn != EnumHand.MAIN_HAND)
+            return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
         if (!worldIn.isRemote) {
             NetworkHandler.sendTo(new PacketSyncAmadronOffers(playerIn), (EntityPlayerMP) playerIn);
             playerIn.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.AMADRON.ordinal(), playerIn.world, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
@@ -205,9 +206,12 @@ public class ItemAmadronTablet extends ItemPressurizable implements IPositionPro
     @Override
     public int getRenderColor(int index) {
         switch (index) {
-            case 0: return 0x90A0490E;  // item
-            case 1: return 0x9000C0C0;  // liquid
-            default: return -1;
+            case 0:
+                return 0x90A0490E;  // item
+            case 1:
+                return 0x9000C0C0;  // liquid
+            default:
+                return -1;
         }
     }
 }

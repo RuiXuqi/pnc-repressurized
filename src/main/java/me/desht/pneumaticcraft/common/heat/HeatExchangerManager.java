@@ -38,28 +38,28 @@ public class HeatExchangerManager implements IHeatRegistry {
 
         Map<String, Fluid> fluids = FluidRegistry.getRegisteredFluids();
         for (Fluid fluid : fluids.values()) {
-            if (fluid.getBlock() != null && !specialBlockExchangers.containsKey(fluid.getBlock())) {
+            if (fluid.getBlock() != null && !this.specialBlockExchangers.containsKey(fluid.getBlock())) {
                 CustomHeatEntry entry = BlockHeatPropertiesConfig.INSTANCE.getCustomHeatEntry(fluid.getBlock().getDefaultState());
                 if (entry != null) {
-                    registerBlockExchanger(fluid.getBlock(), entry.getTemperature(), entry.getThermalResistance());
+                    this.registerBlockExchanger(fluid.getBlock(), entry.getTemperature(), entry.getThermalResistance());
                 } else {
                     Log.warning("unable to retrieve custom heat entry for fluid " + fluid.getName() + " - block: " + fluid.getBlock());
                 }
             }
         }
         // the vanilla flowing blocks aren't in the forge fluid registry...
-        registerBlockExchanger(Blocks.FLOWING_LAVA, specialBlockExchangers.get(Blocks.LAVA));
-        registerBlockExchanger(Blocks.FLOWING_WATER, specialBlockExchangers.get(Blocks.WATER));
+        this.registerBlockExchanger(Blocks.FLOWING_LAVA, this.specialBlockExchangers.get(Blocks.LAVA));
+        this.registerBlockExchanger(Blocks.FLOWING_WATER, this.specialBlockExchangers.get(Blocks.WATER));
     }
 
 
     private void registerCustomHeatEntry(CustomHeatEntry rec) {
         if (rec.isDefaultState()) {
             // all states of this block type
-            registerBlockExchanger(rec.getBlockState().getBlock(), rec.getTemperature(), rec.getThermalResistance());
+            this.registerBlockExchanger(rec.getBlockState().getBlock(), rec.getTemperature(), rec.getThermalResistance());
         } else {
             // a specific blockstate - use where modded blocks have subtypes
-            registerBlockExchanger(rec.getBlockState(), rec.getTemperature(), rec.getThermalResistance());
+            this.registerBlockExchanger(rec.getBlockState(), rec.getTemperature(), rec.getThermalResistance());
         }
     }
 
@@ -78,7 +78,7 @@ public class HeatExchangerManager implements IHeatRegistry {
                 if (block instanceof IHeatExchanger) {
                     return ((IHeatExchanger) block).getHeatExchangerLogic(side);
                 } else {
-                    IHeatExchanger exchanger = getSpecialBlockExchanger(state);
+                    IHeatExchanger exchanger = this.getSpecialBlockExchanger(state);
                     return exchanger == null ? null : exchanger.getHeatExchangerLogic(side);
                 }
             }
@@ -87,8 +87,8 @@ public class HeatExchangerManager implements IHeatRegistry {
 
     private IHeatExchanger getSpecialBlockExchanger(IBlockState state) {
         String key = state.getBlock().getRegistryName() + ":" + state.getBlock().getMetaFromState(state);
-        IHeatExchanger exchanger = specialBlockvariantExchangers.get(key);
-        return exchanger == null ? specialBlockExchangers.get(state.getBlock()) : exchanger;
+        IHeatExchanger exchanger = this.specialBlockvariantExchangers.get(key);
+        return exchanger == null ? this.specialBlockExchangers.get(state.getBlock()) : exchanger;
     }
 
     // todo this can go away in 1.13 when it will be purely block-based (yay flattening)
@@ -97,10 +97,10 @@ public class HeatExchangerManager implements IHeatRegistry {
         if (block instanceof IHeatExchanger)
             Log.warning("The block " + block.getTranslationKey() + " is implementing IHeatExchanger. Therefore you don't need to register it as such");
         String key = block.getRegistryName() + ":" + block.getMetaFromState(state);
-        if (specialBlockvariantExchangers.containsKey(key)) {
+        if (this.specialBlockvariantExchangers.containsKey(key)) {
             Log.error("The block " + key + " was registered as heat exchanger already! It won't be added!");
         } else {
-            specialBlockvariantExchangers.put(key, heatExchanger);
+            this.specialBlockvariantExchangers.put(key, heatExchanger);
         }
     }
 
@@ -109,29 +109,29 @@ public class HeatExchangerManager implements IHeatRegistry {
             throw new IllegalArgumentException("block is null when trying to register a heat exchanger!");
         if (block instanceof IHeatExchanger)
             Log.warning("The block " + block.getTranslationKey() + " is implementing IHeatExchanger. Therefore you don't need to register it as such");
-        if (specialBlockExchangers.containsKey(block)) {
+        if (this.specialBlockExchangers.containsKey(block)) {
             Log.error("The block " + block.getTranslationKey() + " was registered as heat exchanger already! It won't be added!");
         } else {
-            specialBlockExchangers.put(block, heatExchanger);
+            this.specialBlockExchangers.put(block, heatExchanger);
         }
     }
 
     private void registerBlockExchanger(Block block, IHeatExchangerLogic heatExchangerLogic) {
-        registerBlockExchanger(block, new SimpleHeatExchanger(heatExchangerLogic));
+        this.registerBlockExchanger(block, new SimpleHeatExchanger(heatExchangerLogic));
     }
 
     private void registerBlockExchanger(IBlockState state, IHeatExchangerLogic heatExchangerLogic) {
-        registerBlockExchanger(state, new SimpleHeatExchanger(heatExchangerLogic));
+        this.registerBlockExchanger(state, new SimpleHeatExchanger(heatExchangerLogic));
     }
 
     @Override
     public void registerBlockExchanger(Block block, double temperature, double thermalResistance) {
-        registerBlockExchanger(block, new HeatExchangerLogicConstant(temperature, thermalResistance));
+        this.registerBlockExchanger(block, new HeatExchangerLogicConstant(temperature, thermalResistance));
     }
 
     @Override
     public void registerBlockExchanger(IBlockState state, double temperature, double thermalResistance) {
-        registerBlockExchanger(state, new HeatExchangerLogicConstant(temperature, thermalResistance));
+        this.registerBlockExchanger(state, new HeatExchangerLogicConstant(temperature, thermalResistance));
     }
 
     @Override
@@ -151,7 +151,7 @@ public class HeatExchangerManager implements IHeatRegistry {
         private boolean isMultisided = true;
 
         public TemperatureData(IHeatExchanger heatExchanger) {
-            Arrays.fill(temp, null);
+            Arrays.fill(this.temp, null);
 
             Set<IHeatExchangerLogic> heatExchangers = new HashSet<>();
             IHeatExchangerLogic logic = null;
@@ -159,7 +159,7 @@ public class HeatExchangerManager implements IHeatRegistry {
                 logic = heatExchanger.getHeatExchangerLogic(face);
                 if (logic != null) {
                     if (heatExchangers.contains(logic)) {
-                        isMultisided = false;
+                        this.isMultisided = false;
                         break;
                     } else {
                         heatExchangers.add(logic);
@@ -167,28 +167,28 @@ public class HeatExchangerManager implements IHeatRegistry {
                 }
             }
 
-            if (isMultisided) {
+            if (this.isMultisided) {
                 for (EnumFacing face : EnumFacing.VALUES) {
                     logic = heatExchanger.getHeatExchangerLogic(face);
                     if (logic != null) {
-                        temp[face.ordinal()] = logic.getTemperature();
+                        this.temp[face.ordinal()] = logic.getTemperature();
                     }
                 }
             } else if (logic != null) {
-                temp[6] = logic.getTemperature();
+                this.temp[6] = logic.getTemperature();
             }
         }
 
         public boolean isMultisided() {
-            return isMultisided;
+            return this.isMultisided;
         }
 
         public double getTemperature(EnumFacing face) {
-            return face == null ? temp[6] : temp[face.ordinal()];
+            return face == null ? this.temp[6] : this.temp[face.ordinal()];
         }
 
         public boolean hasData(EnumFacing face) {
-            return face == null ? temp[6] != null : temp[face.ordinal()] != null;
+            return face == null ? this.temp[6] != null : this.temp[face.ordinal()] != null;
         }
     }
 }

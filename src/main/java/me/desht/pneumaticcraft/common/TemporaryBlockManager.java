@@ -59,7 +59,7 @@ public class TemporaryBlockManager extends WorldSavedData {
     public static void tickAll(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.START) return;
 
-        for (Map.Entry<Integer,TemporaryBlockManager> entries : managers.entrySet()) {
+        for (Map.Entry<Integer, TemporaryBlockManager> entries : managers.entrySet()) {
             World world = DimensionManager.getWorld(entries.getKey());
             if (world != null) {
                 Iterator<TempBlockRecord> iter = entries.getValue().tempBlocks.iterator();
@@ -78,20 +78,20 @@ public class TemporaryBlockManager extends WorldSavedData {
     }
 
     public void setBlock(BlockPos pos, IBlockState state, int durationTicks) {
-        World world = DimensionManager.getWorld(dimId);
+        World world = DimensionManager.getWorld(this.dimId);
         if (world != null) {
             IBlockState prevState = world.getBlockState(pos);
             world.setBlockState(pos, state);
-            tempBlocks.add(new TempBlockRecord(pos, prevState, state, world.getTotalWorldTime() + durationTicks));
+            this.tempBlocks.add(new TempBlockRecord(pos, prevState, state, world.getTotalWorldTime() + durationTicks));
         }
     }
 
     public boolean trySetBlock(EntityPlayer player, EnumFacing face, BlockPos pos, IBlockState state, int durationTicks) {
-        World world = DimensionManager.getWorld(dimId);
+        World world = DimensionManager.getWorld(this.dimId);
         if (world != null) {
             IBlockState prevState = world.getBlockState(pos);
             if (PneumaticCraftUtils.tryPlaceBlock(world, pos, player, face, state)) {
-                tempBlocks.add(new TempBlockRecord(pos, prevState, state, world.getTotalWorldTime() + durationTicks));
+                this.tempBlocks.add(new TempBlockRecord(pos, prevState, state, world.getTotalWorldTime() + durationTicks));
                 return true;
             }
         }
@@ -100,19 +100,19 @@ public class TemporaryBlockManager extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        tempBlocks.clear();
+        this.tempBlocks.clear();
 
         NBTTagList list = nbt.getTagList("tempBlocks", Constants.NBT.TAG_COMPOUND);
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound tag = list.getCompoundTagAt(i);
-            tempBlocks.add(TempBlockRecord.readFromNBT(tag));
+            this.tempBlocks.add(TempBlockRecord.readFromNBT(tag));
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagList list = new NBTTagList();
-        for (TempBlockRecord record : tempBlocks) {
+        for (TempBlockRecord record : this.tempBlocks) {
             NBTTagCompound tag = new NBTTagCompound();
             record.writeToNBT(tag);
             list.appendTag(tag);
@@ -143,10 +143,10 @@ public class TemporaryBlockManager extends WorldSavedData {
         }
 
         void writeToNBT(NBTTagCompound tag) {
-            tag.setTag("pos", NBTUtil.createPosTag(pos));
-            tag.setTag("prevState", NBTUtil.writeBlockState(new NBTTagCompound(), prevState));
-            tag.setTag("tempState", NBTUtil.writeBlockState(new NBTTagCompound(), tempState));
-            tag.setLong("endTime", endTime);
+            tag.setTag("pos", NBTUtil.createPosTag(this.pos));
+            tag.setTag("prevState", NBTUtil.writeBlockState(new NBTTagCompound(), this.prevState));
+            tag.setTag("tempState", NBTUtil.writeBlockState(new NBTTagCompound(), this.tempState));
+            tag.setLong("endTime", this.endTime);
         }
     }
 }

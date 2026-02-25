@@ -24,21 +24,21 @@ public abstract class InventoryFakePlayer extends InventoryPlayer {
     @Nonnull
     @Override
     public ItemStack getStackInSlot(int index) {
-        if (index >= getUnderlyingItemHandler().getSlots() && index < super.getSizeInventory()) {
+        if (index >= this.getUnderlyingItemHandler().getSlots() && index < super.getSizeInventory()) {
             // bit of a kludge here: the InventoryPlayer sub-inventories are still their usual size, so if any
             // other mod (e.g. Quark) uses that to get an index for getStackInSlot(), we need to account for that.
             // https://github.com/TeamPneumatic/pnc-repressurized/issues/265
             return ItemStack.EMPTY;
         }
-        return getUnderlyingItemHandler().getStackInSlot(index);
+        return this.getUnderlyingItemHandler().getStackInSlot(index);
     }
 
     @Override
     public float getDestroySpeed(IBlockState state) {
         float f = 1.0f;
 
-        if (!getUnderlyingItemHandler().getStackInSlot(0).isEmpty()) {
-            f *= getUnderlyingItemHandler().getStackInSlot(0).getDestroySpeed(state);
+        if (!this.getUnderlyingItemHandler().getStackInSlot(0).isEmpty()) {
+            f *= this.getUnderlyingItemHandler().getStackInSlot(0).getDestroySpeed(state);
         }
 
         return f;
@@ -46,8 +46,8 @@ public abstract class InventoryFakePlayer extends InventoryPlayer {
 
     @Override
     public int storeItemStack(ItemStack itemStackIn) {
-        for (int i = 0; i < getUnderlyingItemHandler().getSlots(); i++) {
-            if (canMerge(getStackInSlot(i), itemStackIn)) return i;
+        for (int i = 0; i < this.getUnderlyingItemHandler().getSlots(); i++) {
+            if (this.canMerge(this.getStackInSlot(i), itemStackIn)) return i;
         }
         return -1;
     }
@@ -62,44 +62,44 @@ public abstract class InventoryFakePlayer extends InventoryPlayer {
 
     @Override
     public int getSizeInventory() {
-        return getUnderlyingItemHandler().getSlots();
+        return this.getUnderlyingItemHandler().getSlots();
     }
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return getUnderlyingItemHandler().extractItem(index, count, false);
+        return this.getUnderlyingItemHandler().extractItem(index, count, false);
     }
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return getUnderlyingItemHandler().extractItem(index, getUnderlyingItemHandler().getSlotLimit(index), false);
+        return this.getUnderlyingItemHandler().extractItem(index, this.getUnderlyingItemHandler().getSlotLimit(index), false);
     }
 
     @Override
     public int getFirstEmptyStack() {
-        for (int i = 0; i < getUnderlyingItemHandler().getSlots(); i++) {
-            if (getUnderlyingItemHandler().getStackInSlot(i).isEmpty()) return i;
+        for (int i = 0; i < this.getUnderlyingItemHandler().getSlots(); i++) {
+            if (this.getUnderlyingItemHandler().getStackInSlot(i).isEmpty()) return i;
         }
         return -1;
     }
 
     @Override
     public boolean isEmpty() {
-        for (int i = 0; i < getUnderlyingItemHandler().getSlots(); i++) {
-            if (!getUnderlyingItemHandler().getStackInSlot(i).isEmpty()) return false;
+        for (int i = 0; i < this.getUnderlyingItemHandler().getSlots(); i++) {
+            if (!this.getUnderlyingItemHandler().getStackInSlot(i).isEmpty()) return false;
         }
         return true;
     }
 
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
-        getUnderlyingItemHandler().setStackInSlot(index, stack);
+        this.getUnderlyingItemHandler().setStackInSlot(index, stack);
     }
 
     @Override
     public void clear() {
-        for (int i = 0; i < getUnderlyingItemHandler().getSlots(); i++) {
-            getUnderlyingItemHandler().setStackInSlot(i, ItemStack.EMPTY);
+        for (int i = 0; i < this.getUnderlyingItemHandler().getSlots(); i++) {
+            this.getUnderlyingItemHandler().setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 }

@@ -14,27 +14,27 @@ public class ModelVacuumPump extends AbstractModelRenderer.BaseModel {
     private final ModelRenderer blade;
 
     public ModelVacuumPump() {
-        textureWidth = 64;
-        textureHeight = 64;
+        this.textureWidth = 64;
+        this.textureHeight = 64;
 
-        turbineCase = new ModelRenderer(this, 0, 47);
-        turbineCase.addBox(0F, 0F, 0F, 1, 4, 1);
-        turbineCase.setRotationPoint(-0.5F, 14.1F, 0F);
-        turbineCase.setTextureSize(64, 64);
-        turbineCase.mirror = true;
-        setRotation(turbineCase, 0F, 0F, 0F);
-        top = new ModelRenderer(this, 0, 47);
-        top.addBox(0F, 0F, 0F, 6, 1, 12);
-        top.setRotationPoint(-3F, 13F, -6F);
-        top.setTextureSize(64, 64);
-        top.mirror = true;
-        setRotation(top, 0F, 0F, 0F);
-        blade = new ModelRenderer(this, 0, 0);
-        blade.addBox(0F, 0F, 0F, 1, 4, 2);
-        blade.setRotationPoint(-0.5F, 14F, -3F);
-        blade.setTextureSize(64, 64);
-        blade.mirror = true;
-        setRotation(blade, 0F, 0F, 0F);
+        this.turbineCase = new ModelRenderer(this, 0, 47);
+        this.turbineCase.addBox(0F, 0F, 0F, 1, 4, 1);
+        this.turbineCase.setRotationPoint(-0.5F, 14.1F, 0F);
+        this.turbineCase.setTextureSize(64, 64);
+        this.turbineCase.mirror = true;
+        this.setRotation(this.turbineCase, 0F, 0F, 0F);
+        this.top = new ModelRenderer(this, 0, 47);
+        this.top.addBox(0F, 0F, 0F, 6, 1, 12);
+        this.top.setRotationPoint(-3F, 13F, -6F);
+        this.top.setTextureSize(64, 64);
+        this.top.mirror = true;
+        this.setRotation(this.top, 0F, 0F, 0F);
+        this.blade = new ModelRenderer(this, 0, 0);
+        this.blade.addBox(0F, 0F, 0F, 1, 4, 2);
+        this.blade.setRotationPoint(-0.5F, 14F, -3F);
+        this.blade.setTextureSize(64, 64);
+        this.blade.mirror = true;
+        this.setRotation(this.blade, 0F, 0F, 0F);
     }
 
     private static final int BLADE_COUNT = 3;
@@ -48,7 +48,7 @@ public class ModelVacuumPump extends AbstractModelRenderer.BaseModel {
             GlStateManager.pushMatrix();
             GlStateManager.rotate(rotation * 2 + (i + 0.5F) / BLADE_COUNT * 360, 0, 1, 0);
             GlStateManager.translate(0, 0, 1D / 16D);
-            blade.render(size);
+            this.blade.render(size);
             GlStateManager.popMatrix();
         }
         GlStateManager.popMatrix();
@@ -61,7 +61,7 @@ public class ModelVacuumPump extends AbstractModelRenderer.BaseModel {
             GlStateManager.pushMatrix();
             GlStateManager.rotate(-rotation * 2 + (float) i / (float) BLADE_COUNT * 360, 0, 1, 0);
             GlStateManager.translate(0, 0, 1D / 16D);
-            blade.render(size);
+            this.blade.render(size);
             GlStateManager.popMatrix();
         }
         GlStateManager.popMatrix();
@@ -74,7 +74,7 @@ public class ModelVacuumPump extends AbstractModelRenderer.BaseModel {
             GlStateManager.translate(0, 0, 3F / 16F);
             GlStateManager.rotate((float) i / (float) CASE_POINTS * 275F - 130, 0, 1, 0);
             GlStateManager.translate(0, 0, 2.5F / 16F);
-            turbineCase.render(size);
+            this.turbineCase.render(size);
             GlStateManager.popMatrix();
         }
         GlStateManager.rotate(180, 0, 1, 0);
@@ -83,17 +83,17 @@ public class ModelVacuumPump extends AbstractModelRenderer.BaseModel {
             GlStateManager.translate(0, 0, 3F / 16F);
             GlStateManager.rotate((float) i / (float) CASE_POINTS * 275F - 130, 0, 1, 0);
             GlStateManager.translate(0, 0, 2.5F / 16F);
-            turbineCase.render(size);
+            this.turbineCase.render(size);
             GlStateManager.popMatrix();
         }
         GlStateManager.popMatrix();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1, 1, 1, 0.4F);
-        top.render(size);
+        this.top.render(size);
         GlStateManager.disableBlend();
 
-        drawPlusAndMinus();
+        this.drawPlusAndMinus();
 
         GlStateManager.enableTexture2D();
     }

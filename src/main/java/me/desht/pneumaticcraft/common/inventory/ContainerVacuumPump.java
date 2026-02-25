@@ -8,8 +8,8 @@ public class ContainerVacuumPump extends ContainerPneumaticBase<TileEntityVacuum
     public ContainerVacuumPump(InventoryPlayer inventoryPlayer, TileEntityVacuumPump te) {
         super(te);
 
-        addUpgradeSlots(71, 29);
+        this.addUpgradeSlots(71, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

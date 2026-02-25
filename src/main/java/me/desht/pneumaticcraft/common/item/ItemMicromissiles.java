@@ -45,8 +45,8 @@ public class ItemMicromissiles extends ItemPneumatic {
 
     public ItemMicromissiles() {
         super("micromissiles");
-        setMaxDamage(ConfigHandler.microMissile.missilePodSize - 1);  // -1 because of counting from 0
-        setMaxStackSize(1);
+        this.setMaxDamage(ConfigHandler.microMissile.missilePodSize - 1);  // -1 because of counting from 0
+        this.setMaxStackSize(1);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class ItemMicromissiles extends ItemPneumatic {
 
         if (playerIn.isSneaking()) {
             playerIn.openGui(PneumaticCraftRepressurized.instance, GuiHandler.EnumGuiId.MICROMISSILE.ordinal(),
-                    worldIn, (int)playerIn.posX, (int)playerIn.posY, (int)playerIn.posZ);
+                    worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
             return ActionResult.newResult(EnumActionResult.SUCCESS, iStack);
         }
 
@@ -64,7 +64,7 @@ public class ItemMicromissiles extends ItemPneumatic {
         missile.posX += directionVec.x;
         missile.posY += directionVec.y + 0.1;
         missile.posZ += directionVec.z;
-        missile.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, getInitialVelocity(iStack), 0.0F);
+        missile.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, this.getInitialVelocity(iStack), 0.0F);
 
         playerIn.getCooldownTracker().setCooldown(this, ConfigHandler.microMissile.launchCooldown);
 
@@ -89,10 +89,10 @@ public class ItemMicromissiles extends ItemPneumatic {
             if (fireMode == FireMode.SMART) {
                 return Math.max(0.2f, tag.getFloat(NBT_TOP_SPEED) / 2f);
             } else {
-                return 1/3f;
+                return 1 / 3f;
             }
         } else {
-            return 1/3f;
+            return 1 / 3f;
         }
     }
 
@@ -111,7 +111,7 @@ public class ItemMicromissiles extends ItemPneumatic {
             if (!filter.isEmpty()) {
                 curInfo.add(I18n.format("gui.sentryTurret.targetFilter") + ": " + TextFormatting.AQUA + filter);
             }
-            curInfo.add(I18n.format("gui.micromissile.firingMode") + ": "+ TextFormatting.AQUA + I18n.format("gui.micromissile.mode." + tag.getString(NBT_FIRE_MODE)));
+            curInfo.add(I18n.format("gui.micromissile.firingMode") + ": " + TextFormatting.AQUA + I18n.format("gui.micromissile.mode." + tag.getString(NBT_FIRE_MODE)));
             if (ConfigHandler.microMissile.damageTerrain) {
                 curInfo.add(I18n.format("gui.tooltip.terrainWarning"));
             } else {

@@ -12,17 +12,17 @@ public class ContainerPressureChamberInterface extends ContainerPneumaticBase<Ti
         super(te);
 
         // add the transfer slot
-        addSlotToContainer(new SlotUntouchable(te.getPrimaryInventory(), 0, 66, 35));
+        this.addSlotToContainer(new SlotUntouchable(te.getPrimaryInventory(), 0, 66, 35));
 
-        addUpgradeSlots(20, 26);
+        this.addUpgradeSlots(20, 26);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
 
         // add the export filter slots
         //  - after the player slots so they won't be shift-clicked.
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                addSlotToContainer(new SlotPhantomUnstackable(te.getFilterHandler(), i * 3 + j, 115 + j * 18, 25 + i * 18) {
+                this.addSlotToContainer(new SlotPhantomUnstackable(te.getFilterHandler(), i * 3 + j, 115 + j * 18, 25 + i * 18) {
                     @Override
                     public boolean isItemValid(@Nonnull ItemStack stack) {
                         return true;

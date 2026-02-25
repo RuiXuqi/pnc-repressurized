@@ -19,16 +19,16 @@ public class GuiProgWidgetEmitRedstone extends GuiProgWidgetOptionBase<ProgWidge
 
         for (int i = 0; i < 6; i++) {
             String sideName = PneumaticCraftUtils.getOrientationName(EnumFacing.byIndex(i));
-            GuiCheckBox checkBox = new GuiCheckBox(i, guiLeft + 4, guiTop + 30 + i * 12, 0xFF404040, sideName);
-            checkBox.checked = widget.getSides()[i];
-            addWidget(checkBox);
+            GuiCheckBox checkBox = new GuiCheckBox(i, this.guiLeft + 4, this.guiTop + 30 + i * 12, 0xFF404040, sideName);
+            checkBox.checked = this.widget.getSides()[i];
+            this.addWidget(checkBox);
         }
     }
 
     @Override
     public void actionPerformed(IGuiWidget checkBox) {
         if (checkBox.getID() < 6 && checkBox.getID() >= 0) {
-            widget.getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
+            this.widget.getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
         }
         super.actionPerformed(checkBox);
     }
@@ -36,6 +36,6 @@ public class GuiProgWidgetEmitRedstone extends GuiProgWidgetOptionBase<ProgWidge
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString("Affecting sides:", guiLeft + 4, guiTop + 20, 0xFF604040);
+        this.fontRenderer.drawString("Affecting sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF604040);
     }
 }

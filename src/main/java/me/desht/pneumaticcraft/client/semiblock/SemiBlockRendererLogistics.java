@@ -25,11 +25,11 @@ public class SemiBlockRendererLogistics implements ISemiBlockRenderer<SemiBlockL
         if (alpha == 0) return;
         if (alpha < 255) GlStateManager.enableBlend();
         GlStateManager.disableTexture2D();
-        RenderUtils.glColorHex((alpha << 24 | 0x00FFFFFF) & semiBlock.getColor(), getLightMultiplier(semiBlock));
+        RenderUtils.glColorHex((alpha << 24 | 0x00FFFFFF) & semiBlock.getColor(), this.getLightMultiplier(semiBlock));
         AxisAlignedBB aabb = semiBlock.getWorld() != null ?
                 semiBlock.getBlockState().getBoundingBox(semiBlock.getWorld(), semiBlock.getPos()) : DEFAULT_BOX;
         RenderUtils.renderFrame(aabb, FRAME_WIDTH);
-        drawSideHighlight(semiBlock, alpha, aabb);
+        this.drawSideHighlight(semiBlock, alpha, aabb);
 
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
@@ -38,7 +38,7 @@ public class SemiBlockRendererLogistics implements ISemiBlockRenderer<SemiBlockL
 
     private void drawSideHighlight(SemiBlockLogistics semiBlock, int alpha, AxisAlignedBB aabb) {
         GlStateManager.enableBlend();
-        RenderUtils.glColorHex(((alpha * 2) / 3 << 24 | 0x00FFFFFF) & semiBlock.getColor(), getLightMultiplier(semiBlock));
+        RenderUtils.glColorHex(((alpha * 2) / 3 << 24 | 0x00FFFFFF) & semiBlock.getColor(), this.getLightMultiplier(semiBlock));
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 

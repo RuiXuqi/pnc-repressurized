@@ -34,21 +34,27 @@ public class Fluids {
     public static final Set<IFluidBlock> MOD_FLUID_BLOCKS = new HashSet<>();
 
     public static final Fluid ETCHING_ACID = createFluid("etchacid",
-            fluid -> ((FluidPneumaticCraft)fluid).setCustomColor(0xFFA05C00), BlockFluidEtchingAcid::new);
+            fluid -> ((FluidPneumaticCraft) fluid).setCustomColor(0xFFA05C00), BlockFluidEtchingAcid::new);
     public static final Fluid PLASTIC = createFluid("plastic",
-            fluid -> {}, fluid -> new BlockFluidPneumaticCraft(fluid, new MaterialLiquid(MapColor.GRAY)));
+            fluid -> {
+            }, fluid -> new BlockFluidPneumaticCraft(fluid, new MaterialLiquid(MapColor.GRAY)));
     public static final Fluid OIL = createFluid("oil",
             fluid -> fluid.setDensity(800).setViscosity(10000), BlockFluidPneumaticCraft::new);
     public static final Fluid LPG = createFluid("lpg",
-            fluid -> {}, BlockFluidPneumaticCraft::new);
+            fluid -> {
+            }, BlockFluidPneumaticCraft::new);
     public static final Fluid GASOLINE = createFluid("fuel",
-            fluid -> {}, BlockFluidPneumaticCraft::new);
+            fluid -> {
+            }, BlockFluidPneumaticCraft::new);
     public static final Fluid KEROSENE = createFluid("kerosene",
-            fluid -> {}, BlockFluidPneumaticCraft::new);
+            fluid -> {
+            }, BlockFluidPneumaticCraft::new);
     public static final Fluid DIESEL = createFluid("diesel",
-            fluid -> {}, BlockFluidPneumaticCraft::new);
+            fluid -> {
+            }, BlockFluidPneumaticCraft::new);
     public static final Fluid LUBRICANT = createFluid("lubricant",
-            fluid -> {}, BlockFluidPneumaticCraft::new);
+            fluid -> {
+            }, BlockFluidPneumaticCraft::new);
 
     private static final Map<String, Block> fluidToBlockMap = new HashMap<>(); //you could theoretically use fluid.getBlock(), but other mods like GregTech break it for some reason.
 

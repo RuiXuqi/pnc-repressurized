@@ -20,22 +20,22 @@ public class PacketSetLogisticsFilterStack extends LocationIntPacket<PacketSetLo
 
     public PacketSetLogisticsFilterStack(SemiBlockLogistics logistics, @Nonnull ItemStack stack, int index) {
         super(logistics.getPos());
-        settingStack = stack;
-        settingIndex = index;
+        this.settingStack = stack;
+        this.settingIndex = index;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        ByteBufUtils.writeItemStack(buf, settingStack);
-        buf.writeInt(settingIndex);
+        ByteBufUtils.writeItemStack(buf, this.settingStack);
+        buf.writeInt(this.settingIndex);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        settingStack = ByteBufUtils.readItemStack(buf);
-        settingIndex = buf.readInt();
+        this.settingStack = ByteBufUtils.readItemStack(buf);
+        this.settingIndex = buf.readInt();
     }
 
     @Override

@@ -23,45 +23,45 @@ public class MovingSoundJetBoots extends MovingSound {
         this.targetPitch = 0.7F;
         this.pitch = 0.4F;
 
-        handler = CommonArmorHandler.getHandlerForPlayer(player);
+        this.handler = CommonArmorHandler.getHandlerForPlayer(player);
     }
 
     @Override
     public void update() {
-        if (!handler.isValid() || !handler.isArmorEnabled()) {
+        if (!this.handler.isValid() || !this.handler.isArmorEnabled()) {
             // handler gets invalidated if the tracked player disconnects
-            donePlaying = true;
+            this.donePlaying = true;
             return;
         }
 
-        if (!handler.isJetBootsEnabled() && endTimer == -1 || !handler.isJetBootsActive() && player.onGround && endTimer == -1) {
-            endTimer = 20;
+        if (!this.handler.isJetBootsEnabled() && this.endTimer == -1 || !this.handler.isJetBootsActive() && this.player.onGround && this.endTimer == -1) {
+            this.endTimer = 20;
         }
-        if (endTimer > 0 && --endTimer <= 0) {
-            donePlaying = true;
+        if (this.endTimer > 0 && --this.endTimer <= 0) {
+            this.donePlaying = true;
         }
 
-        xPosF = (float) player.posX;
-        yPosF = (float) player.posY;
-        zPosF = (float) player.posZ;
+        this.xPosF = (float) this.player.posX;
+        this.yPosF = (float) this.player.posY;
+        this.zPosF = (float) this.player.posZ;
 
-        if (endTimer > 0) {
-            targetPitch = 0.5F;
-            volume = 0.5F - ((20 - endTimer) / 50F);
+        if (this.endTimer > 0) {
+            this.targetPitch = 0.5F;
+            this.volume = 0.5F - ((20 - this.endTimer) / 50F);
         } else {
-            if (handler.isJetBootsActive()) {
-                double vel = Math.sqrt(player.motionX * player.motionX + player.motionY * player.motionY + player.motionZ * player.motionZ);
-                targetPitch = 0.7F + (float) vel / 15;
-                volume = 0.5F + (float) vel / 15;
+            if (this.handler.isJetBootsActive()) {
+                double vel = Math.sqrt(this.player.motionX * this.player.motionX + this.player.motionY * this.player.motionY + this.player.motionZ * this.player.motionZ);
+                this.targetPitch = 0.7F + (float) vel / 15;
+                this.volume = 0.5F + (float) vel / 15;
             } else {
-                targetPitch = 0.5F;
-                volume = 0.4F;
+                this.targetPitch = 0.5F;
+                this.volume = 0.4F;
             }
         }
-        pitch += (targetPitch - pitch) / 10F;
-        if (player.isInsideOfMaterial(Material.WATER)) {
-            pitch *= 0.75f;
-            volume *= 0.5f;
+        this.pitch += (this.targetPitch - this.pitch) / 10F;
+        if (this.player.isInsideOfMaterial(Material.WATER)) {
+            this.pitch *= 0.75f;
+            this.volume *= 0.5f;
         }
     }
 }

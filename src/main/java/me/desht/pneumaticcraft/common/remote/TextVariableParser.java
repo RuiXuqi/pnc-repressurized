@@ -16,17 +16,17 @@ public class TextVariableParser {
     }
 
     public TextVariableParser(String str, DroneAIManager variableHolder) {
-        orig = str;
+        this.orig = str;
         this.variableHolder = variableHolder;
     }
 
     public String parse() {
         int index;
-        String ret = orig;
+        String ret = this.orig;
         while ((index = ret.indexOf("${")) >= 0) {
             int secondIndex = ret.indexOf("}", index);
             if (secondIndex >= 0) {
-                String varValue = getVariableValue(ret.substring(index + 2, secondIndex));
+                String varValue = this.getVariableValue(ret.substring(index + 2, secondIndex));
                 ret = ret.substring(0, index) + varValue + ret.substring(secondIndex + 1);
             } else {
                 return ret.substring(0, index) + "Parsing error: Missing '}'";
@@ -36,7 +36,7 @@ public class TextVariableParser {
     }
 
     public Set<String> getRelevantVariables() {
-        return relevantVariables;
+        return this.relevantVariables;
     }
 
     private String getVariableValue(String variable) {
@@ -44,9 +44,9 @@ public class TextVariableParser {
         boolean y = variable.endsWith(".y");
         boolean z = variable.endsWith(".z");
         if (x || y || z) variable = variable.substring(0, variable.length() - 2);
-        relevantVariables.add(variable);
-        BlockPos pos = variableHolder != null ?
-                variableHolder.getCoordinate(variable) :
+        this.relevantVariables.add(variable);
+        BlockPos pos = this.variableHolder != null ?
+                this.variableHolder.getCoordinate(variable) :
                 GlobalVariableManager.getInstance().getPos(variable.startsWith("#") ? variable.substring(1) : variable);
         if (x) return pos.getX() + "";
         if (y) return pos.getY() + "";

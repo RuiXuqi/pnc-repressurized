@@ -61,21 +61,21 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
 
     public SemiBlockLogistics() {
         super(TileEntity.class);
-        for (int i = 0; i < fluidFilters.length; i++) {
-            fluidFilters[i] = new FluidTank(canFilterStack() ? 64000 : 1000);
+        for (int i = 0; i < this.fluidFilters.length; i++) {
+            this.fluidFilters[i] = new FluidTank(this.canFilterStack() ? 64000 : 1000);
         }
     }
 
     @Override
     public boolean canPlace(EnumFacing facing) {
-        return getTileEntity() != null &&
-                (getTileEntity().hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)
-                || getTileEntity().hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing));
+        return this.getTileEntity() != null &&
+                (this.getTileEntity().hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, facing)
+                        || this.getTileEntity().hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, facing));
     }
 
     @Override
     public boolean canStay() {
-        return canPlace(getSide());
+        return this.canPlace(this.getSide());
     }
 
     public abstract int getColor();
@@ -87,15 +87,15 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     }
 
     public boolean isInvisible() {
-        return invisible;
+        return this.invisible;
     }
 
     public int getAlpha() {
-        return alpha;
+        return this.alpha;
     }
 
     public EnumFacing getSide() {
-        return side;
+        return this.side;
     }
 
     public void setSide(EnumFacing side) {
@@ -105,8 +105,8 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     @Override
     public void update() {
         super.update();
-        if (!world.isRemote) {
-            Iterator<Map.Entry<ItemStack, Integer>> iterator = incomingStacks.entrySet().iterator();
+        if (!this.world.isRemote) {
+            Iterator<Map.Entry<ItemStack, Integer>> iterator = this.incomingStacks.entrySet().iterator();
             while (iterator.hasNext()) {
                 Map.Entry<ItemStack, Integer> entry = iterator.next();
                 int counter = entry.getValue();
@@ -116,7 +116,7 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
                     entry.setValue(counter + 1);
                 }
             }
-            Iterator<Map.Entry<FluidStackWrapper, Integer>> it = incomingFluid.entrySet().iterator();
+            Iterator<Map.Entry<FluidStackWrapper, Integer>> it = this.incomingFluid.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<FluidStackWrapper, Integer> entry = it.next();
                 int counter = entry.getValue();
@@ -128,10 +128,10 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
             }
 
         } else {
-            if (invisible && !playerIsHoldingLogisticItems()) {
-                alpha = Math.max(0, alpha - 9);
+            if (this.invisible && !this.playerIsHoldingLogisticItems()) {
+                this.alpha = Math.max(0, this.alpha - 9);
             } else {
-                alpha = Math.min(255, alpha + 9);
+                this.alpha = Math.min(255, this.alpha + 9);
             }
         }
     }
@@ -146,24 +146,24 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     }
 
     public void informIncomingStack(ItemStack stack) {
-        incomingStacks.put(stack, 0);
+        this.incomingStacks.put(stack, 0);
     }
 
     public void clearIncomingStack(ItemStack stack) {
-        incomingStacks.remove(stack);
+        this.incomingStacks.remove(stack);
     }
 
     public void informIncomingStack(FluidStackWrapper stack) {
-        incomingFluid.put(stack, 0);
+        this.incomingFluid.put(stack, 0);
     }
 
     public void clearIncomingStack(FluidStackWrapper stack) {
-        incomingFluid.remove(stack);
+        this.incomingFluid.remove(stack);
     }
 
     public int getIncomingFluid(Fluid fluid) {
         int count = 0;
-        for (FluidStackWrapper wrapper : incomingFluid.keySet()) {
+        for (FluidStackWrapper wrapper : this.incomingFluid.keySet()) {
             if (wrapper.stack.getFluid() == fluid) count += wrapper.stack.amount;
         }
         return count;
@@ -171,8 +171,8 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
 
     public int getIncomingItems(ItemStack stack) {
         int count = 0;
-        for (ItemStack s : incomingStacks.keySet()) {
-            if (tryMatch(s, stack)) {
+        for (ItemStack s : this.incomingStacks.keySet()) {
+            if (this.tryMatch(s, stack)) {
                 count += s.getCount();
             }
         }
@@ -182,11 +182,11 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag(NBT_FILTERS, filters.serializeNBT());
+        tag.setTag(NBT_FILTERS, this.filters.serializeNBT());
 
         NBTTagList tagList = new NBTTagList();
-        for (int i = 0; i < fluidFilters.length; i++) {
-            FluidTank filter = fluidFilters[i];
+        for (int i = 0; i < this.fluidFilters.length; i++) {
+            FluidTank filter = this.fluidFilters[i];
             if (filter.getFluid() != null) {
                 NBTTagCompound t = new NBTTagCompound();
                 t.setInteger("index", i);
@@ -196,40 +196,40 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
         }
         tag.setTag(NBT_FLUID_FILTERS, tagList);
 
-        tag.setBoolean(NBT_INVISIBLE, invisible);
-        tag.setBoolean(NBT_FUZZY_META, fuzzyMeta);
-        tag.setBoolean(NBT_FUZZY_NBT, fuzzyNBT);
-        tag.setBoolean(NBT_WHITELIST, whitelist);
-        if (side != null) tag.setString(NBT_SIDE, side.getName());
+        tag.setBoolean(NBT_INVISIBLE, this.invisible);
+        tag.setBoolean(NBT_FUZZY_META, this.fuzzyMeta);
+        tag.setBoolean(NBT_FUZZY_NBT, this.fuzzyNBT);
+        tag.setBoolean(NBT_WHITELIST, this.whitelist);
+        if (this.side != null) tag.setString(NBT_SIDE, this.side.getName());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        filters.deserializeNBT(tag.getCompoundTag(NBT_FILTERS));
+        this.filters.deserializeNBT(tag.getCompoundTag(NBT_FILTERS));
 
         NBTTagList tagList = tag.getTagList(NBT_FLUID_FILTERS, 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
-            fluidFilters[tagList.getCompoundTagAt(i).getInteger("index")].readFromNBT(tagList.getCompoundTagAt(i));
+            this.fluidFilters[tagList.getCompoundTagAt(i).getInteger("index")].readFromNBT(tagList.getCompoundTagAt(i));
         }
 
-        invisible = NBTUtil.fromTag(tag, NBT_INVISIBLE, false);
-        fuzzyMeta = NBTUtil.fromTag(tag, NBT_FUZZY_META, false);
-        fuzzyNBT = NBTUtil.fromTag(tag, NBT_FUZZY_NBT, true);
-        whitelist = NBTUtil.fromTag(tag, NBT_WHITELIST, true);
-        side = tag.hasKey(NBT_SIDE) ? EnumFacing.byName(tag.getString(NBT_SIDE)) : EnumFacing.UP;
+        this.invisible = NBTUtil.fromTag(tag, NBT_INVISIBLE, false);
+        this.fuzzyMeta = NBTUtil.fromTag(tag, NBT_FUZZY_META, false);
+        this.fuzzyNBT = NBTUtil.fromTag(tag, NBT_FUZZY_NBT, true);
+        this.whitelist = NBTUtil.fromTag(tag, NBT_WHITELIST, true);
+        this.side = tag.hasKey(NBT_SIDE) ? EnumFacing.byName(tag.getString(NBT_SIDE)) : EnumFacing.UP;
     }
 
     public void setFilter(int filterIndex, FluidStack stack) {
-        fluidFilters[filterIndex].setFluid(stack);
+        this.fluidFilters[filterIndex].setFluid(stack);
     }
 
     public IFluidTank getTankFilter(int filterIndex) {
-        return fluidFilters[filterIndex];
+        return this.fluidFilters[filterIndex];
     }
 
     public IItemHandlerModifiable getFilters() {
-        return filters;
+        return this.filters;
     }
 
     /**
@@ -238,25 +238,25 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
      * @return true if NBT should be saved
      */
     protected boolean shouldSaveNBT() {
-        for (int i = 0; i < filters.getSlots(); i++) {
-            if (!filters.getStackInSlot(i).isEmpty()) return true;
+        for (int i = 0; i < this.filters.getSlots(); i++) {
+            if (!this.filters.getStackInSlot(i).isEmpty()) return true;
         }
 
-        for (FluidTank fluidFilter : fluidFilters) {
+        for (FluidTank fluidFilter : this.fluidFilters) {
             if (fluidFilter.getFluidAmount() > 0) return true;
         }
 
-        return invisible || fuzzyMeta || !fuzzyNBT || !whitelist || side != EnumFacing.UP;
+        return this.invisible || this.fuzzyMeta || !this.fuzzyNBT || !this.whitelist || this.side != EnumFacing.UP;
     }
 
     @Override
     public void addDrops(NonNullList<ItemStack> drops) {
         super.addDrops(drops);
 
-        if (shouldSaveNBT()) {
+        if (this.shouldSaveNBT()) {
             ItemStack drop = drops.get(0);
             NBTTagCompound tag = new NBTTagCompound();
-            writeToNBT(tag);
+            this.writeToNBT(tag);
             drop.setTagCompound(tag);
         }
     }
@@ -265,15 +265,15 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     public void onPlaced(EntityPlayer player, ItemStack stack, EnumFacing facing) {
         NBTTagCompound tag = stack.getTagCompound();
         if (tag != null) {
-            readFromNBT(tag);
+            this.readFromNBT(tag);
         }
-        setSide(facing);
+        this.setSide(facing);
     }
 
     @Override
     public boolean onRightClickWithConfigurator(EntityPlayer player, EnumFacing side) {
-        if (getGuiID() != null) {
-            player.openGui(PneumaticCraftRepressurized.instance, getGuiID().ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+        if (this.getGuiID() != null) {
+            player.openGui(PneumaticCraftRepressurized.instance, this.getGuiID().ordinal(), this.world, this.pos.getX(), this.pos.getY(), this.pos.getZ());
         }
         return true;
     }
@@ -284,24 +284,24 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
 
     boolean tryMatch(ItemStack s1, ItemStack s2) {
         boolean matched;
-        if (!fuzzyMeta && !fuzzyNBT) {
+        if (!this.fuzzyMeta && !this.fuzzyNBT) {
             matched = ItemStack.areItemStacksEqual(s1, s2);
-        } else if (fuzzyMeta && !fuzzyNBT) {
+        } else if (this.fuzzyMeta && !this.fuzzyNBT) {
             matched = !s1.isEmpty() && s1.getItem() == s2.getItem() && ItemStack.areItemStackTagsEqual(s1, s2);
-        } else if (!fuzzyMeta) {
+        } else if (!this.fuzzyMeta) {
             matched = s1.isItemEqual(s2);
         } else {
             matched = !s1.isEmpty() && s1.getItem() == s2.getItem();
         }
-        return matched == whitelist;
+        return matched == this.whitelist;
     }
 
     boolean passesFilter(ItemStack stack) {
         boolean hasStack = false;
-        for (int i = 0; i < filters.getSlots(); i++) {
-            ItemStack s = filters.getStackInSlot(i);
+        for (int i = 0; i < this.filters.getSlots(); i++) {
+            ItemStack s = this.filters.getStackInSlot(i);
             if (!s.isEmpty()) {
-                if (tryMatch(s, stack)) return true;
+                if (this.tryMatch(s, stack)) return true;
                 hasStack = true;
             }
         }
@@ -310,7 +310,7 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
 
     boolean passesFilter(Fluid fluid) {
         boolean hasFilter = false;
-        for (FluidTank filter : fluidFilters) {
+        for (FluidTank filter : this.fluidFilters) {
             if (filter.getFluidAmount() > 0) {
                 if (filter.getFluid().getFluid() == fluid) return true;
                 hasFilter = true;
@@ -322,25 +322,25 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
     @Override
     public void handleGUIButtonPress(int guiID, EntityPlayer player) {
         if (guiID == 9) {
-            invisible = !invisible;
+            this.invisible = !this.invisible;
         } else if (guiID == 10) {
-            fuzzyMeta = !fuzzyMeta;
+            this.fuzzyMeta = !this.fuzzyMeta;
         } else if (guiID == 11) {
-            fuzzyNBT = !fuzzyNBT;
-        } else if (guiID == 12 && supportsBlacklisting()) {
-            whitelist = !whitelist;
+            this.fuzzyNBT = !this.fuzzyNBT;
+        } else if (guiID == 12 && this.supportsBlacklisting()) {
+            this.whitelist = !this.whitelist;
         } else if (guiID >= 13 && guiID <= 18) {
-            setSide(EnumFacing.byIndex(guiID - 13));
+            this.setSide(EnumFacing.byIndex(guiID - 13));
         }
     }
 
     @Override
     public void addTooltip(List<String> curInfo, NBTTagCompound tag, boolean extended) {
         super.addTooltip(curInfo, tag, extended);
-        curInfo.add(PneumaticCraftUtils.xlate("gui.logistic_frame.facing") + ": " + side);
+        curInfo.add(PneumaticCraftUtils.xlate("gui.logistic_frame.facing") + ": " + this.side);
         if (extended) {
             NonNullList<ItemStack> drops = NonNullList.create();
-            addDrops(drops);
+            this.addDrops(drops);
             if (!drops.isEmpty()) {
                 drops.get(0).setTagCompound(tag);
                 ItemLogisticsFrame.addTooltip(drops.get(0), PneumaticCraftRepressurized.proxy.getClientWorld(), curInfo, true);
@@ -350,19 +350,19 @@ public abstract class SemiBlockLogistics extends SemiBlockBasic<TileEntity> {
 
     @Override
     public void addWailaInfoToTag(NBTTagCompound tag) {
-        writeToNBT(tag);
+        this.writeToNBT(tag);
     }
 
     public boolean isFuzzyMeta() {
-        return fuzzyMeta;
+        return this.fuzzyMeta;
     }
 
     public boolean isFuzzyNBT() {
-        return fuzzyNBT;
+        return this.fuzzyNBT;
     }
 
     public boolean isWhitelist() {
-        return whitelist;
+        return this.whitelist;
     }
 
     public boolean supportsBlacklisting() {

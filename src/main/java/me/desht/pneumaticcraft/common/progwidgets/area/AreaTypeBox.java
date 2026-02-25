@@ -8,34 +8,34 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AreaTypeBox extends AreaType{
+public class AreaTypeBox extends AreaType {
 
     public static final String ID = "box";
-    
+
     private EnumBoxType boxType = EnumBoxType.FILLED;
-    
-    private enum EnumBoxType{
+
+    private enum EnumBoxType {
         FILLED("filled"), HOLLOW("hollow"), FRAME("frame");
-        
+
         private final String name;
-        
-        EnumBoxType(String name){
+
+        EnumBoxType(String name) {
             this.name = "gui.progWidget.area.type.box.boxType." + name;
         }
-        
+
         @Override
-        public String toString(){
-            return I18n.format(name);
+        public String toString() {
+            return I18n.format(this.name);
         }
     }
-    
-    public AreaTypeBox(){
+
+    public AreaTypeBox() {
         super(ID);
     }
 
     @Override
-    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
-        switch (boxType) {
+    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        switch (this.boxType) {
             case FILLED:
                 for (int x = minX; x <= maxX; x++) {
                     for (int y = Math.min(255, maxY); y >= minY && y >= 0; y--) {
@@ -72,39 +72,39 @@ public class AreaTypeBox extends AreaType{
                 }
                 break;
             default:
-                throw new IllegalArgumentException(boxType.toString());
-        }       
-    }
-    
-    @Override
-    public void addUIWidgets(List<AreaTypeWidget> widgets){
-        super.addUIWidgets(widgets);
-        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.box.boxType", EnumBoxType.class, () -> boxType, boxType -> this.boxType = boxType));
-    }
-    
-    @Override
-    public void writeToNBT(NBTTagCompound tag){
-        super.writeToNBT(tag);
-        tag.setByte("boxType", (byte)boxType.ordinal());
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound tag){
-        super.readFromNBT(tag);
-        boxType = EnumBoxType.values()[tag.getByte("boxType")];
+                throw new IllegalArgumentException(this.boxType.toString());
+        }
     }
 
     @Override
-    public void convertFromLegacy(EnumAreaType oldAreaType, int typeInfo){
-        switch(oldAreaType){
+    public void addUIWidgets(List<AreaTypeWidget> widgets) {
+        super.addUIWidgets(widgets);
+        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.box.boxType", EnumBoxType.class, () -> this.boxType, boxType -> this.boxType = boxType));
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setByte("boxType", (byte) this.boxType.ordinal());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        this.boxType = EnumBoxType.values()[tag.getByte("boxType")];
+    }
+
+    @Override
+    public void convertFromLegacy(EnumAreaType oldAreaType, int typeInfo) {
+        switch (oldAreaType) {
             case FILL:
-                boxType = EnumBoxType.FILLED;
+                this.boxType = EnumBoxType.FILLED;
                 break;
             case WALL:
-                boxType = EnumBoxType.HOLLOW;
+                this.boxType = EnumBoxType.HOLLOW;
                 break;
             case FRAME:
-                boxType = EnumBoxType.FRAME;
+                this.boxType = EnumBoxType.FRAME;
                 break;
             default:
                 throw new IllegalArgumentException();

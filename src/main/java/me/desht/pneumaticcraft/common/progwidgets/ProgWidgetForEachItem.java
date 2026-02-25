@@ -44,28 +44,28 @@ public class ProgWidgetForEachItem extends ProgWidget implements IJumpBackWidget
 
     @Override
     public void addVariables(Set<String> variables) {
-        variables.add(elementVariable);
+        variables.add(this.elementVariable);
     }
 
     @Override
     public String getVariable() {
-        return elementVariable;
+        return this.elementVariable;
     }
 
     @Override
     public void setVariable(String variable) {
-        elementVariable = variable;
+        this.elementVariable = variable;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setString("variable", elementVariable);
+        tag.setString("variable", this.elementVariable);
         super.writeToNBT(tag);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        elementVariable = tag.getString("variable");
+        this.elementVariable = tag.getString("variable");
         super.readFromNBT(tag);
     }
 
@@ -76,18 +76,18 @@ public class ProgWidgetForEachItem extends ProgWidget implements IJumpBackWidget
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        List<String> locations = getPossibleJumpLocations();
-        ItemStack filter = getFilterForIndex(curIndex++);
-        if (locations.size() > 0 && filter != null && (curIndex == 1 || !aiManager.getStack(elementVariable).isEmpty())) {
-            aiManager.setItem(elementVariable, filter);
+        List<String> locations = this.getPossibleJumpLocations();
+        ItemStack filter = this.getFilterForIndex(this.curIndex++);
+        if (locations.size() > 0 && filter != null && (this.curIndex == 1 || !this.aiManager.getStack(this.elementVariable).isEmpty())) {
+            this.aiManager.setItem(this.elementVariable, filter);
             return ProgWidgetJump.jumpToLabel(drone, allWidgets, locations.get(0));
         }
-        curIndex = 0;
+        this.curIndex = 0;
         return super.getOutputWidget(drone, allWidgets);
     }
 
     private ItemStack getFilterForIndex(int index) {
-        ProgWidgetItemFilter widget = (ProgWidgetItemFilter) getConnectedParameters()[0];
+        ProgWidgetItemFilter widget = (ProgWidgetItemFilter) this.getConnectedParameters()[0];
         for (int i = 0; i < index; i++) {
             if (widget == null) return null;
             widget = (ProgWidgetItemFilter) widget.getConnectedParameters()[0];
@@ -97,7 +97,7 @@ public class ProgWidgetForEachItem extends ProgWidget implements IJumpBackWidget
 
     @Override
     public List<String> getPossibleJumpLocations() {
-        IProgWidget widget = getConnectedParameters()[getParameters().length - 1];
+        IProgWidget widget = this.getConnectedParameters()[this.getParameters().length - 1];
         ProgWidgetString textWidget = widget != null ? (ProgWidgetString) widget : null;
         List<String> locations = new ArrayList<>();
         if (textWidget != null) locations.add(textWidget.string);
@@ -112,7 +112,7 @@ public class ProgWidgetForEachItem extends ProgWidget implements IJumpBackWidget
 
     @Override
     public String getExtraStringInfo() {
-        return "\"" + elementVariable + "\"";
+        return "\"" + this.elementVariable + "\"";
     }
 
     @Override

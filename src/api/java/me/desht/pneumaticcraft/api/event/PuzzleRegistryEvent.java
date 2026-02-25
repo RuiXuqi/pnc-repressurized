@@ -14,10 +14,10 @@ public class PuzzleRegistryEvent extends Event {
     private final IDroneRegistry droneRegistry;
 
     public PuzzleRegistryEvent() {
-        droneRegistry = PneumaticRegistry.getInstance().getDroneRegistry();
+        this.droneRegistry = PneumaticRegistry.getInstance().getDroneRegistry();
     }
 
     public IDroneRegistry getDroneRegistry() {
-        return droneRegistry;
+        return this.droneRegistry;
     }
 }

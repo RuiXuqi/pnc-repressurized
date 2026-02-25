@@ -29,9 +29,9 @@ public class ProgWidgetLightCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                int lightLevel = drone.world().getLight(pos);
-                int requiredLight = ((ICondition) widget).getRequiredCount();
-                return ((ICondition) widget).getOperator().evaluate(lightLevel, requiredLight);
+                int lightLevel = this.drone.world().getLight(pos);
+                int requiredLight = ((ICondition) this.widget).getRequiredCount();
+                return ((ICondition) this.widget).getOperator().evaluate(lightLevel, requiredLight);
             }
 
         };

@@ -15,9 +15,9 @@ public abstract class TubeModuleRedstoneEmitting extends TubeModule {
      */
     public boolean setRedstone(int level) {
         level = MathHelper.clamp(level, 0, 15);
-        if (redstone != level) {
-            redstone = level;
-            updateNeighbors();
+        if (this.redstone != level) {
+            this.redstone = level;
+            this.updateNeighbors();
             return true;
         } else {
             return false;
@@ -26,39 +26,39 @@ public abstract class TubeModuleRedstoneEmitting extends TubeModule {
 
     @Override
     public int getRedstoneLevel() {
-        return redstone;
+        return this.redstone;
     }
 
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Emitting redstone: " + TextFormatting.WHITE + redstone);
+        curInfo.add("Emitting redstone: " + TextFormatting.WHITE + this.redstone);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("redstone", redstone);
+        tag.setInteger("redstone", this.redstone);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstone = tag.getInteger("redstone");
+        this.redstone = tag.getInteger("redstone");
     }
 
     @Override
     public void update() {
-        if (upgraded && !advancedConfig) {
-            if (higherBound < lowerBound) {
-                if (higherBound != lowerBound - 0.1F) {
-                    higherBound = lowerBound - 0.1F;
-                    sendDescriptionPacket();
+        if (this.upgraded && !this.advancedConfig) {
+            if (this.higherBound < this.lowerBound) {
+                if (this.higherBound != this.lowerBound - 0.1F) {
+                    this.higherBound = this.lowerBound - 0.1F;
+                    this.sendDescriptionPacket();
                 }
             } else {
-                if (higherBound != lowerBound + 0.1F) {
-                    higherBound = lowerBound + 0.1F;
-                    sendDescriptionPacket();
+                if (this.higherBound != this.lowerBound + 0.1F) {
+                    this.higherBound = this.lowerBound + 0.1F;
+                    this.sendDescriptionPacket();
                 }
             }
         }

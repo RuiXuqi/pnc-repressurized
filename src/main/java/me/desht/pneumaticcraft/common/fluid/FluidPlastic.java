@@ -9,7 +9,7 @@ public class FluidPlastic extends FluidPneumaticCraft {
 
     public FluidPlastic(String name) {
         super(name);
-        setTemperature(PneumaticValues.PLASTIC_MIXER_MELTING_TEMP);
+        this.setTemperature(PneumaticValues.PLASTIC_MIXER_MELTING_TEMP);
     }
 
     @Override

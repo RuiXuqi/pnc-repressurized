@@ -19,17 +19,17 @@ public class DroneEntityAIInventoryImport extends DroneAIImExBase {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return importItems(pos, true);
+        return this.importItems(pos, true);
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return importItems(pos, false) && super.doBlockInteraction(pos, distToBlock);
+        return this.importItems(pos, false) && super.doBlockInteraction(pos, distToBlock);
     }
 
     private boolean importItems(BlockPos pos, boolean simulate) {
-        TileEntity te = drone.world().getTileEntity(pos);
-        boolean[] sides = ((ISidedWidget) widget).getSides();
+        TileEntity te = this.drone.world().getTileEntity(pos);
+        boolean[] sides = ((ISidedWidget) this.widget).getSides();
         for (int d = 0; d < sides.length; d++) {
             if (!sides[d]) {
                 continue;
@@ -41,31 +41,31 @@ public class DroneEntityAIInventoryImport extends DroneAIImExBase {
             for (int i = 0; i < inv.getSlots(); i++) {
                 ItemStack stack = inv.getStackInSlot(i);
                 if (!stack.isEmpty()) {
-                    if (widget.isItemValidForFilters(stack)) {
+                    if (this.widget.isItemValidForFilters(stack)) {
                         ItemStack importedStack = inv.extractItem(i, stack.getCount(), true);
                         if (importedStack.isEmpty()) {
                             continue;
                         }
                         importedStack = importedStack.copy();
-                        if (((ICountWidget) widget).useCount()) {
-                            importedStack.setCount(Math.min(importedStack.getCount(), getRemainingCount()));
+                        if (((ICountWidget) this.widget).useCount()) {
+                            importedStack.setCount(Math.min(importedStack.getCount(), this.getRemainingCount()));
                         }
-                        ItemStack remainder = IOHelper.insert(drone, importedStack, EnumFacing.UP, simulate);
+                        ItemStack remainder = IOHelper.insert(this.drone, importedStack, EnumFacing.UP, simulate);
                         int removedItems = importedStack.getCount() - remainder.getCount();
                         if (!simulate) {
                             inv.extractItem(i, removedItems, false);
-                            decreaseCount(removedItems);
-                            drone.addAir(null, -PneumaticValues.DRONE_USAGE_INV);
-                            if (((ICountWidget) widget).useCount() && getRemainingCount() <= 0) {
+                            this.decreaseCount(removedItems);
+                            this.drone.addAir(null, -PneumaticValues.DRONE_USAGE_INV);
+                            if (((ICountWidget) this.widget).useCount() && this.getRemainingCount() <= 0) {
                                 return false;
                             }
                         } else if (removedItems > 0) {
                             return true;
                         } else {
-                            drone.addDebugEntry("gui.progWidget.inventoryImport.debug.filledToMax", pos);
+                            this.drone.addDebugEntry("gui.progWidget.inventoryImport.debug.filledToMax", pos);
                         }
                     } else {
-                        drone.addDebugEntry("gui.progWidget.inventoryImport.debug.stackdoesntPassFilter", pos);
+                        this.drone.addDebugEntry("gui.progWidget.inventoryImport.debug.stackdoesntPassFilter", pos);
                     }
                 }
             }

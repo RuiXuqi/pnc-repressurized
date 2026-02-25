@@ -15,9 +15,9 @@ public class ChunkPositionSorter implements Comparator<BlockPos> {
         Vec3d vec = entity.getDronePos();
 
         // work from middle of the block the drone is in (try to minimize inconsistency)
-        x = Math.floor(vec.x) + 0.5;
-        y = Math.floor(vec.y) + 0.5;
-        z = Math.floor(vec.z) + 0.5;
+        this.x = Math.floor(vec.x) + 0.5;
+        this.y = Math.floor(vec.y) + 0.5;
+        this.z = Math.floor(vec.z) + 0.5;
     }
 
     public ChunkPositionSorter(double x, double y, double z) {
@@ -28,7 +28,7 @@ public class ChunkPositionSorter implements Comparator<BlockPos> {
 
     @Override
     public int compare(BlockPos c1, BlockPos c2) {
-        double d = PneumaticCraftUtils.distBetweenSq(c1.getX(), c1.getY(), c1.getZ(), x, y, z) - PneumaticCraftUtils.distBetweenSq(c2.getX(), c2.getY(), c2.getZ(), x, y, z);
+        double d = PneumaticCraftUtils.distBetweenSq(c1.getX(), c1.getY(), c1.getZ(), this.x, this.y, this.z) - PneumaticCraftUtils.distBetweenSq(c2.getX(), c2.getY(), c2.getZ(), this.x, this.y, this.z);
         if (Math.abs(d) < EPSILON) {
             return c1.compareTo(c2);
         } else {

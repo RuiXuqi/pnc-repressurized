@@ -19,12 +19,12 @@ public class ModelSentryTurret extends AbstractModelRenderer.BaseModel {
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, -13 / 16D, 0);
         if (te == null) {
-            if (fakeTurret == null) {
-                fakeTurret = new TileEntitySentryTurret();
+            if (this.fakeTurret == null) {
+                this.fakeTurret = new TileEntitySentryTurret();
             }
-            model.renderMinigun(fakeTurret.getMinigun(), 1 / 16F, partialTicks, false);
+            this.model.renderMinigun(this.fakeTurret.getMinigun(), 1 / 16F, partialTicks, false);
         } else {
-            model.renderMinigun(te.getMinigun(), 1 / 16F, partialTicks, false);
+            this.model.renderMinigun(te.getMinigun(), 1 / 16F, partialTicks, false);
             GlStateManager.pushMatrix();
             GlStateManager.scale(1.0F, -1, -1F);
             GlStateManager.translate(0, -1.45F, 0);

@@ -24,14 +24,14 @@ public class WorldGeneratorPneumaticCraft implements IWorldGenerator {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        if (worldGenDisabled) {
+        if (this.worldGenDisabled) {
             return;
         }
 
-        if (oilBlock == null) {
-            oilBlock = FluidRegistry.getFluid(Fluids.OIL.getName()).getBlock();
-            if (oilBlock == null) {
-                worldGenDisabled = true;
+        if (this.oilBlock == null) {
+            this.oilBlock = FluidRegistry.getFluid(Fluids.OIL.getName()).getBlock();
+            if (this.oilBlock == null) {
+                this.worldGenDisabled = true;
                 return;
             }
         }
@@ -39,16 +39,16 @@ public class WorldGeneratorPneumaticCraft implements IWorldGenerator {
         if (!(chunkGenerator instanceof ChunkGeneratorFlat)) { //don't generate on flatworlds
             switch (world.provider.getDimension()) {
                 case 0:
-                    generateSurface(world, random, chunkX * 16, chunkZ * 16);
+                    this.generateSurface(world, random, chunkX * 16, chunkZ * 16);
                     break;
                 case -1:
-                    generateNether(world, random, chunkX * 16, chunkZ * 16);
+                    this.generateNether(world, random, chunkX * 16, chunkZ * 16);
                     break;
                 case 1:
-                    generateEnd(world, random, chunkX * 16, chunkZ * 16);
+                    this.generateEnd(world, random, chunkX * 16, chunkZ * 16);
                     break;
                 default:
-                    generateSurface(world, random, chunkX * 16, chunkZ * 16);
+                    this.generateSurface(world, random, chunkX * 16, chunkZ * 16);
             }
         }
     }
@@ -61,9 +61,9 @@ public class WorldGeneratorPneumaticCraft implements IWorldGenerator {
     }
 
     private void generateSurface(World world, Random rand, int chunkX, int chunkZ) {
-        if (!isBlacklisted(world.provider.getDimension()) && rand.nextDouble() < ConfigHandler.general.oilGenerationChance / 100D) {
+        if (!this.isBlacklisted(world.provider.getDimension()) && rand.nextDouble() < ConfigHandler.general.oilGenerationChance / 100D) {
             int y = rand.nextInt(rand.nextInt(128) + 8);
-            new WorldGenLakes(oilBlock).generate(world, rand, new BlockPos(chunkX + 8, y, chunkZ + 8));
+            new WorldGenLakes(this.oilBlock).generate(world, rand, new BlockPos(chunkX + 8, y, chunkZ + 8));
         }
     }
 

@@ -11,10 +11,10 @@ public class DroneMoveHelper extends EntityMoveHelper {
 
     public DroneMoveHelper(EntityDroneBase par1EntityLiving) {
         super(par1EntityLiving);
-        entity = par1EntityLiving;
-        x = entity.posX;
-        y = entity.posY;
-        z = entity.posZ;
+        this.entity = par1EntityLiving;
+        this.x = this.entity.posX;
+        this.y = this.entity.posY;
+        this.z = this.entity.posZ;
     }
 
     @Override
@@ -24,34 +24,33 @@ public class DroneMoveHelper extends EntityMoveHelper {
             this.x = x;
             this.y = newY;
             this.z = z;
-            timeoutTimer = 0;
+            this.timeoutTimer = 0;
         } else {
-            timeoutCounter = 0;
+            this.timeoutCounter = 0;
         }
         this.speed = speed;
     }
-    
+
     @Override
-    public void read(EntityMoveHelper that)
-    {
+    public void read(EntityMoveHelper that) {
         //NOOP
     }
 
     @Override
     public void onUpdateMoveHelper() {
-        if (entity.isAccelerating()) {
-            entity.motionX = Math.max(-speed, Math.min(speed, x - entity.posX));
-            entity.motionY = Math.max(-speed, Math.min(speed, y - entity.posY));
-            entity.motionZ = Math.max(-speed, Math.min(speed, z - entity.posZ));
+        if (this.entity.isAccelerating()) {
+            this.entity.motionX = Math.max(-this.speed, Math.min(this.speed, this.x - this.entity.posX));
+            this.entity.motionY = Math.max(-this.speed, Math.min(this.speed, this.y - this.entity.posY));
+            this.entity.motionZ = Math.max(-this.speed, Math.min(this.speed, this.z - this.entity.posZ));
 
-            EntityPathNavigateDrone navigator = (EntityPathNavigateDrone)entity.getNavigator();
-            
+            EntityPathNavigateDrone navigator = (EntityPathNavigateDrone) this.entity.getNavigator();
+
             //When teleporting already, the drone stands still for a bit, so don't expect movement in this case.
-            if (!navigator.isGoingToTeleport() && timeoutTimer++ > 40) {
-                entity.getNavigator().clearPath();
-                timeoutTimer = 0;
-                timeoutCounter++;
-                if (timeoutCounter > 1 && entity.hasPath()) { //Teleport when after re-acquiring a new path, the drone still doesn't move.
+            if (!navigator.isGoingToTeleport() && this.timeoutTimer++ > 40) {
+                this.entity.getNavigator().clearPath();
+                this.timeoutTimer = 0;
+                this.timeoutCounter++;
+                if (this.timeoutCounter > 1 && this.entity.hasPath()) { //Teleport when after re-acquiring a new path, the drone still doesn't move.
                     navigator.teleport();
                 }
             }

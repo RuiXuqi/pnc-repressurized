@@ -68,113 +68,113 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     }
 
     private GuiAnimatedStat addAnimatedStat(String title, StatIcon icon, int color, boolean leftSided) {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        GuiAnimatedStat stat = new GuiAnimatedStat(this, title, icon, xStart + (leftSided ? 0 : xSize + 1), leftSided && lastLeftStat != null || !leftSided && lastRightStat != null ? 3 : yStart + 5, color, leftSided ? lastLeftStat : lastRightStat, leftSided);
+        GuiAnimatedStat stat = new GuiAnimatedStat(this, title, icon, xStart + (leftSided ? 0 : this.xSize + 1), leftSided && this.lastLeftStat != null || !leftSided && this.lastRightStat != null ? 3 : yStart + 5, color, leftSided ? this.lastLeftStat : this.lastRightStat, leftSided);
         stat.setBeveled(true);
-        addWidget(stat);
+        this.addWidget(stat);
         if (leftSided) {
-            lastLeftStat = stat;
+            this.lastLeftStat = stat;
         } else {
-            lastRightStat = stat;
+            this.lastRightStat = stat;
         }
         return stat;
     }
 
     protected GuiAnimatedStat addAnimatedStat(String title, @Nonnull ItemStack icon, int color, boolean leftSided) {
-        return addAnimatedStat(title, StatIcon.of(icon), color, leftSided);
+        return this.addAnimatedStat(title, StatIcon.of(icon), color, leftSided);
     }
 
     protected GuiAnimatedStat addAnimatedStat(String title, ResourceLocation icon, int color, boolean leftSided) {
-        return addAnimatedStat(title, StatIcon.of(icon), color, leftSided);
+        return this.addAnimatedStat(title, StatIcon.of(icon), color, leftSided);
     }
 
     protected GuiAnimatedStat addAnimatedStat(String title, int color, boolean leftSided) {
-        return addAnimatedStat(title, StatIcon.NONE, color, leftSided);
+        return this.addAnimatedStat(title, StatIcon.NONE, color, leftSided);
     }
 
     protected void addWidget(IGuiWidget widget) {
-        widgets.add(widget);
+        this.widgets.add(widget);
         widget.setListener(this);
     }
 
     protected void addWidgets(Iterable<IGuiWidget> widgets) {
         for (IGuiWidget widget : widgets) {
-            addWidget(widget);
+            this.addWidget(widget);
         }
     }
 
     protected void addLabel(String text, int x, int y) {
-        addWidget(new WidgetLabel(x, y, text));
+        this.addWidget(new WidgetLabel(x, y, text));
     }
 
     protected void addLabel(String text, int x, int y, int color) {
-        addWidget(new WidgetLabel(x, y, text, color));
+        this.addWidget(new WidgetLabel(x, y, text, color));
     }
 
     protected void removeWidget(IGuiWidget widget) {
-        widgets.remove(widget);
+        this.widgets.remove(widget);
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        lastLeftStat = lastRightStat = null;
-        if (shouldAddPressureTab() && te instanceof TileEntityPneumaticBase) {
-            pressureStat = this.addAnimatedStat("gui.tab.pressure", new ItemStack(Blockss.PRESSURE_TUBE), 0xFF00AA00, false);
+        this.lastLeftStat = this.lastRightStat = null;
+        if (this.shouldAddPressureTab() && this.te instanceof TileEntityPneumaticBase) {
+            this.pressureStat = this.addAnimatedStat("gui.tab.pressure", new ItemStack(Blockss.PRESSURE_TUBE), 0xFF00AA00, false);
         }
-        if (shouldAddProblemTab()) {
-            problemTab = addAnimatedStat("gui.tab.problems", 0xFFA0A0A0, false);
+        if (this.shouldAddProblemTab()) {
+            this.problemTab = this.addAnimatedStat("gui.tab.problems", 0xFFA0A0A0, false);
         }
-        if (te != null) {
-            if (shouldAddInfoTab()) {
-                addInfoTab("gui.tab.info." + te.getName());
+        if (this.te != null) {
+            if (this.shouldAddInfoTab()) {
+                this.addInfoTab("gui.tab.info." + this.te.getName());
             }
-            if (shouldAddRedstoneTab() && te instanceof IRedstoneControl) {
-                addRedstoneTab();
+            if (this.shouldAddRedstoneTab() && this.te instanceof IRedstoneControl) {
+                this.addRedstoneTab();
             }
-            if (te instanceof IHeatExchanger) {
-                addAnimatedStat("gui.tab.info.heat.title", new ItemStack(Items.BLAZE_POWDER), 0xFFFF5500, false).setText("gui.tab.info.heat");
+            if (this.te instanceof IHeatExchanger) {
+                this.addAnimatedStat("gui.tab.info.heat.title", new ItemStack(Items.BLAZE_POWDER), 0xFFFF5500, false).setText("gui.tab.info.heat");
             }
-            if (shouldAddUpgradeTab()) {
-                addUpgradeTab();
+            if (this.shouldAddUpgradeTab()) {
+                this.addUpgradeTab();
             }
-            if (shouldAddSideConfigTabs()) {
-                addSideConfiguratorTabs();
+            if (this.shouldAddSideConfigTabs()) {
+                this.addSideConfiguratorTabs();
             }
         }
-        hasInit = true;
+        this.hasInit = true;
     }
 
     private void addRedstoneTab() {
-        redstoneTab = addAnimatedStat("gui.tab.redstoneBehaviour", new ItemStack(Items.REDSTONE), 0xFFCC0000, true);
+        this.redstoneTab = this.addAnimatedStat("gui.tab.redstoneBehaviour", new ItemStack(Items.REDSTONE), 0xFFCC0000, true);
         List<String> curInfo = new ArrayList<>();
-        curInfo.add(I18n.format(te.getRedstoneTabTitle()));
-        int width = getWidestRedstoneLabel();
-        redstoneTab.addPadding(curInfo,4, width / fontRenderer.getStringWidth(" "));
-        Rectangle buttonRect = redstoneTab.getButtonScaledRectangle(-width - 12, 24, width + 10, 20);
-        redstoneButton = new GuiButtonSpecial(0, buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, "-");
-        redstoneTab.addWidget(redstoneButton);
+        curInfo.add(I18n.format(this.te.getRedstoneTabTitle()));
+        int width = this.getWidestRedstoneLabel();
+        this.redstoneTab.addPadding(curInfo, 4, width / this.fontRenderer.getStringWidth(" "));
+        Rectangle buttonRect = this.redstoneTab.getButtonScaledRectangle(-width - 12, 24, width + 10, 20);
+        this.redstoneButton = new GuiButtonSpecial(0, buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, "-");
+        this.redstoneTab.addWidget(this.redstoneButton);
     }
 
     private void addUpgradeTab() {
-        String upgrades = "gui.tab.upgrades." + te.getName();
+        String upgrades = "gui.tab.upgrades." + this.te.getName();
         String translatedUpgrades = I18n.format(upgrades);
         List<String> upgradeText = new ArrayList<>();
-        if (te instanceof TileEntityPneumaticBase) {
+        if (this.te instanceof TileEntityPneumaticBase) {
             upgradeText.add("gui.tab.upgrades.volume");
             upgradeText.add("gui.tab.upgrades.security");
         }
-        if (te instanceof IHeatExchanger) {
+        if (this.te instanceof IHeatExchanger) {
             upgradeText.add("gui.tab.upgrades.volumeCapacity");
         }
         if (!translatedUpgrades.equals(upgrades)) upgradeText.add(upgrades);
 
-        addExtraUpgradeText(upgradeText);
+        this.addExtraUpgradeText(upgradeText);
 
         if (upgradeText.size() > 0)
-            addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF6060FF, true).setText(upgradeText);
+            this.addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF6060FF, true).setText(upgradeText);
     }
 
     protected void addExtraUpgradeText(List<String> upgradeText) {
@@ -182,24 +182,24 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
 
     private int getWidestRedstoneLabel() {
         int max = 0;
-        for (int i = 0; i < te.getRedstoneModeCount(); i++) {
-            max = Math.max(max, fontRenderer.getStringWidth(I18n.format(te.getRedstoneButtonText(i))));
+        for (int i = 0; i < this.te.getRedstoneModeCount(); i++) {
+            max = Math.max(max, this.fontRenderer.getStringWidth(I18n.format(this.te.getRedstoneButtonText(i))));
         }
         return max;
     }
 
     private void addSideConfiguratorTabs() {
-        for (SideConfigurator sc : ((ISideConfigurable) te).getSideConfigurators()) {
-            GuiAnimatedStat stat = addAnimatedStat(sc.getTranslationKey(), new ItemStack(Blockss.OMNIDIRECTIONAL_HOPPER), 0xFF90C0E0, false);
+        for (SideConfigurator sc : ((ISideConfigurable) this.te).getSideConfigurators()) {
+            GuiAnimatedStat stat = this.addAnimatedStat(sc.getTranslationKey(), new ItemStack(Blockss.OMNIDIRECTIONAL_HOPPER), 0xFF90C0E0, false);
             stat.addPadding(7, 16);
 
             int yTop = 15, xLeft = 25;
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.TOP, xLeft + 22, yTop));
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.LEFT, xLeft, yTop + 22));
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.FRONT, xLeft + 22, yTop + 22));
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.RIGHT, xLeft + 44, yTop + 22));
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.BOTTOM, xLeft + 22, yTop + 44));
-            stat.addWidget(makeSideConfButton(sc, RelativeFace.BACK, xLeft + 44, yTop + 44));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.TOP, xLeft + 22, yTop));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.LEFT, xLeft, yTop + 22));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.FRONT, xLeft + 22, yTop + 22));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.RIGHT, xLeft + 44, yTop + 22));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.BOTTOM, xLeft + 22, yTop + 44));
+            stat.addWidget(this.makeSideConfButton(sc, RelativeFace.BACK, xLeft + 44, yTop + 44));
         }
     }
 
@@ -210,7 +210,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     }
 
     protected void addInfoTab(String info) {
-        IGuiAnimatedStat stat = addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true);
+        IGuiAnimatedStat stat = this.addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true);
         stat.setText(info);
         if (!ThirdPartyManager.instance().docsProvider.docsProviderInstalled()) {
             stat.appendText(Arrays.asList("", "gui.tab.info.assistIGW"));
@@ -237,31 +237,35 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
         return true;
     }
 
-    protected boolean shouldAddSideConfigTabs() { return te instanceof ISideConfigurable; }
+    protected boolean shouldAddSideConfigTabs() {
+        return this.te instanceof ISideConfigurable;
+    }
 
-    protected int getBackgroundTint() { return 0xFFFFFF; }
+    protected int getBackgroundTint() {
+        return 0xFFFFFF;
+    }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int i, int j) {
-        if (shouldDrawBackground()) {
-            drawDefaultBackground();
-            RenderUtils.glColorHex(0xFF000000 | getBackgroundTint());
-            bindGuiTexture();
-            int xStart = (width - xSize) / 2;
-            int yStart = (height - ySize) / 2;
-            drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
+        if (this.shouldDrawBackground()) {
+            this.drawDefaultBackground();
+            RenderUtils.glColorHex(0xFF000000 | this.getBackgroundTint());
+            this.bindGuiTexture();
+            int xStart = (this.width - this.xSize) / 2;
+            int yStart = (this.height - this.ySize) / 2;
+            this.drawTexturedModalRect(xStart, yStart, 0, 0, this.xSize, this.ySize);
         }
 
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.disableLighting();
-        widgets.forEach(widget -> widget.render(i, j, partialTicks));
-        widgets.forEach(widget -> widget.postRender(i, j, partialTicks));
+        this.widgets.forEach(widget -> widget.render(i, j, partialTicks));
+        this.widgets.forEach(widget -> widget.postRender(i, j, partialTicks));
 
-        if (pressureStat != null) {
-            Point gaugeLocation = getGaugeLocation();
+        if (this.pressureStat != null) {
+            Point gaugeLocation = this.getGaugeLocation();
             if (gaugeLocation != null) {
-                TileEntityPneumaticBase pneu = (TileEntityPneumaticBase) te;
-                GuiUtils.drawPressureGauge(fontRenderer, -1, pneu.criticalPressure, pneu.dangerPressure, te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) te).getMinWorkingPressure() : -Float.MAX_VALUE, pneu.getPressure(), gaugeLocation.x, gaugeLocation.y, zLevel);
+                TileEntityPneumaticBase pneu = (TileEntityPneumaticBase) this.te;
+                GuiUtils.drawPressureGauge(this.fontRenderer, -1, pneu.criticalPressure, pneu.dangerPressure, this.te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) this.te).getMinWorkingPressure() : -Float.MAX_VALUE, pneu.getPressure(), gaugeLocation.x, gaugeLocation.y, this.zLevel);
             }
         }
     }
@@ -271,29 +275,31 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     }
 
     protected void bindGuiTexture() {
-        if (guiTexture != null) {
-            mc.getTextureManager().bindTexture(guiTexture);
+        if (this.guiTexture != null) {
+            this.mc.getTextureManager().bindTexture(this.guiTexture);
             GlStateManager.enableTexture2D();
         }
     }
 
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + xSize * 3 / 4, yStart + ySize / 4 + 4);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        return new Point(xStart + this.xSize * 3 / 4, yStart + this.ySize / 4 + 4);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        if (te != null && getInvNameOffset() != null) {
-            String containerName = I18n.format(te.getName() + ".name");
-            fontRenderer.drawString(containerName, xSize / 2 - fontRenderer.getStringWidth(containerName) / 2 + getInvNameOffset().x, 6 + getInvNameOffset().y, getTitleColor());
+        if (this.te != null && this.getInvNameOffset() != null) {
+            String containerName = I18n.format(this.te.getName() + ".name");
+            this.fontRenderer.drawString(containerName, this.xSize / 2 - this.fontRenderer.getStringWidth(containerName) / 2 + this.getInvNameOffset().x, 6 + this.getInvNameOffset().y, this.getTitleColor());
         }
-        if (getInvTextOffset() != null)
-            fontRenderer.drawString(I18n.format("container.inventory"), 8 + getInvTextOffset().x, ySize - 94 + getInvTextOffset().y, 0x404040);
+        if (this.getInvTextOffset() != null)
+            this.fontRenderer.drawString(I18n.format("container.inventory"), 8 + this.getInvTextOffset().x, this.ySize - 94 + this.getInvTextOffset().y, 0x404040);
     }
 
-    protected int getTitleColor() { return 0x404040; }
+    protected int getTitleColor() {
+        return 0x404040;
+    }
 
     protected Point getInvNameOffset() {
         return new Point(0, 0);
@@ -305,11 +311,11 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
 
     @Override
     public void drawScreen(int x, int y, float partialTick) {
-        if (!hasInit) return;
+        if (!this.hasInit) return;
         super.drawScreen(x, y, partialTick);
 
         List<String> tooltip = new ArrayList<>();
-        for (Object obj : buttonList) {
+        for (Object obj : this.buttonList) {
             if (obj instanceof GuiButtonSpecial) {
                 GuiButtonSpecial button = (GuiButtonSpecial) obj;
                 if (button.visible && button.x < x && button.x + button.getWidth() > x && button.y < y && button.y + button.getHeight() > y) {
@@ -320,78 +326,78 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
 
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.disableLighting();
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getBounds().contains(x, y))
                 widget.addTooltip(x, y, tooltip, PneumaticCraftRepressurized.proxy.isSneakingInGui());
         }
-        if (shouldParseVariablesInTooltips()) {
+        if (this.shouldParseVariablesInTooltips()) {
             for (int i = 0; i < tooltip.size(); i++) {
                 tooltip.set(i, new TextVariableParser(tooltip.get(i)).parse());
             }
         }
 
         if (tooltip.size() > 0) {
-            drawHoveringString(tooltip, x, y, fontRenderer);
+            this.drawHoveringString(tooltip, x, y, this.fontRenderer);
             tooltip.clear();
         }
 
-        renderHoveredToolTip(x, y);
+        this.renderHoveredToolTip(x, y);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
 
-        for (IGuiWidget widget : widgets)
+        for (IGuiWidget widget : this.widgets)
             widget.update();
 
-        if (pressureStat != null) {
+        if (this.pressureStat != null) {
             List<String> pressureText = new ArrayList<>();
-            addPressureStatInfo(pressureText);
-            pressureStat.setText(pressureText);
+            this.addPressureStatInfo(pressureText);
+            this.pressureStat.setText(pressureText);
         }
-        if (problemTab != null && ((Minecraft.getMinecraft().world.getTotalWorldTime() & 0x7) == 0 || firstUpdate)) {
-            handleProblemsTab();
+        if (this.problemTab != null && ((Minecraft.getMinecraft().world.getTotalWorldTime() & 0x7) == 0 || this.firstUpdate)) {
+            this.handleProblemsTab();
         }
-        if (redstoneTab != null) {
-            redstoneButton.displayString = I18n.format(te.getRedstoneButtonText(((IRedstoneControl) te).getRedstoneMode()));
+        if (this.redstoneTab != null) {
+            this.redstoneButton.displayString = I18n.format(this.te.getRedstoneButtonText(((IRedstoneControl) this.te).getRedstoneMode()));
         }
-        firstUpdate = false;
+        this.firstUpdate = false;
     }
 
     private void handleProblemsTab() {
         List<String> problemText = new ArrayList<>();
-        addProblems(problemText);
+        this.addProblems(problemText);
         int nProbs = problemText.size();
-        addWarnings(problemText);
+        this.addWarnings(problemText);
         int nWarnings = problemText.size() - nProbs;
-        addInformation(problemText);
+        this.addInformation(problemText);
         int nInfo = problemText.size() - nWarnings;
 
         if (nProbs > 0) {
-            problemTab.setTexture(Textures.GUI_PROBLEMS_TEXTURE);
-            problemTab.setTitle("gui.tab.problems");
-            problemTab.setBackGroundColor(0xFFFF0000);
+            this.problemTab.setTexture(Textures.GUI_PROBLEMS_TEXTURE);
+            this.problemTab.setTitle("gui.tab.problems");
+            this.problemTab.setBackGroundColor(0xFFFF0000);
         } else if (nWarnings > 0) {
-            problemTab.setTexture(Textures.GUI_WARNING_TEXTURE);
-            problemTab.setTitle("gui.tab.problems.warning");
-            problemTab.setBackGroundColor(0xFFC0C000);
+            this.problemTab.setTexture(Textures.GUI_WARNING_TEXTURE);
+            this.problemTab.setTitle("gui.tab.problems.warning");
+            this.problemTab.setBackGroundColor(0xFFC0C000);
         } else {
-            problemTab.setTexture(Textures.GUI_NO_PROBLEMS_TEXTURE);
-            problemTab.setTitle("gui.tab.problems.noProblems");
-            problemTab.setBackGroundColor(0xFFA0FFA0);
+            this.problemTab.setTexture(Textures.GUI_NO_PROBLEMS_TEXTURE);
+            this.problemTab.setTitle("gui.tab.problems.noProblems");
+            this.problemTab.setBackGroundColor(0xFFA0FFA0);
         }
         if (problemText.isEmpty()) problemText.add("");
-        problemTab.setText(problemText);
+        this.problemTab.setText(problemText);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        sendPacketToServer(button.id);
+        this.sendPacketToServer(button.id);
     }
 
     protected void addPressureStatInfo(List<String> pressureStatText) {
-        TileEntityPneumaticBase pneumaticTile = (TileEntityPneumaticBase) te;
+        TileEntityPneumaticBase pneumaticTile = (TileEntityPneumaticBase) this.te;
         IAirHandler airHandler = pneumaticTile.getAirHandler(null);
         pressureStatText.add("\u00a77Current Pressure:");
         pressureStatText.add("\u00a70" + PneumaticCraftUtils.roundNumberTo(pneumaticTile.getPressure(), 1) + " bar.");
@@ -413,9 +419,9 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
      * @param curInfo string list to append to
      */
     protected void addProblems(List<String> curInfo) {
-        if (te instanceof IMinWorkingPressure) {
-            IMinWorkingPressure minWork = (IMinWorkingPressure) te;
-            if (((TileEntityPneumaticBase) te).getPressure() < minWork.getMinWorkingPressure()) {
+        if (this.te instanceof IMinWorkingPressure) {
+            IMinWorkingPressure minWork = (IMinWorkingPressure) this.te;
+            if (((TileEntityPneumaticBase) this.te).getPressure() < minWork.getMinWorkingPressure()) {
                 curInfo.add("gui.tab.problems.notEnoughPressure");
                 curInfo.add(I18n.format("gui.tab.problems.applyPressure", minWork.getMinWorkingPressure()));
             }
@@ -436,8 +442,8 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
      * @param curInfo string list to append to, which may already contain some problem text
      */
     protected void addWarnings(List<String> curInfo) {
-        if (te instanceof IRedstoneControlled && !te.redstoneAllows()) {
-            IRedstoneControlled redstoneControlled = (IRedstoneControlled) te;
+        if (this.te instanceof IRedstoneControlled && !this.te.redstoneAllows()) {
+            IRedstoneControlled redstoneControlled = (IRedstoneControlled) this.te;
             curInfo.add("gui.tab.problems.redstoneDisallows");
             if (redstoneControlled.getRedstoneMode() == 1) {
                 curInfo.add("gui.tab.problems.provideRedstone");
@@ -450,7 +456,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getBounds().contains(mouseX, mouseY)) widget.onMouseClicked(mouseX, mouseY, mouseButton);
             else widget.onMouseClickedOutsideBounds(mouseX, mouseY, mouseButton);
         }
@@ -460,18 +466,18 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     public void actionPerformed(IGuiWidget widget) {
         if (widget instanceof IGuiAnimatedStat) {
             boolean leftSided = ((IGuiAnimatedStat) widget).isLeftSided();
-            widgets.stream()
+            this.widgets.stream()
                     .filter(w -> w instanceof IGuiAnimatedStat)
                     .map(w -> (IGuiAnimatedStat) w)
                     .filter(stat -> widget != stat && stat.isLeftSided() == leftSided) // when the stat is on the same side, close it.
                     .forEach(IGuiAnimatedStat::closeWindow);
-        } else if (te instanceof ISideConfigurable && widget instanceof GuiButtonSpecial) {
-            ((ISideConfigurable) te).getSideConfigurators().stream()
+        } else if (this.te instanceof ISideConfigurable && widget instanceof GuiButtonSpecial) {
+            ((ISideConfigurable) this.te).getSideConfigurators().stream()
                     .filter(sc -> sc.handleButtonPress(widget.getID()))
                     .findFirst()
                     .ifPresent(sc -> sc.setupButton((GuiButtonSpecial) widget));
         }
-        sendPacketToServer(widget.getID());
+        this.sendPacketToServer(widget.getID());
     }
 
     protected void sendPacketToServer(int id) {
@@ -481,12 +487,12 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
-        widgets.forEach(IGuiWidget::handleMouseInput);
+        this.widgets.forEach(IGuiWidget::handleMouseInput);
     }
 
     @Override
     protected void keyTyped(char key, int keyCode) throws IOException {
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.onKey(key, keyCode)) return;
         }
         super.keyTyped(key, keyCode);
@@ -494,12 +500,12 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
 
     @Override
     public void setWorldAndResolution(Minecraft par1Minecraft, int par2, int par3) {
-        widgets.clear();
+        this.widgets.clear();
         super.setWorldAndResolution(par1Minecraft, par2, par3);
     }
 
     public void drawHoveringString(List<String> text, int x, int y, FontRenderer fontRenderer) {
-        drawHoveringText(text, x, y, fontRenderer);
+        this.drawHoveringText(text, x, y, fontRenderer);
     }
 
     public static void drawTexture(ResourceLocation texture, int x, int y) {
@@ -523,21 +529,21 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
     }
 
     public WidgetTextField getTextFieldFromRectangle(Rectangle textFieldSize) {
-        return new WidgetTextField(fontRenderer, textFieldSize.x, textFieldSize.y, textFieldSize.width, textFieldSize.height);
+        return new WidgetTextField(this.fontRenderer, textFieldSize.x, textFieldSize.y, textFieldSize.width, textFieldSize.height);
     }
 
     @Override
     public int getGuiLeft() {
-        return guiLeft;
+        return this.guiLeft;
     }
 
     @Override
     public int getGuiTop() {
-        return guiTop;
+        return this.guiTop;
     }
 
     public List<Rectangle> getTabRectangles() {
-        return widgets.stream()
+        return this.widgets.stream()
                 .filter(w -> w instanceof IGuiAnimatedStat)
                 .map(IGuiWidget::getBounds)
                 .collect(Collectors.toList());
@@ -551,8 +557,8 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
         ScaledResolution scaledresolution = new ScaledResolution(Minecraft.getMinecraft());
         int i = scaledresolution.getScaledWidth();
         int j = scaledresolution.getScaledHeight();
-        setWorldAndResolution(Minecraft.getMinecraft(), i, j);
-        widgets.stream().filter(widget -> widget instanceof GuiAnimatedStat).forEach(IGuiWidget::update);
+        this.setWorldAndResolution(Minecraft.getMinecraft(), i, j);
+        this.widgets.stream().filter(widget -> widget instanceof GuiAnimatedStat).forEach(IGuiWidget::update);
     }
 
     protected boolean shouldParseVariablesInTooltips() {

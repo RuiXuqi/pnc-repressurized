@@ -22,28 +22,28 @@ public class NetworkConnectionBackground extends NetworkConnectionHandler {
     @Override
     public void update() {
         for (int node = 0; node < 35; node++) {
-            if (station.connects(node, node + 1)) {
-                addConnection(node, node + 1);
+            if (this.station.connects(node, node + 1)) {
+                this.addConnection(node, node + 1);
             } else {
-                removeConnection(node, node + 1);
+                this.removeConnection(node, node + 1);
             }
-            if (station.connects(node, node - 4)) {
-                addConnection(node, node - 4);
+            if (this.station.connects(node, node - 4)) {
+                this.addConnection(node, node - 4);
             } else {
-                removeConnection(node, node - 4);
+                this.removeConnection(node, node - 4);
             }
-            if (station.connects(node, node - 5)) {
-                addConnection(node, node - 5);
+            if (this.station.connects(node, node - 5)) {
+                this.addConnection(node, node - 5);
             } else {
-                removeConnection(node, node - 5);
+                this.removeConnection(node, node - 5);
             }
-            if (station.connects(node, node - 6)) {
-                addConnection(node, node - 6);
+            if (this.station.connects(node, node - 6)) {
+                this.addConnection(node, node - 6);
             } else {
-                removeConnection(node, node - 6);
+                this.removeConnection(node, node - 6);
             }
         }
-        for (RenderProgressingLine line : lineList)
+        for (RenderProgressingLine line : this.lineList)
             //Don't use the super update, as we don't want the load speed to be influenced by the node rating.
             line.incProgress(TileEntityConstants.NETWORK_NORMAL_BRIDGE_SPEED);
     }

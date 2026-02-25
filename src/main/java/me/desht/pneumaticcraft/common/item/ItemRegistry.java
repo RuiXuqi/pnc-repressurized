@@ -24,7 +24,7 @@ public class ItemRegistry implements IItemRegistry {
     @Override
     public void registerInventoryItem(IInventoryItem handler) {
         if (handler == null) throw new NullPointerException("IInventoryItem is null!");
-        inventoryItems.add(handler);
+        this.inventoryItems.add(handler);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ItemRegistry implements IItemRegistry {
         Set<Item> applicableUpgrades = upgradeAcceptor.getApplicableUpgrades();
         if (applicableUpgrades != null) {
             for (Item applicableUpgrade : applicableUpgrades) {
-                List<IUpgradeAcceptor> acceptors = upgradeToAcceptors.computeIfAbsent(applicableUpgrade, k -> new ArrayList<>());
+                List<IUpgradeAcceptor> acceptors = this.upgradeToAcceptors.computeIfAbsent(applicableUpgrade, k -> new ArrayList<>());
                 acceptors.add(upgradeAcceptor);
             }
         }
@@ -46,7 +46,7 @@ public class ItemRegistry implements IItemRegistry {
 
     @Override
     public void addTooltip(Item upgrade, List<String> tooltip) {
-        List<IUpgradeAcceptor> acceptors = upgradeToAcceptors.get(upgrade);
+        List<IUpgradeAcceptor> acceptors = this.upgradeToAcceptors.get(upgrade);
         if (acceptors != null) {
             List<String> tempList = new ArrayList<>(acceptors.size());
             for (IUpgradeAcceptor acceptor : acceptors) {
@@ -59,10 +59,10 @@ public class ItemRegistry implements IItemRegistry {
 
     @Override
     public void registerMagnetSuppressor(IMagnetSuppressor suppressor) {
-        magnetSuppressors.add(suppressor);
+        this.magnetSuppressors.add(suppressor);
     }
 
     public boolean shouldSuppressMagnet(Entity e) {
-        return magnetSuppressors.stream().anyMatch(s -> s.shouldSuppressMagnet(e));
+        return this.magnetSuppressors.stream().anyMatch(s -> s.shouldSuppressMagnet(e));
     }
 }

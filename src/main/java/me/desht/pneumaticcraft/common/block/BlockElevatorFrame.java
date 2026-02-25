@@ -58,7 +58,7 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        boolean[] connected = getConnections(worldIn, pos);
+        boolean[] connected = this.getConnections(worldIn, pos);
         for (Corner corner : Corner.values()) {
             state = state.withProperty(corner.prop, connected[corner.ordinal()]);
         }
@@ -86,17 +86,17 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
         }
 
         boolean isColliding = false;
-        boolean[] connected = getConnections(world, pos);
+        boolean[] connected = this.getConnections(world, pos);
         for (Corner corner : Corner.values()) {
             if (!connected[corner.ordinal()]) {
-                setBlockBounds(corner.aabb);
+                this.setBlockBounds(corner.aabb);
                 if (super.collisionRayTrace(state, world, pos, origin, direction) != null) {
                     isColliding = true;
                 }
             }
         }
 
-        setBlockBounds(FULL_BLOCK_AABB);
+        this.setBlockBounds(FULL_BLOCK_AABB);
         return isColliding ? super.collisionRayTrace(state, world, pos, origin, direction) : null;
     }
 
@@ -108,10 +108,10 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
         boolean frameZPos = world.getBlockState(pos.south()).getBlock() == Blockss.ELEVATOR_FRAME;
         boolean frameZNeg = world.getBlockState(pos.north()).getBlock() == Blockss.ELEVATOR_FRAME;
 
-        res[Corner.SE.ordinal()]  = frameXPos || frameZPos;
-        res[Corner.NE.ordinal()]  = frameXPos || frameZNeg;
-        res[Corner.SW.ordinal()]  = frameXNeg || frameZPos;
-        res[Corner.NW.ordinal()]  = frameXNeg || frameZNeg;
+        res[Corner.SE.ordinal()] = frameXPos || frameZPos;
+        res[Corner.NE.ordinal()] = frameXPos || frameZNeg;
+        res[Corner.SW.ordinal()] = frameXNeg || frameZPos;
+        res[Corner.NW.ordinal()] = frameXNeg || frameZNeg;
 
         return res;
     }
@@ -119,7 +119,7 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
 
     @Override
     public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean isActualState) {
-        boolean[] connected = getConnections(worldIn, pos);
+        boolean[] connected = this.getConnections(worldIn, pos);
 
         for (Corner corner : Corner.values()) {
             if (!connected[corner.ordinal()]) {
@@ -127,7 +127,7 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
             }
         }
 
-        float blockHeight = getElevatorBlockHeight(worldIn, pos);
+        float blockHeight = this.getElevatorBlockHeight(worldIn, pos);
         if (blockHeight > 0) {
             AxisAlignedBB aabb = new AxisAlignedBB(0, 0, 0, 1, blockHeight, 1);
             addCollisionBoxToList(pos, entityBox, collidingBoxes, aabb);
@@ -188,10 +188,10 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
     }
 
     private enum Corner {
-        NE(1, -1, BlockElevatorFrame.NE, new AxisAlignedBB(15f / 16f, 0, 0, 1, 15f/16f, 1f/16f)),
-        SE(1, 1, BlockElevatorFrame.SE, new AxisAlignedBB(15f / 16f, 0, 15f / 16f, 1, 15f/16f, 1)),
-        SW(-1, 1, BlockElevatorFrame.SW, new AxisAlignedBB(0, 0, 15f / 16f, 1f / 16f, 15f/16f, 1)),
-        NW(-1,-1, BlockElevatorFrame.NW, new AxisAlignedBB(0, 0, 0, 1f/16f, 15f/16f, 1f/16f));
+        NE(1, -1, BlockElevatorFrame.NE, new AxisAlignedBB(15f / 16f, 0, 0, 1, 15f / 16f, 1f / 16f)),
+        SE(1, 1, BlockElevatorFrame.SE, new AxisAlignedBB(15f / 16f, 0, 15f / 16f, 1, 15f / 16f, 1)),
+        SW(-1, 1, BlockElevatorFrame.SW, new AxisAlignedBB(0, 0, 15f / 16f, 1f / 16f, 15f / 16f, 1)),
+        NW(-1, -1, BlockElevatorFrame.NW, new AxisAlignedBB(0, 0, 0, 1f / 16f, 15f / 16f, 1f / 16f));
 
         final int x;
         final int z;
@@ -199,7 +199,8 @@ public class BlockElevatorFrame extends BlockPneumaticCraftModeled {
         final AxisAlignedBB aabb;
 
         Corner(int x, int z, PropertyBool prop, AxisAlignedBB aabb) {
-            this.x = x; this.z = z;
+            this.x = x;
+            this.z = z;
             this.prop = prop;
             this.aabb = aabb;
         }

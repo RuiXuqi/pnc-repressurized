@@ -18,16 +18,16 @@ public class PacketNotifyVariablesRemote extends AbstractPacket<PacketNotifyVari
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        variables = new String[buf.readInt()];
-        for (int i = 0; i < variables.length; i++) {
-            variables[i] = ByteBufUtils.readUTF8String(buf);
+        this.variables = new String[buf.readInt()];
+        for (int i = 0; i < this.variables.length; i++) {
+            this.variables[i] = ByteBufUtils.readUTF8String(buf);
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(variables.length);
-        for (String s : variables)
+        buf.writeInt(this.variables.length);
+        for (String s : this.variables)
             ByteBufUtils.writeUTF8String(buf, s);
     }
 

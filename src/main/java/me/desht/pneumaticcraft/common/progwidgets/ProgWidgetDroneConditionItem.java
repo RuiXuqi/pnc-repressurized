@@ -36,7 +36,7 @@ public class ProgWidgetDroneConditionItem extends ProgWidgetDroneEvaluation impl
 
     @Override
     public boolean isItemValidForFilters(ItemStack item) {
-        return ProgWidgetItemFilter.isItemValidForFilters(item, ProgWidget.getConnectedWidgetList(this, 0), ProgWidget.getConnectedWidgetList(this, getParameters().length), null);
+        return ProgWidgetItemFilter.isItemValidForFilters(item, ProgWidget.getConnectedWidgetList(this, 0), ProgWidget.getConnectedWidgetList(this, this.getParameters().length), null);
     }
 
 }

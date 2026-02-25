@@ -17,7 +17,7 @@ public class HeatBehaviourHeatFrame extends HeatBehaviour<TileEntity> {
     @Override
     public void initialize(String id, IHeatExchangerLogic connectedHeatLogic, World world, BlockPos pos, EnumFacing direction) {
         super.initialize(id, connectedHeatLogic, world, pos, direction);
-        semiBlock = null;
+        this.semiBlock = null;
     }
 
     @Override
@@ -26,20 +26,20 @@ public class HeatBehaviourHeatFrame extends HeatBehaviour<TileEntity> {
     }
 
     private SemiBlockHeatFrame getSemiBlock() {
-        if (semiBlock == null) {
-            semiBlock = SemiBlockManager.getInstance(getWorld()).getSemiBlock(SemiBlockHeatFrame.class, getWorld(), getPos());
+        if (this.semiBlock == null) {
+            this.semiBlock = SemiBlockManager.getInstance(this.getWorld()).getSemiBlock(SemiBlockHeatFrame.class, this.getWorld(), this.getPos());
         }
-        return semiBlock;
+        return this.semiBlock;
     }
 
     @Override
     public boolean isApplicable() {
-        return getSemiBlock() != null;
+        return this.getSemiBlock() != null;
     }
 
     @Override
     public void update() {
-        HeatExchangerLogicTicking.exchange(getSemiBlock().getHeatExchangerLogic(null), getHeatExchanger());
+        HeatExchangerLogicTicking.exchange(this.getSemiBlock().getHeatExchangerLogic(null), this.getHeatExchanger());
     }
 
 }

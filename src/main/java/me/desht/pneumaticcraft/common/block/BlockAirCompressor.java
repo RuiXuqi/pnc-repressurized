@@ -16,7 +16,9 @@ public class BlockAirCompressor extends BlockPneumaticCraftModeled {
         super(Material.IRON, "air_compressor");
     }
 
-    BlockAirCompressor(String name) { super(Material.IRON, name); }
+    BlockAirCompressor(String name) {
+        super(Material.IRON, name);
+    }
 
     @Override
     protected BlockStateContainer createBlockState() {

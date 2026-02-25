@@ -16,12 +16,12 @@ public class PacketServerTickTime extends AbstractPacket<PacketServerTickTime> {
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        tickTime = buffer.readDouble();
+        this.tickTime = buffer.readDouble();
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        buffer.writeDouble(tickTime);
+        buffer.writeDouble(this.tickTime);
     }
 
     @Override

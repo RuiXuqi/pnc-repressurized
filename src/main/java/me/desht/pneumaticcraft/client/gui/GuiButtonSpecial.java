@@ -21,11 +21,11 @@ import java.util.List;
 
 public class GuiButtonSpecial extends GuiButtonExt implements IGuiWidget {
 
-    public enum IconPosition { MIDDLE, LEFT, RIGHT }
+    public enum IconPosition {MIDDLE, LEFT, RIGHT}
 
     private ItemStack[] renderedStacks;
     private ResourceLocation resLoc;
-    private List<String> tooltipText = new ArrayList<>();
+    private final List<String> tooltipText = new ArrayList<>();
     private final RenderItem itemRenderer = Minecraft.getMinecraft().getRenderItem();
     private int invisibleHoverColor;
     private boolean thisVisible = true;
@@ -38,11 +38,11 @@ public class GuiButtonSpecial extends GuiButtonExt implements IGuiWidget {
     }
 
     public void setVisible(boolean visible) {
-        thisVisible = visible;
+        this.thisVisible = visible;
     }
 
     public void setInvisibleHoverColor(int color) {
-        invisibleHoverColor = color;
+        this.invisibleHoverColor = color;
     }
 
     public void setIconPosition(IconPosition iconPosition) {
@@ -59,90 +59,94 @@ public class GuiButtonSpecial extends GuiButtonExt implements IGuiWidget {
     }
 
     public GuiButtonSpecial setTooltipText(List<String> tooltip) {
-        tooltipText.clear();
-        tooltipText.addAll(tooltip);
+        this.tooltipText.clear();
+        this.tooltipText.addAll(tooltip);
         return this;
     }
 
     public GuiButtonSpecial setTooltipText(String tooltip) {
-        tooltipText.clear();
+        this.tooltipText.clear();
         if (tooltip != null && !tooltip.equals("")) {
-            tooltipText.add(tooltip);
+            this.tooltipText.add(tooltip);
         }
         return this;
     }
 
     public void getTooltip(List<String> curTooltip) {
-        if (tooltipText != null) {
-            curTooltip.addAll(tooltipText);
+        if (this.tooltipText != null) {
+            curTooltip.addAll(this.tooltipText);
         }
     }
 
     public String getTooltip() {
-        return tooltipText.size() > 0 ? tooltipText.get(0) : "";
+        return this.tooltipText.size() > 0 ? this.tooltipText.get(0) : "";
     }
 
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     @Override
     public void drawButton(Minecraft mc, int x, int y, float partialTicks) {
-        if (thisVisible) super.drawButton(mc, x, y, partialTicks);
+        if (this.thisVisible) super.drawButton(mc, x, y, partialTicks);
 
-        if (visible) {
-            if (renderedStacks != null) {
-                int startX = getIconX();
+        if (this.visible) {
+            if (this.renderedStacks != null) {
+                int startX = this.getIconX();
                 GlStateManager.enableRescaleNormal();
                 RenderHelper.enableGUIStandardItemLighting();
-                for (int i = 0; i < renderedStacks.length; i++) {
-                    itemRenderer.renderItemAndEffectIntoGUI(renderedStacks[i], startX + i * 18, this.y + 2);
+                for (int i = 0; i < this.renderedStacks.length; i++) {
+                    this.itemRenderer.renderItemAndEffectIntoGUI(this.renderedStacks[i], startX + i * 18, this.y + 2);
                 }
                 RenderHelper.disableStandardItemLighting();
                 GlStateManager.disableRescaleNormal();
             }
-            if (resLoc != null) {
-                mc.getTextureManager().bindTexture(resLoc);
-                drawModalRectWithCustomSizedTexture(this.x + width / 2 - 8, this.y + 2, 0, 0, 16, 16, 16, 16);
+            if (this.resLoc != null) {
+                mc.getTextureManager().bindTexture(this.resLoc);
+                drawModalRectWithCustomSizedTexture(this.x + this.width / 2 - 8, this.y + 2, 0, 0, 16, 16, 16, 16);
             }
-            if (enabled && !thisVisible && x >= this.x && y >= this.y && x < this.x + width && y < this.y + height) {
-                Gui.drawRect(this.x, this.y, this.x + width, this.y + height, invisibleHoverColor);
+            if (this.enabled && !this.thisVisible && x >= this.x && y >= this.y && x < this.x + this.width && y < this.y + this.height) {
+                Gui.drawRect(this.x, this.y, this.x + this.width, this.y + this.height, this.invisibleHoverColor);
             }
         }
     }
 
     private int getIconX() {
-        switch (iconPosition) {
-            case LEFT: return x - 1 - 18 * renderedStacks.length;
-            case RIGHT: return x + width + 1;
-            case MIDDLE: default: return x + width / 2 - renderedStacks.length * 9 + 1;
+        switch (this.iconPosition) {
+            case LEFT:
+                return this.x - 1 - 18 * this.renderedStacks.length;
+            case RIGHT:
+                return this.x + this.width + 1;
+            case MIDDLE:
+            default:
+                return this.x + this.width / 2 - this.renderedStacks.length * 9 + 1;
         }
     }
 
     @Override
     public void setListener(IWidgetListener gui) {
-        listener = gui;
+        this.listener = gui;
     }
 
     @Override
     public int getID() {
-        return id;
+        return this.id;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTick);
+        this.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTick);
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
-        if (mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
-            playPressSound(Minecraft.getMinecraft().getSoundHandler());
-            listener.actionPerformed(this);
+        if (this.mousePressed(Minecraft.getMinecraft(), mouseX, mouseY)) {
+            this.playPressSound(Minecraft.getMinecraft().getSoundHandler());
+            this.listener.actionPerformed(this);
         }
     }
 
@@ -153,12 +157,12 @@ public class GuiButtonSpecial extends GuiButtonExt implements IGuiWidget {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTooltip, boolean shiftPressed) {
-        if (visible) curTooltip.addAll(tooltipText);
+        if (this.visible) curTooltip.addAll(this.tooltipText);
     }
 
     @Override

@@ -29,7 +29,10 @@ public class RenderPressureTubeModule extends TileEntitySpecialRenderer<TileEnti
         }
         boolean render = false;
         for (int i = 0; i < tile.modules.length; i++) {
-            if (tile.modules[i] != null) render = true;
+            if (tile.modules[i] != null) {
+                render = true;
+                break;
+            }
         }
         if (!render && holdingModule == null)
             return;
@@ -45,7 +48,7 @@ public class RenderPressureTubeModule extends TileEntitySpecialRenderer<TileEnti
         GlStateManager.scale(1.0F, -1F, -1F);
 
         // "fake" module is for showing a preview of where the module would be placed
-        if (holdingModule != null) attachFakeModule(mc, tile, holdingModule);
+        if (holdingModule != null) this.attachFakeModule(mc, tile, holdingModule);
 
         for (int i = 0; i < tile.modules.length; i++) {
             TubeModule module = tile.modules[i];
@@ -78,7 +81,7 @@ public class RenderPressureTubeModule extends TileEntitySpecialRenderer<TileEnti
                 && rtr.typeOfHit == RayTraceResult.Type.BLOCK
                 && rtr.getBlockPos().equals(tile.getPos())
                 && mc.world.getTileEntity(rtr.getBlockPos()) == tile) {
-            ((BlockPressureTube) Blockss.PRESSURE_TUBE).tryPlaceModule(mc.player, mc.world, tile.getPos(), rtr.sideHit, hand , true);
+            ((BlockPressureTube) Blockss.PRESSURE_TUBE).tryPlaceModule(mc.player, mc.world, tile.getPos(), rtr.sideHit, hand, true);
         }
     }
 }

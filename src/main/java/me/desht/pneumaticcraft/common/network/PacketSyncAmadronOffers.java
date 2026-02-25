@@ -57,10 +57,10 @@ public class PacketSyncAmadronOffers extends AbstractPacket<PacketSyncAmadronOff
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        staticOffers = readOffers(buf);
-        selectedPeriodicOffers = readOffers(buf);
-        mayAddPeriodic = buf.readBoolean();
-        mayAddStatic = buf.readBoolean();
+        this.staticOffers = this.readOffers(buf);
+        this.selectedPeriodicOffers = this.readOffers(buf);
+        this.mayAddPeriodic = buf.readBoolean();
+        this.mayAddStatic = buf.readBoolean();
     }
 
     private Collection<AmadronOffer> readOffers(ByteBuf buf) {
@@ -78,18 +78,18 @@ public class PacketSyncAmadronOffers extends AbstractPacket<PacketSyncAmadronOff
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(staticOffers.size());
-        for (AmadronOffer offer : staticOffers) {
+        buf.writeInt(this.staticOffers.size());
+        for (AmadronOffer offer : this.staticOffers) {
             buf.writeBoolean(offer instanceof AmadronOfferCustom);
             offer.writeToBuf(buf);
         }
-        buf.writeInt(selectedPeriodicOffers.size());
-        for (AmadronOffer offer : selectedPeriodicOffers) {
+        buf.writeInt(this.selectedPeriodicOffers.size());
+        for (AmadronOffer offer : this.selectedPeriodicOffers) {
             buf.writeBoolean(offer instanceof AmadronOfferCustom);
             offer.writeToBuf(buf);
         }
-        buf.writeBoolean(mayAddPeriodic);
-        buf.writeBoolean(mayAddStatic);
+        buf.writeBoolean(this.mayAddPeriodic);
+        buf.writeBoolean(this.mayAddStatic);
     }
 
     @Override

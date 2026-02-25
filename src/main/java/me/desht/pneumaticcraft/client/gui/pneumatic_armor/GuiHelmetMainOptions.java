@@ -27,33 +27,33 @@ public class GuiHelmetMainOptions implements IOptionPage {
     public void initGui(IGuiScreen gui) {
         gui.getButtonList().add(new GuiButton(10, 30, 128, 150, 20, "Move Pressure Stat Screen..."));
         gui.getButtonList().add(new GuiButton(11, 30, 150, 150, 20, "Move Message Screen..."));
-        changeKeybindingButton = new KeybindingButton(12, 30, 172, 150, 20, "Change open menu key...", KeyHandler.getInstance().keybindOpenOptions);
-        gui.getButtonList().add(changeKeybindingButton);
+        this.changeKeybindingButton = new KeybindingButton(12, 30, 172, 150, 20, "Change open menu key...", KeyHandler.getInstance().keybindOpenOptions);
+        gui.getButtonList().add(this.changeKeybindingButton);
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
         switch (button.id) {
             case 10:
-                Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(renderHandler, ArmorHUDLayout.LayoutTypes.POWER));
+                Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.renderHandler, ArmorHUDLayout.LayoutTypes.POWER));
                 break;
             case 11:
-                renderHandler.testMessageStat = new GuiAnimatedStat(null, "Test Message, keep in mind messages can be long!",
+                this.renderHandler.testMessageStat = new GuiAnimatedStat(null, "Test Message, keep in mind messages can be long!",
                         GuiAnimatedStat.StatIcon.NONE, 0x7000AA00, null, ArmorHUDLayout.INSTANCE.messageStat);
-                renderHandler.testMessageStat.openWindow();
+                this.renderHandler.testMessageStat.openWindow();
                 Minecraft.getMinecraft().displayGuiScreen(
-                        new GuiMoveStat(renderHandler, ArmorHUDLayout.LayoutTypes.MESSAGE, renderHandler.testMessageStat));
+                        new GuiMoveStat(this.renderHandler, ArmorHUDLayout.LayoutTypes.MESSAGE, this.renderHandler.testMessageStat));
                 break;
             case 12:
-                changeKeybindingButton.toggleKeybindMode();
+                this.changeKeybindingButton.toggleKeybindMode();
                 break;
         }
     }
 
     @Override
     public void keyTyped(char ch, int key) {
-        if (changeKeybindingButton != null) {
-            changeKeybindingButton.receiveKey(key);
+        if (this.changeKeybindingButton != null) {
+            this.changeKeybindingButton.receiveKey(key);
         }
     }
 

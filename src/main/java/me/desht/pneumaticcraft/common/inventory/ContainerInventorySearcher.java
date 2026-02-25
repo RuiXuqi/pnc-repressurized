@@ -15,18 +15,18 @@ public class ContainerInventorySearcher extends Container {
         // Add the player's inventory slots to the container
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                addSlotToContainer(new Slot(inventoryPlayer, col + row * 9 + 9, 8 + col * 18, 48 + row * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, col + row * 9 + 9, 8 + col * 18, 48 + row * 18));
             }
         }
 
         // Add the player's action bar slots to the container
         for (int slot = 0; slot < 9; ++slot) {
-            addSlotToContainer(new Slot(inventoryPlayer, slot, 8 + slot * 18, 106));
+            this.addSlotToContainer(new Slot(inventoryPlayer, slot, 8 + slot * 18, 106));
         }
     }
 
     public void init(IItemHandler inv) {
-        addSlotToContainer(new SlotItemHandler(inv, 0, 80, 23));
+        this.addSlotToContainer(new SlotItemHandler(inv, 0, 80, 23));
     }
 
     /**

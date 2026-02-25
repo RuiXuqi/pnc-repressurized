@@ -43,12 +43,12 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
 
     @SideOnly(Side.CLIENT)
     public int getTicksSinceAction() {
-        return ticksSinceAction;
+        return this.ticksSinceAction;
     }
 
     @SideOnly(Side.CLIENT)
     public int getTicksSinceNotEnoughAir() {
-        return ticksSinceNotEnoughAir;
+        return this.ticksSinceNotEnoughAir;
     }
 
     @Override
@@ -78,7 +78,7 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
 
     @Override
     public int getColorChannel() {
-        return colorChannel;
+        return this.colorChannel;
     }
 
     @Override
@@ -87,35 +87,35 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
     }
 
     public boolean hasPower() {
-        return powered;
+        return this.powered;
     }
 
     public void onUpdatePacket(int status, int colorChannel) {
-        powered = status > 0;
-        if (status == 2) ticksSinceAction = 0;
-        if (status == 3) ticksSinceNotEnoughAir = 0;
+        this.powered = status > 0;
+        if (status == 2) this.ticksSinceAction = 0;
+        if (status == 3) this.ticksSinceNotEnoughAir = 0;
         this.colorChannel = colorChannel;
     }
 
     @Override
     public void writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setBoolean("powered", powered);
-        nbt.setByte("colorChannel", (byte) colorChannel);
+        nbt.setBoolean("powered", this.powered);
+        nbt.setByte("colorChannel", (byte) this.colorChannel);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        powered = nbt.getBoolean("powered");
-        colorChannel = nbt.getByte("colorChannel");
+        this.powered = nbt.getBoolean("powered");
+        this.colorChannel = nbt.getByte("colorChannel");
     }
 
     public SemiBlockLogistics getFrame() {
-        if (cachedFrame == null) {
-            cachedFrame = SemiBlockManager.getInstance(getTube().world()).getSemiBlock(SemiBlockLogistics.class, getTube().world(), getTube().pos().offset(dir));
+        if (this.cachedFrame == null) {
+            this.cachedFrame = SemiBlockManager.getInstance(this.getTube().world()).getSemiBlock(SemiBlockLogistics.class, this.getTube().world(), this.getTube().pos().offset(this.dir));
         }
-        return cachedFrame;
+        return this.cachedFrame;
     }
 
     @Override
@@ -125,8 +125,8 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
             OptionalInt colorIndex = DyeUtils.dyeDamageFromStack(heldStack);
             if (colorIndex.isPresent()) {
                 if (!player.world.isRemote) {
-                    setColorChannel(colorIndex.getAsInt());
-                    NetworkHandler.sendToAllAround(new PacketUpdateLogisticModule(this, 0), getTube().world());
+                    this.setColorChannel(colorIndex.getAsInt());
+                    NetworkHandler.sendToAllAround(new PacketUpdateLogisticModule(this, 0), this.getTube().world());
                     if (ConfigHandler.general.useUpDyesWhenColoring && !player.capabilities.isCreativeMode) {
                         heldStack.shrink(1);
                     }
@@ -140,20 +140,20 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
     @Override
     public void update() {
         super.update();
-        if (cachedFrame != null && cachedFrame.isInvalid()) cachedFrame = null;
-        if (!getTube().world().isRemote) {
-            if (powered != getTube().getAirHandler(null).getPressure() >= MIN_PRESSURE) {
-                powered = !powered;
-                NetworkHandler.sendToAllAround(new PacketUpdateLogisticModule(this, 0), getTube().world());
+        if (this.cachedFrame != null && this.cachedFrame.isInvalid()) this.cachedFrame = null;
+        if (!this.getTube().world().isRemote) {
+            if (this.powered != this.getTube().getAirHandler(null).getPressure() >= MIN_PRESSURE) {
+                this.powered = !this.powered;
+                NetworkHandler.sendToAllAround(new PacketUpdateLogisticModule(this, 0), this.getTube().world());
             }
-            if (--ticksUntilNextCycle <= 0) {
+            if (--this.ticksUntilNextCycle <= 0) {
                 LogisticsManager manager = new LogisticsManager();
                 Map<SemiBlockLogistics, ModuleLogistics> frameToModuleMap = new HashMap<>();
                 Map<SemiBlockLogistics, EnumFacing> frameToSide = new HashMap<>();
-                for (TubeModule module : ModuleNetworkManager.getInstance(getTube().world()).getConnectedModules(this)) {
+                for (TubeModule module : ModuleNetworkManager.getInstance(this.getTube().world()).getConnectedModules(this)) {
                     if (module instanceof ModuleLogistics) {
                         ModuleLogistics logistics = (ModuleLogistics) module;
-                        if (logistics.getColorChannel() == getColorChannel()) {
+                        if (logistics.getColorChannel() == this.getColorChannel()) {
                             // Make sure any connected module doesn't tick, set it to a 5 second timer.
                             // This is also a penalty value when no task is executed this tick.
                             // The timer will be reduced to 20 ticks later if the module does some work.
@@ -174,9 +174,9 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
                 for (LogisticsTask task : tasks) {
                     if (task.isStillValid(task.transportingItem.isEmpty() ? task.transportingFluid.stack : task.transportingItem)) {
                         if (!task.transportingItem.isEmpty()) {
-                            handleItems(frameToModuleMap.get(task.provider), frameToModuleMap.get(task.requester), task);
+                            this.handleItems(frameToModuleMap.get(task.provider), frameToModuleMap.get(task.requester), task);
                         } else {
-                            handleFluids(frameToModuleMap.get(task.provider), frameToModuleMap.get(task.requester), task);
+                            this.handleFluids(frameToModuleMap.get(task.provider), frameToModuleMap.get(task.requester), task);
                         }
                     }
                 }
@@ -185,13 +185,13 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
                 frameToSide.forEach(SemiBlockLogistics::setSide);
             }
         } else {
-            if (ticksSinceAction >= 0) {
-                ticksSinceAction++;
-                if (ticksSinceAction > 3) ticksSinceAction = -1;
+            if (this.ticksSinceAction >= 0) {
+                this.ticksSinceAction++;
+                if (this.ticksSinceAction > 3) this.ticksSinceAction = -1;
             }
-            if (ticksSinceNotEnoughAir >= 0) {
-                ticksSinceNotEnoughAir++;
-                if (ticksSinceNotEnoughAir > 20) ticksSinceNotEnoughAir = -1;
+            if (this.ticksSinceNotEnoughAir >= 0) {
+                this.ticksSinceNotEnoughAir++;
+                if (this.ticksSinceNotEnoughAir > 20) this.ticksSinceNotEnoughAir = -1;
             }
         }
     }
@@ -211,20 +211,20 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
                 IAirHandler receiverAirHandler = requestingModule.getTube().getAirHandler(null);
                 if (airUsed > receiverAirHandler.getAir()) {
                     // not enough air to move all the items - scale back the number to be moved
-                    double scale = receiverAirHandler.getAir() / (double)airUsed;
-                    extractedStack.setCount((int)(extractedStack.getCount() * scale));
+                    double scale = receiverAirHandler.getAir() / (double) airUsed;
+                    extractedStack.setCount((int) (extractedStack.getCount() * scale));
                     airUsed *= scale;
                 }
                 if (extractedStack.isEmpty()) {
-                    sendModuleUpdate(providingModule, false);
-                    sendModuleUpdate(requestingModule, false);
+                    this.sendModuleUpdate(providingModule, false);
+                    this.sendModuleUpdate(requestingModule, false);
                 } else {
-                    sendModuleUpdate(providingModule, true);
-                    sendModuleUpdate(requestingModule, true);
+                    this.sendModuleUpdate(providingModule, true);
+                    this.sendModuleUpdate(requestingModule, true);
                     receiverAirHandler.addAir(-airUsed);
                     IOHelper.extract(providingHandler, extractedStack, IOHelper.ExtractCount.EXACT, false, false);
                     ItemHandlerHelper.insertItem(requestingHandler, extractedStack, false);
-                    ticksUntilNextCycle = 20;
+                    this.ticksUntilNextCycle = 20;
                 }
             }
         }
@@ -247,18 +247,18 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
                     if (airUsed > receiverAirHandler.getAir()) {
                         // not enough air to move it all - scale back the amount of fluid to be moved
                         double scale = receiverAirHandler.getAir() / airUsed;
-                        drainingFluid.amount = (int)(extractedFluid.amount * scale);
+                        drainingFluid.amount = (int) (extractedFluid.amount * scale);
                         airUsed *= scale;
                     }
                     if (drainingFluid.amount == 0) {
-                        sendModuleUpdate(providingModule, false);
-                        sendModuleUpdate(requestingModule, false);
+                        this.sendModuleUpdate(providingModule, false);
+                        this.sendModuleUpdate(requestingModule, false);
                     } else {
-                        sendModuleUpdate(providingModule, true);
-                        sendModuleUpdate(requestingModule, true);
+                        this.sendModuleUpdate(providingModule, true);
+                        this.sendModuleUpdate(requestingModule, true);
                         requestingModule.getTube().getAirHandler(null).addAir((int) -airUsed);
                         requestingHandler.fill(providingHandler.drain(drainingFluid, true), true);
-                        ticksUntilNextCycle = 20;
+                        this.ticksUntilNextCycle = 20;
                     }
                 }
             }
@@ -273,11 +273,11 @@ public class ModuleLogistics extends TubeModule implements INetworkedModule {
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
         String status;
-        if (ticksSinceAction >= 0) {
+        if (this.ticksSinceAction >= 0) {
             status = "waila.logisticsModule.transporting";
-        } else if (ticksSinceNotEnoughAir >= 0) {
+        } else if (this.ticksSinceNotEnoughAir >= 0) {
             status = "waila.logisticsModule.notEnoughAir";
-        } else if (hasPower()) {
+        } else if (this.hasPower()) {
             status = "waila.logisticsModule.powered";
         } else {
             status = "waila.logisticsModule.noPower";

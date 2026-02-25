@@ -10,19 +10,19 @@ public class WidgetLabelVariable extends WidgetLabel {
 
     public WidgetLabelVariable(int x, int y, String text) {
         super(x, y, text);
-        parser = new TextVariableParser(text);
+        this.parser = new TextVariableParser(text);
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        String oldText = text;
-        text = parser.parse();
+        String oldText = this.text;
+        this.text = this.parser.parse();
         super.render(mouseX, mouseY, partialTick);
-        text = oldText;
+        this.text = oldText;
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, Minecraft.getMinecraft().fontRenderer.getStringWidth(parser.parse()), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        return new Rectangle(this.x, this.y, Minecraft.getMinecraft().fontRenderer.getStringWidth(this.parser.parse()), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
     }
 }

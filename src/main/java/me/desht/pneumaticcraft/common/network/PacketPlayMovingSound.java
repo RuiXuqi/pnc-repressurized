@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class PacketPlayMovingSound extends AbstractPacket<PacketPlayMovingSound> {
 
-    enum SourceType { ENTITY, STATIC_POS }
+    enum SourceType {ENTITY, STATIC_POS}
 
     private MovingSounds.Sound sound;
     private int entityId;
@@ -37,37 +37,37 @@ public class PacketPlayMovingSound extends AbstractPacket<PacketPlayMovingSound>
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        buffer.writeByte(sound.ordinal());
-        buffer.writeByte(sourceType.ordinal());
-        if (sourceType == SourceType.ENTITY) {
-            buffer.writeInt(entityId);
-        } else if (sourceType == SourceType.STATIC_POS) {
-            buffer.writeInt(pos.getX());
-            buffer.writeInt(pos.getY());
-            buffer.writeInt(pos.getZ());
+        buffer.writeByte(this.sound.ordinal());
+        buffer.writeByte(this.sourceType.ordinal());
+        if (this.sourceType == SourceType.ENTITY) {
+            buffer.writeInt(this.entityId);
+        } else if (this.sourceType == SourceType.STATIC_POS) {
+            buffer.writeInt(this.pos.getX());
+            buffer.writeInt(this.pos.getY());
+            buffer.writeInt(this.pos.getZ());
         }
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        sound = MovingSounds.Sound.values()[buffer.readByte()];
-        sourceType = SourceType.values()[buffer.readByte()];
-        if (sourceType == SourceType.ENTITY) {
-            entityId = buffer.readInt();
-        } else if (sourceType == SourceType.STATIC_POS) {
-            pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+        this.sound = MovingSounds.Sound.values()[buffer.readByte()];
+        this.sourceType = SourceType.values()[buffer.readByte()];
+        if (this.sourceType == SourceType.ENTITY) {
+            this.entityId = buffer.readInt();
+        } else if (this.sourceType == SourceType.STATIC_POS) {
+            this.pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
         }
     }
 
     @Override
     public void handleClientSide(PacketPlayMovingSound message, EntityPlayer player) {
-        if (sourceType == SourceType.ENTITY) {
-            Entity e = player.world.getEntityByID(entityId);
+        if (this.sourceType == SourceType.ENTITY) {
+            Entity e = player.world.getEntityByID(this.entityId);
             if (e != null) {
-                MovingSounds.playMovingSound(sound, e);
+                MovingSounds.playMovingSound(this.sound, e);
             }
-        } else if (sourceType == SourceType.STATIC_POS) {
-            MovingSounds.playMovingSound(sound, pos);
+        } else if (this.sourceType == SourceType.STATIC_POS) {
+            MovingSounds.playMovingSound(this.sound, this.pos);
         }
     }
 

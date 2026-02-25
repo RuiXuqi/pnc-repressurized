@@ -21,11 +21,11 @@ public class WidgetTextField extends GuiTextField implements IGuiWidget {
 
     @Override
     public void setListener(IWidgetListener gui) {
-        listener = gui;
+        this.listener = gui;
     }
 
     public WidgetTextField setAsPasswordBox() {
-        passwordBox = true;
+        this.passwordBox = true;
         return this;
     }
 
@@ -36,41 +36,41 @@ public class WidgetTextField extends GuiTextField implements IGuiWidget {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        String oldText = getText();
-        int oldCursorPos = getCursorPosition();
-        if (passwordBox) {
-            setText(StringUtils.repeat('*', oldText.length()));
-            setCursorPosition(oldCursorPos);
+        String oldText = this.getText();
+        int oldCursorPos = this.getCursorPosition();
+        if (this.passwordBox) {
+            this.setText(StringUtils.repeat('*', oldText.length()));
+            this.setCursorPosition(oldCursorPos);
         }
-        drawTextBox();
-        if (passwordBox) {
-            setText(oldText);
-            setCursorPosition(oldCursorPos);
+        this.drawTextBox();
+        if (this.passwordBox) {
+            this.setText(oldText);
+            this.setCursorPosition(oldCursorPos);
         }
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
-        mouseClicked(mouseX, mouseY, button);
-        if (isFocused() && button == 1) {
-            setText("");
-            listener.onKeyTyped(this);
+        this.mouseClicked(mouseX, mouseY, button);
+        if (this.isFocused() && button == 1) {
+            this.setText("");
+            this.listener.onKeyTyped(this);
         }
     }
 
     @Override
     public void onMouseClickedOutsideBounds(int mouseX, int mouseY, int button) {
-        onMouseClicked(mouseX, mouseY, button);
+        this.onMouseClicked(mouseX, mouseY, button);
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTooltip, boolean shiftPressed) {
-        curTooltip.addAll(tooltip);
+        curTooltip.addAll(this.tooltip);
     }
 
     public void setTooltip(String... tooltip) {
@@ -80,8 +80,8 @@ public class WidgetTextField extends GuiTextField implements IGuiWidget {
 
     @Override
     public boolean onKey(char key, int keyCode) {
-        if (textboxKeyTyped(key, keyCode)) {
-            listener.onKeyTyped(this);
+        if (this.textboxKeyTyped(key, keyCode)) {
+            this.listener.onKeyTyped(this);
             return true;
         }
         return false;

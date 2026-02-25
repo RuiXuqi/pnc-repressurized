@@ -28,41 +28,41 @@ public class TileEntityPressureChamberWall extends TileEntityBase implements IMa
     }
 
     public TileEntityPressureChamberValve getCore() {
-        if (teValve == null && (valveX != 0 || valveY != 0 || valveZ != 0)) {
+        if (this.teValve == null && (this.valveX != 0 || this.valveY != 0 || this.valveZ != 0)) {
             // when the saved TE equals null, check if we can
             // retrieve the TE from the NBT saved coords.
-            TileEntity te = getWorld().getTileEntity(new BlockPos(valveX, valveY, valveZ));
-            setCore(te instanceof TileEntityPressureChamberValve ? (TileEntityPressureChamberValve) te : null);
+            TileEntity te = this.getWorld().getTileEntity(new BlockPos(this.valveX, this.valveY, this.valveZ));
+            this.setCore(te instanceof TileEntityPressureChamberValve ? (TileEntityPressureChamberValve) te : null);
         }
-        return teValve;
+        return this.teValve;
     }
 
     public void onBlockBreak() {
-        teValve = getCore();
-        if (teValve != null) {
-            teValve.onMultiBlockBreak();
+        this.teValve = this.getCore();
+        if (this.teValve != null) {
+            this.teValve.onMultiBlockBreak();
         }
     }
 
     void setCore(TileEntityPressureChamberValve te) {
-        if (!getWorld().isRemote) {
+        if (!this.getWorld().isRemote) {
             if (te != null) {
-                valveX = te.getPos().getX();
-                valveY = te.getPos().getY();
-                valveZ = te.getPos().getZ();
+                this.valveX = te.getPos().getX();
+                this.valveY = te.getPos().getY();
+                this.valveZ = te.getPos().getZ();
             } else {
-                valveX = 0;
-                valveY = 0;
-                valveZ = 0;
+                this.valveX = 0;
+                this.valveY = 0;
+                this.valveZ = 0;
             }
         }
-        boolean hasChanged = teValve != te;
-        teValve = te;
-        if (hasChanged && !getWorld().isRemote) {
-            IBlockState curState = getWorld().getBlockState(getPos());
+        boolean hasChanged = this.teValve != te;
+        this.teValve = te;
+        if (hasChanged && !this.getWorld().isRemote) {
+            IBlockState curState = this.getWorld().getBlockState(this.getPos());
             if (curState.getBlock() == Blockss.PRESSURE_CHAMBER_WALL) {
-                IBlockState newState = ((BlockPressureChamberWall) Blockss.PRESSURE_CHAMBER_WALL).updateState(curState, getWorld(), getPos());
-                getWorld().setBlockState(getPos(), newState, 2);
+                IBlockState newState = ((BlockPressureChamberWall) Blockss.PRESSURE_CHAMBER_WALL).updateState(curState, this.getWorld(), this.getPos());
+                this.getWorld().setBlockState(this.getPos(), newState, 2);
             }
         }
     }
@@ -70,7 +70,7 @@ public class TileEntityPressureChamberWall extends TileEntityBase implements IMa
     @Override
     public void onDescUpdate() {
         super.onDescUpdate();
-        teValve = null;
+        this.teValve = null;
     }
 
     /**
@@ -79,25 +79,25 @@ public class TileEntityPressureChamberWall extends TileEntityBase implements IMa
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        valveX = tag.getInteger("valveX");
-        valveY = tag.getInteger("valveY");
-        valveZ = tag.getInteger("valveZ");
-        teValve = null;
+        this.valveX = tag.getInteger("valveX");
+        this.valveY = tag.getInteger("valveY");
+        this.valveZ = tag.getInteger("valveZ");
+        this.teValve = null;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("valveX", valveX);
-        tag.setInteger("valveY", valveY);
-        tag.setInteger("valveZ", valveZ);
+        tag.setInteger("valveX", this.valveX);
+        tag.setInteger("valveY", this.valveY);
+        tag.setInteger("valveZ", this.valveZ);
         return tag;
     }
 
     @Override
     public void printManometerMessage(EntityPlayer player, List<String> curInfo) {
-        if (getCore() != null) {
-            teValve.getAirHandler(null).printManometerMessage(player, curInfo);
+        if (this.getCore() != null) {
+            this.teValve.getAirHandler(null).printManometerMessage(player, curInfo);
         }
     }
 
@@ -107,8 +107,8 @@ public class TileEntityPressureChamberWall extends TileEntityBase implements IMa
     }
 
     @Override
-    public TileEntity getInfoTileEntity(){
-        return getCore();
+    public TileEntity getInfoTileEntity() {
+        return this.getCore();
     }
 
 }

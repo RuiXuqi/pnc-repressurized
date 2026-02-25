@@ -30,6 +30,7 @@ public interface IPneumaticMachine {
 
     /**
      * Convenience method to cast a TE to a IPneumaticMachine
+     *
      * @param te the tile entity
      * @return an IPneumaticMachine, or null
      */

@@ -55,23 +55,23 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
     private GuiButtonSpecial warningButton;
 
     public GuiMicromissile() {
-        xSize = 183;
-        ySize = 191;
+        this.xSize = 183;
+        this.ySize = 191;
 
         ItemStack stack = ItemMicromissiles.getHeldMicroMissile(Minecraft.getMinecraft().player);
         if (stack.getItem() == Itemss.MICROMISSILES) {
             if (stack.hasTagCompound()) {
-                topSpeed = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_TOP_SPEED);
-                turnSpeed = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_TURN_SPEED);
-                damage = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_DAMAGE);
-                entityFilter = NBTUtil.getString(stack, ItemMicromissiles.NBT_FILTER);
-                point = new Point(NBTUtil.getInteger(stack,ItemMicromissiles.NBT_PX), NBTUtil.getInteger(stack, ItemMicromissiles.NBT_PY));
-                fireMode = FireMode.fromString(NBTUtil.getString(stack, ItemMicromissiles.NBT_FIRE_MODE));
+                this.topSpeed = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_TOP_SPEED);
+                this.turnSpeed = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_TURN_SPEED);
+                this.damage = NBTUtil.getFloat(stack, ItemMicromissiles.NBT_DAMAGE);
+                this.entityFilter = NBTUtil.getString(stack, ItemMicromissiles.NBT_FILTER);
+                this.point = new Point(NBTUtil.getInteger(stack, ItemMicromissiles.NBT_PX), NBTUtil.getInteger(stack, ItemMicromissiles.NBT_PY));
+                this.fireMode = FireMode.fromString(NBTUtil.getString(stack, ItemMicromissiles.NBT_FIRE_MODE));
             } else {
-                topSpeed = turnSpeed = damage = 1/3f;
-                point = new Point(MAX_DIST / 2, MAX_DIST / 4);
-                entityFilter = "";
-                fireMode = FireMode.SMART;
+                this.topSpeed = this.turnSpeed = this.damage = 1 / 3f;
+                this.point = new Point(MAX_DIST / 2, MAX_DIST / 4);
+                this.entityFilter = "";
+                this.fireMode = FireMode.SMART;
             }
         }
     }
@@ -83,73 +83,73 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
         FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 
         String labelStr = I18n.format("gui.sentryTurret.targetFilter");
-        filterLabel = new WidgetLabel(guiLeft + 12, guiTop + 130, labelStr);
-        addWidget(filterLabel);
-        int textBoxX = guiLeft + 12 + fr.getStringWidth(labelStr) + 5;
-        int textBoxWidth = xSize - (textBoxX - guiLeft) - 20;
-        textField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, textBoxX, guiTop + 128, textBoxWidth, 10);
-        textField.setText(entityFilter);
-        addWidget(textField);
-        textField.setFocused(true);
+        this.filterLabel = new WidgetLabel(this.guiLeft + 12, this.guiTop + 130, labelStr);
+        this.addWidget(this.filterLabel);
+        int textBoxX = this.guiLeft + 12 + fr.getStringWidth(labelStr) + 5;
+        int textBoxWidth = this.xSize - (textBoxX - this.guiLeft) - 20;
+        this.textField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, textBoxX, this.guiTop + 128, textBoxWidth, 10);
+        this.textField.setText(this.entityFilter);
+        this.addWidget(this.textField);
+        this.textField.setFocused(true);
 
-        addWidget(new WidgetTooltipArea(guiLeft + 42, guiTop + 9, 35, 9, "gui.micromissile.topSpeed"));
-        addWidget(new WidgetTooltipArea(guiLeft + 6, guiTop + 103, 25, 12, "gui.micromissile.turnSpeed"));
-        addWidget(new WidgetTooltipArea(guiLeft + 96, guiTop + 103, 15, 15, "gui.micromissile.damage"));
+        this.addWidget(new WidgetTooltipArea(this.guiLeft + 42, this.guiTop + 9, 35, 9, "gui.micromissile.topSpeed"));
+        this.addWidget(new WidgetTooltipArea(this.guiLeft + 6, this.guiTop + 103, 25, 12, "gui.micromissile.turnSpeed"));
+        this.addWidget(new WidgetTooltipArea(this.guiLeft + 96, this.guiTop + 103, 15, 15, "gui.micromissile.damage"));
 
         String saveLabel = I18n.format("gui.micromissile.saveDefault");
         int buttonWidth = fr.getStringWidth(saveLabel) + 10;
-        int buttonX = guiLeft + (xSize - buttonWidth) / 2;
-        buttonList.add(new GuiButtonSpecial(1, buttonX, guiTop + 160, buttonWidth, 20, saveLabel));
+        int buttonX = this.guiLeft + (this.xSize - buttonWidth) / 2;
+        this.buttonList.add(new GuiButtonSpecial(1, buttonX, this.guiTop + 160, buttonWidth, 20, saveLabel));
 
-        modeButton = new GuiButtonSpecial(2, guiLeft + 123, guiTop + 20, 52, 20, "");
-        modeButton.setTooltipText("gui.micromissile.modeTooltip");
-        buttonList.add(modeButton);
+        this.modeButton = new GuiButtonSpecial(2, this.guiLeft + 123, this.guiTop + 20, 52, 20, "");
+        this.modeButton.setTooltipText("gui.micromissile.modeTooltip");
+        this.buttonList.add(this.modeButton);
 
-        warningButton = new GuiButtonSpecial(3, guiLeft + 162, guiTop + 123, 20, 20, "");
-        warningButton.setVisible(false);
-        warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
-        buttonList.add(warningButton);
+        this.warningButton = new GuiButtonSpecial(3, this.guiLeft + 162, this.guiTop + 123, 20, 20, "");
+        this.warningButton.setVisible(false);
+        this.warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
+        this.buttonList.add(this.warningButton);
 
-        validateEntityFilter(entityFilter);
+        this.validateEntityFilter(this.entityFilter);
 
-        setupWidgets();
+        this.setupWidgets();
     }
 
     private void setupWidgets() {
-        textField.setEnabled(fireMode == FireMode.SMART);
-        filterLabel.setColor(fireMode == FireMode.SMART ? 0xFF404040 : 0xFFAAAAAA);
-        modeButton.displayString = I18n.format("gui.micromissile.mode." + fireMode.toString());
+        this.textField.setEnabled(this.fireMode == FireMode.SMART);
+        this.filterLabel.setColor(this.fireMode == FireMode.SMART ? 0xFF404040 : 0xFFAAAAAA);
+        this.modeButton.displayString = I18n.format("gui.micromissile.mode." + this.fireMode.toString());
     }
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
         super.drawScreen(x, y, partialTicks);
 
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-            GuiUtils.showPopupHelpScreen(this, fontRenderer,
+            GuiUtils.showPopupHelpScreen(this, this.fontRenderer,
                     PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.entityFilter.helpText"), 60));
-        } else if (textField.getBounds().contains(x, y)) {
+        } else if (this.textField.getBounds().contains(x, y)) {
             String str = I18n.format("gui.entityFilter");
-            fontRenderer.drawString(str, guiLeft + (xSize - fontRenderer.getStringWidth(str)) / 2, guiTop + ySize + 5, 0x808080);
+            this.fontRenderer.drawString(str, this.guiLeft + (this.xSize - this.fontRenderer.getStringWidth(str)) / 2, this.guiTop + this.ySize + 5, 0x808080);
         }
 
-        if (fireMode == FireMode.DUMB) {
+        if (this.fireMode == FireMode.DUMB) {
             return;
         }
 
         GlStateManager.disableTexture2D();
         GlStateManager.disableLighting();
-        if (point != null) {
-            double px = point.getX();
-            double py = point.getY();
+        if (this.point != null) {
+            double px = this.point.getX();
+            double py = this.point.getY();
             RenderUtils.glColorHex(0x2020A0, 255);
             GlStateManager.pushMatrix();
-            GlStateManager.translate(guiLeft + SELECTOR_BOUNDS.x, guiTop + SELECTOR_BOUNDS.y, 0);
+            GlStateManager.translate(this.guiLeft + SELECTOR_BOUNDS.x, this.guiTop + SELECTOR_BOUNDS.y, 0);
             BufferBuilder wr = Tessellator.getInstance().getBuffer();
 
             // crosshairs
-            int size = dragging ? 5 : 3;
+            int size = this.dragging ? 5 : 3;
             GlStateManager.glLineWidth(2);
             GlStateManager.glBegin(GL11.GL_LINES);
             GL11.glVertex2d(px - size, py);
@@ -161,7 +161,7 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
             GlStateManager.glEnd();
 
             GL11.glEnable(GL11.GL_LINE_STIPPLE);
-            GL11.glLineStipple(1, (short)0xAAAA);
+            GL11.glLineStipple(1, (short) 0xAAAA);
             // speed line
             GlStateManager.glBegin(GL11.GL_LINES);
             GL11.glVertex2d(px, py);
@@ -184,22 +184,22 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
         }
 
         GlStateManager.pushMatrix();
-        GlStateManager.translate(guiLeft, guiTop, 0);
+        GlStateManager.translate(this.guiLeft, this.guiTop, 0);
         GlStateManager.glLineWidth(10);
         GL11.glEnable(GL11.GL_LINE_STIPPLE);
-        GL11.glLineStipple(1, (short)0xFEFE);
+        GL11.glLineStipple(1, (short) 0xFEFE);
         RenderUtils.glColorHex(0x00C000, 255);
         GlStateManager.glBegin(GL11.GL_LINES);
         GL11.glVertex2i(125, 51);
-        GL11.glVertex2i(125 + (int) (49 * topSpeed), 51);
+        GL11.glVertex2i(125 + (int) (49 * this.topSpeed), 51);
         GlStateManager.glEnd();
         GlStateManager.glBegin(GL11.GL_LINES);
         GL11.glVertex2i(125, 71);
-        GL11.glVertex2i(125 + (int) (49 * turnSpeed), 71);
+        GL11.glVertex2i(125 + (int) (49 * this.turnSpeed), 71);
         GlStateManager.glEnd();
         GlStateManager.glBegin(GL11.GL_LINES);
         GL11.glVertex2i(125, 91);
-        GL11.glVertex2i(125 + (int) (49 * damage), 91);
+        GL11.glVertex2i(125 + (int) (49 * this.damage), 91);
         GlStateManager.glEnd();
         GlStateManager.popMatrix();
 
@@ -214,8 +214,8 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
     public void updateScreen() {
         super.updateScreen();
 
-        if (sendTimer > 0 && --sendTimer == 0) {
-            sendSettingsToServer(false);
+        if (this.sendTimer > 0 && --this.sendTimer == 0) {
+            this.sendSettingsToServer(false);
         }
     }
 
@@ -231,8 +231,8 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if (trySetPoint(mouseX, mouseY)) {
-            dragging = true;
+        if (this.trySetPoint(mouseX, mouseY)) {
+            this.dragging = true;
         } else {
             super.mouseClicked(mouseX, mouseY, mouseButton);
         }
@@ -240,8 +240,8 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
 
     @Override
     protected void mouseClickMove(int mouseX, int mouseY, int clickedMouseButton, long timeSinceLastClick) {
-        if (dragging) {
-            trySetPoint(mouseX, mouseY);
+        if (this.dragging) {
+            this.trySetPoint(mouseX, mouseY);
         } else {
             super.mouseClickMove(mouseX, mouseY, clickedMouseButton, timeSinceLastClick);
         }
@@ -249,10 +249,10 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
 
     @Override
     protected void mouseReleased(int mouseX, int mouseY, int state) {
-        if (dragging) {
+        if (this.dragging) {
             // send updated values to server
-            sendSettingsToServer(false);
-            dragging = false;
+            this.sendSettingsToServer(false);
+            this.dragging = false;
         } else {
             super.mouseReleased(mouseX, mouseY, state);
         }
@@ -262,37 +262,37 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
     public void onKeyTyped(IGuiWidget widget) {
         if (widget instanceof WidgetTextField) {
             // entity filter updated
-            entityFilter = ((WidgetTextField) widget).getText();
-            if (validateEntityFilter(entityFilter)) {
-                sendTimer = 5;  // delayed send to reduce packet spam while typing
+            this.entityFilter = ((WidgetTextField) widget).getText();
+            if (this.validateEntityFilter(this.entityFilter)) {
+                this.sendTimer = 5;  // delayed send to reduce packet spam while typing
             }
         }
     }
 
     private boolean validateEntityFilter(String filter) {
         try {
-            warningButton.visible = false;
-            warningButton.setTooltipText("");
+            this.warningButton.visible = false;
+            this.warningButton.setTooltipText("");
             EntityFilter f = new EntityFilter(filter);  // syntax check
             return true;
         } catch (Exception e) {
-            warningButton.visible = true;
-            warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
+            this.warningButton.visible = true;
+            this.warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
             return false;
         }
     }
 
     private boolean trySetPoint(int mouseX, int mouseY) {
-        Point p = getPoint(mouseX, mouseY);
+        Point p = this.getPoint(mouseX, mouseY);
         if (p != null) {
             double dSpeed = MAX_DIST - p.distance(TOP_SPEED_PT);
             double dTurnSpd = MAX_DIST - p.distance(TURN_SPEED_PT);
             double dDamage = MAX_DIST - p.distance(DMG_PT);
             double total = dSpeed + dTurnSpd + dDamage;
-            topSpeed = (float) (dSpeed / total);
-            turnSpeed = (float) (dTurnSpd / total);
-            damage = (float) (dDamage / total);
-            point = p;
+            this.topSpeed = (float) (dSpeed / total);
+            this.turnSpeed = (float) (dTurnSpd / total);
+            this.damage = (float) (dDamage / total);
+            this.point = p;
             return true;
         }
         return false;
@@ -301,31 +301,31 @@ public class GuiMicromissile extends GuiPneumaticScreenBase {
     @Override
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button.id == 1) {
-            sendSettingsToServer(true);
+            this.sendSettingsToServer(true);
         } else if (button.id == 2) {
-            int n = fireMode.ordinal() + 1;
+            int n = this.fireMode.ordinal() + 1;
             if (n >= FireMode.values().length) n = 0;
-            fireMode = FireMode.values()[n];
-            setupWidgets();
-            sendSettingsToServer(false);
+            this.fireMode = FireMode.values()[n];
+            this.setupWidgets();
+            this.sendSettingsToServer(false);
         } else {
             super.actionPerformed(button);
         }
     }
 
     private void sendSettingsToServer(boolean saveDefault) {
-        NetworkHandler.sendToServer(new PacketUpdateMicromissileSettings(topSpeed, turnSpeed, damage, point, entityFilter, fireMode, saveDefault));
+        NetworkHandler.sendToServer(new PacketUpdateMicromissileSettings(this.topSpeed, this.turnSpeed, this.damage, this.point, this.entityFilter, this.fireMode, saveDefault));
     }
 
     private Point getPoint(int mouseX, int mouseY) {
-        Rectangle r = new Rectangle(SELECTOR_BOUNDS.x + guiLeft, SELECTOR_BOUNDS.y + guiTop, SELECTOR_BOUNDS.width, SELECTOR_BOUNDS.height);
+        Rectangle r = new Rectangle(SELECTOR_BOUNDS.x + this.guiLeft, SELECTOR_BOUNDS.y + this.guiTop, SELECTOR_BOUNDS.width, SELECTOR_BOUNDS.height);
 
         if (!r.contains(mouseX, mouseY)) {
             return null;
         }
 
         Point p = new Point(mouseX - r.x, mouseY - r.y);
-        return isPointInTriangle(p, TOP_SPEED_PT, TURN_SPEED_PT, DMG_PT) ? p : null;
+        return this.isPointInTriangle(p, TOP_SPEED_PT, TURN_SPEED_PT, DMG_PT) ? p : null;
     }
 
     private boolean isPointInTriangle(Point s, Point a, Point b, Point c) {

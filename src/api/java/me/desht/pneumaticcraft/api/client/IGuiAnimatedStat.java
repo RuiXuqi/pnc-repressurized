@@ -128,7 +128,7 @@ public interface IGuiAnimatedStat {
     /**
      * Pad the stat tab with some spacing to allow for widget placement.
      *
-     * @param text existing text to insert into the padding
+     * @param text  existing text to insert into the padding
      * @param nRows rows of spacing
      * @param nCols columns of spacing
      */
@@ -202,7 +202,7 @@ public interface IGuiAnimatedStat {
      * the stat, but this may be useful when drawing images, laying out widgets, etc.  Passing 0 as either dimension
      * will cancel any forced width/height and return to dynamic calculation.
      *
-     * @param width width of the expanded stat
+     * @param width  width of the expanded stat
      * @param height height of the expanded stat
      */
     void setForcedDimensions(int width, int height);

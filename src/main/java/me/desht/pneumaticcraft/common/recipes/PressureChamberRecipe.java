@@ -29,13 +29,13 @@ public class PressureChamberRecipe {
 
         @Override
         public float getCraftingPressure() {
-            return pressureRequired;
+            return this.pressureRequired;
         }
 
         @Override
         public boolean isValidRecipe(@Nonnull ItemStackHandler chamberHandler) {
-            for (ItemIngredient ingredient : input) {
-                int amount = getFilteredChamberContents(chamberHandler, ingredient).mapToInt(ItemStack::getCount).sum();
+            for (ItemIngredient ingredient : this.input) {
+                int amount = this.getFilteredChamberContents(chamberHandler, ingredient).mapToInt(ItemStack::getCount).sum();
                 if (amount < ingredient.getItemAmount()) {
                     return false;
                 }
@@ -50,19 +50,19 @@ public class PressureChamberRecipe {
 
         @Override
         public List<ItemIngredient> getInput() {
-            return input;
+            return this.input;
         }
 
         @Override
         public NonNullList<ItemStack> getResult() {
-            return output;
+            return this.output;
         }
 
         @Nonnull
         @Override
         public NonNullList<ItemStack> craftRecipe(@Nonnull ItemStackHandler chamberHandler) {
             // remove the recipe's input items from the chamber
-            for (ItemIngredient ingredient : input) {
+            for (ItemIngredient ingredient : this.input) {
                 int amountLeft = ingredient.getItemAmount();
                 for (int i = 0; i < chamberHandler.getSlots(); i++) {
                     ItemStack itemInChamber = chamberHandler.getStackInSlot(i);
@@ -73,7 +73,7 @@ public class PressureChamberRecipe {
                 }
             }
 
-            return output;
+            return this.output;
         }
     }
 }

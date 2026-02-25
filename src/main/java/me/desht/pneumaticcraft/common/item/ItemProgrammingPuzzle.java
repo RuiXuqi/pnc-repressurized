@@ -37,7 +37,7 @@ public class ItemProgrammingPuzzle extends ItemPneumaticSubtyped {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             addItems(items);
         }
     }
@@ -94,7 +94,7 @@ public class ItemProgrammingPuzzle extends ItemPneumaticSubtyped {
         }*/
         IProgWidget widget = WidgetRegistrator.getWidgetFromName(widgetKey);
         int meta = widget == null ? ItemPlastic.BLACK : WidgetRegistrator.getWidgetFromName(widgetKey).getCraftingColorIndex();
-        ItemStack stack = new ItemStack(Itemss.PROGRAMMING_PUZZLE,1, meta);
+        ItemStack stack = new ItemStack(Itemss.PROGRAMMING_PUZZLE, 1, meta);
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("type", widgetKey);
         stack.setTagCompound(tag);

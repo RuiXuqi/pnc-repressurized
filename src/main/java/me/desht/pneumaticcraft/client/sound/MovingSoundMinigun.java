@@ -21,17 +21,17 @@ public class MovingSoundMinigun extends MovingSound {
         super(Sounds.MINIGUN, SoundCategory.NEUTRAL);
         this.entity = entity;
         this.tileEntity = null;
-        init();
+        this.init();
     }
 
     public MovingSoundMinigun(TileEntity tileEntity) {
         super(Sounds.MINIGUN, SoundCategory.NEUTRAL);
         this.entity = null;
         this.tileEntity = tileEntity;
-        xPosF = tileEntity.getPos().getX();
-        yPosF = tileEntity.getPos().getY();
-        zPosF = tileEntity.getPos().getZ();
-        init();
+        this.xPosF = tileEntity.getPos().getX();
+        this.yPosF = tileEntity.getPos().getY();
+        this.zPosF = tileEntity.getPos().getZ();
+        this.init();
     }
 
     private void init() {
@@ -43,36 +43,36 @@ public class MovingSoundMinigun extends MovingSound {
     @Override
     public void update() {
         Minigun minigun = null;
-        if (entity != null) {
-            if (entity.isDead) {
-                donePlaying = true;
+        if (this.entity != null) {
+            if (this.entity.isDead) {
+                this.donePlaying = true;
                 return;
             }
-            xPosF = (float) entity.posX;
-            yPosF = (float) entity.posY;
-            zPosF = (float) entity.posZ;
-            if (entity instanceof EntityPlayer) {
-                EntityPlayer player = (EntityPlayer) entity;
+            this.xPosF = (float) this.entity.posX;
+            this.yPosF = (float) this.entity.posY;
+            this.zPosF = (float) this.entity.posZ;
+            if (this.entity instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) this.entity;
                 ItemStack curItem = player.getHeldItemMainhand();
                 if (curItem.getItem() == Itemss.MINIGUN) {
                     minigun = ((ItemMinigun) Itemss.MINIGUN).getMinigun(curItem, player);
                 }
-            } else if (entity instanceof EntityDrone) {
-                minigun = ((EntityDrone) entity).getMinigun();
+            } else if (this.entity instanceof EntityDrone) {
+                minigun = ((EntityDrone) this.entity).getMinigun();
             }
-        } else if (tileEntity != null) {
-            if (tileEntity.isInvalid()) {
-                donePlaying = true;
+        } else if (this.tileEntity != null) {
+            if (this.tileEntity.isInvalid()) {
+                this.donePlaying = true;
                 return;
             }
-            if (tileEntity instanceof TileEntitySentryTurret) {
-                minigun = ((TileEntitySentryTurret) tileEntity).getMinigun();
+            if (this.tileEntity instanceof TileEntitySentryTurret) {
+                minigun = ((TileEntitySentryTurret) this.tileEntity).getMinigun();
             }
         }
         if (minigun != null) {
-            donePlaying = !minigun.isMinigunActivated() || minigun.getMinigunSpeed() < Minigun.MAX_GUN_SPEED * 0.9;
+            this.donePlaying = !minigun.isMinigunActivated() || minigun.getMinigunSpeed() < Minigun.MAX_GUN_SPEED * 0.9;
         } else {
-            donePlaying = true;
+            this.donePlaying = true;
         }
     }
 }

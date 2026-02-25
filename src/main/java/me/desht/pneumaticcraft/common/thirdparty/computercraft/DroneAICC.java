@@ -26,40 +26,40 @@ class DroneAICC extends EntityAIBase {
                 TileEntityDroneInterface inter = (TileEntityDroneInterface) te;
                 if (targetAI) {
                     if (inter.getDrone() == drone) {
-                        droneInterface = inter;
+                        this.droneInterface = inter;
                         return;
                     }
                 } else {
                     if (inter.getDrone() == null) {
-                        droneInterface = inter;
-                        droneInterface.setDrone(drone);
+                        this.droneInterface = inter;
+                        this.droneInterface.setDrone(drone);
                         return;
                     }
                 }
             }
         }
-        droneInterface = null;
+        this.droneInterface = null;
     }
 
     public ProgWidgetCC getWidget() {
-        return widget;
+        return this.widget;
     }
 
     @Override
     public synchronized boolean shouldExecute() {
-        newAction = false;
-        if (curAction != null) {
-            curActionActive = curAction.shouldExecute();
-            if (curActionActive) curAction.startExecuting();
+        this.newAction = false;
+        if (this.curAction != null) {
+            this.curActionActive = this.curAction.shouldExecute();
+            if (this.curActionActive) this.curAction.startExecuting();
         }
-        return droneInterface != null && !droneInterface.isInvalid() && droneInterface.getDrone() == drone;
+        return this.droneInterface != null && !this.droneInterface.isInvalid() && this.droneInterface.getDrone() == this.drone;
     }
 
     @Override
     public synchronized boolean shouldContinueExecuting() {
-        if (!newAction && curActionActive && curAction != null) {
-            boolean shouldContinue = curAction.shouldContinueExecuting();
-            if (!shouldContinue) curAction.resetTask();
+        if (!this.newAction && this.curActionActive && this.curAction != null) {
+            boolean shouldContinue = this.curAction.shouldContinueExecuting();
+            if (!shouldContinue) this.curAction.resetTask();
             return shouldContinue;
         } else {
             return false;
@@ -68,21 +68,21 @@ class DroneAICC extends EntityAIBase {
 
     @Override
     public synchronized void updateTask() {
-        if (curActionActive && curAction != null) curAction.updateTask();
+        if (this.curActionActive && this.curAction != null) this.curAction.updateTask();
     }
 
     synchronized void setAction(IProgWidget widget, EntityAIBase ai) throws IllegalArgumentException {
-        curAction = ai;
-        newAction = true;
-        curActionActive = true;
+        this.curAction = ai;
+        this.newAction = true;
+        this.curActionActive = true;
     }
 
     synchronized void abortAction() {
-        curAction = null;
+        this.curAction = null;
     }
 
     synchronized boolean isActionDone() {
-        if (curAction == null) throw new IllegalStateException("There's no action active!");
-        return !curActionActive;
+        if (this.curAction == null) throw new IllegalStateException("There's no action active!");
+        return !this.curActionActive;
     }
 }

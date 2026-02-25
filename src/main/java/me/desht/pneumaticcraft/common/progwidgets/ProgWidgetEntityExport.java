@@ -37,9 +37,9 @@ public class ProgWidgetEntityExport extends ProgWidgetAreaItemBase {
 
             @Override
             public boolean shouldExecute() {
-                if (drone.getCarryingEntities().isEmpty()) return false;
-                for (Entity e : drone.getCarryingEntities()) {
-                    if (!widget.isEntityValid(e)) return false;
+                if (this.drone.getCarryingEntities().isEmpty()) return false;
+                for (Entity e : this.drone.getCarryingEntities()) {
+                    if (!this.widget.isEntityValid(e)) return false;
                 }
                 return super.shouldExecute();
             }
@@ -56,7 +56,7 @@ public class ProgWidgetEntityExport extends ProgWidgetAreaItemBase {
 
             @Override
             protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-                drone.setCarryingEntity(null);
+                this.drone.setCarryingEntity(null);
                 return false;
             }
 

@@ -48,29 +48,29 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
     private int maxActions = -1;
 
     /**
-     * @param drone the drone
+     * @param drone  the drone
      * @param widget needs to implement IBlockOrdered
      */
     public DroneAIBlockInteraction(IDroneBase drone, Widget widget) {
         this.drone = drone;
-        setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
+        this.setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
         this.widget = widget;
-        order = widget instanceof IBlockOrdered ? ((IBlockOrdered) widget).getOrder() : EnumOrder.CLOSEST;
-        area = widget.getCachedAreaList();
-        worldCache = ProgWidgetAreaItemBase.getCache(area, drone.world());
-        if (area.size() > 0) {
-            Iterator<BlockPos> iterator = area.iterator();
+        this.order = widget instanceof IBlockOrdered ? ((IBlockOrdered) widget).getOrder() : EnumOrder.CLOSEST;
+        this.area = widget.getCachedAreaList();
+        this.worldCache = ProgWidgetAreaItemBase.getCache(this.area, drone.world());
+        if (this.area.size() > 0) {
+            Iterator<BlockPos> iterator = this.area.iterator();
             BlockPos pos = iterator.next();
-            minY = maxY = pos.getY();
+            this.minY = this.maxY = pos.getY();
             while (iterator.hasNext()) {
                 pos = iterator.next();
-                minY = Math.min(minY, pos.getY());
-                maxY = Math.max(maxY, pos.getY());
+                this.minY = Math.min(this.minY, pos.getY());
+                this.maxY = Math.max(this.maxY, pos.getY());
             }
-            if (order == EnumOrder.HIGH_TO_LOW) {
-                curY = maxY;
-            } else if (order == EnumOrder.LOW_TO_HIGH) {
-                curY = minY;
+            if (this.order == EnumOrder.HIGH_TO_LOW) {
+                this.curY = this.maxY;
+            } else if (this.order == EnumOrder.LOW_TO_HIGH) {
+                this.curY = this.minY;
             }
         }
     }
@@ -80,16 +80,16 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
      */
     @Override
     public boolean shouldExecute() {
-        if (aborted || maxActions >= 0 && totalActions >= maxActions) {
+        if (this.aborted || this.maxActions >= 0 && this.totalActions >= this.maxActions) {
             return false;
         } else {
-            if (!searching) {
-                searching = true;
-                searchIndex = 0;
-                curPos = null;
-                lastSuccessfulY = curY;
-                if (sorter == null || sorter.isDone())
-                    sorter = new ThreadedSorter<>(area, new ChunkPositionSorter(drone));
+            if (!this.searching) {
+                this.searching = true;
+                this.searchIndex = 0;
+                this.curPos = null;
+                this.lastSuccessfulY = this.curY;
+                if (this.sorter == null || this.sorter.isDone())
+                    this.sorter = new ThreadedSorter<>(this.area, new ChunkPositionSorter(this.drone));
                 return true;
             } else {
                 return false;
@@ -98,16 +98,16 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
     }
 
     private void updateY() {
-        searchIndex = 0;
-        if (order == ProgWidgetPlace.EnumOrder.LOW_TO_HIGH) {
-            if (++curY > maxY) curY = minY;
-        } else if (order == ProgWidgetPlace.EnumOrder.HIGH_TO_LOW) {
-            if (--curY < minY) curY = maxY;
+        this.searchIndex = 0;
+        if (this.order == ProgWidgetPlace.EnumOrder.LOW_TO_HIGH) {
+            if (++this.curY > this.maxY) this.curY = this.minY;
+        } else if (this.order == ProgWidgetPlace.EnumOrder.HIGH_TO_LOW) {
+            if (--this.curY < this.minY) this.curY = this.maxY;
         }
     }
 
     private boolean isYValid(int y) {
-        return order == ProgWidgetPlace.EnumOrder.CLOSEST || y == curY;
+        return this.order == ProgWidgetPlace.EnumOrder.CLOSEST || y == this.curY;
     }
 
     public DroneAIBlockInteraction<Widget> setMaxActions(int maxActions) {
@@ -124,66 +124,66 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
      */
     @Override
     public boolean shouldContinueExecuting() {
-        if (aborted) return false;
-        if (searching) {
-            if (!sorter.isDone()) return true;//Wait until the area is sorted from closest to furtherest.
+        if (this.aborted) return false;
+        if (this.searching) {
+            if (!this.sorter.isDone()) return true;//Wait until the area is sorted from closest to furtherest.
             boolean firstRun = true;
             int searchedBlocks = 0; //keeps track of the looked up blocks, and stops searching when we reach our quota.
-            while (curPos == null && curY != lastSuccessfulY && order != ProgWidgetDigAndPlace.EnumOrder.CLOSEST || firstRun) {
+            while (this.curPos == null && this.curY != this.lastSuccessfulY && this.order != ProgWidgetDigAndPlace.EnumOrder.CLOSEST || firstRun) {
                 firstRun = false;
-                while (!shouldAbort() && searchIndex < area.size()) {
-                    BlockPos pos = area.get(searchIndex);
-                    if (isYValid(pos.getY()) && !blacklist.contains(pos) && (!respectClaims() || !DroneClaimManager.getInstance(drone.world()).isClaimed(pos))) {
-                        indicateToListeningPlayers(pos);
-                        if (isValidPosition(pos)) {
-                            curPos = pos;
-                            if (moveToPositions()) {
-                                if (tryMoveToBlock(pos)) {
+                while (!this.shouldAbort() && this.searchIndex < this.area.size()) {
+                    BlockPos pos = this.area.get(this.searchIndex);
+                    if (this.isYValid(pos.getY()) && !this.blacklist.contains(pos) && (!this.respectClaims() || !DroneClaimManager.getInstance(this.drone.world()).isClaimed(pos))) {
+                        this.indicateToListeningPlayers(pos);
+                        if (this.isValidPosition(pos)) {
+                            this.curPos = pos;
+                            if (this.moveToPositions()) {
+                                if (this.tryMoveToBlock(pos)) {
                                     return true;
                                 }
-                                if (drone.getPathNavigator().isGoingToTeleport()) {
-                                    return movedToBlockOK(pos);
+                                if (this.drone.getPathNavigator().isGoingToTeleport()) {
+                                    return this.movedToBlockOK(pos);
                                 } else {
-                                    drone.addDebugEntry("gui.progWidget.general.debug.cantNavigate", pos);
+                                    this.drone.addDebugEntry("gui.progWidget.general.debug.cantNavigate", pos);
                                 }
                             } else {
-                                searching = false;
-                                totalActions++;
+                                this.searching = false;
+                                this.totalActions++;
                                 return true;
                             }
                         }
                         searchedBlocks++;
                     }
-                    searchIndex++;
-                    if (searchedBlocks >= lookupsPerSearch()) return true;
+                    this.searchIndex++;
+                    if (searchedBlocks >= this.lookupsPerSearch()) return true;
                 }
-                if (curPos == null) updateY();
+                if (this.curPos == null) this.updateY();
             }
-            if (!shouldAbort()) addEndingDebugEntry();
+            if (!this.shouldAbort()) this.addEndingDebugEntry();
             return false;
         } else {
-            Vec3d dronePos = drone.getDronePos();
-            double dist = curPos != null ? PneumaticCraftUtils.distBetween(curPos.getX() + 0.5, curPos.getY() + 0.5, curPos.getZ() + 0.5, dronePos.x, dronePos.y, dronePos.z) : 0;
-            if (curPos != null) {
-                if (!moveToPositions()) return doBlockInteraction(curPos, dist);
-                if (respectClaims()) DroneClaimManager.getInstance(drone.world()).claim(curPos);
-                if (dist < (moveIntoBlock() ? 1 : 2)) {
-                    return doBlockInteraction(curPos, dist);
+            Vec3d dronePos = this.drone.getDronePos();
+            double dist = this.curPos != null ? PneumaticCraftUtils.distBetween(this.curPos.getX() + 0.5, this.curPos.getY() + 0.5, this.curPos.getZ() + 0.5, dronePos.x, dronePos.y, dronePos.z) : 0;
+            if (this.curPos != null) {
+                if (!this.moveToPositions()) return this.doBlockInteraction(this.curPos, dist);
+                if (this.respectClaims()) DroneClaimManager.getInstance(this.drone.world()).claim(this.curPos);
+                if (dist < (this.moveIntoBlock() ? 1 : 2)) {
+                    return this.doBlockInteraction(this.curPos, dist);
                 }
             }
-            return !drone.getPathNavigator().hasNoPath();
+            return !this.drone.getPathNavigator().hasNoPath();
         }
     }
 
     private boolean tryMoveToBlock(BlockPos pos) {
-        if (moveIntoBlock()) {
-            if (drone.getPathNavigator().moveToXYZ(curPos.getX(), curPos.getY() + 0.5, curPos.getZ())) {
-                return movedToBlockOK(pos);
+        if (this.moveIntoBlock()) {
+            if (this.drone.getPathNavigator().moveToXYZ(this.curPos.getX(), this.curPos.getY() + 0.5, this.curPos.getZ())) {
+                return this.movedToBlockOK(pos);
             }
         } else {
             for (EnumFacing dir : EnumFacing.VALUES) {
-                if (drone.getPathNavigator().moveToXYZ(curPos.getX() + dir.getXOffset(), curPos.getY() + dir.getYOffset() + 0.5, curPos.getZ() + dir.getZOffset())) {
-                    return movedToBlockOK(pos);
+                if (this.drone.getPathNavigator().moveToXYZ(this.curPos.getX() + dir.getXOffset(), this.curPos.getY() + dir.getYOffset() + 0.5, this.curPos.getZ() + dir.getZOffset())) {
+                    return this.movedToBlockOK(pos);
                 }
             }
         }
@@ -191,15 +191,15 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
     }
 
     private boolean movedToBlockOK(BlockPos pos) {
-        searching = false;
-        totalActions++;
-        if (respectClaims()) DroneClaimManager.getInstance(drone.world()).claim(pos);
-        blacklist.clear(); //clear the list for next time (maybe the blocks/rights have changed by the time there will be dug again).
+        this.searching = false;
+        this.totalActions++;
+        if (this.respectClaims()) DroneClaimManager.getInstance(this.drone.world()).claim(pos);
+        this.blacklist.clear(); //clear the list for next time (maybe the blocks/rights have changed by the time there will be dug again).
         return true;
     }
 
     protected void addEndingDebugEntry() {
-        drone.addDebugEntry("gui.progWidget.blockInteraction.debug.noBlocksValid");
+        this.drone.addDebugEntry("gui.progWidget.blockInteraction.debug.noBlocksValid");
     }
 
     protected int lookupsPerSearch() {
@@ -215,11 +215,11 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
     }
 
     protected boolean shouldAbort() {
-        return aborted;
+        return this.aborted;
     }
 
     public void abort() {
-        aborted = true;
+        this.aborted = true;
     }
 
     protected boolean moveToPositions() {
@@ -232,7 +232,7 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
      * @param pos
      */
     private void indicateToListeningPlayers(BlockPos pos) {
-        for (EntityPlayer player : drone.world().playerEntities) {
+        for (EntityPlayer player : this.drone.world().playerEntities) {
             if (player.getDistanceSq(pos) < 1024) {
                 ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
                 if (helmet.getItem() == Itemss.PNEUMATIC_HELMET) {
@@ -248,8 +248,8 @@ public abstract class DroneAIBlockInteraction<Widget extends ProgWidgetAreaItemB
     }
 
     protected void addToBlacklist(BlockPos coord) {
-        blacklist.add(coord);
-        drone.sendWireframeToClient(coord);
+        this.blacklist.add(coord);
+        this.drone.sendWireframeToClient(coord);
     }
 
 }

@@ -16,7 +16,7 @@ public class RunSpeedUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleab
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(IItemRegistry.EnumUpgrade.SPEED) };
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.SPEED)};
     }
 
     @Override

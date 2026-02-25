@@ -17,7 +17,7 @@ public abstract class ProgWidgetDigAndPlace extends ProgWidgetAreaItemBase imple
 
     @Override
     public EnumOrder getOrder() {
-        return order;
+        return this.order;
     }
 
     @Override
@@ -28,7 +28,7 @@ public abstract class ProgWidgetDigAndPlace extends ProgWidgetAreaItemBase imple
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Order: " + order.getLocalizedName());
+        curTooltip.add("Order: " + this.order.getLocalizedName());
     }
 
     public ProgWidgetDigAndPlace(EnumOrder order) {
@@ -44,22 +44,22 @@ public abstract class ProgWidgetDigAndPlace extends ProgWidgetAreaItemBase imple
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("order", order.ordinal());
-        tag.setBoolean("useMaxActions", useMaxActions);
-        tag.setInteger("maxActions", maxActions);
+        tag.setInteger("order", this.order.ordinal());
+        tag.setBoolean("useMaxActions", this.useMaxActions);
+        tag.setInteger("maxActions", this.maxActions);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        order = EnumOrder.values()[tag.getInteger("order")];
-        useMaxActions = tag.getBoolean("useMaxActions");
-        maxActions = tag.getInteger("maxActions");
+        this.order = EnumOrder.values()[tag.getInteger("order")];
+        this.useMaxActions = tag.getBoolean("useMaxActions");
+        this.maxActions = tag.getInteger("maxActions");
     }
 
     @Override
     public String getExtraStringInfo() {
-        return order.getLocalizedName();
+        return this.order.getLocalizedName();
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class ProgWidgetDigAndPlace extends ProgWidgetAreaItemBase imple
 
     @Override
     public int getMaxActions() {
-        return maxActions;
+        return this.maxActions;
     }
 
     @Override
@@ -79,7 +79,7 @@ public abstract class ProgWidgetDigAndPlace extends ProgWidgetAreaItemBase imple
 
     @Override
     public boolean useMaxActions() {
-        return useMaxActions;
+        return this.useMaxActions;
     }
 
     protected DroneAIBlockInteraction setupMaxActions(DroneAIBlockInteraction ai, IMaxActions widget) {

@@ -39,33 +39,33 @@ public class TileEntityFluxCompressor extends TileEntityPneumaticBase implements
 
     public TileEntityFluxCompressor(float dangerPressure, float criticalPressure, int volume, int upgradeSlots) {
         super(dangerPressure, criticalPressure, volume, 4);
-        addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
-        heatExchanger.setThermalCapacity(100);
+        this.addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
+        this.heatExchanger.setThermalCapacity(100);
     }
 
-    public int getEfficiency(){
-        return HeatUtil.getEfficiency(heatExchanger.getTemperatureAsInt());
+    public int getEfficiency() {
+        return HeatUtil.getEfficiency(this.heatExchanger.getTemperatureAsInt());
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!world.isRemote) {
-            if (world.getTotalWorldTime() % 5 == 0) {
-                airPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * getEfficiency() * ConfigHandler.machineProperties.fluxCompressorEfficiency / 100 / 100);
-                rfPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades());
+        if (!this.world.isRemote) {
+            if (this.world.getTotalWorldTime() % 5 == 0) {
+                this.airPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * this.getEfficiency() * ConfigHandler.machineProperties.fluxCompressorEfficiency / 100 / 100);
+                this.rfPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades());
             }
-            if (redstoneAllows() && energy.getEnergyStored() >= rfPerTick) {
-                this.addAir(airPerTick);
-                energy.extractEnergy(rfPerTick, false);
-                heatExchanger.addHeat(rfPerTick / 100D);
+            if (this.redstoneAllows() && this.energy.getEnergyStored() >= this.rfPerTick) {
+                this.addAir(this.airPerTick);
+                this.energy.extractEnergy(this.rfPerTick, false);
+                this.heatExchanger.addHeat(this.rfPerTick / 100D);
             }
         }
 
-        if (!getWorld().isRemote) {
-            List<Pair<EnumFacing, IAirHandler>> teList = getAirHandler(null).getConnectedPneumatics();
-            if (teList.size() == 0) getAirHandler(null).airLeak(getRotation().getOpposite());
+        if (!this.getWorld().isRemote) {
+            List<Pair<EnumFacing, IAirHandler>> teList = this.getAirHandler(null).getConnectedPneumatics();
+            if (teList.size() == 0) this.getAirHandler(null).airLeak(this.getRotation().getOpposite());
         }
     }
 
@@ -76,65 +76,65 @@ public class TileEntityFluxCompressor extends TileEntityPneumaticBase implements
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return side == getRotation().getOpposite();
+        return side == this.getRotation().getOpposite();
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         // back face is where pneumatics connect
-        return (capability == CapabilityEnergy.ENERGY && facing != getRotation().getOpposite())
+        return (capability == CapabilityEnergy.ENERGY && facing != this.getRotation().getOpposite())
                 || super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityEnergy.ENERGY && facing != getRotation().getOpposite()) {
-            return CapabilityEnergy.ENERGY.cast(energy);
+        if (capability == CapabilityEnergy.ENERGY && facing != this.getRotation().getOpposite()) {
+            return CapabilityEnergy.ENERGY.cast(this.energy);
         } else {
             return super.getCapability(capability, facing);
         }
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag){
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        energy.writeToNBT(tag);
-        tag.setByte("redstoneMode", (byte)redstoneMode);
+        this.energy.writeToNBT(tag);
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
         return tag;
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound tag){
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        energy.readFromNBT(tag);
-        redstoneMode = tag.getByte("redstoneMode");
+        this.energy.readFromNBT(tag);
+        this.redstoneMode = tag.getByte("redstoneMode");
     }
 
     @Override
-    public void handleGUIButtonPress(int buttonID, EntityPlayer player){
-        if (buttonID == 0 && ++redstoneMode > 2) redstoneMode = 0;
+    public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
+        if (buttonID == 0 && ++this.redstoneMode > 2) this.redstoneMode = 0;
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
     public int getInfoEnergyPerTick() {
-        return rfPerTick;
+        return this.rfPerTick;
     }
 
     public int getInfoEnergyStored() {
-        return energy.getEnergyStored();
+        return this.energy.getEnergyStored();
     }
 
     public int getAirRate() {
-        return airPerTick;
+        return this.airPerTick;
     }
 }

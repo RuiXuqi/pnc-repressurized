@@ -13,9 +13,9 @@ public class DroneAIForEachCoordinate extends DroneAIBlockInteraction<ProgWidget
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        if (widget.isValidPosition(pos)) {
-            curCoord = pos;
-            abort();
+        if (this.widget.isValidPosition(pos)) {
+            this.curCoord = pos;
+            this.abort();
         }
         return false;
     }
@@ -26,7 +26,7 @@ public class DroneAIForEachCoordinate extends DroneAIBlockInteraction<ProgWidget
     }
 
     public BlockPos getCurCoord() {
-        return curCoord;
+        return this.curCoord;
     }
 
     @Override

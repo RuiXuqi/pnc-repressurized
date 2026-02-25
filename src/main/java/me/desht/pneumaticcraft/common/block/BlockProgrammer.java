@@ -29,7 +29,7 @@ public class BlockProgrammer extends BlockPneumaticCraftModeled {
 
     BlockProgrammer() {
         super(Material.IRON, "programmer");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Override

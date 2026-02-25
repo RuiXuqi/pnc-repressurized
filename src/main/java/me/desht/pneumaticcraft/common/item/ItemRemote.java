@@ -33,7 +33,7 @@ import java.util.List;
 public class ItemRemote extends ItemPneumatic {
     public ItemRemote() {
         super("remote");
-        setMaxStackSize(1);
+        this.setMaxStackSize(1);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ItemRemote extends ItemPneumatic {
         ItemStack stack = player.getHeldItem(handIn);
         if (handIn != EnumHand.MAIN_HAND) return ActionResult.newResult(EnumActionResult.PASS, stack);
         if (!world.isRemote) {
-            openGui(player, stack);
+            this.openGui(player, stack);
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
@@ -50,7 +50,7 @@ public class ItemRemote extends ItemPneumatic {
     public EnumActionResult onItemUseFirst(EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, EnumHand hand) {
         ItemStack remote = player.getHeldItem(hand);
         if (hand != EnumHand.MAIN_HAND) return EnumActionResult.PASS;
-        if (!world.isRemote && !player.isSneaking() && isAllowedToEdit(player, remote)) {
+        if (!world.isRemote && !player.isSneaking() && this.isAllowedToEdit(player, remote)) {
             TileEntity te = world.getTileEntity(pos);
             if (te instanceof TileEntitySecurityStation) {
                 if (((TileEntitySecurityStation) te).doesAllowPlayer(player)) {
@@ -95,7 +95,7 @@ public class ItemRemote extends ItemPneumatic {
 
     private void openGui(EntityPlayer player, ItemStack remote) {
         if (player.isSneaking()) {
-            if (isAllowedToEdit(player, remote)) {
+            if (this.isAllowedToEdit(player, remote)) {
                 player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.REMOTE_EDITOR.ordinal(), player.world, (int) player.posX, (int) player.posY, (int) player.posZ);
                 NetworkHandler.sendTo(new PacketNotifyVariablesRemote(GlobalVariableManager.getInstance().getAllActiveVariableNames()), (EntityPlayerMP) player);
             }

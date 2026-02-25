@@ -60,54 +60,54 @@ public class CoordTrackUpgradeHandler implements IUpgradeRenderHandler {
 
     @Override
     public void initConfig() {
-        pathEnabled = ConfigHandler.helmetOptions.pathEnabled;
-        wirePath = ConfigHandler.helmetOptions.wirePath;
-        xRayEnabled = ConfigHandler.helmetOptions.xRayEnabled;
-        pathUpdateSetting = ConfigHandler.helmetOptions.pathUpdateSetting;
+        this.pathEnabled = ConfigHandler.helmetOptions.pathEnabled;
+        this.wirePath = ConfigHandler.helmetOptions.wirePath;
+        this.xRayEnabled = ConfigHandler.helmetOptions.xRayEnabled;
+        this.pathUpdateSetting = ConfigHandler.helmetOptions.pathUpdateSetting;
     }
 
     @Override
     public void saveToConfig() {
-        ConfigHandler.helmetOptions.pathEnabled = pathEnabled;
-        ConfigHandler.helmetOptions.wirePath = wirePath;
-        ConfigHandler.helmetOptions.xRayEnabled = xRayEnabled;
-        ConfigHandler.helmetOptions.pathUpdateSetting = pathUpdateSetting;
+        ConfigHandler.helmetOptions.pathEnabled = this.pathEnabled;
+        ConfigHandler.helmetOptions.wirePath = this.wirePath;
+        ConfigHandler.helmetOptions.xRayEnabled = this.xRayEnabled;
+        ConfigHandler.helmetOptions.pathUpdateSetting = this.pathUpdateSetting;
         ConfigHandler.sync();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void update(EntityPlayer player, int rangeUpgrades) {
-        if (coordTracker != null) {
-            coordTracker.ticksExisted++;
+        if (this.coordTracker != null) {
+            this.coordTracker.ticksExisted++;
         } else {
             BlockPos pos = ItemPneumaticArmor.getCoordTrackerPos(ClientUtils.getWornArmor(EntityEquipmentSlot.HEAD), player.world);
             if (pos != null) {
-                coordTracker = new RenderCoordWireframe(player.world, pos);
-                navigator = new RenderNavigator(coordTracker.world, coordTracker.pos);
+                this.coordTracker = new RenderCoordWireframe(player.world, pos);
+                this.navigator = new RenderNavigator(this.coordTracker.world, this.coordTracker.pos);
             }
         }
-        if (noPathCooldown > 0) {
-            noPathCooldown--;
+        if (this.noPathCooldown > 0) {
+            this.noPathCooldown--;
         }
-        if (navigator != null && pathEnabled && noPathCooldown == 0 && --pathCalculateCooldown <= 0) {
-            navigator.updatePath();
-            if (!navigator.tracedToDestination()) {
-                noPathCooldown = 100; // wait 5 seconds before recalculating a path.
+        if (this.navigator != null && this.pathEnabled && this.noPathCooldown == 0 && --this.pathCalculateCooldown <= 0) {
+            this.navigator.updatePath();
+            if (!this.navigator.tracedToDestination()) {
+                this.noPathCooldown = 100; // wait 5 seconds before recalculating a path.
             }
-            pathCalculateCooldown = pathUpdateSetting == 2 ? 1 : pathUpdateSetting == 1 ? 20 : 100;
+            this.pathCalculateCooldown = this.pathUpdateSetting == 2 ? 1 : this.pathUpdateSetting == 1 ? 20 : 100;
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void render3D(float partialTicks) {
-        if (coordTracker != null) {
-            if (FMLClientHandler.instance().getClient().player.world.provider.getDimension() != coordTracker.world.provider.getDimension())
+        if (this.coordTracker != null) {
+            if (FMLClientHandler.instance().getClient().player.world.provider.getDimension() != this.coordTracker.world.provider.getDimension())
                 return;
-            coordTracker.render(partialTicks);
-            if (pathEnabled && navigator != null) {
-                navigator.render(wirePath, xRayEnabled, partialTicks);
+            this.coordTracker.render(partialTicks);
+            if (this.pathEnabled && this.navigator != null) {
+                this.navigator.render(this.wirePath, this.xRayEnabled, partialTicks);
             }
         }
     }
@@ -130,17 +130,17 @@ public class CoordTrackUpgradeHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void reset() {
-        coordTracker = null;
-        navigator = null;
+        this.coordTracker = null;
+        this.navigator = null;
     }
 
     @SubscribeEvent
     public boolean onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-        if (event.getWorld().isRemote && isListeningToCoordTrackerSetting) {
-            isListeningToCoordTrackerSetting = false;
+        if (event.getWorld().isRemote && this.isListeningToCoordTrackerSetting) {
+            this.isListeningToCoordTrackerSetting = false;
             EnumFacing dir = event.getFace();
             if (dir == null) return false;
-            reset();
+            this.reset();
             ItemStack stack = event.getEntityPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
             if (!stack.isEmpty()) {
                 ItemPneumaticArmor.setCoordTrackerPos(stack, event.getWorld().provider.getDimension(), event.getPos().offset(dir));
@@ -154,14 +154,14 @@ public class CoordTrackUpgradeHandler implements IUpgradeRenderHandler {
     public EnumNavigationResult navigateToSurface(EntityPlayer player) {
         World world = player.world;
         BlockPos navigatingPos = world.getHeight(new BlockPos(player));
-        Path path = PneumaticCraftUtils.getPathFinder().findPath(world, PneumaticCraftUtils.createDummyEntity(player), navigatingPos, (float)SEARCH_RANGE);
+        Path path = PneumaticCraftUtils.getPathFinder().findPath(world, PneumaticCraftUtils.createDummyEntity(player), navigatingPos, (float) SEARCH_RANGE);
         if (path != null) {
             for (int i = 0; i < path.getCurrentPathLength(); i++) {
                 PathPoint pathPoint = path.getPathPointFromIndex(i);
                 BlockPos pathPos = new BlockPos(pathPoint.x, pathPoint.y, pathPoint.z);
                 if (world.canSeeSky(pathPos)) {
-                    coordTracker = new RenderCoordWireframe(world, pathPos);
-                    navigator = new RenderNavigator(world, pathPos);
+                    this.coordTracker = new RenderCoordWireframe(world, pathPos);
+                    this.navigator = new RenderNavigator(world, pathPos);
                     return EnumNavigationResult.EASY_PATH;
                 }
             }
@@ -172,8 +172,8 @@ public class CoordTrackUpgradeHandler implements IUpgradeRenderHandler {
                 PathPoint pathPoint = path.getPathPointFromIndex(i);
                 BlockPos pathPos = new BlockPos(pathPoint.x, pathPoint.y, pathPoint.z);
                 if (world.canSeeSky(pathPos)) {
-                    coordTracker = new RenderCoordWireframe(world, pathPos);
-                    navigator = new RenderNavigator(world, pathPos);
+                    this.coordTracker = new RenderCoordWireframe(world, pathPos);
+                    this.navigator = new RenderNavigator(world, pathPos);
                     return EnumNavigationResult.DRONE_PATH;
                 }
             }

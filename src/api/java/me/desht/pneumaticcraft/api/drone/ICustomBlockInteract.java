@@ -38,11 +38,11 @@ public interface ICustomBlockInteract {
      * import/export up to {@link IBlockInteractHandler#getRemainingCount()}, and you must notify the transferred amount
      * by doing {@link IBlockInteractHandler#decreaseCount(int)}.
      *
-     * @param pos current visited location
-     * @param drone a reference to the drone object
+     * @param pos             current visited location
+     * @param drone           a reference to the drone object
      * @param interactHandler object you can use to use to get accessible sides and give feedback about counts.
-     * @param simulate  true when trying to figure out whether or not the drone should navigate to this block,
-     *                  false when next to this block.
+     * @param simulate        true when trying to figure out whether or not the drone should navigate to this block,
+     *                        false when next to this block.
      * @return true if the interaction was (would be) successful
      */
     boolean doInteract(BlockPos pos, IDrone drone, IBlockInteractHandler interactHandler, boolean simulate);

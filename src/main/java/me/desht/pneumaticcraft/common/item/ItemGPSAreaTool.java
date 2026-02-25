@@ -48,32 +48,33 @@ public class ItemGPSAreaTool extends ItemPneumatic implements IPositionProvider 
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        if (handIn != EnumHand.MAIN_HAND) return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
+        if (handIn != EnumHand.MAIN_HAND)
+            return ActionResult.newResult(EnumActionResult.PASS, playerIn.getHeldItem(handIn));
         ItemStack stack = playerIn.getHeldItemMainhand();
         if (worldIn.isRemote) {
-            showGUI(stack, 0);
+            this.showGUI(stack, 0);
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
-    
+
     @SubscribeEvent
-    public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event){
-        if(event.getItemStack().getItem() == this){
-            if(!event.getPos().equals(getGPSLocation(event.getItemStack(), 1))){
+    public void onBlockLeftClick(PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getItemStack().getItem() == this) {
+            if (!event.getPos().equals(getGPSLocation(event.getItemStack(), 1))) {
                 setGPSPosAndNotify(event.getEntityPlayer(), event.getPos(), 1);
             }
             event.setCanceled(true);
         }
     }
-    
+
     @SubscribeEvent
-    public void onLeftClickAir(PlayerInteractEvent.LeftClickEmpty event){
-        if(event.getItemStack().getItem() == this){
-            showGUI(event.getItemStack(), 1);
+    public void onLeftClickAir(PlayerInteractEvent.LeftClickEmpty event) {
+        if (event.getItemStack().getItem() == this) {
+            this.showGUI(event.getItemStack(), 1);
         }
     }
 
-    public static void setGPSPosAndNotify(EntityPlayer player, BlockPos pos, int index){
+    public static void setGPSPosAndNotify(EntityPlayer player, BlockPos pos, int index) {
         setGPSLocation(player.getHeldItemMainhand(), pos, index);
         if (!player.world.isRemote) {
             player.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + String.format("[GPS Area Tool] Set P%d to %d, %d, %d.", index + 1, pos.getX(), pos.getY(), pos.getZ())), false);
@@ -81,8 +82,8 @@ public class ItemGPSAreaTool extends ItemPneumatic implements IPositionProvider 
                 ((EntityPlayerMP) player).connection.sendPacket(new SPacketHeldItemChange(player.inventory.currentItem));
         }
     }
-    
-    private void showGUI(ItemStack stack, int index){
+
+    private void showGUI(ItemStack stack, int index) {
         FMLCommonHandler.instance().showGuiScreen(new GuiGPSAreaTool(stack, index));
     }
 
@@ -90,7 +91,7 @@ public class ItemGPSAreaTool extends ItemPneumatic implements IPositionProvider 
     @Override
     public void addInformation(ItemStack stack, World worldIn, List<String> infoList, ITooltipFlag par4) {
         super.addInformation(stack, worldIn, infoList, par4);
-        for(int index = 0; index < 2; index++){
+        for (int index = 0; index < 2; index++) {
             BlockPos pos = getGPSLocation(stack, index);
             infoList.add(String.format("\u00a72P%d: %d, %d, %d", index + 1, pos.getX(), pos.getY(), pos.getZ()));
             String varName = getVariable(stack, index);
@@ -180,9 +181,9 @@ public class ItemGPSAreaTool extends ItemPneumatic implements IPositionProvider 
     public int getRenderColor(int index) {
         return 0x90FFFF00;
     }
-    
+
     @Override
-    public boolean disableDepthTest(){
+    public boolean disableDepthTest() {
         return false;
     }
 }

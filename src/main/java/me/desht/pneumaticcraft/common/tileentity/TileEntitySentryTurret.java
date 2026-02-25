@@ -61,39 +61,39 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
     public TileEntitySentryTurret() {
         super(4);
-        addApplicableUpgrade(EnumUpgrade.RANGE);
+        this.addApplicableUpgrade(EnumUpgrade.RANGE);
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            if (getMinigun().getAttackTarget() == null && redstoneAllows()) {
-                getMinigun().setSweeping(true);
-                if ((getWorld().getTotalWorldTime() & 0xF) == 0) {
-                    List<EntityLivingBase> entities = getWorld().getEntitiesWithinAABB(EntityLivingBase.class, getTargetingBoundingBox(), entitySelector);
+        if (!this.getWorld().isRemote) {
+            if (this.getMinigun().getAttackTarget() == null && this.redstoneAllows()) {
+                this.getMinigun().setSweeping(true);
+                if ((this.getWorld().getTotalWorldTime() & 0xF) == 0) {
+                    List<EntityLivingBase> entities = this.getWorld().getEntitiesWithinAABB(EntityLivingBase.class, this.getTargetingBoundingBox(), this.entitySelector);
                     if (entities.size() > 0) {
                         entities.sort(new TargetSorter());
-                        getMinigun().setAttackTarget(entities.get(0));
-                        targetEntityId = entities.get(0).getEntityId();
+                        this.getMinigun().setAttackTarget(entities.get(0));
+                        this.targetEntityId = entities.get(0).getEntityId();
                     }
                 }
             } else {
-                getMinigun().setSweeping(false);
+                this.getMinigun().setSweeping(false);
             }
-            EntityLivingBase target = getMinigun().getAttackTarget();
+            EntityLivingBase target = this.getMinigun().getAttackTarget();
             if (target != null) {
-                if (!redstoneAllows() || !entitySelector.apply(target)) {
-                    getMinigun().setAttackTarget(null);
-                    targetEntityId = -1;
+                if (!this.redstoneAllows() || !this.entitySelector.apply(target)) {
+                    this.getMinigun().setAttackTarget(null);
+                    this.targetEntityId = -1;
                 } else {
-                    if ((getWorld().getTotalWorldTime() & 0x7) == 0) {
-                        getFakePlayer().setPosition(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5); //Make sure the knockback has the right direction.
-                        boolean usedAmmo = getMinigun().tryFireMinigun(target);
+                    if ((this.getWorld().getTotalWorldTime() & 0x7) == 0) {
+                        this.getFakePlayer().setPosition(this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5); //Make sure the knockback has the right direction.
+                        boolean usedAmmo = this.getMinigun().tryFireMinigun(target);
                         if (usedAmmo) {
-                            for (int i = 0; i < inventory.getSlots(); i++) {
-                                if (!inventory.getStackInSlot(i).isEmpty()) {
-                                    inventory.setStackInSlot(i, ItemStack.EMPTY);
+                            for (int i = 0; i < this.inventory.getSlots(); i++) {
+                                if (!this.inventory.getStackInSlot(i).isEmpty()) {
+                                    this.inventory.setStackInSlot(i, ItemStack.EMPTY);
                                     break;
                                 }
                             }
@@ -102,51 +102,51 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
                 }
             }
         }
-        getMinigun().update(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5);
+        this.getMinigun().update(this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5);
     }
 
     private boolean canSeeEntity(Entity entity) {
         Vec3d entityVec = new Vec3d(entity.posX + entity.width / 2, entity.posY + entity.height / 2, entity.posZ + entity.width / 2);
-        Vec3d tileVec = new Vec3d(getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5);
-        RayTraceResult trace = getWorld().rayTraceBlocks(entityVec, tileVec);
-        return trace != null && trace.getBlockPos().equals(getPos());
+        Vec3d tileVec = new Vec3d(this.getPos().getX() + 0.5, this.getPos().getY() + 0.5, this.getPos().getZ() + 0.5);
+        RayTraceResult trace = this.getWorld().rayTraceBlocks(entityVec, tileVec);
+        return trace != null && trace.getBlockPos().equals(this.getPos());
     }
 
     private AxisAlignedBB getTargetingBoundingBox() {
-        return new AxisAlignedBB(getPos().getX() - range, getPos().getY() - range, getPos().getZ() - range, getPos().getX() + range + 1, getPos().getY() + range + 1, getPos().getZ() + range + 1);
+        return new AxisAlignedBB(this.getPos().getX() - this.range, this.getPos().getY() - this.range, this.getPos().getZ() - this.range, this.getPos().getX() + this.range + 1, this.getPos().getY() + this.range + 1, this.getPos().getZ() + this.range + 1);
     }
 
     @Override
     protected void onFirstServerUpdate() {
         super.onFirstServerUpdate();
-        updateAmmo();
-        setText(0, entityFilter);
+        this.updateAmmo();
+        this.setText(0, this.entityFilter);
     }
 
     @Override
     public void onDescUpdate() {
         super.onDescUpdate();
-        Entity entity = getWorld().getEntityByID(targetEntityId);
+        Entity entity = this.getWorld().getEntityByID(this.targetEntityId);
         if (entity instanceof EntityLivingBase) {
-            getMinigun().setAttackTarget((EntityLivingBase) entity);
+            this.getMinigun().setAttackTarget((EntityLivingBase) entity);
         } else {
-            getMinigun().setAttackTarget(null);
+            this.getMinigun().setAttackTarget(null);
         }
     }
 
     public Minigun getMinigun() {
-        if (minigun == null) {
-            minigun = new MinigunSentryTurret();
-            minigun.setWorld(getWorld());
-            if (!getWorld().isRemote) {
-                minigun.setPlayer(getFakePlayer());
+        if (this.minigun == null) {
+            this.minigun = new MinigunSentryTurret();
+            this.minigun.setWorld(this.getWorld());
+            if (!this.getWorld().isRemote) {
+                this.minigun.setPlayer(this.getFakePlayer());
             }
         }
-        return minigun;
+        return this.minigun;
     }
 
     private EntityPlayer getFakePlayer() {
-        FakePlayer fakePlayer = FakePlayerFactory.get((WorldServer) getWorld(), new GameProfile(null, "Sentry Turret"));
+        FakePlayer fakePlayer = FakePlayerFactory.get((WorldServer) this.getWorld(), new GameProfile(null, "Sentry Turret"));
         if (fakePlayer.connection == null) {
             fakePlayer.connection = new FakeNetHandlerPlayerServer(FMLCommonHandler.instance().getMinecraftServerInstance(), fakePlayer);
         }
@@ -156,35 +156,35 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag("Items", inventory.serializeNBT());
-        tag.setByte("redstoneMode", (byte) redstoneMode);
-        tag.setString("entityFilter", entityFilter);
+        tag.setTag("Items", this.inventory.serializeNBT());
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
+        tag.setString("entityFilter", this.entityFilter);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        redstoneMode = tag.getByte("redstoneMode");
-        entityFilter = tag.getString("entityFilter");
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.redstoneMode = tag.getByte("redstoneMode");
+        this.entityFilter = tag.getString("entityFilter");
     }
 
     @Override
     public boolean redstoneAllows() {
-        return redstoneMode == 3 || super.redstoneAllows();
+        return this.redstoneMode == 3 || super.redstoneAllows();
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
@@ -204,7 +204,7 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            updateAmmo();
+            TileEntitySentryTurret.this.updateAmmo();
         }
 
         @Override
@@ -215,38 +215,38 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
     private void updateAmmo() {
         ItemStack ammo = ItemStack.EMPTY;
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            ammo = inventory.getStackInSlot(i);
+        for (int i = 0; i < this.inventory.getSlots(); i++) {
+            ammo = this.inventory.getStackInSlot(i);
             if (!ammo.isEmpty()) {
                 break;
             }
         }
-        getMinigun().setAmmoStack(ammo);
-        recalculateRange();
+        this.getMinigun().setAmmoStack(ammo);
+        this.recalculateRange();
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     protected void onUpgradesChanged() {
         super.onUpgradesChanged();
-        if (getWorld() != null) {
+        if (this.getWorld() != null) {
             // this can get called when reading nbt on load when world = null
             // in that case, range is recalculated in onFirstServerUpdate()
-            recalculateRange();
+            this.recalculateRange();
         }
     }
 
     private void recalculateRange() {
-        range = 16.0 + Math.min(16, getUpgrades(EnumUpgrade.RANGE));
-        ItemStack ammoStack = getMinigun().getAmmoStack();
+        this.range = 16.0 + Math.min(16, this.getUpgrades(EnumUpgrade.RANGE));
+        ItemStack ammoStack = this.getMinigun().getAmmoStack();
         if (ammoStack.getItem() instanceof ItemGunAmmo) {
-            range *= ((ItemGunAmmo) ammoStack.getItem()).getRangeMultiplier(ammoStack);
+            this.range *= ((ItemGunAmmo) ammoStack.getItem()).getRangeMultiplier(ammoStack);
         }
-        rangeSq = range * range;
+        this.rangeSq = this.range * this.range;
     }
 
     private class MinigunSentryTurret extends Minigun {
@@ -257,7 +257,7 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
         @Override
         public boolean isMinigunActivated() {
-            return activated;
+            return TileEntitySentryTurret.this.activated;
         }
 
         @Override
@@ -267,19 +267,19 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
         @Override
         public void setAmmoColorStack(@Nonnull ItemStack ammo) {
-            minigunColorStack = ammo;
+            TileEntitySentryTurret.this.minigunColorStack = ammo;
         }
 
         @Override
         public int getAmmoColor() {
-            return getAmmoColor(minigunColorStack);
+            return this.getAmmoColor(TileEntitySentryTurret.this.minigunColorStack);
         }
 
         @Override
         public void playSound(SoundEvent soundName, float volume, float pitch) {
             NetworkHandler.sendToAllAround(new PacketPlaySound(soundName, SoundCategory.BLOCKS,
-                    getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5,
-                    volume, pitch, false), world);
+                    TileEntitySentryTurret.this.getPos().getX() + 0.5, TileEntitySentryTurret.this.getPos().getY() + 0.5, TileEntitySentryTurret.this.getPos().getZ() + 0.5,
+                    volume, pitch, false), this.world);
         }
 
         @Override
@@ -289,7 +289,7 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
         @Override
         public boolean isSweeping() {
-            return sweeping;
+            return TileEntitySentryTurret.this.sweeping;
         }
 
         @Override
@@ -302,13 +302,13 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
         private final BlockPos pos;
 
         TargetSorter() {
-            pos = new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ());
+            this.pos = new BlockPos(TileEntitySentryTurret.this.getPos().getX(), TileEntitySentryTurret.this.getPos().getY(), TileEntitySentryTurret.this.getPos().getZ());
         }
 
         @Override
         public int compare(Entity arg0, Entity arg1) {
-            double dist1 = PneumaticCraftUtils.distBetweenSq(pos, arg0.getPosition());
-            double dist2 = PneumaticCraftUtils.distBetweenSq(pos, arg1.getPosition());
+            double dist1 = PneumaticCraftUtils.distBetweenSq(this.pos, arg0.getPosition());
+            double dist2 = PneumaticCraftUtils.distBetweenSq(this.pos, arg1.getPosition());
             return Double.compare(dist1, dist2);
         }
     }
@@ -318,17 +318,17 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
         public boolean apply(Entity entity) {
             if (entity instanceof EntityPlayer) {
                 EntityPlayer player = (EntityPlayer) entity;
-                if (player.capabilities.isCreativeMode || isExcludedBySecurityStations(player)) return false;
+                if (player.capabilities.isCreativeMode || this.isExcludedBySecurityStations(player)) return false;
             }
-            return super.apply(entity) && inRange(entity) && canSeeEntity(entity);
+            return super.apply(entity) && this.inRange(entity) && TileEntitySentryTurret.this.canSeeEntity(entity);
         }
 
         private boolean inRange(Entity entity) {
-            return PneumaticCraftUtils.distBetweenSq(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ()), entity.posX, entity.posY, entity.posZ) <= rangeSq;
+            return PneumaticCraftUtils.distBetweenSq(new BlockPos(TileEntitySentryTurret.this.getPos().getX(), TileEntitySentryTurret.this.getPos().getY(), TileEntitySentryTurret.this.getPos().getZ()), entity.posX, entity.posY, entity.posZ) <= TileEntitySentryTurret.this.rangeSq;
         }
 
         private boolean isExcludedBySecurityStations(EntityPlayer player) {
-            Iterator<TileEntitySecurityStation> iterator = TileEntitySecurityStation.getSecurityStations(getWorld(), getPos(), false).iterator();
+            Iterator<TileEntitySecurityStation> iterator = TileEntitySecurityStation.getSecurityStations(TileEntitySentryTurret.this.getWorld(), TileEntitySentryTurret.this.getPos(), false).iterator();
             if (iterator.hasNext()) { //When there are Security Stations, all stations need to be allowing the player.
                 while (iterator.hasNext()) {
                     if (!iterator.next().doesAllowPlayer(player)) return false;
@@ -342,16 +342,16 @@ public class TileEntitySentryTurret extends TileEntityTickableBase implements IR
 
     @Override
     public void setText(int textFieldID, String text) {
-        entityFilter = text;
-        if (world != null && !world.isRemote) {
-            entitySelector.setFilter(text);
-            if (minigun != null) minigun.setAttackTarget(null);
-            markDirty();
+        this.entityFilter = text;
+        if (this.world != null && !this.world.isRemote) {
+            this.entitySelector.setFilter(text);
+            if (this.minigun != null) this.minigun.setAttackTarget(null);
+            this.markDirty();
         }
     }
 
     @Override
     public String getText(int textFieldID) {
-        return entityFilter;
+        return this.entityFilter;
     }
 }

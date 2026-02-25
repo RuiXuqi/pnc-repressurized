@@ -24,23 +24,23 @@ public class ActionWidgetButton extends ActionWidgetVariable<GuiButtonSpecial> i
     @Override
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
         super.readFromNBT(tag, guiLeft, guiTop);
-        widget = new GuiButtonSpecial(-1, tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, tag.getInteger("width"), tag.getInteger("height"), tag.getString("text"));
-        settingCoordinate = new BlockPos(tag.getInteger("settingX"), tag.getInteger("settingY"), tag.getInteger("settingZ"));
-        widget.setTooltipText(tag.getString("tooltip"));
+        this.widget = new GuiButtonSpecial(-1, tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, tag.getInteger("width"), tag.getInteger("height"), tag.getString("text"));
+        this.settingCoordinate = new BlockPos(tag.getInteger("settingX"), tag.getInteger("settingY"), tag.getInteger("settingZ"));
+        this.widget.setTooltipText(tag.getString("tooltip"));
     }
 
     @Override
     public NBTTagCompound toNBT(int guiLeft, int guiTop) {
         NBTTagCompound tag = super.toNBT(guiLeft, guiTop);
-        tag.setInteger("x", widget.x - guiLeft);
-        tag.setInteger("y", widget.y - guiTop);
-        tag.setInteger("width", widget.width);
-        tag.setInteger("height", widget.height);
-        tag.setString("text", widget.displayString);
-        tag.setInteger("settingX", settingCoordinate.getX());
-        tag.setInteger("settingY", settingCoordinate.getY());
-        tag.setInteger("settingZ", settingCoordinate.getZ());
-        tag.setString("tooltip", widget.getTooltip());
+        tag.setInteger("x", this.widget.x - guiLeft);
+        tag.setInteger("y", this.widget.y - guiTop);
+        tag.setInteger("width", this.widget.width);
+        tag.setInteger("height", this.widget.height);
+        tag.setString("text", this.widget.displayString);
+        tag.setInteger("settingX", this.settingCoordinate.getX());
+        tag.setInteger("settingY", this.settingCoordinate.getY());
+        tag.setInteger("settingZ", this.settingCoordinate.getZ());
+        tag.setString("tooltip", this.widget.getTooltip());
         return tag;
     }
 
@@ -51,17 +51,17 @@ public class ActionWidgetButton extends ActionWidgetVariable<GuiButtonSpecial> i
 
     @Override
     public void setText(String text) {
-        widget.displayString = text;
+        this.widget.displayString = text;
     }
 
     @Override
     public String getText() {
-        return widget.displayString;
+        return this.widget.displayString;
     }
 
     @Override
     public void onActionPerformed() {
-        NetworkHandler.sendToServer(new PacketSetGlobalVariable(getVariableName(), settingCoordinate));
+        NetworkHandler.sendToServer(new PacketSetGlobalVariable(this.getVariableName(), this.settingCoordinate));
     }
 
     @Override
@@ -76,33 +76,33 @@ public class ActionWidgetButton extends ActionWidgetVariable<GuiButtonSpecial> i
 
     @Override
     public void setWidgetPos(int x, int y) {
-        widget.x = x;
-        widget.y = y;
+        this.widget.x = x;
+        this.widget.y = y;
     }
 
     public void setWidth(int width) {
-        widget.width = width;
+        this.widget.width = width;
     }
 
     public int getWidth() {
-        return widget.width;
+        return this.widget.width;
     }
 
     public void setHeight(int height) {
-        widget.height = height;
+        this.widget.height = height;
     }
 
     public int getHeight() {
-        return widget.height;
+        return this.widget.height;
     }
 
     @Override
     public void setTooltip(String text) {
-        widget.setTooltipText(text);
+        this.widget.setTooltipText(text);
     }
 
     @Override
     public String getTooltip() {
-        return widget.getTooltip();
+        return this.widget.getTooltip();
     }
 }

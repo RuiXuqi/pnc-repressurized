@@ -20,15 +20,15 @@ public class PacketUpdatePressureModule extends PacketUpdateTubeModule<PacketUpd
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(fieldId);
-        buffer.writeFloat(value);
+        buffer.writeInt(this.fieldId);
+        buffer.writeFloat(this.value);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        fieldId = buffer.readInt();
-        value = buffer.readFloat();
+        this.fieldId = buffer.readInt();
+        this.value = buffer.readFloat();
     }
 
     @Override

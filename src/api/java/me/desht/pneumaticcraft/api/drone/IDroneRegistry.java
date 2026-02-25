@@ -17,7 +17,7 @@ public interface IDroneRegistry {
      * With this method you can register custom blocks to allow the drone to pathfind through them. If the block requires any special
      * handling, like allow pathfinding on certain conditions, you can pass a IPathFindHandler with the registry.
      *
-     * @param block the block to allow pathfinding through
+     * @param block   the block to allow pathfinding through
      * @param handler can be null, to always allow pathfinding through this block.
      */
     void addPathfindableBlock(Block block, IPathfindHandler handler);
@@ -43,8 +43,8 @@ public interface IDroneRegistry {
      * When a player attempts to catch the drone (by wrenching it), the drone will only the drop the items that it was
      * delivering (or none if it dropped those items already). The Drone itself never will be dropped.
      *
-     * @param world the world
-     * @param pos position to deliver items to
+     * @param world           the world
+     * @param pos             position to deliver items to
      * @param deliveredStacks stacks that are delivered by the drone; when no stacks, or more than 65 stacks are given, this will generate an IllegalArgumentException.
      * @return the drone; you can use this to set a custom name for example (defaults to "Amadron Delivery Drone").
      */
@@ -53,8 +53,8 @@ public interface IDroneRegistry {
     /**
      * The opposite of deliverItemsAmazonStyle. Will retrieve the queried items from an inventory at the specified location.
      *
-     * @param world the world
-     * @param pos the position to retrieve items from
+     * @param world         the world
+     * @param pos           the position to retrieve items from
      * @param queriedStacks the stacks to retrieve
      * @return the drone
      */
@@ -64,8 +64,8 @@ public interface IDroneRegistry {
      * Similar to deliverItemsAmazonStyle, but with Fluids. Will spawn in a Drone that will fill an IFluidHandler at the
      * given block position. If the fluid doesn't fit or there isn't a IFluidHandler, the fluid <em>will be lost</em>.
      *
-     * @param world the world
-     * @param pos the position to delivery the fluid to
+     * @param world          the world
+     * @param pos            the position to delivery the fluid to
      * @param deliveredFluid the fluid to deliver
      * @return the drone
      */
@@ -74,8 +74,8 @@ public interface IDroneRegistry {
     /**
      * The opposite of deliverFluidAmazonStyle. Will retrieve the queried fluid from an IFluidHandler at the specified location.
      *
-     * @param world the world
-     * @param pos the block position to retrieve fluid from
+     * @param world        the world
+     * @param pos          the block position to retrieve fluid from
      * @param queriedFluid the fluid to retrieve
      * @return the drone
      */

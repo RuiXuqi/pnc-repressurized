@@ -15,16 +15,16 @@ public abstract class PacketAbstractAmadronTrade<REQ extends PacketAbstractAmadr
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        offer = AmadronOfferCustom.loadFromBuf(buf);
+        this.offer = AmadronOfferCustom.loadFromBuf(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        offer.writeToBuf(buf);
+        this.offer.writeToBuf(buf);
     }
 
     public AmadronOfferCustom getOffer() {
-        return offer;
+        return this.offer;
     }
 
 }

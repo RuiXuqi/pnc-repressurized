@@ -39,20 +39,20 @@ public enum ModdedWrenchUtils {
     }
 
     public void registerThirdPartyWrenches() {
-        registerWrench(CRESCENT_HAMMER);
-        registerWrench(SMART_WRENCH);
-        registerWrench(IMMERSIVE_TOOL);
-        registerWrench(AE2_CERTUS_WRENCH);
-        registerWrench(AE2_NETHER_WRENCH);
-        registerWrench(YETA_WRENCH);
-        registerWrench(BC_WRENCH);
-        registerWrench(TESLA_WRENCH);
-        registerWrench(IC2_WRENCH);
-        registerWrench(CB_WRENCH_WOOD);
+        this.registerWrench(CRESCENT_HAMMER);
+        this.registerWrench(SMART_WRENCH);
+        this.registerWrench(IMMERSIVE_TOOL);
+        this.registerWrench(AE2_CERTUS_WRENCH);
+        this.registerWrench(AE2_NETHER_WRENCH);
+        this.registerWrench(YETA_WRENCH);
+        this.registerWrench(BC_WRENCH);
+        this.registerWrench(TESLA_WRENCH);
+        this.registerWrench(IC2_WRENCH);
+        this.registerWrench(CB_WRENCH_WOOD);
     }
 
     private void registerWrench(Item wrench) {
-        if (wrench != null) wrenches.add(makeWrenchKey(new ItemStack(wrench)));
+        if (wrench != null) this.wrenches.add(makeWrenchKey(new ItemStack(wrench)));
     }
 
     private static String makeWrenchKey(ItemStack wrench) {
@@ -71,7 +71,7 @@ public enum ModdedWrenchUtils {
      * @return true if it's a modded wrench, false otherwise
      */
     public boolean isModdedWrench(@Nonnull ItemStack stack) {
-        return wrenches.contains(makeWrenchKey(stack));
+        return this.wrenches.contains(makeWrenchKey(stack));
     }
 
 }

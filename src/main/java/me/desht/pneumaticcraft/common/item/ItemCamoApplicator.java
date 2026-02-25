@@ -62,7 +62,7 @@ public class ItemCamoApplicator extends ItemPressurizable {
                 } else {
                     setCamoState(stack, state);
                 }
-            } else{
+            } else {
                 // either apply saved camo, or remove current camo from block
                 TileEntity te = world.getTileEntity(pos);
                 if (!(te instanceof ICamouflageableTE)) {
@@ -71,7 +71,7 @@ public class ItemCamoApplicator extends ItemPressurizable {
 
                 IBlockState camoState = getCamoState(stack);
 
-                float pressure = getPressure(stack);
+                float pressure = this.getPressure(stack);
                 if (pressure < 0.1 && !player.capabilities.isCreativeMode) {
                     // not enough pressure
                     return EnumActionResult.FAIL;
@@ -105,7 +105,7 @@ public class ItemCamoApplicator extends ItemPressurizable {
                 }
 
                 // and apply the new camouflage
-                addAir(stack, -PneumaticValues.USAGE_CAMO_APPLICATOR);
+                this.addAir(stack, -PneumaticValues.USAGE_CAMO_APPLICATOR);
                 ((ICamouflageableTE) te).setCamouflage(camoState);
                 IBlockState particleState = camoState == null ? existingCamo : camoState;
                 if (particleState != null) {

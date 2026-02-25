@@ -20,7 +20,7 @@ public class ProcessorAmadronTrade implements IComponentProcessor {
         ItemStack result = PatchouliAPI.instance.deserializeItemStack(iVariableProvider.get("item"));
         for (AmadronOffer offer : AmadronOfferManager.getInstance().getAllOffers()) {
             if (offer.getInput() instanceof ItemStack && offer.getOutput() instanceof ItemStack) {
-                ItemStack outStack = (ItemStack)offer.getOutput();
+                ItemStack outStack = (ItemStack) offer.getOutput();
                 if (ItemStack.areItemsEqual(result, outStack)) {
                     this.offer = offer;
                     break;
@@ -28,22 +28,22 @@ public class ProcessorAmadronTrade implements IComponentProcessor {
             }
         }
 
-        text = iVariableProvider.has("text") ? iVariableProvider.get("text") : null;
+        this.text = iVariableProvider.has("text") ? iVariableProvider.get("text") : null;
     }
 
     @Override
     public String process(String key) {
-        if (offer == null) return null;
+        if (this.offer == null) return null;
 
         switch (key) {
             case "input":
-                return ItemStackUtil.serializeStack((ItemStack) offer.getInput());
+                return ItemStackUtil.serializeStack((ItemStack) this.offer.getInput());
             case "output":
-                return ItemStackUtil.serializeStack((ItemStack) offer.getOutput());
+                return ItemStackUtil.serializeStack((ItemStack) this.offer.getOutput());
             case "name":
-                return ((ItemStack) offer.getOutput()).getDisplayName();
+                return ((ItemStack) this.offer.getOutput()).getDisplayName();
             case "text":
-                return text == null ? null : I18n.format(text);
+                return this.text == null ? null : I18n.format(this.text);
         }
 
         return null;

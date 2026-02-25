@@ -20,7 +20,7 @@ public class OreDictionaryHelper {
         OreDictionary.registerOre(Names.BLOCK_IRON_COMPRESSED, Blockss.COMPRESSED_IRON);
         OreDictionary.registerOre(Names.GEAR_IRON_COMPRESSED, Itemss.COMPRESSED_IRON_GEAR);
 
-        for (int i = 0; i < ItemPlastic.ORE_NAMES.length; i++){
+        for (int i = 0; i < ItemPlastic.ORE_NAMES.length; i++) {
             OreDictionary.registerOre(ItemPlastic.ORE_NAMES[i], new ItemStack(Itemss.PLASTIC, 1, i));
         }
 

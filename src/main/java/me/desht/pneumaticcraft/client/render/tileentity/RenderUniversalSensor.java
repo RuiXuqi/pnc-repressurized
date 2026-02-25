@@ -9,7 +9,7 @@ public class RenderUniversalSensor extends AbstractModelRenderer<TileEntityUnive
     private final ModelUniversalSensor model;
 
     public RenderUniversalSensor() {
-        model = new ModelUniversalSensor();
+        this.model = new ModelUniversalSensor();
     }
 
     @Override
@@ -20,7 +20,7 @@ public class RenderUniversalSensor extends AbstractModelRenderer<TileEntityUnive
     @Override
     void renderModel(TileEntityUniversalSensor te, float partialTicks) {
         if (te != null) {
-            model.renderModel(0.0625f, te.oldDishRotation + (te.dishRotation - te.oldDishRotation) * partialTicks);
+            this.model.renderModel(0.0625f, te.oldDishRotation + (te.dishRotation - te.oldDishRotation) * partialTicks);
             te.renderRangeLines();
         }
     }

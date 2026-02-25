@@ -35,23 +35,23 @@ public class KeyHandler {
     }
 
     private KeyHandler() {
-        registerKeyListener(HUDHandler.instance());
+        this.registerKeyListener(HUDHandler.instance());
 
-        keybindOpenOptions = registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_ARMOR_OPTIONS, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_U, Names.PNEUMATIC_KEYBINDING_CATEGORY));
-        keybindHack = registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_HELMET_HACK, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_H, Names.PNEUMATIC_KEYBINDING_CATEGORY));
-        keybindDebuggingDrone = registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_HELMET_DEBUGGING_DRONE, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_Y, Names.PNEUMATIC_KEYBINDING_CATEGORY));
-        keybindKick = registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_BOOTS_KICK, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_X, Names.PNEUMATIC_KEYBINDING_CATEGORY));
-        keybindLauncher = registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_LAUNCHER, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_C, Names.PNEUMATIC_KEYBINDING_CATEGORY));
+        this.keybindOpenOptions = this.registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_ARMOR_OPTIONS, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_U, Names.PNEUMATIC_KEYBINDING_CATEGORY));
+        this.keybindHack = this.registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_HELMET_HACK, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_H, Names.PNEUMATIC_KEYBINDING_CATEGORY));
+        this.keybindDebuggingDrone = this.registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_HELMET_DEBUGGING_DRONE, KeyConflictContext.IN_GAME, KeyModifier.NONE, Keyboard.KEY_Y, Names.PNEUMATIC_KEYBINDING_CATEGORY));
+        this.keybindKick = this.registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_BOOTS_KICK, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_X, Names.PNEUMATIC_KEYBINDING_CATEGORY));
+        this.keybindLauncher = this.registerKeyBinding(new KeyBinding(KeyHandler.DESCRIPTION_LAUNCHER, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_C, Names.PNEUMATIC_KEYBINDING_CATEGORY));
     }
 
     private KeyBinding registerKeyBinding(KeyBinding keyBinding) {
         ClientRegistry.registerKeyBinding(keyBinding);
-        keys.add(keyBinding);
+        this.keys.add(keyBinding);
         return keyBinding;
     }
 
     private void registerKeyListener(IKeyListener listener) {
-        keyListeners.add(listener);
+        this.keyListeners.add(listener);
     }
 
     /**
@@ -61,15 +61,15 @@ public class KeyHandler {
      */
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
-        for (KeyBinding key : keys) {
+        for (KeyBinding key : this.keys) {
             if (key.isPressed()) {
-                onKey(key);
+                this.onKey(key);
             }
         }
     }
 
     public void onKey(KeyBinding keybinding) {
-        for (IKeyListener listener : keyListeners) {
+        for (IKeyListener listener : this.keyListeners) {
             listener.onKeyPress(keybinding);
         }
     }

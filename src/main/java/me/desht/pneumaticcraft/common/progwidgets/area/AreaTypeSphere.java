@@ -8,36 +8,36 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AreaTypeSphere extends AreaType{
+public class AreaTypeSphere extends AreaType {
 
     public static final String ID = "sphere";
-    
+
     private EnumSphereType sphereType = EnumSphereType.FILLED;
-    
-    private enum EnumSphereType{
+
+    private enum EnumSphereType {
         FILLED("filled"), HOLLOW("hollow");
-        
+
         private final String name;
-        
-        EnumSphereType(String name){
+
+        EnumSphereType(String name) {
             this.name = "gui.progWidget.area.type.sphere.sphereType." + name;
         }
-        
+
         @Override
-        public String toString(){
-            return I18n.format(name);
+        public String toString() {
+            return I18n.format(this.name);
         }
     }
-    
-    public AreaTypeSphere(){
+
+    public AreaTypeSphere() {
         super(ID);
     }
 
     @Override
-    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
+    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         double radius = PneumaticCraftUtils.distBetween(p1, p2);
         double radiusSq = radius * radius;
-        double innerRadius = sphereType == EnumSphereType.HOLLOW ? radius - 1 : 0;
+        double innerRadius = this.sphereType == EnumSphereType.HOLLOW ? radius - 1 : 0;
         double innerRadiusSq = innerRadius * innerRadius;
         minX = (int) (p1.getX() - radius - 1);
         minY = (int) (p1.getY() - radius - 1);
@@ -56,22 +56,22 @@ public class AreaTypeSphere extends AreaType{
             }
         }
     }
-    
+
     @Override
-    public void addUIWidgets(List<AreaTypeWidget> widgets){
+    public void addUIWidgets(List<AreaTypeWidget> widgets) {
         super.addUIWidgets(widgets);
-        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.sphere.sphereType", EnumSphereType.class, () -> sphereType, sphereType -> this.sphereType = sphereType));
+        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.sphere.sphereType", EnumSphereType.class, () -> this.sphereType, sphereType -> this.sphereType = sphereType));
     }
-    
+
     @Override
-    public void writeToNBT(NBTTagCompound tag){
+    public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setByte("sphereType", (byte)sphereType.ordinal());
+        tag.setByte("sphereType", (byte) this.sphereType.ordinal());
     }
-    
+
     @Override
-    public void readFromNBT(NBTTagCompound tag){
+    public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        sphereType = EnumSphereType.values()[tag.getByte("sphereType")];
+        this.sphereType = EnumSphereType.values()[tag.getByte("sphereType")];
     }
 }

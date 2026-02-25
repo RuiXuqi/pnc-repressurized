@@ -15,10 +15,10 @@ interface IAutoFluidEjecting {
             if (toDrain != null && toDrain.amount > 0) {
                 EnumFacing ejectDir = te.getUpgradeCache().getEjectDirection();
                 if (ejectDir != null) {
-                    tryEjectLiquid(te, handler, ejectDir, toDrain.amount);
+                    this.tryEjectLiquid(te, handler, ejectDir, toDrain.amount);
                 } else {
                     for (EnumFacing d : EnumFacing.VALUES) {
-                        toDrain.amount -= tryEjectLiquid(te, handler, d, toDrain.amount);
+                        toDrain.amount -= this.tryEjectLiquid(te, handler, d, toDrain.amount);
                         if (toDrain.amount <= 0) break;
                     }
                 }

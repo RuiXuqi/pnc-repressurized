@@ -15,25 +15,27 @@ public class ContainerAmadronAddTrade extends ContainerPneumaticBase {
 
     public ContainerAmadronAddTrade() {
         super(null);
-        addSlotToContainer(new SlotUntouchable(inv, INPUT_SLOT, 10, 90));
-        addSlotToContainer(new SlotUntouchable(inv, OUTPUT_SLOT, 99, 90));
+        this.addSlotToContainer(new SlotUntouchable(this.inv, INPUT_SLOT, 10, 90));
+        this.addSlotToContainer(new SlotUntouchable(this.inv, OUTPUT_SLOT, 99, 90));
     }
 
     public void setStack(int index, @Nonnull ItemStack stack) {
-        inv.setStackInSlot(index, stack);
+        this.inv.setStackInSlot(index, stack);
     }
 
     @Nonnull
     public ItemStack getStack(int index) {
-        return inv.getStackInSlot(index);
+        return this.inv.getStackInSlot(index);
     }
+
     @Nonnull
     public ItemStack getInputStack() {
-        return inv.getStackInSlot(INPUT_SLOT);
+        return this.inv.getStackInSlot(INPUT_SLOT);
     }
+
     @Nonnull
     public ItemStack getOutputStack() {
-        return inv.getStackInSlot(OUTPUT_SLOT);
+        return this.inv.getStackInSlot(OUTPUT_SLOT);
     }
 
     @Override

@@ -28,41 +28,41 @@ public class PacketDescription extends LocationIntPacket<PacketDescription> {
 
     public PacketDescription(IDescSynced te) {
         super(te.getPosition());
-        type = te.getSyncType();
-        values = new Object[te.getDescriptionFields().size()];
-        types = new byte[values.length];
-        for (int i = 0; i < values.length; i++) {
-            values[i] = te.getDescriptionFields().get(i).getValue();
-            types[i] = PacketUpdateGui.getType(te.getDescriptionFields().get(i));
+        this.type = te.getSyncType();
+        this.values = new Object[te.getDescriptionFields().size()];
+        this.types = new byte[this.values.length];
+        for (int i = 0; i < this.values.length; i++) {
+            this.values[i] = te.getDescriptionFields().get(i).getValue();
+            this.types[i] = PacketUpdateGui.getType(te.getDescriptionFields().get(i));
         }
-        extraData = new NBTTagCompound();
-        te.writeToPacket(extraData);
+        this.extraData = new NBTTagCompound();
+        te.writeToPacket(this.extraData);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeByte(type.ordinal());
-        buf.writeInt(values.length);
-        for (int i = 0; i < types.length; i++) {
-            buf.writeByte(types[i]);
-            PacketUpdateGui.writeField(buf, values[i], types[i]);
+        buf.writeByte(this.type.ordinal());
+        buf.writeInt(this.values.length);
+        for (int i = 0; i < this.types.length; i++) {
+            buf.writeByte(this.types[i]);
+            PacketUpdateGui.writeField(buf, this.values[i], this.types[i]);
         }
-        ByteBufUtils.writeTag(buf, extraData);
+        ByteBufUtils.writeTag(buf, this.extraData);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        type = IDescSynced.Type.values()[buf.readByte()];
+        this.type = IDescSynced.Type.values()[buf.readByte()];
         int dataAmount = buf.readInt();
-        types = new byte[dataAmount];
-        values = new Object[dataAmount];
+        this.types = new byte[dataAmount];
+        this.values = new Object[dataAmount];
         for (int i = 0; i < dataAmount; i++) {
-            types[i] = buf.readByte();
-            values[i] = PacketUpdateGui.readField(buf, types[i]);
+            this.types[i] = buf.readByte();
+            this.values[i] = PacketUpdateGui.readField(buf, this.types[i]);
         }
-        extraData = ByteBufUtils.readTag(buf);
+        this.extraData = ByteBufUtils.readTag(buf);
     }
 
     private static Object getSyncableForType(PacketDescription message, EntityPlayer player, IDescSynced.Type type) {
@@ -111,38 +111,38 @@ public class PacketDescription extends LocationIntPacket<PacketDescription> {
      */
 
     public NBTTagCompound writeNBT(NBTTagCompound compound) {
-        compound.setTag("Pos", NBTUtil.createPosTag(pos));
-        compound.setInteger("SyncType", type.ordinal());
-        compound.setInteger("Length", values.length);
+        compound.setTag("Pos", NBTUtil.createPosTag(this.pos));
+        compound.setInteger("SyncType", this.type.ordinal());
+        compound.setInteger("Length", this.values.length);
         ByteBuf buf = Unpooled.buffer();
         NBTTagList list = new NBTTagList();
-        for (int i = 0; i < types.length; i++) {
+        for (int i = 0; i < this.types.length; i++) {
             NBTTagCompound element = new NBTTagCompound();
-            element.setByte("Type", types[i]);
+            element.setByte("Type", this.types[i]);
             buf.clear();
-            PacketUpdateGui.writeField(buf, values[i], types[i]);
+            PacketUpdateGui.writeField(buf, this.values[i], this.types[i]);
             element.setByteArray("Value", Arrays.copyOf(buf.array(), buf.writerIndex()));
             list.appendTag(element);
         }
         buf.release();
         compound.setTag("Data", list);
-        compound.setTag("Extra", extraData);
+        compound.setTag("Extra", this.extraData);
 
         return compound;
     }
 
     public PacketDescription(NBTTagCompound compound) {
         super(NBTUtil.getPosFromTag(compound.getCompoundTag("Pos")));
-        type = IDescSynced.Type.values()[compound.getInteger("SyncType")];
-        values = new Object[compound.getInteger("Length")];
-        types = new byte[values.length];
+        this.type = IDescSynced.Type.values()[compound.getInteger("SyncType")];
+        this.values = new Object[compound.getInteger("Length")];
+        this.types = new byte[this.values.length];
         NBTTagList list = compound.getTagList("Data", Constants.NBT.TAG_COMPOUND);
-        for (int i = 0; i < values.length; i++) {
+        for (int i = 0; i < this.values.length; i++) {
             NBTTagCompound element = list.getCompoundTagAt(i);
-            types[i] = element.getByte("Type");
+            this.types[i] = element.getByte("Type");
             byte[] b = element.getByteArray("Value");
-            values[i] = PacketUpdateGui.readField(Unpooled.wrappedBuffer(b), types[i]);
+            this.values[i] = PacketUpdateGui.readField(Unpooled.wrappedBuffer(b), this.types[i]);
         }
-        extraData = compound.getCompoundTag("Extra");
+        this.extraData = compound.getCompoundTag("Extra");
     }
 }

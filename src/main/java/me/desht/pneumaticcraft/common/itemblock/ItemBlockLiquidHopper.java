@@ -18,6 +18,6 @@ public class ItemBlockLiquidHopper extends ItemBlock {
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable NBTTagCompound nbt) {
-        return new FluidItemWrapper(stack,"Tank", PneumaticValues.NORMAL_TANK_CAPACITY);
+        return new FluidItemWrapper(stack, "Tank", PneumaticValues.NORMAL_TANK_CAPACITY);
     }
 }

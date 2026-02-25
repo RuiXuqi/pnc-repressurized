@@ -32,52 +32,52 @@ public class AmadronOfferManager {
     }
 
     public Collection<AmadronOffer> getStaticOffers() {
-        return staticOffers;
+        return this.staticOffers;
     }
 
     public Collection<AmadronOffer> getPeriodicOffers() {
-        return periodicOffers;
+        return this.periodicOffers;
     }
 
     public LinkedHashSet<AmadronOffer> getSelectedPeriodicOffers() {
-        return selectedPeriodicOffers;
+        return this.selectedPeriodicOffers;
     }
 
     public Collection<AmadronOffer> getAllOffers() {
-        return allOffers;
+        return this.allOffers;
     }
 
     public boolean addStaticOffer(AmadronOffer offer) {
-        allOffers.add(offer);
-        return staticOffers.add(offer);
+        this.allOffers.add(offer);
+        return this.staticOffers.add(offer);
     }
 
     public boolean removeStaticOffer(AmadronOffer offer) {
-        allOffers.remove(offer);
-        return staticOffers.remove(offer);
+        this.allOffers.remove(offer);
+        return this.staticOffers.remove(offer);
     }
 
     public boolean addPeriodicOffer(AmadronOffer offer) {
-        if (periodicOffers.contains(offer)) {
+        if (this.periodicOffers.contains(offer)) {
             return false;
         } else {
-            periodicOffers.add(offer);
+            this.periodicOffers.add(offer);
             return true;
         }
     }
 
     public void removePeriodicOffer(AmadronOffer offer) {
-        periodicOffers.remove(offer);
+        this.periodicOffers.remove(offer);
     }
 
     public boolean hasOffer(AmadronOffer offer) {
-        return allOffers.contains(offer);
+        return this.allOffers.contains(offer);
     }
 
     public void recompileOffers() {
-        allOffers.clear();
-        allOffers.addAll(staticOffers);
-        allOffers.addAll(selectedPeriodicOffers);
+        this.allOffers.clear();
+        this.allOffers.addAll(this.staticOffers);
+        this.allOffers.addAll(this.selectedPeriodicOffers);
     }
 
     /**
@@ -88,11 +88,11 @@ public class AmadronOfferManager {
      */
     @SideOnly(Side.CLIENT)
     public void syncOffers(Collection<AmadronOffer> newStaticOffers, Collection<AmadronOffer> newSelectedPeriodicOffers) {
-        staticOffers.clear();
-        staticOffers.addAll(newStaticOffers);
-        selectedPeriodicOffers.clear();
-        selectedPeriodicOffers.addAll(newSelectedPeriodicOffers);
-        recompileOffers();
+        this.staticOffers.clear();
+        this.staticOffers.addAll(newStaticOffers);
+        this.selectedPeriodicOffers.clear();
+        this.selectedPeriodicOffers.addAll(newSelectedPeriodicOffers);
+        this.recompileOffers();
     }
 
     /**
@@ -102,7 +102,7 @@ public class AmadronOfferManager {
      * @return the actual offer that is in the offer manager
      */
     public AmadronOffer get(AmadronOffer offer) {
-        for (AmadronOffer o : allOffers) {
+        for (AmadronOffer o : this.allOffers) {
             if (o.equals(offer)) return o;
         }
         return null;
@@ -110,7 +110,7 @@ public class AmadronOfferManager {
 
     public int countOffers(String playerId) {
         int count = 0;
-        for (AmadronOffer offer : allOffers) {
+        for (AmadronOffer offer : this.allOffers) {
             if (offer instanceof AmadronOfferCustom && ((AmadronOfferCustom) offer).getPlayerId().equals(playerId))
                 count++;
         }
@@ -119,7 +119,7 @@ public class AmadronOfferManager {
 
     public void tryRestockCustomOffers() {
         boolean needSave = false;
-        for (AmadronOffer offer : allOffers) {
+        for (AmadronOffer offer : this.allOffers) {
             if (offer instanceof AmadronOfferCustom) {
                 AmadronOfferCustom custom = (AmadronOfferCustom) offer;
                 TileEntity input = custom.getProvidingTileEntity();
@@ -160,13 +160,13 @@ public class AmadronOfferManager {
 
     public void shufflePeriodicOffers() {
         Random rand = new Random();
-        selectedPeriodicOffers.clear();
-        int toBeSelected = Math.min(AmadronOfferPeriodicConfig.offersPer, periodicOffers.size());
-        while (selectedPeriodicOffers.size() < toBeSelected) {
-            selectedPeriodicOffers.add(periodicOffers.get(rand.nextInt(periodicOffers.size())));
+        this.selectedPeriodicOffers.clear();
+        int toBeSelected = Math.min(AmadronOfferPeriodicConfig.offersPer, this.periodicOffers.size());
+        while (this.selectedPeriodicOffers.size() < toBeSelected) {
+            this.selectedPeriodicOffers.add(this.periodicOffers.get(rand.nextInt(this.periodicOffers.size())));
         }
 
-        recompileOffers();
+        this.recompileOffers();
     }
 
     /**

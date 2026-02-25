@@ -12,17 +12,17 @@ public class ThreadedSorter<T> extends Thread {
     public ThreadedSorter(List<T> list, Comparator<? super T> comparator) {
         this.list = list;
         this.comparator = comparator;
-        setName("PneumaticCraft Drone Area Sorting Thread");
-        start();
+        this.setName("PneumaticCraft Drone Area Sorting Thread");
+        this.start();
     }
 
     @Override
     public void run() {
-        list.sort(comparator);
-        isDone = true;
+        this.list.sort(this.comparator);
+        this.isDone = true;
     }
 
     public boolean isDone() {
-        return isDone;
+        return this.isDone;
     }
 }

@@ -21,9 +21,9 @@ public class GuiProgWidgetPlace<Widget extends ProgWidgetPlace> extends GuiProgW
         super.initGui();
         List<GuiRadioButton> radioButtons = new ArrayList<>();
         for (int i = 0; i < 6; i++) {
-            GuiRadioButton radioButton = new GuiRadioButton(i + 10, guiLeft + 4, guiTop + 80 + i * 12, 0xFF404040, PneumaticCraftUtils.getOrientationName(EnumFacing.byIndex(i)));
-            radioButton.checked = widget.placeDir.ordinal() == i;
-            addWidget(radioButton);
+            GuiRadioButton radioButton = new GuiRadioButton(i + 10, this.guiLeft + 4, this.guiTop + 80 + i * 12, 0xFF404040, PneumaticCraftUtils.getOrientationName(EnumFacing.byIndex(i)));
+            radioButton.checked = this.widget.placeDir.ordinal() == i;
+            this.addWidget(radioButton);
             radioButtons.add(radioButton);
             radioButton.otherChoices = radioButtons;
         }
@@ -37,7 +37,7 @@ public class GuiProgWidgetPlace<Widget extends ProgWidgetPlace> extends GuiProgW
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget.getID() >= 10 && guiWidget.getID() < 16)
-            widget.placeDir = EnumFacing.byIndex(guiWidget.getID() - 10);
+            this.widget.placeDir = EnumFacing.byIndex(guiWidget.getID() - 10);
         super.actionPerformed(guiWidget);
     }
 

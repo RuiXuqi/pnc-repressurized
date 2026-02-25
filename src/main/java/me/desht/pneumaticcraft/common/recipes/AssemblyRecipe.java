@@ -24,15 +24,15 @@ public class AssemblyRecipe {
     }
 
     public ItemStack getInput() {
-        return input;
+        return this.input;
     }
 
     public ItemStack getOutput() {
-        return output;
+        return this.output;
     }
 
     public ItemStack getProgramStack() {
-        return programStack;
+        return this.programStack;
     }
 
     static void addDrillRecipe(Object input, Object output) {

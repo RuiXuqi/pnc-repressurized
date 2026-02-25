@@ -55,49 +55,50 @@ public class TileEntityAirCompressor extends TileEntityPneumaticBase implements 
         }
 
     }
+
     public TileEntityAirCompressor() {
         this(PneumaticValues.DANGER_PRESSURE_AIR_COMPRESSOR, PneumaticValues.MAX_PRESSURE_AIR_COMPRESSOR, PneumaticValues.VOLUME_AIR_COMPRESSOR);
     }
 
     public TileEntityAirCompressor(float dangerPressure, float criticalPressure, int volume) {
         super(dangerPressure, criticalPressure, volume, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
     }
 
     public boolean isActive() {
-        return isActive;
+        return this.isActive;
     }
 
     @Override
     public void update() {
-        if (!getWorld().isRemote) {
-            if (redstoneAllows() && burnTime < curFuelUsage && TileEntityFurnace.isItemFuel(inventory.getStackInSlot(FUEL_SLOT))) {
-                ItemStack fuelStack = inventory.getStackInSlot(FUEL_SLOT);
-                burnTime += TileEntityFurnace.getItemBurnTime(fuelStack);
-                maxBurnTime = burnTime;
+        if (!this.getWorld().isRemote) {
+            if (this.redstoneAllows() && this.burnTime < this.curFuelUsage && TileEntityFurnace.isItemFuel(this.inventory.getStackInSlot(FUEL_SLOT))) {
+                ItemStack fuelStack = this.inventory.getStackInSlot(FUEL_SLOT);
+                this.burnTime += TileEntityFurnace.getItemBurnTime(fuelStack);
+                this.maxBurnTime = this.burnTime;
                 fuelStack.shrink(1);
             }
 
-            curFuelUsage = (int) (getBaseProduction() * getSpeedUsageMultiplierFromUpgrades() / 10);
-            if (burnTime >= curFuelUsage) {
-                burnTime -= curFuelUsage;
-                if (!getWorld().isRemote) {
-                    addAir((int) (getBaseProduction() * getSpeedMultiplierFromUpgrades() * getEfficiency() / 100D));
-                    onFuelBurn(curFuelUsage);
+            this.curFuelUsage = (int) (this.getBaseProduction() * this.getSpeedUsageMultiplierFromUpgrades() / 10);
+            if (this.burnTime >= this.curFuelUsage) {
+                this.burnTime -= this.curFuelUsage;
+                if (!this.getWorld().isRemote) {
+                    this.addAir((int) (this.getBaseProduction() * this.getSpeedMultiplierFromUpgrades() * this.getEfficiency() / 100D));
+                    this.onFuelBurn(this.curFuelUsage);
                 }
             }
-            boolean wasActive = isActive;
-            isActive = burnTime > curFuelUsage;
-            if (wasActive != isActive) {
-                getWorld().setBlockState(getPos(), getWorld().getBlockState(getPos()).withProperty(BlockAirCompressor.ON, isActive));
+            boolean wasActive = this.isActive;
+            this.isActive = this.burnTime > this.curFuelUsage;
+            if (wasActive != this.isActive) {
+                this.getWorld().setBlockState(this.getPos(), this.getWorld().getBlockState(this.getPos()).withProperty(BlockAirCompressor.ON, this.isActive));
             }
-        } else if (isActive) spawnBurningParticle();
+        } else if (this.isActive) this.spawnBurningParticle();
 
         super.update();
 
-        if (!getWorld().isRemote) {
-            List<Pair<EnumFacing, IAirHandler>> teList = getAirHandler(null).getConnectedPneumatics();
-            if (teList.size() == 0) getAirHandler(null).airLeak(getRotation());
+        if (!this.getWorld().isRemote) {
+            List<Pair<EnumFacing, IAirHandler>> teList = this.getAirHandler(null).getConnectedPneumatics();
+            if (teList.size() == 0) this.getAirHandler(null).airLeak(this.getRotation());
         }
     }
 
@@ -113,54 +114,54 @@ public class TileEntityAirCompressor extends TileEntityPneumaticBase implements 
     }
 
     private void spawnBurningParticle() {
-        if (getWorld().rand.nextInt(3) != 0) return;
-        float px = getPos().getX() + 0.5F;
-        float py = getPos().getY() + getWorld().rand.nextFloat() * 6.0F / 16.0F;
-        float pz = getPos().getZ() + 0.5F;
+        if (this.getWorld().rand.nextInt(3) != 0) return;
+        float px = this.getPos().getX() + 0.5F;
+        float py = this.getPos().getY() + this.getWorld().rand.nextFloat() * 6.0F / 16.0F;
+        float pz = this.getPos().getZ() + 0.5F;
         float f3 = 0.5F;
-        float f4 = getWorld().rand.nextFloat() * 0.4F - 0.2F;
-        switch (getRotation()) {
+        float f4 = this.getWorld().rand.nextFloat() * 0.4F - 0.2F;
+        switch (this.getRotation()) {
             case EAST:
-                getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px - f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
-                getWorld().spawnParticle(EnumParticleTypes.FLAME, px - f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px - f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.FLAME, px - f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
                 break;
             case WEST:
-                getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
-                getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f3, py, pz + f4, 0.0D, 0.0D, 0.0D);
                 break;
             case SOUTH:
-                getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f4, py, pz - f3, 0.0D, 0.0D, 0.0D);
-                getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f4, py, pz - f3, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f4, py, pz - f3, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f4, py, pz - f3, 0.0D, 0.0D, 0.0D);
                 break;
             case NORTH:
-                getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f4, py, pz + f3, 0.0D, 0.0D, 0.0D);
-                getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f4, py, pz + f3, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.SMOKE_NORMAL, px + f4, py, pz + f3, 0.0D, 0.0D, 0.0D);
+                this.getWorld().spawnParticle(EnumParticleTypes.FLAME, px + f4, py, pz + f3, 0.0D, 0.0D, 0.0D);
                 break;
         }
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return getRotation() == side;
+        return this.getRotation() == side;
     }
 
     public int getBurnTimeRemainingScaled(int parts) {
-        if (maxBurnTime == 0 || burnTime < curFuelUsage) return 0;
-        return parts * burnTime / maxBurnTime;
+        if (this.maxBurnTime == 0 || this.burnTime < this.curFuelUsage) return 0;
+        return parts * this.burnTime / this.maxBurnTime;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     @Override
@@ -171,30 +172,30 @@ public class TileEntityAirCompressor extends TileEntityPneumaticBase implements 
     @Override
     public void readFromNBT(NBTTagCompound nbtTagCompound) {
         super.readFromNBT(nbtTagCompound);
-        burnTime = nbtTagCompound.getInteger("burnTime");
-        maxBurnTime = nbtTagCompound.getInteger("maxBurn");
-        redstoneMode = nbtTagCompound.getInteger("redstoneMode");
-        inventory = new AirCompressorHandler();
-        inventory.deserializeNBT(nbtTagCompound.getCompoundTag("Items"));
+        this.burnTime = nbtTagCompound.getInteger("burnTime");
+        this.maxBurnTime = nbtTagCompound.getInteger("maxBurn");
+        this.redstoneMode = nbtTagCompound.getInteger("redstoneMode");
+        this.inventory = new AirCompressorHandler();
+        this.inventory.deserializeNBT(nbtTagCompound.getCompoundTag("Items"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbtTagCompound) {
         super.writeToNBT(nbtTagCompound);
-        nbtTagCompound.setInteger("burnTime", burnTime);
-        nbtTagCompound.setInteger("maxBurn", maxBurnTime);
-        nbtTagCompound.setInteger("redstoneMode", redstoneMode);
-        nbtTagCompound.setTag("Items", inventory.serializeNBT());
+        nbtTagCompound.setInteger("burnTime", this.burnTime);
+        nbtTagCompound.setInteger("maxBurn", this.maxBurnTime);
+        nbtTagCompound.setInteger("redstoneMode", this.redstoneMode);
+        nbtTagCompound.setTag("Items", this.inventory.serializeNBT());
         return nbtTagCompound;
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 }

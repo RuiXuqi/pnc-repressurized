@@ -12,14 +12,14 @@ public class EnderIO implements IThirdParty {
 
     @Override
     public void preInit() {
-        registerFuel(Fluids.DIESEL);
-        registerFuel(Fluids.KEROSENE);
-        registerFuel(Fluids.GASOLINE);
-        registerFuel(Fluids.LPG);
+        this.registerFuel(Fluids.DIESEL);
+        this.registerFuel(Fluids.KEROSENE);
+        this.registerFuel(Fluids.GASOLINE);
+        this.registerFuel(Fluids.LPG);
     }
 
     private void registerFuel(Fluid fluid) {
-        registerFuel(fluid, 60, PneumaticCraftAPIHandler.getInstance().liquidFuels.get(fluid.getName()) / 60);
+        this.registerFuel(fluid, 60, PneumaticCraftAPIHandler.getInstance().liquidFuels.get(fluid.getName()) / 60);
     }
 
     private void registerFuel(Fluid fluid, int powerPerCycle, int burnTime) {
@@ -33,7 +33,7 @@ public class EnderIO implements IThirdParty {
     @Override
     public void postInit() {
         IThirdParty.registerFuel("hootch", "EnderIO", 60 * 6000);
-        IThirdParty.registerFuel("rocket_fuel", "EnderIO",160 * 7000);
-        IThirdParty.registerFuel("fire_water", "EnderIO",80 * 15000);
+        IThirdParty.registerFuel("rocket_fuel", "EnderIO", 160 * 7000);
+        IThirdParty.registerFuel("fire_water", "EnderIO", 80 * 15000);
     }
 }

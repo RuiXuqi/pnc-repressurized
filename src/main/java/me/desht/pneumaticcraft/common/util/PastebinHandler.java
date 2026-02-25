@@ -14,6 +14,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class PastebinHandler extends Thread {
 
     private PastebinHandler() {
         RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(5000).build();
-        httpclient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
+        this.httpclient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
         isDone = false;
     }
 
@@ -53,12 +54,12 @@ public class PastebinHandler extends Thread {
     public void run() {
         try {
             exception = null;
-            if (username != null) {
-                loginInternal(username, password);
-            } else if (contents != null) {
-                getLink = putInternal(contents);
-            } else if (getLink != null) {
-                contents = getInternal(getLink);
+            if (this.username != null) {
+                this.loginInternal(this.username, this.password);
+            } else if (this.contents != null) {
+                this.getLink = this.putInternal(this.contents);
+            } else if (this.getLink != null) {
+                this.contents = this.getInternal(this.getLink);
             }
         } catch (Exception e) {
             exception = e;
@@ -104,11 +105,11 @@ public class PastebinHandler extends Thread {
         params.add(new BasicNameValuePair("api_user_password", password));
         try {
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            HttpResponse response = httpclient.execute(httppost);
+            HttpResponse response = this.httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                userKey = IOUtils.toString(instream, "UTF-8");
+                userKey = IOUtils.toString(instream, StandardCharsets.UTF_8);
                 if (userKey.startsWith("Bad API request")) {
                     Log.warning("User tried to log in into pastebin, it responded with the following: " + userKey);
                     userKey = null;
@@ -132,11 +133,11 @@ public class PastebinHandler extends Thread {
         if (isLoggedIn()) params.add(new BasicNameValuePair("api_user_key", userKey));
         try {
             httppost.setEntity(new UrlEncodedFormEntity(params, "UTF-8"));
-            HttpResponse response = httpclient.execute(httppost);
+            HttpResponse response = this.httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
             if (entity != null) {
                 InputStream instream = entity.getContent();
-                return IOUtils.toString(instream, "UTF-8");
+                return IOUtils.toString(instream, StandardCharsets.UTF_8);
             }
 
         } catch (Exception e) {

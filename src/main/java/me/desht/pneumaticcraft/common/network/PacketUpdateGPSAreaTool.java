@@ -15,14 +15,14 @@ public class PacketUpdateGPSAreaTool extends AbstractPacket<PacketUpdateGPSAreaT
     }
 
     public PacketUpdateGPSAreaTool(ProgWidgetArea area) {
-        areaWidgetData = new NBTTagCompound();
-        area.writeToNBT(areaWidgetData);
+        this.areaWidgetData = new NBTTagCompound();
+        area.writeToNBT(this.areaWidgetData);
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         try {
-            new PacketBuffer(buffer).writeCompoundTag(areaWidgetData);
+            new PacketBuffer(buffer).writeCompoundTag(this.areaWidgetData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -31,7 +31,7 @@ public class PacketUpdateGPSAreaTool extends AbstractPacket<PacketUpdateGPSAreaT
     @Override
     public void fromBytes(ByteBuf buffer) {
         try {
-            areaWidgetData = new PacketBuffer(buffer).readCompoundTag();
+            this.areaWidgetData = new PacketBuffer(buffer).readCompoundTag();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -39,13 +39,13 @@ public class PacketUpdateGPSAreaTool extends AbstractPacket<PacketUpdateGPSAreaT
 
     @Override
     public void handleClientSide(PacketUpdateGPSAreaTool message, EntityPlayer player) {
-        handleServerSide(null, player);
+        this.handleServerSide(null, player);
     }
 
     @Override
     public void handleServerSide(PacketUpdateGPSAreaTool message, EntityPlayer player) {
         ItemStack stack = player.getHeldItemMainhand();
-        if (stack.getItem() == Itemss.GPS_AREA_TOOL){
+        if (stack.getItem() == Itemss.GPS_AREA_TOOL) {
             stack.setTagCompound(message.areaWidgetData);
         }
     }

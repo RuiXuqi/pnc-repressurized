@@ -32,10 +32,10 @@ public class WailaSemiBlockHandler implements IWailaDataProvider {
     @SuppressWarnings({"rawtypes"})
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        
+
         List<SemiBlockBasic> semiBlocks = SemiBlockManager.getInstance(accessor.getWorld()).getSemiBlocksAsList(SemiBlockBasic.class, accessor.getWorld(), accessor.getPosition());
         NBTTagList tagList = accessor.getNBTData().getTagList("semiBlocks", Constants.NBT.TAG_COMPOUND);
-        for(int i = 0; i < semiBlocks.size(); i++){
+        for (int i = 0; i < semiBlocks.size(); i++) {
             NonNullList<ItemStack> l = NonNullList.create();
             semiBlocks.get(i).addDrops(l);
             if (!l.isEmpty()) {
@@ -57,7 +57,7 @@ public class WailaSemiBlockHandler implements IWailaDataProvider {
         List<SemiBlockBasic> semiBlocks = SemiBlockManager.getInstance(world).getSemiBlocksAsList(SemiBlockBasic.class, world, pos);
         NBTTagList tagList = new NBTTagList();
         tag.setTag("semiBlocks", tagList);
-        for(SemiBlockBasic<?> semiBlock : semiBlocks){
+        for (SemiBlockBasic<?> semiBlock : semiBlocks) {
             NBTTagCompound subTag = new NBTTagCompound();
             semiBlock.addWailaInfoToTag(subTag);
             tagList.appendTag(subTag);

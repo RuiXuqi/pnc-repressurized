@@ -24,10 +24,10 @@ public class UpgradableItemUtils {
     /**
      * Add a standardized tooltip listing the installed upgrades in the given item.
      *
-     * @param iStack the item
-     * @param world the world
+     * @param iStack   the item
+     * @param world    the world
      * @param textList list of text to append tooltip too
-     * @param flag tooltip flag
+     * @param flag     tooltip flag
      */
     public static void addUpgradeInformation(ItemStack iStack, World world, List<String> textList, ITooltipFlag flag) {
         ItemStack[] inventoryStacks = getUpgradeStacks(iStack);

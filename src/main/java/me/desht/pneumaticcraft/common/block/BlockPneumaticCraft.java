@@ -80,23 +80,23 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     protected BlockPneumaticCraft(Material material, String registryName) {
         super(material);
-        setTranslationKey(registryName);
-        setRegistryName(registryName);
-        setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
-        setHardness(3.0F);
-        setResistance(10.0F);
+        this.setTranslationKey(registryName);
+        this.setRegistryName(registryName);
+        this.setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
+        this.setHardness(3.0F);
+        this.setResistance(10.0F);
     }
 
     @Override
     public boolean hasTileEntity(IBlockState state) {
-        return getTileEntityClass() != null;
+        return this.getTileEntityClass() != null;
     }
 
     @Nullable
     @Override
     public TileEntity createTileEntity(World world, IBlockState state) {
         try {
-            TileEntity te = getTileEntityClass().newInstance();
+            TileEntity te = this.getTileEntityClass().newInstance();
             te.setWorld(world);
             if (te instanceof TileEntityBase) {
                 ((TileEntityBase) te).onTileEntityCreated();
@@ -118,8 +118,8 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack heldItem = player.getHeldItem(hand);
         if (player.isSneaking()
-                || getGuiID() == null
-                || isRotatable() && (heldItem.getItem() == Itemss.MANOMETER || ModdedWrenchUtils.getInstance().isModdedWrench(heldItem))
+                || this.getGuiID() == null
+                || this.isRotatable() && (heldItem.getItem() == Itemss.MANOMETER || ModdedWrenchUtils.getInstance().isModdedWrench(heldItem))
                 || hand == EnumHand.OFF_HAND && ModdedWrenchUtils.getInstance().isModdedWrench(player.getHeldItemMainhand())) {
             return false;
         } else {
@@ -131,7 +131,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
                     } else if (FluidUtils.tryFluidExtraction(te, null, player, hand)) {
                         return true;
                     }
-                    player.openGui(PneumaticCraftRepressurized.instance, getGuiID().ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
+                    player.openGui(PneumaticCraftRepressurized.instance, this.getGuiID().ordinal(), world, pos.getX(), pos.getY(), pos.getZ());
                 }
             }
 
@@ -142,9 +142,9 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     @Override
     public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
         IBlockState state = super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
-        if (isRotatable()) {
-            EnumFacing f = PneumaticCraftUtils.getDirectionFacing(placer, canRotateToTopOrBottom());
-            return state.withProperty(ROTATION, reversePlacementRotation() ? f.getOpposite() : f);
+        if (this.isRotatable()) {
+            EnumFacing f = PneumaticCraftUtils.getDirectionFacing(placer, this.canRotateToTopOrBottom());
+            return state.withProperty(ROTATION, this.reversePlacementRotation() ? f.getOpposite() : f);
         } else {
             return state;
         }
@@ -152,6 +152,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     /**
      * Bit of a kludge for historical reasons; some blocks face the wrong way by default.
+     *
      * @return whether or not the block should be rotated 180 degrees on placement
      */
     protected boolean reversePlacementRotation() {
@@ -182,11 +183,11 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     }
 
     protected void setRotation(World world, BlockPos pos, EnumFacing rotation) {
-        setRotation(world, pos, rotation, world.getBlockState(pos));
+        this.setRotation(world, pos, rotation, world.getBlockState(pos));
     }
 
     protected EnumFacing getRotation(IBlockAccess world, BlockPos pos) {
-        return getRotation(world.getBlockState(pos));
+        return this.getRotation(world.getBlockState(pos));
     }
 
     protected EnumFacing getRotation(IBlockState state) {
@@ -207,7 +208,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     @Override
     protected BlockStateContainer createBlockState() {
-        if (isRotatable()) {
+        if (this.isRotatable()) {
             return new BlockStateContainer(this, ROTATION);
         } else {
             return super.createBlockState();
@@ -216,7 +217,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        if (isRotatable()) {
+        if (this.isRotatable()) {
             return state.getValue(ROTATION).ordinal();
         } else {
             return super.getMetaFromState(state);
@@ -225,7 +226,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
-        if (isRotatable()) {
+        if (this.isRotatable()) {
             return super.getStateFromMeta(meta).withProperty(ROTATION, EnumFacing.byIndex(meta));
         } else {
             return super.getStateFromMeta(meta);
@@ -248,24 +249,24 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
             if (te instanceof TileEntityBase) {
                 ((TileEntityBase) te).setPreserveStateOnBreak(true);
             }
-            if (!player.capabilities.isCreativeMode) dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
+            if (!player.capabilities.isCreativeMode) this.dropBlockAsItem(world, pos, world.getBlockState(pos), 0);
             world.setBlockToAir(pos);
             return true;
         } else {
-            if (isRotatable()) {
+            if (this.isRotatable()) {
                 IBlockState state = world.getBlockState(pos);
-                if (!rotateCustom(world, pos, state, side)) {
-                    if (rotateForgeWay()) {
-                        if (!canRotateToTopOrBottom()) side = EnumFacing.UP;
-                        if (getRotation(world, pos).getAxis() != side.getAxis()) {
-                            setRotation(world, pos, getRotation(world, pos).rotateAround(side.getAxis()));
+                if (!this.rotateCustom(world, pos, state, side)) {
+                    if (this.rotateForgeWay()) {
+                        if (!this.canRotateToTopOrBottom()) side = EnumFacing.UP;
+                        if (this.getRotation(world, pos).getAxis() != side.getAxis()) {
+                            this.setRotation(world, pos, this.getRotation(world, pos).rotateAround(side.getAxis()));
                         }
                     } else {
-                        EnumFacing f = getRotation(world, pos);
+                        EnumFacing f = this.getRotation(world, pos);
                         do {
                             f = EnumFacing.byIndex(f.ordinal() + 1);
-                        } while (!canRotateToTopOrBottom() && f.getAxis() == Axis.Y);
-                        setRotation(world, pos, f);
+                        } while (!this.canRotateToTopOrBottom() && f.getAxis() == Axis.Y);
+                        this.setRotation(world, pos, f);
                     }
                     TileEntity te = world.getTileEntity(pos);
                     if (te instanceof TileEntityBase) ((TileEntityBase) te).onBlockRotated();
@@ -285,9 +286,9 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
      * Can be overridden to implement custom rotation behaviour for a block.
      *
      * @param world the world
-     * @param pos block position
+     * @param pos   block position
      * @param state block state
-     * @param side the side clicked
+     * @param side  the side clicked
      * @return true when the method is overridden, to disable default rotation behaviour
      */
     protected boolean rotateCustom(World world, BlockPos pos, IBlockState state, EnumFacing side) {
@@ -319,7 +320,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     public void addInformation(ItemStack stack, World world, List<String> curInfo, ITooltipFlag flag) {
         if (stack.hasTagCompound()) {
             if (NBTUtil.hasTag(stack, NBT_AIR_AMOUNT)) {
-                TileEntity te = createTileEntity(world, getDefaultState());
+                TileEntity te = this.createTileEntity(world, this.getDefaultState());
                 if (te instanceof IPneumaticMachine) {
                     curInfo.add(TextFormatting.DARK_GREEN + "Stored Air: " + NBTUtil.getInteger(stack, NBT_AIR_AMOUNT) + "mL");
                 }
@@ -339,10 +340,10 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
                     }
                 }
             }
-            addExtraInformation(stack, world, curInfo, flag);
+            this.addExtraInformation(stack, world, curInfo, flag);
         }
         if (PneumaticCraftRepressurized.proxy.isSneakingInGui()) {
-            TileEntity te = createTileEntity(world, getDefaultState());
+            TileEntity te = this.createTileEntity(world, this.getDefaultState());
             if (te instanceof TileEntityPneumaticBase) {
                 float pressure = ((TileEntityPneumaticBase) te).dangerPressure;
                 curInfo.add(TextFormatting.YELLOW + I18n.format("gui.tooltip.maxPressure", pressure));
@@ -351,8 +352,8 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
         String info = "gui.tab.info." + stack.getTranslationKey();
         if (PneumaticCraftRepressurized.proxy.isSneakingInGui()) {
-            if (!addTooltip(curInfo, info + ".short")) {
-                addTooltip(curInfo, info);
+            if (!this.addTooltip(curInfo, info + ".short")) {
+                this.addTooltip(curInfo, info);
             }
         } else {
             curInfo.add(TextFormatting.AQUA + I18n.format("gui.tooltip.sneakForInfo"));
@@ -381,7 +382,7 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
      */
     @Override
     public boolean hasComparatorInputOverride(IBlockState state) {
-        return IComparatorSupport.class.isAssignableFrom(getTileEntityClass());
+        return IComparatorSupport.class.isAssignableFrom(this.getTileEntityClass());
     }
 
     /**
@@ -395,13 +396,13 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     @Override
     public Set<Item> getApplicableUpgrades() {
-        TileEntity te = createTileEntity(null, getDefaultState());
+        TileEntity te = this.createTileEntity(null, this.getDefaultState());
         return te instanceof IUpgradeAcceptor ? ((IUpgradeAcceptor) te).getApplicableUpgrades() : Collections.emptySet();
     }
 
     @Override
     public String getName() {
-        return getTranslationKey() + ".name";
+        return this.getTranslationKey() + ".name";
     }
 
     @Override
@@ -411,11 +412,12 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        return bounds;
+        return this.bounds;
     }
 
     /**
      * Compatibility with 1.8 code...
+     *
      * @param bounds new bounding box
      */
     protected void setBlockBounds(AxisAlignedBB bounds) {
@@ -506,12 +508,12 @@ public abstract class BlockPneumaticCraft extends Block implements IPneumaticWre
     @Optional.Method(modid = "theoneprobe")
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         TileEntity te = world.getTileEntity(data.getPos());
-        if(te instanceof IInfoForwarder){
-            te = ((IInfoForwarder)te).getInfoTileEntity();
+        if (te instanceof IInfoForwarder) {
+            te = ((IInfoForwarder) te).getInfoTileEntity();
         }
 
         if (te instanceof IPneumaticMachine) {
-            TOPCallback.handlePneumatic(mode, probeInfo, (IPneumaticMachine)te);
+            TOPCallback.handlePneumatic(mode, probeInfo, (IPneumaticMachine) te);
         }
         if (te instanceof IHeatExchanger) {
             TOPCallback.handleHeat(mode, probeInfo, (IHeatExchanger) te);

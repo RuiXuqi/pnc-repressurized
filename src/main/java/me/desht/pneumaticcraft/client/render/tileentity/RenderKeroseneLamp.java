@@ -8,7 +8,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import java.util.List;
 
 public class RenderKeroseneLamp extends FastFluidTESR<TileEntityKeroseneLamp> {
-    private static final AxisAlignedBB TANK_BOUNDS = new AxisAlignedBB(6/16f, 1/16f, 6/16f, 10/16f, 9/16f, 10/16f);
+    private static final AxisAlignedBB TANK_BOUNDS = new AxisAlignedBB(6 / 16f, 1 / 16f, 6 / 16f, 10 / 16f, 9 / 16f, 10 / 16f);
 
     @Override
     List<TankRenderInfo> getTanksToRender(TileEntityKeroseneLamp te) {

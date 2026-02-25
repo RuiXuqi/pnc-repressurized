@@ -69,8 +69,8 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
     @Override
     public void initGui(IGuiScreen gui) {
         GuiScreen guiScreen = (GuiScreen) gui;
-        screenWidth = guiScreen.width;
-        screenHeight = guiScreen.height;
+        this.screenWidth = guiScreen.width;
+        this.screenHeight = guiScreen.height;
 
         if (PneumaticCraftRepressurized.proxy.getClientPlayer() != null) {
             ItemStack helmet = PneumaticCraftRepressurized.proxy.getClientPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD);
@@ -78,87 +78,87 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
                 int entityId = NBTUtil.getInteger(helmet, NBTKeys.PNEUMATIC_HELMET_DEBUGGING_DRONE);
                 Entity entity = PneumaticCraftRepressurized.proxy.getClientWorld().getEntityByID(entityId);
                 if (entity instanceof EntityDrone) {
-                    selectedDrone = (EntityDrone) entity;
+                    this.selectedDrone = (EntityDrone) entity;
                 }
             }
         }
 
-        showStart = new GuiButton(10, 30, 128, 150, 20, I18n.format("gui.progWidget.debug.showStart"));
-        gui.getButtonList().add(showStart);
+        this.showStart = new GuiButton(10, 30, 128, 150, 20, I18n.format("gui.progWidget.debug.showStart"));
+        gui.getButtonList().add(this.showStart);
 
-        showActive = new GuiButton(11, 30, 150, 150, 20, I18n.format("gui.progWidget.debug.showActive"));
-        gui.getButtonList().add(showActive);
+        this.showActive = new GuiButton(11, 30, 150, 150, 20, I18n.format("gui.progWidget.debug.showActive"));
+        gui.getButtonList().add(this.showActive);
 
-        followCheckbox = new GuiCheckBox(12, 30, 176, 0xFFFFFFFF, " " + I18n.format("gui.progWidget.debug.followActive"));
-        followCheckbox.x = 180 - followCheckbox.getBounds().width;
+        this.followCheckbox = new GuiCheckBox(12, 30, 176, 0xFFFFFFFF, " " + I18n.format("gui.progWidget.debug.followActive"));
+        this.followCheckbox.x = 180 - this.followCheckbox.getBounds().width;
 
-        programmingStartX = PROGAMMING_MARGIN;
-        programmingWidth = guiScreen.width - PROGAMMING_MARGIN * 2;
-        programmingHeight = guiScreen.height - PROGAMMING_MARGIN - PROGRAMMING_START_Y;
-        programmerUnit = new DebugInfoProgrammerUnit(selectedDrone != null ? selectedDrone.getProgWidgets() : new ArrayList<>(),
+        this.programmingStartX = PROGAMMING_MARGIN;
+        this.programmingWidth = guiScreen.width - PROGAMMING_MARGIN * 2;
+        this.programmingHeight = guiScreen.height - PROGAMMING_MARGIN - PROGRAMMING_START_Y;
+        this.programmerUnit = new DebugInfoProgrammerUnit(this.selectedDrone != null ? this.selectedDrone.getProgWidgets() : new ArrayList<>(),
                 gui.getFontRenderer(),
                 0, 0, guiScreen.width, guiScreen.height,
                 100,
-                programmingStartX, PROGRAMMING_START_Y,
-                programmingWidth, programmingHeight,
+                this.programmingStartX, PROGRAMMING_START_Y,
+                this.programmingWidth, this.programmingHeight,
                 0, 0, 0);
-        if (selectedDrone != null) {
-            programmerUnit.gotoPiece(GuiProgrammer.findWidget(selectedDrone.getProgWidgets(), ProgWidgetStart.class));
+        if (this.selectedDrone != null) {
+            this.programmerUnit.gotoPiece(GuiProgrammer.findWidget(this.selectedDrone.getProgWidgets(), ProgWidgetStart.class));
         }
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
-        if (selectedDrone != null) {
+        if (this.selectedDrone != null) {
             if (button.id == 10) {
-                programmerUnit.gotoPiece(GuiProgrammer.findWidget(selectedDrone.getProgWidgets(), ProgWidgetStart.class));
+                this.programmerUnit.gotoPiece(GuiProgrammer.findWidget(this.selectedDrone.getProgWidgets(), ProgWidgetStart.class));
             } else if (button.id == 11) {
-                programmerUnit.gotoPiece(selectedDrone.getActiveWidget());
+                this.programmerUnit.gotoPiece(this.selectedDrone.getActiveWidget());
             }
         }
     }
 
     @Override
     public void drawPreButtons(int x, int y, float partialTicks) {
-        drawRect(programmingStartX, PROGRAMMING_START_Y, programmingStartX + programmingWidth, PROGRAMMING_START_Y + programmingHeight, 0x55000000);
+        drawRect(this.programmingStartX, PROGRAMMING_START_Y, this.programmingStartX + this.programmingWidth, PROGRAMMING_START_Y + this.programmingHeight, 0x55000000);
     }
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
-        if (selectedDrone != null) {
-            Minecraft.getMinecraft().fontRenderer.drawString("Drone name: " + selectedDrone.getName(), 20, screenHeight - 15, 0xFFFFFFFF, true);
-            Minecraft.getMinecraft().fontRenderer.drawString("Routine: " + selectedDrone.getLabel(), screenWidth / 2f, screenHeight - 15, 0xFFFFFFFF, true);
+        if (this.selectedDrone != null) {
+            Minecraft.getMinecraft().fontRenderer.drawString("Drone name: " + this.selectedDrone.getName(), 20, this.screenHeight - 15, 0xFFFFFFFF, true);
+            Minecraft.getMinecraft().fontRenderer.drawString("Routine: " + this.selectedDrone.getLabel(), this.screenWidth / 2f, this.screenHeight - 15, 0xFFFFFFFF, true);
         }
 
         GlStateManager.translate(0, 0, 300);
-        programmerUnit.render(x, y, true, true, true);
-        programmerUnit.renderForeground(x, y, null);
+        this.programmerUnit.render(x, y, true, true, true);
+        this.programmerUnit.renderForeground(x, y, null);
         GlStateManager.translate(0, 0, -300);
 
-        followCheckbox.render(x, y, partialTicks);
+        this.followCheckbox.render(x, y, partialTicks);
 
-        if (selectedDrone == null) {
-            drawCenteredString(Minecraft.getMinecraft().fontRenderer, "Press '" + Keyboard.getKeyName(KeyHandler.getInstance().keybindDebuggingDrone.getKeyCode()) + "' on a Drone when tracked by an Entity Tracker to debug the Drone.", screenWidth / 2, screenHeight / 2, 0xFFFF0000);
+        if (this.selectedDrone == null) {
+            this.drawCenteredString(Minecraft.getMinecraft().fontRenderer, "Press '" + Keyboard.getKeyName(KeyHandler.getInstance().keybindDebuggingDrone.getKeyCode()) + "' on a Drone when tracked by an Entity Tracker to debug the Drone.", this.screenWidth / 2, this.screenHeight / 2, 0xFFFF0000);
         }
 
-        IProgWidget widget = programmerUnit.getHoveredWidget(x, y);
-        if (widget == null) widget = areaShowingWidget;
-        upgradeHandler.getShowingPositions().clear();
+        IProgWidget widget = this.programmerUnit.getHoveredWidget(x, y);
+        if (widget == null) widget = this.areaShowingWidget;
+        this.upgradeHandler.getShowingPositions().clear();
         if (widget != null) {
-            int widgetId = selectedDrone.getProgWidgets().indexOf(widget);
-            DebugEntry entry = selectedDrone.getDebugEntry(widgetId);
+            int widgetId = this.selectedDrone.getProgWidgets().indexOf(widget);
+            DebugEntry entry = this.selectedDrone.getDebugEntry(widgetId);
             if (entry != null && entry.hasCoords()) {
-                upgradeHandler.getShowingPositions().add(entry.getPos());
+                this.upgradeHandler.getShowingPositions().add(entry.getPos());
             }
         }
     }
 
     @Override
     public void updateScreen() {
-        showStart.enabled = selectedDrone != null && !selectedDrone.getProgWidgets().isEmpty();
-        showActive.enabled = selectedDrone != null && selectedDrone.getActiveWidget() != null;
-        if (followCheckbox.checked && selectedDrone != null && selectedDrone.getActiveWidget() != null) {
-            programmerUnit.gotoPiece(selectedDrone.getActiveWidget());
+        this.showStart.enabled = this.selectedDrone != null && !this.selectedDrone.getProgWidgets().isEmpty();
+        this.showActive.enabled = this.selectedDrone != null && this.selectedDrone.getActiveWidget() != null;
+        if (this.followCheckbox.checked && this.selectedDrone != null && this.selectedDrone.getActiveWidget() != null) {
+            this.programmerUnit.gotoPiece(this.selectedDrone.getActiveWidget());
         }
     }
 
@@ -169,20 +169,20 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
 
     @Override
     public void mouseClicked(int x, int y, int button) {
-        if (followCheckbox.getBounds().contains(x, y)) {
-            followCheckbox.onMouseClicked(x, y, button);
+        if (this.followCheckbox.getBounds().contains(x, y)) {
+            this.followCheckbox.onMouseClicked(x, y, button);
         } else {
             if (button == 0) {
-                areaShowingWidget = programmerUnit.getHoveredWidget(x, y);
+                this.areaShowingWidget = this.programmerUnit.getHoveredWidget(x, y);
             } else if (button == 1) {
-                IProgWidget widget = programmerUnit.getHoveredWidget(x, y);
+                IProgWidget widget = this.programmerUnit.getHoveredWidget(x, y);
                 if (widget instanceof IAreaProvider) {
-                    upgradeHandler.getShownArea().clear();
-                    int widgetId = selectedDrone.getProgWidgets().indexOf(widget);
+                    this.upgradeHandler.getShownArea().clear();
+                    int widgetId = this.selectedDrone.getProgWidgets().indexOf(widget);
                     if (areaShowWidgetId != widgetId) {
                         Set<BlockPos> area = Sets.newHashSet();
                         ((IAreaProvider) widget).getArea(area);
-                        upgradeHandler.getShownArea().addAll(area);
+                        this.upgradeHandler.getShownArea().addAll(area);
                         areaShowWidgetId = widgetId;
                     } else {
                         clearAreaShowWidgetId();
@@ -194,7 +194,7 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
 
     @Override
     public void handleMouseInput() {
-        programmerUnit.getScrollBar().handleMouseInput();
+        this.programmerUnit.getScrollBar().handleMouseInput();
     }
 
     private class DebugInfoProgrammerUnit extends GuiUnitProgrammer {
@@ -207,16 +207,16 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
 
         @Override
         protected void addAdditionalInfoToTooltip(IProgWidget widget, List<String> tooltip) {
-            int widgetId = selectedDrone.getProgWidgets().indexOf(widget);
+            int widgetId = GuiDroneDebuggerOptions.this.selectedDrone.getProgWidgets().indexOf(widget);
 
-            DebugEntry entry = selectedDrone.getDebugEntry(widgetId);
+            DebugEntry entry = GuiDroneDebuggerOptions.this.selectedDrone.getDebugEntry(widgetId);
             if (entry != null) {
                 long elapsed = (System.currentTimeMillis() - entry.getReceivedTime()) / 50;
                 tooltip.add(TextFormatting.AQUA + "Last message:  " + TextFormatting.YELLOW + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(elapsed, true) + " ago");
                 tooltip.add(TextFormatting.AQUA + TextFormatting.ITALIC.toString() + "  \"" + I18n.format(entry.getMessage()) + "\"  ");
                 if (entry.hasCoords()) {
                     tooltip.add(TextFormatting.GREEN + I18n.format("gui.progWidget.debug.hasPositions"));
-                    if (widget != areaShowingWidget)
+                    if (widget != GuiDroneDebuggerOptions.this.areaShowingWidget)
                         tooltip.add(TextFormatting.GREEN + I18n.format("gui.progWidget.debug.clickToShow"));
                 }
             }
@@ -231,10 +231,10 @@ public class GuiDroneDebuggerOptions extends Gui implements IOptionPage {
 
         @Override
         protected void renderAdditionally() {
-            if (selectedDrone != null && selectedDrone.getActiveWidget() != null) {
-                drawBorder(selectedDrone.getActiveWidget(), 0xFF00FF00);
+            if (GuiDroneDebuggerOptions.this.selectedDrone != null && GuiDroneDebuggerOptions.this.selectedDrone.getActiveWidget() != null) {
+                this.drawBorder(GuiDroneDebuggerOptions.this.selectedDrone.getActiveWidget(), 0xFF00FF00);
                 if (areaShowWidgetId >= 0) {
-                    drawBorder(selectedDrone.getProgWidgets().get(areaShowWidgetId), 0xA040FFA0, 2);
+                    this.drawBorder(GuiDroneDebuggerOptions.this.selectedDrone.getProgWidgets().get(areaShowWidgetId), 0xA040FFA0, 2);
                 }
             }
         }

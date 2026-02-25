@@ -16,7 +16,7 @@ public class RenderElevatorBase extends AbstractModelRenderer<TileEntityElevator
     private final ModelElevatorBase model;
 
     public RenderElevatorBase() {
-        model = new ModelElevatorBase();
+        this.model = new ModelElevatorBase();
     }
 
     @Override
@@ -32,7 +32,7 @@ public class RenderElevatorBase extends AbstractModelRenderer<TileEntityElevator
     @Override
     void renderModel(TileEntityElevatorBase te, float partialTicks) {
         float extension = te.oldExtension + (te.extension - te.oldExtension) * partialTicks;
-        model.renderModel(0.0625f, extension);
+        this.model.renderModel(0.0625f, extension);
     }
 
     @Override

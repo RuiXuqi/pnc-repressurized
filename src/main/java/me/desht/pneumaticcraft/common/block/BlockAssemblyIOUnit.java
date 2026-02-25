@@ -28,7 +28,7 @@ public class BlockAssemblyIOUnit extends BlockPneumaticCraftModeled {
 
     BlockAssemblyIOUnit() {
         super(Material.IRON, "assembly_io_unit");
-        setBlockBounds(BASE_BOUNDS);
+        this.setBlockBounds(BASE_BOUNDS);
     }
 
     @Override

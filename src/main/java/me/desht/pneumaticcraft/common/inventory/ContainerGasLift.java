@@ -9,10 +9,10 @@ public class ContainerGasLift extends ContainerPneumaticBase<TileEntityGasLift> 
     public ContainerGasLift(InventoryPlayer inventoryPlayer, TileEntityGasLift te) {
         super(te);
 
-        addUpgradeSlots(11, 29);
+        this.addUpgradeSlots(11, 29);
 
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 55, 48));
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 55, 48));
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

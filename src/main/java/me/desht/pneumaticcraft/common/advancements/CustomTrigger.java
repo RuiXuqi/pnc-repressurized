@@ -23,12 +23,12 @@ public class CustomTrigger implements ICriterionTrigger {
 
     public CustomTrigger(String parString) {
         super();
-        ID = RL(parString);
+        this.ID = RL(parString);
     }
 
     public CustomTrigger(ResourceLocation parRL) {
         super();
-        ID = parRL;
+        this.ID = parRL;
     }
 
     /* (non-Javadoc)
@@ -36,7 +36,7 @@ public class CustomTrigger implements ICriterionTrigger {
      */
     @Override
     public ResourceLocation getId() {
-        return ID;
+        return this.ID;
     }
 
     /* (non-Javadoc)

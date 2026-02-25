@@ -10,60 +10,61 @@ import java.util.stream.Collectors;
 
 /**
  * Class to build simple (no jumping) Drone programs, without needing to worry about the X/Y locations of widgets
+ *
  * @author MineMaarten
  *
  */
-public class DroneProgramBuilder{
+public class DroneProgramBuilder {
 
     private final List<DroneInstruction> instructions = new ArrayList<>();
-    
-    public void add(IProgWidget mainInstruction, IProgWidget... whitelist){
-        instructions.add(new DroneInstruction(mainInstruction, Arrays.asList(whitelist)));
+
+    public void add(IProgWidget mainInstruction, IProgWidget... whitelist) {
+        this.instructions.add(new DroneInstruction(mainInstruction, Arrays.asList(whitelist)));
     }
-    
-    public List<IProgWidget> build(){
+
+    public List<IProgWidget> build() {
         List<IProgWidget> allWidgets = new ArrayList<>();
         int curY = 0;
-        for(DroneInstruction instruction : instructions){
+        for (DroneInstruction instruction : this.instructions) {
             instruction.mainInstruction.setX(0);
             instruction.mainInstruction.setY(curY);
-            
+
             //Add whitelist
-            if(!instruction.whitelist.isEmpty()){
-                for(int parameterIndex = 0; parameterIndex < instruction.mainInstruction.getParameters().length; parameterIndex++){
+            if (!instruction.whitelist.isEmpty()) {
+                for (int parameterIndex = 0; parameterIndex < instruction.mainInstruction.getParameters().length; parameterIndex++) {
                     Class<? extends IProgWidget> parameterClass = instruction.mainInstruction.getParameters()[parameterIndex];
                     List<IProgWidget> whitelist = instruction.whitelist.stream()
-                                                             .filter(x -> parameterClass.isAssignableFrom(x.getClass()))
-                                                             .collect(Collectors.toList());
+                            .filter(x -> parameterClass.isAssignableFrom(x.getClass()))
+                            .collect(Collectors.toList());
                     int curX = instruction.mainInstruction.getWidth() / 2;
-                    for(IProgWidget whitelistItem : whitelist){
+                    for (IProgWidget whitelistItem : whitelist) {
                         whitelistItem.setX(curX);
                         whitelistItem.setY(curY + parameterIndex * 11);
                         curX += whitelistItem.getWidth() / 2;
                     }
                 }
             }
-            
-            
+
+
             curY += instruction.mainInstruction.getHeight() / 2;
             instruction.addToWidgets(allWidgets);
         }
         TileEntityProgrammer.updatePuzzleConnections(allWidgets);
         return allWidgets;
     }
-    
-    private class DroneInstruction{
+
+    private class DroneInstruction {
         final IProgWidget mainInstruction;
         final List<IProgWidget> whitelist;
-        
-        DroneInstruction(IProgWidget mainInstruction, List<IProgWidget> whitelist){
+
+        DroneInstruction(IProgWidget mainInstruction, List<IProgWidget> whitelist) {
             this.mainInstruction = mainInstruction;
             this.whitelist = whitelist;
         }
-        
-        void addToWidgets(List<IProgWidget> widgets){
-            widgets.add(mainInstruction);
-            widgets.addAll(whitelist);
+
+        void addToWidgets(List<IProgWidget> widgets) {
+            widgets.add(this.mainInstruction);
+            widgets.addAll(this.whitelist);
         }
     }
 }

@@ -34,8 +34,8 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
 
     @SideOnly(Side.CLIENT)
     private static RenderItem itemRender;
-    
-    public static ProgWidgetItemFilter withFilter(ItemStack filter){
+
+    public static ProgWidgetItemFilter withFilter(ItemStack filter) {
         ProgWidgetItemFilter widget = new ProgWidgetItemFilter();
         widget.filter = filter;
         return widget;
@@ -44,19 +44,19 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (variable.equals("") && filter == null) {
+        if (this.variable.equals("") && this.filter == null) {
             curInfo.add("gui.progWidget.itemFilter.error.noFilter");
         }
-        if (matchBlock && !(filter.getItem() instanceof ItemBlock)) {
+        if (this.matchBlock && !(this.filter.getItem() instanceof ItemBlock)) {
             curInfo.add("gui.progWidget.itemFilter.error.notBlock");
         }
     }
 
     @Override
     public void renderExtraInfo() {
-        if (variable.equals("")) {
-            if (!filter.isEmpty()) {
-                drawItemStack(filter, 10, 2, "");
+        if (this.variable.equals("")) {
+            if (!this.filter.isEmpty()) {
+                drawItemStack(this.filter, 10, 2, "");
             }
         } else {
             super.renderExtraInfo();
@@ -65,12 +65,12 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
 
     @Override
     public String getExtraStringInfo() {
-        return "\"" + variable + "\"";
+        return "\"" + this.variable + "\"";
     }
 
     @Nonnull
     public ItemStack getFilter() {
-        return variable.equals("") ? filter : aiManager != null ? aiManager.getStack(variable) : ItemStack.EMPTY;
+        return this.variable.equals("") ? this.filter : this.aiManager != null ? this.aiManager.getStack(this.variable) : ItemStack.EMPTY;
     }
 
     public void setFilter(@Nonnull ItemStack filter) {
@@ -97,18 +97,18 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        if (!filter.isEmpty()) {
-            curTooltip.add(TextFormatting.AQUA + "Filter: " + TextFormatting.RESET + filter.getDisplayName());
-            if (useOreDict) {
+        if (!this.filter.isEmpty()) {
+            curTooltip.add(TextFormatting.AQUA + "Filter: " + TextFormatting.RESET + this.filter.getDisplayName());
+            if (this.useOreDict) {
                 curTooltip.add(TextFormatting.DARK_AQUA + "- Using Ore Dictionary");
-            } else if (useModSimilarity) {
+            } else if (this.useModSimilarity) {
                 curTooltip.add(TextFormatting.DARK_AQUA + "- Using Mod similarity");
             } else {
-                curTooltip.add(TextFormatting.DARK_AQUA + "- " + (useMetadata ? "Using" : "Ignoring") + " meta");
-                if (matchBlock) {
+                curTooltip.add(TextFormatting.DARK_AQUA + "- " + (this.useMetadata ? "Using" : "Ignoring") + " meta");
+                if (this.matchBlock) {
                     curTooltip.add(TextFormatting.DARK_AQUA + "- Matching by block");
                 } else {
-                    curTooltip.add(TextFormatting.DARK_AQUA + "- " + (useNBT ? "Using" : "Ignoring") + " NBT");
+                    curTooltip.add(TextFormatting.DARK_AQUA + "- " + (this.useNBT ? "Using" : "Ignoring") + " NBT");
                 }
             }
         }
@@ -142,29 +142,29 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (filter != null) {
-            filter.writeToNBT(tag);
+        if (this.filter != null) {
+            this.filter.writeToNBT(tag);
         }
-        tag.setBoolean("useMetadata", useMetadata);
-        tag.setBoolean("useNBT", useNBT);
-        tag.setBoolean("useOreDict", useOreDict);
-        tag.setBoolean("useModSimilarity", useModSimilarity);
-        tag.setBoolean("matchBlock", matchBlock);
-        tag.setInteger("specificMeta", specificMeta);
-        tag.setString("variable", variable);
+        tag.setBoolean("useMetadata", this.useMetadata);
+        tag.setBoolean("useNBT", this.useNBT);
+        tag.setBoolean("useOreDict", this.useOreDict);
+        tag.setBoolean("useModSimilarity", this.useModSimilarity);
+        tag.setBoolean("matchBlock", this.matchBlock);
+        tag.setInteger("specificMeta", this.specificMeta);
+        tag.setString("variable", this.variable);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        filter = new ItemStack(tag);
-        useMetadata = tag.getBoolean("useMetadata");
-        useNBT = tag.getBoolean("useNBT");
-        useOreDict = tag.getBoolean("useOreDict");
-        useModSimilarity = tag.getBoolean("useModSimilarity");
-        matchBlock = tag.getBoolean("matchBlock");
-        specificMeta = tag.getInteger("specificMeta");
-        variable = tag.getString("variable");
+        this.filter = new ItemStack(tag);
+        this.useMetadata = tag.getBoolean("useMetadata");
+        this.useNBT = tag.getBoolean("useNBT");
+        this.useOreDict = tag.getBoolean("useOreDict");
+        this.useModSimilarity = tag.getBoolean("useModSimilarity");
+        this.matchBlock = tag.getBoolean("matchBlock");
+        this.specificMeta = tag.getInteger("specificMeta");
+        this.variable = tag.getString("variable");
     }
 
     @Override
@@ -223,11 +223,11 @@ public class ProgWidgetItemFilter extends ProgWidget implements IVariableWidget 
     }
 
     public String getVariable() {
-        return variable;
+        return this.variable;
     }
 
     @Override
     public void addVariables(Set<String> variables) {
-        variables.add(variable);
+        variables.add(this.variable);
     }
 }

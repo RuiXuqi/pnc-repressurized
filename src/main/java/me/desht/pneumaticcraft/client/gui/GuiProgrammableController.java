@@ -27,34 +27,35 @@ public class GuiProgrammableController extends GuiPneumaticContainerBase<TileEnt
     public void initGui() {
         super.initGui();
 
-        if (te.hasCapability(CapabilityEnergy.ENERGY, null)) {
-            IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, null);
-            addWidget(new WidgetEnergy(guiLeft + 12, guiTop + 20, storage));
+        if (this.te.hasCapability(CapabilityEnergy.ENERGY, null)) {
+            IEnergyStorage storage = this.te.getCapability(CapabilityEnergy.ENERGY, null);
+            this.addWidget(new WidgetEnergy(this.guiLeft + 12, this.guiTop + 20, storage));
         }
 
         List<String> exc = TileEntityProgrammableController.BLACKLISTED_WIDGETS.stream()
                 .map(s -> "\u2022 " + I18n.format("programmingPuzzle." + s + ".name"))
                 .sorted()
                 .collect(Collectors.toList());
-        addAnimatedStat("gui.tab.info.programmable_controller.excluded",
+        this.addAnimatedStat("gui.tab.info.programmable_controller.excluded",
                 new ItemStack(Itemss.DRONE), 0xFFFF5050, true).setText(exc);
     }
 
     @Override
     public IDroneBase getDrone() {
-        return te;
+        return this.te;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 46, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 46, 19, 4210752);
     }
 
     @Override
     protected void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
-        if (te.getPrimaryInventory().getStackInSlot(0).isEmpty()) curInfo.add("gui.tab.problems.programmableController.noProgram");
+        if (this.te.getPrimaryInventory().getStackInSlot(0).isEmpty())
+            curInfo.add("gui.tab.problems.programmableController.noProgram");
     }
 
     @Override

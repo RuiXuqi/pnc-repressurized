@@ -41,81 +41,81 @@ public class GuiLogisticsBase<Logistics extends SemiBlockLogistics> extends GuiP
     private GuiCheckBox fuzzyMeta;
     private GuiCheckBox fuzzyNBT;
     private GuiCheckBox whitelist;
-    private GuiButtonSpecial[] facingButtons = new GuiButtonSpecial[6];
+    private final GuiButtonSpecial[] facingButtons = new GuiButtonSpecial[6];
     private GuiAnimatedStat facingTab;
 
     public GuiLogisticsBase(InventoryPlayer invPlayer, Logistics logistics) {
         super(new ContainerLogistics(invPlayer, logistics), null, Textures.GUI_LOGISTICS_REQUESTER);
-        this.logistics = (Logistics) ((ContainerLogistics) inventorySlots).logistics;
-        ySize = 216;
+        this.logistics = (Logistics) ((ContainerLogistics) this.inventorySlots).logistics;
+        this.ySize = 216;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        if (searchGui != null) {
-            inventorySlots.getSlot(editingSlot).putStack(searchGui.getSearchStack());
-            NetworkHandler.sendToServer(new PacketSetLogisticsFilterStack(logistics, searchGui.getSearchStack(), editingSlot));
-            searchGui = null;
+        if (this.searchGui != null) {
+            this.inventorySlots.getSlot(this.editingSlot).putStack(this.searchGui.getSearchStack());
+            NetworkHandler.sendToServer(new PacketSetLogisticsFilterStack(this.logistics, this.searchGui.getSearchStack(), this.editingSlot));
+            this.searchGui = null;
         }
-        if (fluidSearchGui != null && fluidSearchGui.getFilter() != null) {
-            FluidStack filter = new FluidStack(fluidSearchGui.getFilter(), 1000);
-            logistics.setFilter(editingSlot, filter);
-            NetworkHandler.sendToServer(new PacketSetLogisticsFluidFilterStack(logistics, filter, editingSlot));
-            fluidSearchGui = null;
+        if (this.fluidSearchGui != null && this.fluidSearchGui.getFilter() != null) {
+            FluidStack filter = new FluidStack(this.fluidSearchGui.getFilter(), 1000);
+            this.logistics.setFilter(this.editingSlot, filter);
+            NetworkHandler.sendToServer(new PacketSetLogisticsFluidFilterStack(this.logistics, filter, this.editingSlot));
+            this.fluidSearchGui = null;
         }
         String invisibleText = I18n.format("gui.logistic_frame.invisible");
-        addWidget(invisible = new GuiCheckBox(9, guiLeft + xSize - 15 - fontRenderer.getStringWidth(invisibleText), guiTop + 6, 0xFF404040, invisibleText));
-        invisible.setTooltip(Arrays.asList(WordUtils.wrap(I18n.format("gui.logistic_frame.invisible.tooltip"), 40).split(System.getProperty("line.separator"))));
+        this.addWidget(this.invisible = new GuiCheckBox(9, this.guiLeft + this.xSize - 15 - this.fontRenderer.getStringWidth(invisibleText), this.guiTop + 6, 0xFF404040, invisibleText));
+        this.invisible.setTooltip(Arrays.asList(WordUtils.wrap(I18n.format("gui.logistic_frame.invisible.tooltip"), 40).split(System.getProperty("line.separator"))));
 
-        addWidget(new WidgetLabel(guiLeft + 8, guiTop + 18, I18n.format(String.format("gui.%s.filters", SemiBlockManager.getKeyForSemiBlock(logistics)))));
-        addWidget(new WidgetLabel(guiLeft + 8, guiTop + 90, I18n.format("gui.logistic_frame.liquid")));
+        this.addWidget(new WidgetLabel(this.guiLeft + 8, this.guiTop + 18, I18n.format(String.format("gui.%s.filters", SemiBlockManager.getKeyForSemiBlock(this.logistics)))));
+        this.addWidget(new WidgetLabel(this.guiLeft + 8, this.guiTop + 90, I18n.format("gui.logistic_frame.liquid")));
         for (int i = 0; i < 9; i++) {
-            addWidget(new WidgetFluidStack(i, guiLeft + i * 18 + 8, guiTop + 101, logistics.getTankFilter(i)));
+            this.addWidget(new WidgetFluidStack(i, this.guiLeft + i * 18 + 8, this.guiTop + 101, this.logistics.getTankFilter(i)));
         }
 
-        addInfoTab(I18n.format("gui.tab.info." + SemiBlockManager.getKeyForSemiBlock(logistics)));
-        addFilterTab();
-        if (!((ContainerLogistics) inventorySlots).isItemContainer()) {
-            addFacingTab();
+        this.addInfoTab(I18n.format("gui.tab.info." + SemiBlockManager.getKeyForSemiBlock(this.logistics)));
+        this.addFilterTab();
+        if (!((ContainerLogistics) this.inventorySlots).isItemContainer()) {
+            this.addFacingTab();
         }
     }
 
     private void addFilterTab() {
-        GuiAnimatedStat filterTab = addAnimatedStat("gui.logistic_frame.filter_settings", new ItemStack(Blocks.WEB), 0xFF106010, false);
-        filterTab.addPadding(logistics.supportsBlacklisting() ? 6 : 4, 26);
-        fuzzyMeta = new GuiCheckBox(10, 5, 20, 0xFFFFFFFF, I18n.format("gui.logistic_frame.fuzzyMeta"));
-        filterTab.addWidget(fuzzyMeta);
-        fuzzyNBT = new GuiCheckBox(11, 5, 36, 0xFFFFFFFF, I18n.format("gui.logistic_frame.fuzzyNBT"));
-        filterTab.addWidget(fuzzyNBT);
-        if (logistics.supportsBlacklisting()) {
-            whitelist = new GuiCheckBox(12, 5, 52, 0xFFFFFFFF, I18n.format("gui.logistic_frame.whitelist"));
-            filterTab.addWidget(whitelist);
+        GuiAnimatedStat filterTab = this.addAnimatedStat("gui.logistic_frame.filter_settings", new ItemStack(Blocks.WEB), 0xFF106010, false);
+        filterTab.addPadding(this.logistics.supportsBlacklisting() ? 6 : 4, 26);
+        this.fuzzyMeta = new GuiCheckBox(10, 5, 20, 0xFFFFFFFF, I18n.format("gui.logistic_frame.fuzzyMeta"));
+        filterTab.addWidget(this.fuzzyMeta);
+        this.fuzzyNBT = new GuiCheckBox(11, 5, 36, 0xFFFFFFFF, I18n.format("gui.logistic_frame.fuzzyNBT"));
+        filterTab.addWidget(this.fuzzyNBT);
+        if (this.logistics.supportsBlacklisting()) {
+            this.whitelist = new GuiCheckBox(12, 5, 52, 0xFFFFFFFF, I18n.format("gui.logistic_frame.whitelist"));
+            filterTab.addWidget(this.whitelist);
         }
     }
 
     private void addFacingTab() {
-        facingTab = addAnimatedStat("", new ItemStack(Items.MAP), 0xFFC0C0C0, false);
-        facingTab.addPadding(8, 18);
-        facingTab.addWidget(facingButtons[0] = new GuiButtonSpecial(13, 15, 62, 20, 20,"D"));
-        facingTab.addWidget(facingButtons[1] = new GuiButtonSpecial(14, 15, 20, 20, 20,"U"));
-        facingTab.addWidget(facingButtons[2] = new GuiButtonSpecial(15, 36, 20, 20, 20,"N"));
-        facingTab.addWidget(facingButtons[3] = new GuiButtonSpecial(16, 36, 62, 20, 20,"S"));
-        facingTab.addWidget(facingButtons[4] = new GuiButtonSpecial(17, 15, 41, 20, 20,"W"));
-        facingTab.addWidget(facingButtons[5] = new GuiButtonSpecial(18, 57, 41, 20, 20,"E"));
-        GuiButtonSpecial info = new GuiButtonSpecial(19, 36, 41, 20, 20,"");
+        this.facingTab = this.addAnimatedStat("", new ItemStack(Items.MAP), 0xFFC0C0C0, false);
+        this.facingTab.addPadding(8, 18);
+        this.facingTab.addWidget(this.facingButtons[0] = new GuiButtonSpecial(13, 15, 62, 20, 20, "D"));
+        this.facingTab.addWidget(this.facingButtons[1] = new GuiButtonSpecial(14, 15, 20, 20, 20, "U"));
+        this.facingTab.addWidget(this.facingButtons[2] = new GuiButtonSpecial(15, 36, 20, 20, 20, "N"));
+        this.facingTab.addWidget(this.facingButtons[3] = new GuiButtonSpecial(16, 36, 62, 20, 20, "S"));
+        this.facingTab.addWidget(this.facingButtons[4] = new GuiButtonSpecial(17, 15, 41, 20, 20, "W"));
+        this.facingTab.addWidget(this.facingButtons[5] = new GuiButtonSpecial(18, 57, 41, 20, 20, "E"));
+        GuiButtonSpecial info = new GuiButtonSpecial(19, 36, 41, 20, 20, "");
         info.setVisible(false);
         info.setTooltipText(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.logistic_frame.facing.tooltip")));
         info.setRenderedIcon(Textures.GUI_INFO_LOCATION);
-        facingTab.addWidget(info);
+        this.facingTab.addWidget(info);
     }
 
     @Override
     protected int getBackgroundTint() {
         if (!ConfigHandler.client.logisticsGUITint) return super.getBackgroundTint();
 
-        int c = logistics.getColor();
+        int c = this.logistics.getColor();
         // desaturate; this is a background colour...
         float[] hsb = Color.RGBtoHSB((c & 0xFF0000) >> 16, (c & 0xFF00) >> 8, c & 0xFF, null);
         Color color = Color.getHSBColor(hsb[0], hsb[1] * 0.2f, hsb[2]);
@@ -131,16 +131,16 @@ public class GuiLogisticsBase<Logistics extends SemiBlockLogistics> extends GuiP
     @Override
     public void updateScreen() {
         super.updateScreen();
-        invisible.checked = logistics.isInvisible();
-        fuzzyMeta.checked = logistics.isFuzzyMeta();
-        fuzzyNBT.checked = logistics.isFuzzyNBT();
-        if (logistics.supportsBlacklisting())
-            whitelist.checked = logistics.isWhitelist();
-        String s = logistics.getSide() == null ? "-" : logistics.getSide().getName();
-        if (facingTab != null) {
-            facingTab.setTitle(I18n.format("gui.logistic_frame.facing") + ": " + s);
+        this.invisible.checked = this.logistics.isInvisible();
+        this.fuzzyMeta.checked = this.logistics.isFuzzyMeta();
+        this.fuzzyNBT.checked = this.logistics.isFuzzyNBT();
+        if (this.logistics.supportsBlacklisting())
+            this.whitelist.checked = this.logistics.isWhitelist();
+        String s = this.logistics.getSide() == null ? "-" : this.logistics.getSide().getName();
+        if (this.facingTab != null) {
+            this.facingTab.setTitle(I18n.format("gui.logistic_frame.facing") + ": " + s);
             for (EnumFacing face : EnumFacing.values()) {
-                facingButtons[face.getIndex()].enabled = face != logistics.getSide();
+                this.facingButtons[face.getIndex()].enabled = face != this.logistics.getSide();
             }
         }
     }
@@ -152,10 +152,10 @@ public class GuiLogisticsBase<Logistics extends SemiBlockLogistics> extends GuiP
             boolean leftClick = Mouse.isButtonDown(0);
             boolean middleClick = Mouse.isButtonDown(2);
             boolean shift = PneumaticCraftRepressurized.proxy.isSneakingInGui();
-            IFluidTank tank = logistics.getTankFilter(widget.getID());
+            IFluidTank tank = this.logistics.getTankFilter(widget.getID());
             if (tank.getFluidAmount() > 0) {
                 if (middleClick) {
-                    logistics.setFilter(widget.getID(), null);
+                    this.logistics.setFilter(widget.getID(), null);
                 } else if (leftClick) {
                     tank.drain(shift ? tank.getFluidAmount() / 2 : 1000, true);
                     if (tank.getFluidAmount() < 1000) {
@@ -164,11 +164,11 @@ public class GuiLogisticsBase<Logistics extends SemiBlockLogistics> extends GuiP
                 } else {
                     tank.fill(new FluidStack(tank.getFluid().getFluid(), shift ? tank.getFluidAmount() : 1000), true);
                 }
-                NetworkHandler.sendToServer(new PacketSetLogisticsFluidFilterStack(logistics, tank.getFluid(), widget.getID()));
+                NetworkHandler.sendToServer(new PacketSetLogisticsFluidFilterStack(this.logistics, tank.getFluid(), widget.getID()));
             } else {
-                fluidSearchGui = new GuiLogisticsLiquidFilter(this);
-                editingSlot = widget.getID();
-                mc.displayGuiScreen(fluidSearchGui);
+                this.fluidSearchGui = new GuiLogisticsLiquidFilter(this);
+                this.editingSlot = widget.getID();
+                this.mc.displayGuiScreen(this.fluidSearchGui);
             }
         }
     }
@@ -176,8 +176,8 @@ public class GuiLogisticsBase<Logistics extends SemiBlockLogistics> extends GuiP
     @Override
     protected void handleMouseClick(Slot slot, int slotId, int clickedButton, ClickType clickType) {
         if (slot instanceof SlotPhantom && Minecraft.getMinecraft().player.inventory.getItemStack().isEmpty() && !slot.getHasStack() && clickedButton == 1) {
-            editingSlot = slot.getSlotIndex();
-            Minecraft.getMinecraft().displayGuiScreen(searchGui = new GuiSearcher(Minecraft.getMinecraft().player));
+            this.editingSlot = slot.getSlotIndex();
+            Minecraft.getMinecraft().displayGuiScreen(this.searchGui = new GuiSearcher(Minecraft.getMinecraft().player));
         } else {
             super.handleMouseClick(slot, slotId, clickedButton, clickType);
         }

@@ -18,29 +18,29 @@ public class ArmorMessage {
     int lifeSpan;
 
     public ArmorMessage(String title, List<String> message, int duration, int backColor) {
-        lifeSpan = duration;
-        stat = new GuiAnimatedStat(null, title, GuiAnimatedStat.StatIcon.NONE, backColor, null, ArmorHUDLayout.INSTANCE.messageStat);
-        stat.setMinDimensionsAndReset(0, 0);
-        stat.setText(message);
+        this.lifeSpan = duration;
+        this.stat = new GuiAnimatedStat(null, title, GuiAnimatedStat.StatIcon.NONE, backColor, null, ArmorHUDLayout.INSTANCE.messageStat);
+        this.stat.setMinDimensionsAndReset(0, 0);
+        this.stat.setText(message);
         EntityPlayer player = FMLClientHandler.instance().getClient().player;
         player.world.playSound(player.posX, player.posY, player.posZ, Sounds.SCIFI, SoundCategory.PLAYERS, 0.1F, 1.0F, true);
     }
 
     void setDependingMessage(GuiAnimatedStat dependingStat) {
-        stat.setParentStat(dependingStat);
-        stat.setBaseY(2);
+        this.stat.setParentStat(dependingStat);
+        this.stat.setBaseY(2);
     }
 
     public GuiAnimatedStat getStat() {
-        return stat;
+        return this.stat;
     }
 
     void renderMessage(FontRenderer fontRenderer, float partialTicks) {
-        if (lifeSpan > 10) {
-            stat.openWindow();
+        if (this.lifeSpan > 10) {
+            this.stat.openWindow();
         } else {
-            stat.closeWindow();
+            this.stat.closeWindow();
         }
-        stat.render(-1, -1, partialTicks);
+        this.stat.render(-1, -1, partialTicks);
     }
 }

@@ -20,6 +20,7 @@ public interface IHacking {
 
     /**
      * Add a new hack to the entity's list of hacks.
+     *
      * @param hackable a hack
      */
     void addHackable(IHackableEntity hackable);

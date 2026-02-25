@@ -9,6 +9,7 @@ public class WidgetLabel extends WidgetBase {
     public enum Alignment {
         LEFT, CENTRE, RIGHT
     }
+
     public String text;
     private int color;
     private Alignment alignment = Alignment.LEFT;
@@ -35,28 +36,28 @@ public class WidgetLabel extends WidgetBase {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        if (visible) {
+        if (this.visible) {
             int drawX;
             FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-            switch (alignment) {
+            switch (this.alignment) {
                 case LEFT:
                 default:
-                    drawX = x;
+                    drawX = this.x;
                     break;
                 case CENTRE:
-                    drawX = x - fr.getStringWidth(text) / 2;
+                    drawX = this.x - fr.getStringWidth(this.text) / 2;
                     break;
                 case RIGHT:
-                    drawX = x - fr.getStringWidth(text);
+                    drawX = this.x - fr.getStringWidth(this.text);
                     break;
             }
-            fr.drawString(text, drawX, y, color);
+            fr.drawString(this.text, drawX, this.y, this.color);
         }
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, Minecraft.getMinecraft().fontRenderer.getStringWidth(text), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        return new Rectangle(this.x, this.y, Minecraft.getMinecraft().fontRenderer.getStringWidth(this.text), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
     }
 
 }

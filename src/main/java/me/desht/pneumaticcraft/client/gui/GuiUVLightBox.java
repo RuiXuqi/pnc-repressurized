@@ -21,14 +21,14 @@ public class GuiUVLightBox extends GuiPneumaticContainerBase<TileEntityUVLightBo
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
-        fontRenderer.drawString("PCB", 70, 25, 4210752);
+        this.fontRenderer.drawString("Upgr.", 28, 19, 4210752);
+        this.fontRenderer.drawString("PCB", 70, 25, 4210752);
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (te.getPrimaryInventory().getStackInSlot(TileEntityUVLightBox.PCB_SLOT).isEmpty()) {
+        if (this.te.getPrimaryInventory().getStackInSlot(TileEntityUVLightBox.PCB_SLOT).isEmpty()) {
             textList.add("\u00a77No PCB to expose");
             textList.addAll(PneumaticCraftUtils.convertStringIntoList("\u00a7Insert an Empty PCB", GuiConstants.MAX_CHAR_PER_LINE_LEFT));
         }

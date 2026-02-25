@@ -75,7 +75,7 @@ public class JEI implements IModPlugin {
 
         registry.addAdvancedGuiHandlers(new GuiTabHandler());
 
-        addIngredientInfoTabs(registry);
+        this.addIngredientInfoTabs(registry);
 
         IIngredientBlacklist blacklist = registry.getJeiHelpers().getIngredientBlacklist();
         blacklist.addIngredientToBlacklist(new ItemStack(Blockss.FAKE_ICE));
@@ -89,12 +89,12 @@ public class JEI implements IModPlugin {
             } else {
                 stacks.add(new ItemStack(item, 1, 0));
             }
-            stacks.forEach(s -> addStackInfo(registry, s));
+            stacks.forEach(s -> this.addStackInfo(registry, s));
         }
 
         for (Block block : Blockss.blocks) {
             ItemStack stack = new ItemStack(block, 1, 0);
-            addStackInfo(registry, stack);
+            this.addStackInfo(registry, stack);
         }
 
         for (Fluid fluid : Fluids.FLUIDS) {

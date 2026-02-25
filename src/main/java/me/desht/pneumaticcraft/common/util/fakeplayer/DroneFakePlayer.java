@@ -22,27 +22,27 @@ public class DroneFakePlayer extends FakePlayer {
 
     @Override
     public void addExperience(int amount) {
-        Vec3d pos = drone.getDronePos();
-        EntityXPOrb orb = new EntityXPOrb(drone.world(), pos.x, pos.y, pos.z, amount);
-        drone.world().spawnEntity(orb);
+        Vec3d pos = this.drone.getDronePos();
+        EntityXPOrb orb = new EntityXPOrb(this.drone.world(), pos.x, pos.y, pos.z, amount);
+        this.drone.world().spawnEntity(orb);
     }
 
     @Nonnull
     @Override
     public ItemStack getItemStackFromSlot(@Nonnull EntityEquipmentSlot slotIn) {
-        return slotIn == EntityEquipmentSlot.MAINHAND ? drone.getInv().getStackInSlot(0) : ItemStack.EMPTY;
+        return slotIn == EntityEquipmentSlot.MAINHAND ? this.drone.getInv().getStackInSlot(0) : ItemStack.EMPTY;
     }
 
     @Override
     public void setItemStackToSlot(EntityEquipmentSlot slotIn, ItemStack stack) {
         if (slotIn == EntityEquipmentSlot.MAINHAND) {
-            drone.getInv().setStackInSlot(0, stack);
+            this.drone.getInv().setStackInSlot(0, stack);
         }
     }
 
     @Override
     public boolean isSneaking() {
-        return sneaking;
+        return this.sneaking;
     }
 
     @Override
@@ -52,6 +52,6 @@ public class DroneFakePlayer extends FakePlayer {
 
     @Override
     public void onUpdate() {
-        ticksSinceLastSwing++;  // without this, drone's melee will be hopeless
+        this.ticksSinceLastSwing++;  // without this, drone's melee will be hopeless
     }
 }

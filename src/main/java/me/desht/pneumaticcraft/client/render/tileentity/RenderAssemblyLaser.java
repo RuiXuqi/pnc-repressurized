@@ -9,7 +9,7 @@ public class RenderAssemblyLaser extends AbstractModelRenderer<TileEntityAssembl
     private final ModelAssemblyLaser model;
 
     public RenderAssemblyLaser() {
-        model = new ModelAssemblyLaser();
+        this.model = new ModelAssemblyLaser();
     }
 
     @Override
@@ -24,9 +24,9 @@ public class RenderAssemblyLaser extends AbstractModelRenderer<TileEntityAssembl
             for (int i = 0; i < 5; i++) {
                 renderAngles[i] = te.oldAngles[i] + (te.angles[i] - te.oldAngles[i]) * partialTicks;
             }
-            model.renderModel(0.0625F, renderAngles, te.isLaserOn);
+            this.model.renderModel(0.0625F, renderAngles, te.isLaserOn);
         } else {
-            model.renderModel(0.0625F, new float[]{0, 0, 35, 55, 0}, false);
+            this.model.renderModel(0.0625F, new float[]{0, 0, 35, 55, 0}, false);
         }
     }
 }

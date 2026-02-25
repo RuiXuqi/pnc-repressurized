@@ -37,72 +37,72 @@ public class GuiRemoteEditor extends GuiRemote {
 
     public GuiRemoteEditor(ItemStack remote) {
         super(remote, Textures.GUI_REMOTE_EDITOR);
-        xSize = 283;
+        this.xSize = 283;
     }
 
     @Override
     public void initGui() {
-        if (pastebinGui != null && pastebinGui.outputTag != null) {
-            NBTTagCompound tag = remote.getTagCompound();
+        if (this.pastebinGui != null && this.pastebinGui.outputTag != null) {
+            NBTTagCompound tag = this.remote.getTagCompound();
             if (tag == null) {
                 tag = new NBTTagCompound();
-                remote.setTagCompound(tag);
+                this.remote.setTagCompound(tag);
             }
-            tag.setTag("actionWidgets", pastebinGui.outputTag.getTagList("main", 10));
-        } else if (remoteLayout != null) {
-            NBTTagCompound tag = remote.getTagCompound();
+            tag.setTag("actionWidgets", this.pastebinGui.outputTag.getTagList("main", 10));
+        } else if (this.remoteLayout != null) {
+            NBTTagCompound tag = this.remote.getTagCompound();
             if (tag == null) {
                 tag = new NBTTagCompound();
-                remote.setTagCompound(tag);
+                this.remote.setTagCompound(tag);
             }
-            tag.setTag("actionWidgets", remoteLayout.toNBT(oldGuiLeft, oldGuiTop).getTagList("actionWidgets", 10));
+            tag.setTag("actionWidgets", this.remoteLayout.toNBT(this.oldGuiLeft, this.oldGuiTop).getTagList("actionWidgets", 10));
         }
 
-        if (invSearchGui != null && invSearchGui.getSearchStack() != null && invSearchGui.getSearchStack().getItem() == Itemss.REMOTE) {
-            if (ItemRemote.hasSameSecuritySettings(remote, invSearchGui.getSearchStack())) {
-                remoteLayout = new RemoteLayout(invSearchGui.getSearchStack(), guiLeft, guiTop);
+        if (this.invSearchGui != null && this.invSearchGui.getSearchStack() != null && this.invSearchGui.getSearchStack().getItem() == Itemss.REMOTE) {
+            if (ItemRemote.hasSameSecuritySettings(this.remote, this.invSearchGui.getSearchStack())) {
+                this.remoteLayout = new RemoteLayout(this.invSearchGui.getSearchStack(), this.guiLeft, this.guiTop);
             } else {
-                mc.player.sendStatusMessage(new TextComponentString("gui.remote.differentSecuritySettings"), false);
+                this.mc.player.sendStatusMessage(new TextComponentString("gui.remote.differentSecuritySettings"), false);
             }
         }
         super.initGui();
 
-        oldGuiLeft = guiLeft;
-        oldGuiTop = guiTop;
-        visibleSpawnWidgets.clear();
-        visibleSpawnWidgets.add(new ActionWidgetCheckBox(new GuiCheckBox(-1, guiLeft + 200, guiTop + 20, 0xFF404040, I18n.format("remote.checkbox.name"))));
-        visibleSpawnWidgets.add(new ActionWidgetLabel(new WidgetLabelVariable(guiLeft + 200, guiTop + 35, I18n.format("remote.label.name"))));
-        visibleSpawnWidgets.add(new ActionWidgetButton(new GuiButtonSpecial(-1, guiLeft + 200, guiTop + 50, 50, 20, I18n.format("remote.button.name"))));
-        visibleSpawnWidgets.add(new ActionWidgetDropdown(new WidgetComboBox(fontRenderer, guiLeft + 200, guiTop + 80, 70, fontRenderer.FONT_HEIGHT + 1).setFixedOptions()));
+        this.oldGuiLeft = this.guiLeft;
+        this.oldGuiTop = this.guiTop;
+        this.visibleSpawnWidgets.clear();
+        this.visibleSpawnWidgets.add(new ActionWidgetCheckBox(new GuiCheckBox(-1, this.guiLeft + 200, this.guiTop + 20, 0xFF404040, I18n.format("remote.checkbox.name"))));
+        this.visibleSpawnWidgets.add(new ActionWidgetLabel(new WidgetLabelVariable(this.guiLeft + 200, this.guiTop + 35, I18n.format("remote.label.name"))));
+        this.visibleSpawnWidgets.add(new ActionWidgetButton(new GuiButtonSpecial(-1, this.guiLeft + 200, this.guiTop + 50, 50, 20, I18n.format("remote.button.name"))));
+        this.visibleSpawnWidgets.add(new ActionWidgetDropdown(new WidgetComboBox(this.fontRenderer, this.guiLeft + 200, this.guiTop + 80, 70, this.fontRenderer.FONT_HEIGHT + 1).setFixedOptions()));
 
-        for (ActionWidget actionWidget : visibleSpawnWidgets) {
-            addWidget(actionWidget.getWidget());
+        for (ActionWidget actionWidget : this.visibleSpawnWidgets) {
+            this.addWidget(actionWidget.getWidget());
         }
 
-        GuiButtonSpecial importRemoteButton = new GuiButtonSpecial(0, guiLeft - 24, guiTop, 20, 20, "");
+        GuiButtonSpecial importRemoteButton = new GuiButtonSpecial(0, this.guiLeft - 24, this.guiTop, 20, 20, "");
         importRemoteButton.setTooltipText(I18n.format("gui.remote.button.importRemoteButton"));
         importRemoteButton.setRenderStacks(new ItemStack(Itemss.REMOTE));
-        buttonList.add(importRemoteButton);
+        this.buttonList.add(importRemoteButton);
 
-        GuiButtonSpecial pastebinButton = new GuiButtonSpecial(1, guiLeft - 24, guiTop + 22, 20, 20, "");
+        GuiButtonSpecial pastebinButton = new GuiButtonSpecial(1, this.guiLeft - 24, this.guiTop + 22, 20, 20, "");
         pastebinButton.setTooltipText(I18n.format("gui.remote.button.pastebinButton"));
         pastebinButton.setRenderedIcon(Textures.GUI_PASTEBIN_ICON_LOCATION);
-        buttonList.add(pastebinButton);
+        this.buttonList.add(pastebinButton);
 
-        GuiCheckBox snapCheck = new GuiCheckBox(1000, guiLeft + 200, guiTop + 100, 0xFF404040, "Snap to Grid");
+        GuiCheckBox snapCheck = new GuiCheckBox(1000, this.guiLeft + 200, this.guiTop + 100, 0xFF404040, "Snap to Grid");
         snapCheck.checked = ConfigHandler.client.guiRemoteGridSnap;
-        addWidget(snapCheck);
+        this.addWidget(snapCheck);
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 0) {
-            invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
-            FMLClientHandler.instance().showGuiScreen(invSearchGui);
+            this.invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
+            FMLClientHandler.instance().showGuiScreen(this.invSearchGui);
         } else if (button.id == 1) {
             NBTTagCompound mainTag = new NBTTagCompound();
-            mainTag.setTag("main", remote.getTagCompound() != null ? remote.getTagCompound().getTagList("actionWidgets", 10) : new NBTTagCompound());
-            FMLClientHandler.instance().showGuiScreen(pastebinGui = new GuiPastebin(this, mainTag));
+            mainTag.setTag("main", this.remote.getTagCompound() != null ? this.remote.getTagCompound().getTagList("actionWidgets", 10) : new NBTTagCompound());
+            FMLClientHandler.instance().showGuiScreen(this.pastebinGui = new GuiPastebin(this, mainTag));
         }
     }
 
@@ -113,89 +113,89 @@ public class GuiRemoteEditor extends GuiRemote {
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int x, int y) {
-        drawDefaultBackground();
-        bindGuiTexture();
-        Gui.drawModalRectWithCustomSizedTexture(guiLeft, guiTop, 0, 0, xSize, ySize, 320, 256);
+        this.drawDefaultBackground();
+        this.bindGuiTexture();
+        Gui.drawModalRectWithCustomSizedTexture(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize, 320, 256);
         super.drawGuiContainerBackgroundLayer(partialTicks, x, y);
 
-        x += guiLeft;
-        y += guiTop;
+        x += this.guiLeft;
+        y += this.guiTop;
 
         boolean isLeftClicking = Mouse.isButtonDown(0);
         boolean isMiddleClicking = Mouse.isButtonDown(2);
 
-        if (draggingWidget != null) {
-            int x1 = x - dragMouseStartX + dragWidgetStartX - guiLeft;
-            int y1 = y - dragMouseStartY + dragWidgetStartY - guiTop;
+        if (this.draggingWidget != null) {
+            int x1 = x - this.dragMouseStartX + this.dragWidgetStartX - this.guiLeft;
+            int y1 = y - this.dragMouseStartY + this.dragWidgetStartY - this.guiTop;
             if (ConfigHandler.client.guiRemoteGridSnap) {
                 x1 = (x1 / 4) * 4;
                 y1 = (y1 / 4) * 4;
             }
-            draggingWidget.setWidgetPos(x1, y1);
+            this.draggingWidget.setWidgetPos(x1, y1);
         }
 
-        if (isLeftClicking && !wasClicking) {
-            for (ActionWidget widget : visibleSpawnWidgets) {
+        if (isLeftClicking && !this.wasClicking) {
+            for (ActionWidget widget : this.visibleSpawnWidgets) {
                 Rectangle bounds = widget.getWidget().getBounds();
-                if (x >= bounds.x + guiLeft && y >= bounds.y + guiTop && x <= bounds.x + guiLeft + bounds.width && y <= bounds.y + guiTop + bounds.height) {
-                    draggingWidget = widget.copy();
-                    remoteLayout.addWidget(draggingWidget);
-                    addWidget(draggingWidget.getWidget());
-                    dragMouseStartX = x - guiLeft;
-                    dragMouseStartY = y - guiTop;
-                    dragWidgetStartX = bounds.x;
-                    dragWidgetStartY = bounds.y;
+                if (x >= bounds.x + this.guiLeft && y >= bounds.y + this.guiTop && x <= bounds.x + this.guiLeft + bounds.width && y <= bounds.y + this.guiTop + bounds.height) {
+                    this.draggingWidget = widget.copy();
+                    this.remoteLayout.addWidget(this.draggingWidget);
+                    this.addWidget(this.draggingWidget.getWidget());
+                    this.dragMouseStartX = x - this.guiLeft;
+                    this.dragMouseStartY = y - this.guiTop;
+                    this.dragWidgetStartX = bounds.x;
+                    this.dragWidgetStartY = bounds.y;
                     break;
                 }
             }
-            if (draggingWidget == null) {
-                for (ActionWidget widget : remoteLayout.getActionWidgets()) {
+            if (this.draggingWidget == null) {
+                for (ActionWidget widget : this.remoteLayout.getActionWidgets()) {
                     Rectangle bounds = widget.getWidget().getBounds();
-                    if (x >= bounds.x + guiLeft && y >= bounds.y + guiTop && x <= bounds.x + guiLeft + bounds.width && y <= bounds.y + guiTop + bounds.height) {
-                        draggingWidget = widget;
-                        dragMouseStartX = x - guiLeft;
-                        dragMouseStartY = y - guiTop;
-                        dragWidgetStartX = bounds.x;
-                        dragWidgetStartY = bounds.y;
+                    if (x >= bounds.x + this.guiLeft && y >= bounds.y + this.guiTop && x <= bounds.x + this.guiLeft + bounds.width && y <= bounds.y + this.guiTop + bounds.height) {
+                        this.draggingWidget = widget;
+                        this.dragMouseStartX = x - this.guiLeft;
+                        this.dragMouseStartY = y - this.guiTop;
+                        this.dragWidgetStartX = bounds.x;
+                        this.dragWidgetStartY = bounds.y;
                         break;
                     }
                 }
             }
-        } else if (isMiddleClicking && !wasClicking) {
-            for (ActionWidget widget : remoteLayout.getActionWidgets()) {
+        } else if (isMiddleClicking && !this.wasClicking) {
+            for (ActionWidget widget : this.remoteLayout.getActionWidgets()) {
                 Rectangle bounds = widget.getWidget().getBounds();
-                if (x >= bounds.x + guiLeft && y >= bounds.y + guiTop && x <= bounds.x + guiLeft + bounds.width && y <= bounds.y + guiTop + bounds.height) {
-                    draggingWidget = widget.copy();
-                    remoteLayout.addWidget(draggingWidget);
-                    addWidget(draggingWidget.getWidget());
-                    dragMouseStartX = 0;
-                    dragMouseStartY = 0;
-                    dragWidgetStartX = bounds.x - (x - guiLeft);
-                    dragWidgetStartY = bounds.y - (y - guiTop);
+                if (x >= bounds.x + this.guiLeft && y >= bounds.y + this.guiTop && x <= bounds.x + this.guiLeft + bounds.width && y <= bounds.y + this.guiTop + bounds.height) {
+                    this.draggingWidget = widget.copy();
+                    this.remoteLayout.addWidget(this.draggingWidget);
+                    this.addWidget(this.draggingWidget.getWidget());
+                    this.dragMouseStartX = 0;
+                    this.dragMouseStartY = 0;
+                    this.dragWidgetStartX = bounds.x - (x - this.guiLeft);
+                    this.dragWidgetStartY = bounds.y - (y - this.guiTop);
                     break;
                 }
             }
         }
 
-        if (!isLeftClicking && !isMiddleClicking && draggingWidget != null) {
-            if (isOutsideProgrammingArea(draggingWidget)) {
-                remoteLayout.getActionWidgets().remove(draggingWidget);
-                removeWidget(draggingWidget.getWidget());
+        if (!isLeftClicking && !isMiddleClicking && this.draggingWidget != null) {
+            if (this.isOutsideProgrammingArea(this.draggingWidget)) {
+                this.remoteLayout.getActionWidgets().remove(this.draggingWidget);
+                this.removeWidget(this.draggingWidget.getWidget());
             }
-            draggingWidget = null;
+            this.draggingWidget = null;
         }
-        wasClicking = isLeftClicking || isMiddleClicking;
+        this.wasClicking = isLeftClicking || isMiddleClicking;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Widget Tray", 194, 8, 0x404040);
+        this.fontRenderer.drawString("Widget Tray", 194, 8, 0x404040);
     }
 
     private boolean isOutsideProgrammingArea(ActionWidget widget) {
         Rectangle bounds = widget.getWidget().getBounds();
-        return !new Rectangle(guiLeft, guiTop, 183, ySize).contains(bounds);
+        return !new Rectangle(this.guiLeft, this.guiTop, 183, this.ySize).contains(bounds);
     }
 
     @Override
@@ -203,12 +203,12 @@ public class GuiRemoteEditor extends GuiRemote {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
         if (mouseButton == 1) {
-            for (ActionWidget widget : remoteLayout.getActionWidgets()) {
-                if (!isOutsideProgrammingArea(widget)) {
+            for (ActionWidget widget : this.remoteLayout.getActionWidgets()) {
+                if (!this.isOutsideProgrammingArea(widget)) {
                     Rectangle bounds = widget.getWidget().getBounds();
                     if (mouseX >= bounds.x && mouseY >= bounds.y && mouseX <= bounds.x + bounds.width && mouseY <= bounds.y + bounds.height) {
                         GuiScreen screen = widget.getGui(this);
-                        if (screen != null) mc.displayGuiScreen(screen);
+                        if (screen != null) this.mc.displayGuiScreen(screen);
                     }
                 }
             }
@@ -237,6 +237,6 @@ public class GuiRemoteEditor extends GuiRemote {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        NetworkHandler.sendToServer(new PacketUpdateRemoteLayout(remoteLayout.toNBT(guiLeft, guiTop)));
+        NetworkHandler.sendToServer(new PacketUpdateRemoteLayout(this.remoteLayout.toNBT(this.guiLeft, this.guiTop)));
     }
 }

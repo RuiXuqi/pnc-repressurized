@@ -21,8 +21,8 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
 
     @Override
     public int getEmittingRedstone() {
-        if (getConnectedParameters()[0] != null) {
-            return NumberUtils.toInt(((ProgWidgetString) getConnectedParameters()[0]).string);
+        if (this.getConnectedParameters()[0] != null) {
+            return NumberUtils.toInt(((ProgWidgetString) this.getConnectedParameters()[0]).string);
         } else {
             return 0;
         }
@@ -30,12 +30,12 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
 
     @Override
     public void setSides(boolean[] sides) {
-        accessingSides = sides;
+        this.accessingSides = sides;
     }
 
     @Override
     public boolean[] getSides() {
-        return accessingSides;
+        return this.accessingSides;
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
         super.addErrors(curInfo, widgets);
 
         boolean sideActive = false;
-        for (boolean bool : accessingSides) {
+        for (boolean bool : this.accessingSides) {
             sideActive |= bool;
         }
         if (!sideActive) curInfo.add("gui.progWidget.general.error.noSideActive");
@@ -53,14 +53,14 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
         curTooltip.add("Affecting sides:");
-        curTooltip.add(getExtraStringInfo());
+        curTooltip.add(this.getExtraStringInfo());
     }
 
     @Override
     public String getExtraStringInfo() {
         boolean allSides = true;
         boolean noSides = true;
-        for (boolean bool : accessingSides) {
+        for (boolean bool : this.accessingSides) {
             if (bool) {
                 noSides = false;
             } else {
@@ -74,7 +74,7 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
         } else {
             StringBuilder tipBuilder = new StringBuilder();
             for (int i = 0; i < 6; i++) {
-                if (accessingSides[i]) {
+                if (this.accessingSides[i]) {
                     switch (EnumFacing.byIndex(i)) {
                         case UP:
                             tipBuilder.append("top, ");
@@ -106,7 +106,7 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         for (int i = 0; i < 6; i++) {
-            tag.setBoolean(EnumFacing.byIndex(i).name(), accessingSides[i]);
+            tag.setBoolean(EnumFacing.byIndex(i).name(), this.accessingSides[i]);
         }
     }
 
@@ -114,7 +114,7 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         for (int i = 0; i < 6; i++) {
-            accessingSides[i] = tag.getBoolean(EnumFacing.byIndex(i).name());
+            this.accessingSides[i] = tag.getBoolean(EnumFacing.byIndex(i).name());
         }
     }
 
@@ -181,10 +181,10 @@ public class ProgWidgetEmitRedstone extends ProgWidget implements IRedstoneEmiss
 
         @Override
         public boolean shouldExecute() {
-            boolean[] sides = ((ISidedWidget) widget).getSides();
+            boolean[] sides = ((ISidedWidget) this.widget).getSides();
             for (int i = 0; i < 6; i++) {
                 if (sides[i]) {
-                    drone.setEmittingRedstone(EnumFacing.byIndex(i), ((IRedstoneEmissionWidget) widget).getEmittingRedstone());
+                    this.drone.setEmittingRedstone(EnumFacing.byIndex(i), ((IRedstoneEmissionWidget) this.widget).getEmittingRedstone());
                 }
             }
             return false;

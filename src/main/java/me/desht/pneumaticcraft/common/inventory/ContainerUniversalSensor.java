@@ -8,9 +8,9 @@ public class ContainerUniversalSensor extends ContainerPneumaticBase<TileEntityU
     public ContainerUniversalSensor(InventoryPlayer inventoryPlayer, TileEntityUniversalSensor te) {
         super(te);
 
-        addUpgradeSlots(19, 108);
+        this.addUpgradeSlots(19, 108);
 
-        addPlayerSlots(inventoryPlayer, 157);
+        this.addPlayerSlots(inventoryPlayer, 157);
     }
 
 }

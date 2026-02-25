@@ -34,27 +34,27 @@ public class ResourceDrawable implements IDrawable {
 
     @Override
     public int getWidth() {
-        return drawWidth;
+        return this.drawWidth;
     }
 
     @Override
     public int getHeight() {
-        return drawHeight;
+        return this.drawHeight;
     }
 
     public ResourceLocation getResource() {
-        return resource;
+        return this.resource;
     }
 
     @Override
     public void draw(Minecraft minecraft) {
-        draw(minecraft, 0, 0);
+        this.draw(minecraft, 0, 0);
     }
 
     @Override
     public void draw(Minecraft minecraft, int xOffset, int yOffset) {
-        minecraft.getTextureManager().bindTexture(resource);
-        Gui.drawModalRectWithCustomSizedTexture(x + xOffset, y + yOffset, u, v, drawWidth, drawHeight, texWidth, texHeight);
+        minecraft.getTextureManager().bindTexture(this.resource);
+        Gui.drawModalRectWithCustomSizedTexture(this.x + xOffset, this.y + yOffset, this.u, this.v, this.drawWidth, this.drawHeight, this.texWidth, this.texHeight);
     }
 
 }

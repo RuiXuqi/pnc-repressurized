@@ -11,39 +11,39 @@ public abstract class DroneAIImExBase extends DroneAIBlockInteraction implements
 
     protected DroneAIImExBase(IDroneBase drone, ProgWidgetAreaItemBase widget) {
         super(drone, widget);
-        transportCount = ((ICountWidget) widget).getCount();
+        this.transportCount = ((ICountWidget) widget).getCount();
     }
 
     @Override
     public boolean shouldExecute() {
-        boolean countReached = transportCount <= 0;
-        transportCount = ((ICountWidget) widget).getCount();
-        return !(countReached && useCount()) && super.shouldExecute();
+        boolean countReached = this.transportCount <= 0;
+        this.transportCount = ((ICountWidget) this.widget).getCount();
+        return !(countReached && this.useCount()) && super.shouldExecute();
     }
 
     @Override
     public void decreaseCount(int count) {
-        transportCount -= count;
+        this.transportCount -= count;
     }
 
     @Override
     public int getRemainingCount() {
-        return transportCount;
+        return this.transportCount;
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return !useCount() || transportCount > 0;
+        return !this.useCount() || this.transportCount > 0;
     }
 
     @Override
     public boolean[] getSides() {
-        return ((ISidedWidget) widget).getSides();
+        return ((ISidedWidget) this.widget).getSides();
     }
 
     @Override
     public boolean useCount() {
-        return ((ICountWidget) widget).useCount();
+        return ((ICountWidget) this.widget).useCount();
     }
 
 }

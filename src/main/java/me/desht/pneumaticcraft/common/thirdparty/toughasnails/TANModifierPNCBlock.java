@@ -113,7 +113,7 @@ public class TANModifierPNCBlock implements ITemperatureModifier {
         private final Map<Integer, Map<BlockPos, TimeAndModifier>> cache = new HashMap<>();
 
         private void prune(World world) {
-            Map<BlockPos, TimeAndModifier> posMap = cache.get(world.provider.getDimension());
+            Map<BlockPos, TimeAndModifier> posMap = this.cache.get(world.provider.getDimension());
             if (posMap != null) {
                 long now = world.getTotalWorldTime();
                 posMap.entrySet().removeIf(entry -> now - entry.getValue().ticks > ConfigHandler.integration.tanRefreshInterval);
@@ -121,7 +121,7 @@ public class TANModifierPNCBlock implements ITemperatureModifier {
         }
 
         private float getModifier(World world, BlockPos pos) {
-            Map<BlockPos, TimeAndModifier> posMap = cache.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
+            Map<BlockPos, TimeAndModifier> posMap = this.cache.computeIfAbsent(world.provider.getDimension(), k -> new HashMap<>());
             TimeAndModifier tm = posMap.get(pos);
 
             if (tm == null) {

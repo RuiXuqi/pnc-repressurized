@@ -46,7 +46,7 @@ public class PacketUpdateMicromissileSettings extends AbstractPacket<PacketUpdat
     public void handleServerSide(PacketUpdateMicromissileSettings message, EntityPlayer player) {
         ItemStack stack = ItemMicromissiles.getHeldMicroMissile(player);
         if (!stack.isEmpty()) {
-            applySettings(message, player, stack);
+            this.applySettings(message, player, stack);
         } else {
             Log.warning("Received PacketUpdateMicromissileSettings but player does not hold a Micromissile? " + player.getName());
         }
@@ -79,24 +79,24 @@ public class PacketUpdateMicromissileSettings extends AbstractPacket<PacketUpdat
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        topSpeed = buf.readFloat();
-        accel = buf.readFloat();
-        damage = buf.readFloat();
-        point = new Point(buf.readInt(), buf.readInt());
-        entityFilter = ByteBufUtils.readUTF8String(buf);
-        fireMode = FireMode.fromString(ByteBufUtils.readUTF8String(buf));
-        saveDefault = buf.readBoolean();
+        this.topSpeed = buf.readFloat();
+        this.accel = buf.readFloat();
+        this.damage = buf.readFloat();
+        this.point = new Point(buf.readInt(), buf.readInt());
+        this.entityFilter = ByteBufUtils.readUTF8String(buf);
+        this.fireMode = FireMode.fromString(ByteBufUtils.readUTF8String(buf));
+        this.saveDefault = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeFloat(topSpeed);
-        buf.writeFloat(accel);
-        buf.writeFloat(damage);
-        buf.writeInt(point.x);
-        buf.writeInt(point.y);
-        ByteBufUtils.writeUTF8String(buf, entityFilter);
-        ByteBufUtils.writeUTF8String(buf, fireMode.toString());
-        buf.writeBoolean(saveDefault);
+        buf.writeFloat(this.topSpeed);
+        buf.writeFloat(this.accel);
+        buf.writeFloat(this.damage);
+        buf.writeInt(this.point.x);
+        buf.writeInt(this.point.y);
+        ByteBufUtils.writeUTF8String(buf, this.entityFilter);
+        ByteBufUtils.writeUTF8String(buf, this.fireMode.toString());
+        buf.writeBoolean(this.saveDefault);
     }
 }

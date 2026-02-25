@@ -98,9 +98,9 @@ public class ClientEventHandler {
     @SubscribeEvent
     public void onItemTooltip(ItemTooltipEvent event) {
         if (event.getItemStack().getItem() instanceof IProgrammable) {
-            handleProgrammableTooltip(event);
+            this.handleProgrammableTooltip(event);
         } else if (event.getItemStack().getItem() instanceof ItemBucket || event.getItemStack().getItem() instanceof UniversalBucket) {
-            handleFluidContainerTooltip(event);
+            this.handleFluidContainerTooltip(event);
         }
     }
 
@@ -117,7 +117,7 @@ public class ClientEventHandler {
                 GuiScreen curScreen = Minecraft.getMinecraft().currentScreen;
                 if (curScreen instanceof IGuiDrone) {
                     if (!((IGuiDrone) curScreen).getDrone().isProgramApplicable(widget)) {
-                        prefix = TextFormatting.RED + TextFormatting.ITALIC.toString() + "";
+                        prefix = TextFormatting.RED + TextFormatting.ITALIC.toString();
                         hasInvalidPrograms = true;
                     }
                 }
@@ -129,7 +129,7 @@ public class ClientEventHandler {
             Collections.sort(addedEntries);
             event.getToolTip().addAll(addedEntries);
             if (PneumaticCraftRepressurized.proxy.isSneakingInGui() && !widgets.isEmpty()) {
-                Map<Integer,Integer> widgetColorMap = TileEntityProgrammer.getPuzzleSummary(widgets);
+                Map<Integer, Integer> widgetColorMap = TileEntityProgrammer.getPuzzleSummary(widgets);
                 event.getToolTip().add(TextFormatting.WHITE + I18n.format("gui.tooltip.programmable.requiredPieces"));
                 for (int color : widgetColorMap.keySet()) {
                     ItemStack stack = ItemProgrammingPuzzle.getStackForColor(color);
@@ -178,12 +178,12 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onLivingRender(RenderLivingEvent.Pre event) {
-        setRenderHead(event.getEntity(), false);
+        this.setRenderHead(event.getEntity(), false);
     }
 
     @SubscribeEvent
     public void onLivingRender(RenderLivingEvent.Post event) {
-        setRenderHead(event.getEntity(), true);
+        this.setRenderHead(event.getEntity(), true);
     }
 
     private void setRenderHead(EntityLivingBase entity, boolean setRender) {
@@ -226,18 +226,18 @@ public class ClientEventHandler {
             EntityPlayer player = Minecraft.getMinecraft().player;
             Minecraft mc = Minecraft.getMinecraft();
             ItemStack stack = player.getHeldItemMainhand();
-            if (stack.getItem() instanceof ItemMinigun){
+            if (stack.getItem() instanceof ItemMinigun) {
                 Minigun minigun = ((ItemMinigun) stack.getItem()).getMinigun(stack, player);
                 int w = event.getResolution().getScaledWidth();
                 int h = event.getResolution().getScaledHeight();
 
                 if (minigun.isMinigunActivated() && minigun.getMinigunSpeed() == Minigun.MAX_GUN_SPEED) {
-                     drawBulletTraces2D(minigun.getAmmoColor() | 0x40000000, w, h);
+                    this.drawBulletTraces2D(minigun.getAmmoColor() | 0x40000000, w, h);
                 }
 
                 ItemStack ammo = minigun.getAmmoStack();
                 if (!ammo.isEmpty()) {
-                    GuiUtils.drawItemStack(ammo,w / 2 + 16, h / 2 - 7);
+                    GuiUtils.drawItemStack(ammo, w / 2 + 16, h / 2 - 7);
                     int remaining = ammo.getMaxDamage() - ammo.getItemDamage();
                     GlStateManager.pushMatrix();
                     GlStateManager.translate(w / 2f + 32, h / 2f - 1, 0);
@@ -316,14 +316,14 @@ public class ClientEventHandler {
                     Vec3d directionVec = player.getLookVec().normalize();
                     Vec3d vec = new Vec3d(directionVec.x, 0, directionVec.z).normalize();
                     vec.rotateYaw((float) Math.toRadians(-15 + (player.rotationYawHead - player.renderYawOffset)));
-                    minigunFire.startX = vec.x * MINIGUN_RADIUS;
-                    minigunFire.startY = vec.y * MINIGUN_RADIUS - player.getYOffset();
-                    minigunFire.startZ = vec.z * MINIGUN_RADIUS;
+                    this.minigunFire.startX = vec.x * MINIGUN_RADIUS;
+                    this.minigunFire.startY = vec.y * MINIGUN_RADIUS - player.getYOffset();
+                    this.minigunFire.startZ = vec.z * MINIGUN_RADIUS;
                     for (int i = 0; i < 5; i++) {
-                        minigunFire.endX = directionVec.x * 20 + player.getRNG().nextDouble() - 0.5;
-                        minigunFire.endY = directionVec.y * 20 + player.getEyeHeight() + player.getRNG().nextDouble() - 0.5;
-                        minigunFire.endZ = directionVec.z * 20 + player.getRNG().nextDouble() - 0.5;
-                        minigunFire.render();
+                        this.minigunFire.endX = directionVec.x * 20 + player.getRNG().nextDouble() - 0.5;
+                        this.minigunFire.endY = directionVec.y * 20 + player.getEyeHeight() + player.getRNG().nextDouble() - 0.5;
+                        this.minigunFire.endZ = directionVec.z * 20 + player.getRNG().nextDouble() - 0.5;
+                        this.minigunFire.render();
                     }
                     GlStateManager.color(1, 1, 1, 1);
                     GlStateManager.enableTexture2D();
@@ -352,9 +352,9 @@ public class ClientEventHandler {
         // set up camo models for camouflageable blocks
         for (Block block : Blockss.blocks) {
             if (block instanceof BlockPneumaticCraftCamo) {
-                Map<IBlockState,ModelResourceLocation> map
+                Map<IBlockState, ModelResourceLocation> map
                         = event.getModelManager().getBlockModelShapes().getBlockStateMapper().getVariants(block);
-                for (Map.Entry<IBlockState,ModelResourceLocation> entry : map.entrySet()) {
+                for (Map.Entry<IBlockState, ModelResourceLocation> entry : map.entrySet()) {
                     IBakedModel model = event.getModelRegistry().getObject(entry.getValue());
                     if (model != null) {
                         CamoModel customModel = new CamoModel(model);
@@ -392,17 +392,17 @@ public class ClientEventHandler {
                 } else {
                     targetRoll = 0F;
                 }
-                currentScreenRoll += (targetRoll - currentScreenRoll) / div;
-                event.setRoll(currentScreenRoll);
+                this.currentScreenRoll += (targetRoll - this.currentScreenRoll) / div;
+                event.setRoll(this.currentScreenRoll);
             } else {
-                currentScreenRoll = 0F;
+                this.currentScreenRoll = 0F;
             }
         }
     }
 
     @SubscribeEvent
     public void registerModels(ModelRegistryEvent event) {
-        registerFluidModels();
+        this.registerFluidModels();
 
         for (Block block : Blockss.blocks) {
             Item item = Item.getItemFromBlock(block);
@@ -412,7 +412,7 @@ public class ClientEventHandler {
         Item assemblyIO = Item.getItemFromBlock(Blockss.ASSEMBLY_IO_UNIT);
         ModelLoader.setCustomModelResourceLocation(assemblyIO, 1, new ModelResourceLocation(RL("assembly_io_unit_import"), "inventory"));
 
-        for (Item item: Itemss.items) {
+        for (Item item : Itemss.items) {
             if (item instanceof ItemPneumaticSubtyped) {
                 ModelBakery.registerItemVariants(item);
                 ItemPneumaticSubtyped subtyped = (ItemPneumaticSubtyped) item;
@@ -496,9 +496,9 @@ public class ClientEventHandler {
 
         double dot = new Vec3d(0, 1, 0).dotProduct(forward);
         if (Math.abs(dot + 1) < 0.000001) {
-            return new Quaternion(0F, 1F, 0F, (float)Math.PI);
+            return new Quaternion(0F, 1F, 0F, (float) Math.PI);
         }
-        if (Math.abs (dot - 1) < 0.000001) {
+        if (Math.abs(dot - 1) < 0.000001) {
             return new Quaternion(); //identity
         }
 
@@ -547,15 +547,15 @@ public class ClientEventHandler {
             int width = 0;
             FontRenderer fr = event.getFontRenderer();
             int y = event.getY() + fr.FONT_HEIGHT * 2 + 5;
-            width = Math.max(width, renderString(fr, (I18n.format("gui.micromissile.topSpeed")), event.getX(), y));
-            width = Math.max(width, renderString(fr, (I18n.format("gui.micromissile.turnSpeed")), event.getX(), y + fr.FONT_HEIGHT));
-            width = Math.max(width, renderString(fr, (I18n.format("gui.micromissile.damage")), event.getX(), y + fr.FONT_HEIGHT * 2));
+            width = Math.max(width, this.renderString(fr, (I18n.format("gui.micromissile.topSpeed")), event.getX(), y));
+            width = Math.max(width, this.renderString(fr, (I18n.format("gui.micromissile.turnSpeed")), event.getX(), y + fr.FONT_HEIGHT));
+            width = Math.max(width, this.renderString(fr, (I18n.format("gui.micromissile.damage")), event.getX(), y + fr.FONT_HEIGHT * 2));
             int barX = event.getX() + width + 2;
             int barW = event.getWidth() - width - 10;
             GlStateManager.disableTexture2D();
             GlStateManager.glLineWidth(10);
             GL11.glEnable(GL11.GL_LINE_STIPPLE);
-            GL11.glLineStipple(1, (short)0xFEFE);
+            GL11.glLineStipple(1, (short) 0xFEFE);
             RenderUtils.glColorHex(0x00C000, 255);
             GlStateManager.glBegin(GL11.GL_LINES);
             GL11.glVertex2i(barX, y + 4);
@@ -644,9 +644,8 @@ public class ClientEventHandler {
         }
     }
 
-    public static Pair<Integer,Integer> getScaledScreenSize() {
+    public static Pair<Integer, Integer> getScaledScreenSize() {
         //noinspection SuspiciousNameCombination
         return Pair.of(lastWidth, lastHeight);
     }
 }
-

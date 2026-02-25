@@ -24,12 +24,12 @@ public class SemiBlockActiveProvider extends SemiBlockLogistics implements ISpec
 
     @Override
     public boolean canProvide(ItemStack providingStack) {
-        return passesFilter(providingStack);
+        return this.passesFilter(providingStack);
     }
 
     @Override
     public boolean canProvide(FluidStack providingStack) {
-        return passesFilter(providingStack.getFluid());
+        return this.passesFilter(providingStack.getFluid());
     }
 
 }

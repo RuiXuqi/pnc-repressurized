@@ -30,7 +30,7 @@ public class PneumaticRecipeRegistry implements IPneumaticRecipeRegistry {
     @Override
     public void registerThermopneumaticProcessingPlantRecipe(FluidStack requiredFluid, @Nonnull ItemStack requiredItem, FluidStack output, double requiredTemperature, float requiredPressure) {
         Validate.notNull(output);
-        registerThermopneumaticProcessingPlantRecipe(new BasicThermopneumaticProcessingPlantRecipe(requiredFluid, requiredItem, output, requiredTemperature, requiredPressure));
+        this.registerThermopneumaticProcessingPlantRecipe(new BasicThermopneumaticProcessingPlantRecipe(requiredFluid, requiredItem, output, requiredTemperature, requiredPressure));
     }
 
     @Override
@@ -104,13 +104,13 @@ public class PneumaticRecipeRegistry implements IPneumaticRecipeRegistry {
 
     @Override
     public void registerHeatFrameCoolRecipe(ItemIngredient input, ItemStack output) {
-    	HeatFrameCoolingRecipe.recipes.add(new HeatFrameCoolingRecipe(input, output));
+        HeatFrameCoolingRecipe.recipes.add(new HeatFrameCoolingRecipe(input, output));
     }
 
     @Override
-	public void registerRefineryRecipe(FluidStack input, FluidStack... outputs) {
-        registerRefineryRecipe(373, input, outputs);
-	}
+    public void registerRefineryRecipe(FluidStack input, FluidStack... outputs) {
+        this.registerRefineryRecipe(373, input, outputs);
+    }
 
     @Override
     public void registerRefineryRecipe(int minimumTemperature, FluidStack input, FluidStack... outputs) {

@@ -36,7 +36,7 @@ public class RenderProgressingLine {
 
     public RenderProgressingLine(RenderProgressingLine copy) {
         this(copy.startX, copy.startY, copy.startZ, copy.endX, copy.endY, copy.endZ);
-        progress = copy.progress;
+        this.progress = copy.progress;
     }
 
     public boolean hasLineSameProperties(double startX, double startY, double startZ, double endX, double endY, double endZ) {
@@ -44,7 +44,7 @@ public class RenderProgressingLine {
     }
 
     public float getProgress() {
-        return progress;
+        return this.progress;
     }
 
     public RenderProgressingLine setProgress(float progress) {
@@ -59,25 +59,25 @@ public class RenderProgressingLine {
      * @return Returns true when the maximum progress has been reached.
      */
     public boolean incProgress(float increment) {
-        progress += increment;
-        if (progress > 1F) {
-            progress = 1F;
+        this.progress += increment;
+        if (this.progress > 1F) {
+            this.progress = 1F;
             return true;
-        } else if (progress < 0F) {
-            progress = 0F;
+        } else if (this.progress < 0F) {
+            this.progress = 0F;
             return true;
         }
         return false;
     }
 
     public boolean incProgressByDistance(double distance) {
-        double totalDistance = Math.sqrt(Math.pow(endX - startX, 2) + Math.pow(endY - startY, 2) + Math.pow(endZ - startZ, 2));
-        progress += distance / totalDistance;
-        if (progress > 1F) {
-            progress = 1F;
+        double totalDistance = Math.sqrt(Math.pow(this.endX - this.startX, 2) + Math.pow(this.endY - this.startY, 2) + Math.pow(this.endZ - this.startZ, 2));
+        this.progress += distance / totalDistance;
+        if (this.progress > 1F) {
+            this.progress = 1F;
             return true;
-        } else if (progress < 0F) {
-            progress = 0F;
+        } else if (this.progress < 0F) {
+            this.progress = 0F;
             return true;
         }
         return false;
@@ -87,8 +87,8 @@ public class RenderProgressingLine {
     public void render() {
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        wr.pos(startX, startY, startZ).endVertex();
-        wr.pos(startX + (endX - startX) * progress, startY + (endY - startY) * progress, startZ + (endZ - startZ) * progress).endVertex();
+        wr.pos(this.startX, this.startY, this.startZ).endVertex();
+        wr.pos(this.startX + (this.endX - this.startX) * this.progress, this.startY + (this.endY - this.startY) * this.progress, this.startZ + (this.endZ - this.startZ) * this.progress).endVertex();
         Tessellator.getInstance().draw();
     }
 
@@ -96,8 +96,8 @@ public class RenderProgressingLine {
     public void renderInterpolated(RenderProgressingLine lastTickLine, float partialTick) {
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
-        wr.pos(getInter(startX, lastTickLine.startX, partialTick), getInter(startY, lastTickLine.startY, partialTick), getInter(startZ, lastTickLine.startZ, partialTick)).endVertex();
-        wr.pos(getInter(startX, lastTickLine.startX, partialTick) + (getInter(endX, lastTickLine.endX, partialTick) - getInter(startX, lastTickLine.startX, partialTick)) * progress, getInter(startY, lastTickLine.startY, partialTick) + (getInter(startY, lastTickLine.startY, partialTick) - getInter(endY, lastTickLine.endY, partialTick)) * progress, getInter(startZ, lastTickLine.startZ, partialTick) + (getInter(endZ, lastTickLine.endZ, partialTick) - getInter(startZ, lastTickLine.startZ, partialTick)) * progress).endVertex();
+        wr.pos(this.getInter(this.startX, lastTickLine.startX, partialTick), this.getInter(this.startY, lastTickLine.startY, partialTick), this.getInter(this.startZ, lastTickLine.startZ, partialTick)).endVertex();
+        wr.pos(this.getInter(this.startX, lastTickLine.startX, partialTick) + (this.getInter(this.endX, lastTickLine.endX, partialTick) - this.getInter(this.startX, lastTickLine.startX, partialTick)) * this.progress, this.getInter(this.startY, lastTickLine.startY, partialTick) + (this.getInter(this.startY, lastTickLine.startY, partialTick) - this.getInter(this.endY, lastTickLine.endY, partialTick)) * this.progress, this.getInter(this.startZ, lastTickLine.startZ, partialTick) + (this.getInter(this.endZ, lastTickLine.endZ, partialTick) - this.getInter(this.startZ, lastTickLine.startZ, partialTick)) * this.progress).endVertex();
         Tessellator.getInstance().draw();
     }
 
@@ -106,7 +106,7 @@ public class RenderProgressingLine {
     }
 
     public int getPointedSlotNumber(GuiSecurityStationBase gui) {
-        Slot slot = gui.getSlotAtPosition((int) endX, (int) endY);
+        Slot slot = gui.getSlotAtPosition((int) this.endX, (int) this.endY);
         return slot != null ? slot.slotNumber : 0;
     }
 }

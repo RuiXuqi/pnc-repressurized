@@ -34,7 +34,7 @@ public class OpenComputers implements IThirdParty {
     @Override
     public void init() {
         if (Loader.isModLoaded(ModIds.OPEN_COMPUTERS)) {
-            initializeDrivers();
+            this.initializeDrivers();
         }
     }
 

@@ -59,58 +59,58 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     public TileEntityAssemblyController() {
         super(PneumaticValues.DANGER_PRESSURE_ASSEMBLY_CONTROLLER, PneumaticValues.MAX_PRESSURE_ASSEMBLY_CONTROLLER, PneumaticValues.VOLUME_ASSEMBLY_CONTROLLER, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
     }
 
     @Override
     public void update() {
-        ItemStack programStack = inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX);
+        ItemStack programStack = this.inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX);
 
         // curProgram must be available on the client, or we can't show program-problems in the GUI
-        if (curProgram == null && !goingToHomePosition && programStack.getItem() == Itemss.ASSEMBLY_PROGRAM) {
-            curProgram = ItemAssemblyProgram.getProgramFromItem(programStack.getMetadata());
-        } else if (curProgram != null && (programStack.isEmpty() || curProgram.getClass() != ItemAssemblyProgram.getProgramFromItem(programStack.getMetadata()).getClass())) {
-            curProgram = null;
-            if (!getWorld().isRemote) goingToHomePosition = true;
+        if (this.curProgram == null && !this.goingToHomePosition && programStack.getItem() == Itemss.ASSEMBLY_PROGRAM) {
+            this.curProgram = ItemAssemblyProgram.getProgramFromItem(programStack.getMetadata());
+        } else if (this.curProgram != null && (programStack.isEmpty() || this.curProgram.getClass() != ItemAssemblyProgram.getProgramFromItem(programStack.getMetadata()).getClass())) {
+            this.curProgram = null;
+            if (!this.getWorld().isRemote) this.goingToHomePosition = true;
         }
 
-        if (!getWorld().isRemote) {
-            setStatus("Standby");
-            if (getPressure() >= PneumaticValues.MIN_PRESSURE_ASSEMBLY_CONTROLLER) {
-                if (curProgram != null || goingToHomePosition) {
-                    if (assemblySystem == null) {
-                        assemblySystem = findAssemblySystem();
+        if (!this.getWorld().isRemote) {
+            this.setStatus("Standby");
+            if (this.getPressure() >= PneumaticValues.MIN_PRESSURE_ASSEMBLY_CONTROLLER) {
+                if (this.curProgram != null || this.goingToHomePosition) {
+                    if (this.assemblySystem == null) {
+                        this.assemblySystem = this.findAssemblySystem();
                     }
-                    if (assemblySystem != null && (!isMachineMissing || curProgram == null) && !isMachineDuplicate) {
+                    if (this.assemblySystem != null && (!this.isMachineMissing || this.curProgram == null) && !this.isMachineDuplicate) {
                         boolean useAir;
-                        if (curProgram != null) {
-                            useAir = curProgram.executeStep(assemblySystem);
+                        if (this.curProgram != null) {
+                            useAir = this.curProgram.executeStep(this.assemblySystem);
                             if (useAir) {
-                                setStatus("Running...");
+                                this.setStatus("Running...");
                             }
                         } else {
                             useAir = true;
-                            boolean resetDone = assemblySystem.reset();
-                            goingToHomePosition = isMachineMissing || !resetDone;
-                            setStatus("Resetting...");
+                            boolean resetDone = this.assemblySystem.reset();
+                            this.goingToHomePosition = this.isMachineMissing || !resetDone;
+                            this.setStatus("Resetting...");
                         }
                         if (useAir) {
-                            addAir(-(int) (PneumaticValues.USAGE_ASSEMBLING * getSpeedUsageMultiplierFromUpgrades()));
+                            this.addAir(-(int) (PneumaticValues.USAGE_ASSEMBLING * this.getSpeedUsageMultiplierFromUpgrades()));
                         }
-                        assemblySystem.setSpeed(getSpeedMultiplierFromUpgrades());
+                        this.assemblySystem.setSpeed(this.getSpeedMultiplierFromUpgrades());
                     }
                 }
             }
-            hasProblem = isMachineMissing
-                    || isMachineDuplicate
-                    || getPressure() < PneumaticValues.MIN_PRESSURE_ASSEMBLY_CONTROLLER
-                    || curProgram == null
-                    || curProgram.curProblem != AssemblyProgram.EnumTubeProblem.NO_PROBLEM;
+            this.hasProblem = this.isMachineMissing
+                    || this.isMachineDuplicate
+                    || this.getPressure() < PneumaticValues.MIN_PRESSURE_ASSEMBLY_CONTROLLER
+                    || this.curProgram == null
+                    || this.curProgram.curProblem != AssemblyProgram.EnumTubeProblem.NO_PROBLEM;
         }
         super.update();
     }
@@ -119,23 +119,23 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
      * Force the controller to rediscover its machines on the next tick.
      */
     void invalidateAssemblySystem() {
-        assemblySystem = null;
+        this.assemblySystem = null;
     }
 
     private AssemblySystem findAssemblySystem() {
-        EnumMachine[] requiredMachines = curProgram != null ? curProgram.getRequiredMachines() : EnumMachine.values();
+        EnumMachine[] requiredMachines = this.curProgram != null ? this.curProgram.getRequiredMachines() : EnumMachine.values();
 
-        duplicateMachine = null;
+        this.duplicateMachine = null;
         AssemblySystem assemblySystem = new AssemblySystem(this);
-        for (IAssemblyMachine machine : findMachines(requiredMachines.length * 2)) {  // *2 ensures duplicates are noticed
+        for (IAssemblyMachine machine : this.findMachines(requiredMachines.length * 2)) {  // *2 ensures duplicates are noticed
             if (!assemblySystem.addMachine(machine)) {
-                duplicateMachine = machine.getAssemblyType();
+                this.duplicateMachine = machine.getAssemblyType();
             }
         }
-        missingMachine = assemblySystem.checkForMissingMachine(requiredMachines);
+        this.missingMachine = assemblySystem.checkForMissingMachine(requiredMachines);
 
-        isMachineDuplicate = duplicateMachine != null;
-        isMachineMissing = missingMachine != null;
+        this.isMachineDuplicate = this.duplicateMachine != null;
+        this.isMachineMissing = this.missingMachine != null;
 
         return assemblySystem;
     }
@@ -146,21 +146,21 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
     }
 
     private void setStatus(String text) {
-        displayedText = text;
+        this.displayedText = text;
     }
 
     @SideOnly(Side.CLIENT)
     public void addProblems(List<String> problemList) {
-        if (curProgram == null) {
+        if (this.curProgram == null) {
             problemList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.tab.problems.assembly_controller.no_program")));
         } else {
-            if (isMachineDuplicate) {
-                String key = I18n.format(duplicateMachine.getTranslationKey());
+            if (this.isMachineDuplicate) {
+                String key = I18n.format(this.duplicateMachine.getTranslationKey());
                 problemList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.tab.problems.assembly_controller.duplicateMachine", key)));
-            } else if (!isMachineMissing) {
-                curProgram.addProgramProblem(problemList);
+            } else if (!this.isMachineMissing) {
+                this.curProgram.addProgramProblem(problemList);
             } else {
-                String key = I18n.format(missingMachine.getTranslationKey());
+                String key = I18n.format(this.missingMachine.getTranslationKey());
                 problemList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.tab.problems.assembly_controller.missingMachine", key)));
             }
         }
@@ -168,16 +168,16 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
 
     public List<IAssemblyMachine> findMachines(int max) {
         List<IAssemblyMachine> machineList = new ArrayList<>();
-        findMachines(machineList, getPos(), max);
+        this.findMachines(machineList, this.getPos(), max);
         return machineList;
     }
 
     private void findMachines(List<IAssemblyMachine> machineList, BlockPos pos, int max) {
         for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-            TileEntity te = getWorld().getTileEntity(pos.offset(dir));
+            TileEntity te = this.getWorld().getTileEntity(pos.offset(dir));
             if (te instanceof IAssemblyMachine && !machineList.contains(te) && machineList.size() < max) {
                 machineList.add((IAssemblyMachine) te);
-                findMachines(machineList, te.getPos(), max);
+                this.findMachines(machineList, te.getPos(), max);
             }
         }
     }
@@ -185,15 +185,15 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        updateConnections();
-        invalidateAssemblySystem();
+        this.updateConnections();
+        this.invalidateAssemblySystem();
     }
 
     private void updateConnections() {
-        List<Pair<EnumFacing, IAirHandler>> connections = getAirHandler(null).getConnectedPneumatics();
-        Arrays.fill(sidesConnected, false);
+        List<Pair<EnumFacing, IAirHandler>> connections = this.getAirHandler(null).getConnectedPneumatics();
+        Arrays.fill(this.sidesConnected, false);
         for (Pair<EnumFacing, IAirHandler> entry : connections) {
-            sidesConnected[entry.getKey().ordinal()] = true;
+            this.sidesConnected[entry.getKey().ordinal()] = true;
         }
     }
 
@@ -205,7 +205,7 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     @Override
@@ -216,28 +216,28 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        goingToHomePosition = tag.getBoolean("goingToHomePosition");
-        displayedText = tag.getString("displayedText");
+        this.goingToHomePosition = tag.getBoolean("goingToHomePosition");
+        this.displayedText = tag.getString("displayedText");
         for (int i = 0; i < 6; i++) {
-            sidesConnected[i] = tag.getBoolean("sideConnected" + i);
+            this.sidesConnected[i] = tag.getBoolean("sideConnected" + i);
         }
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        if (!inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX).isEmpty()) {
-            curProgram = ItemAssemblyProgram.getProgramFromItem(inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX).getMetadata());
-            if (curProgram != null) curProgram.readFromNBT(tag);
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        if (!this.inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX).isEmpty()) {
+            this.curProgram = ItemAssemblyProgram.getProgramFromItem(this.inventory.getStackInSlot(PROGRAM_INVENTORY_INDEX).getMetadata());
+            if (this.curProgram != null) this.curProgram.readFromNBT(tag);
         }
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("goingToHomePosition", goingToHomePosition);
-        tag.setString("displayedText", displayedText);
-        if (curProgram != null) curProgram.writeToNBT(tag);
+        tag.setBoolean("goingToHomePosition", this.goingToHomePosition);
+        tag.setString("displayedText", this.displayedText);
+        if (this.curProgram != null) this.curProgram.writeToNBT(tag);
         for (int i = 0; i < 6; i++) {
-            tag.setBoolean("sideConnected" + i, sidesConnected[i]);
+            tag.setBoolean("sideConnected" + i, this.sidesConnected[i]);
         }
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setTag("Items", this.inventory.serializeNBT());
         return tag;
     }
 
@@ -272,26 +272,26 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
         }
 
         private IAssemblyMachine get(EnumMachine machine) {
-            return machines[machine.ordinal()];
+            return this.machines[machine.ordinal()];
         }
 
         boolean addMachine(IAssemblyMachine machine) {
-            if (machines[machine.getAssemblyType().ordinal()] != null) {
+            if (this.machines[machine.getAssemblyType().ordinal()] != null) {
                 return false;  // already present
             }
-            machines[machine.getAssemblyType().ordinal()] = machine;
-            machine.setControllerPos(getPos());
+            this.machines[machine.getAssemblyType().ordinal()] = machine;
+            machine.setControllerPos(TileEntityAssemblyController.this.getPos());
             return true;
         }
 
         boolean reset() {
             boolean resetDone = true;
-            for (IAssemblyMachine machine : machines) {
+            for (IAssemblyMachine machine : this.machines) {
                 if (machine instanceof IResettable) {
                     if (!((IResettable) machine).reset()) {
                         resetDone = false;
                         if (machine instanceof TileEntityAssemblyPlatform) {
-                            getExportUnit().pickupItem(null);
+                            this.getExportUnit().pickupItem(null);
                         }
                         break;
                     }
@@ -301,38 +301,38 @@ public class TileEntityAssemblyController extends TileEntityPneumaticBase implem
         }
 
         void setSpeed(float speedMult) {
-            for (IAssemblyMachine te : machines) {
+            for (IAssemblyMachine te : this.machines) {
                 if (te != null) te.setSpeed(speedMult);
             }
         }
 
         TileEntityAssemblyController getController() {
-            return (TileEntityAssemblyController) get(EnumMachine.CONTROLLER);
+            return (TileEntityAssemblyController) this.get(EnumMachine.CONTROLLER);
         }
 
         public TileEntityAssemblyIOUnit getImportUnit() {
-            return (TileEntityAssemblyIOUnit) get(EnumMachine.IO_UNIT_IMPORT);
+            return (TileEntityAssemblyIOUnit) this.get(EnumMachine.IO_UNIT_IMPORT);
         }
 
         public TileEntityAssemblyIOUnit getExportUnit() {
-            return (TileEntityAssemblyIOUnit) get(EnumMachine.IO_UNIT_EXPORT);
+            return (TileEntityAssemblyIOUnit) this.get(EnumMachine.IO_UNIT_EXPORT);
         }
 
         public TileEntityAssemblyPlatform getPlatform() {
-            return (TileEntityAssemblyPlatform) get(EnumMachine.PLATFORM);
+            return (TileEntityAssemblyPlatform) this.get(EnumMachine.PLATFORM);
         }
 
         public TileEntityAssemblyLaser getLaser() {
-            return (TileEntityAssemblyLaser) get(EnumMachine.LASER);
+            return (TileEntityAssemblyLaser) this.get(EnumMachine.LASER);
         }
 
         public TileEntityAssemblyDrill getDrill() {
-            return (TileEntityAssemblyDrill) get(EnumMachine.DRILL);
+            return (TileEntityAssemblyDrill) this.get(EnumMachine.DRILL);
         }
 
         EnumMachine checkForMissingMachine(EnumMachine[] requiredMachines) {
             for (EnumMachine e : requiredMachines) {
-                if (get(e) == null) {
+                if (this.get(e) == null) {
                     return e;
                 }
             }

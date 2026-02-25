@@ -97,7 +97,7 @@ public class EntityTrackHandler {
         @Override
         public boolean isApplicable(Entity entity) {
             if (entity instanceof EntityDrone) {
-                droneAIRenderer = new RenderDroneAI((EntityDrone) entity);
+                this.droneAIRenderer = new RenderDroneAI((EntityDrone) entity);
                 return true;
             } else {
                 return false;
@@ -105,17 +105,17 @@ public class EntityTrackHandler {
         }
 
         public RenderDroneAI getDroneAIRenderer() {
-            return droneAIRenderer;
+            return this.droneAIRenderer;
         }
 
         @Override
         public void update(Entity entity) {
-            droneAIRenderer.update();
+            this.droneAIRenderer.update();
         }
 
         @Override
         public void render(Entity entity, float partialTicks) {
-            droneAIRenderer.render(partialTicks);
+            this.droneAIRenderer.render(partialTicks);
         }
 
         @Override
@@ -251,21 +251,21 @@ public class EntityTrackHandler {
         @Override
         public void update(Entity entity) {
             if (((EntityCreeper) entity).getCreeperState() == 1) {
-                creeperInFuseTime++;
-                if (creeperInFuseTime > 30) creeperInFuseTime = 30;
+                this.creeperInFuseTime++;
+                if (this.creeperInFuseTime > 30) this.creeperInFuseTime = 30;
             } else {
-                creeperInFuseTime--;
-                if (creeperInFuseTime < 0) creeperInFuseTime = 0;
+                this.creeperInFuseTime--;
+                if (this.creeperInFuseTime < 0) this.creeperInFuseTime = 0;
             }
         }
 
         @Override
         public void addInfo(Entity entity, List<String> curInfo, boolean isLookingAtTarget) {
-            if (creeperInFuseTime > 0) {
+            if (this.creeperInFuseTime > 0) {
                 if (((EntityCreeper) entity).getCreeperState() == 1) {
-                    curInfo.add(TextFormatting.RED + I18n.format("entityTracker.info.creeper.fuse", Math.round((30 - creeperInFuseTime) / 20F * 10F) / 10F + "s !"));
+                    curInfo.add(TextFormatting.RED + I18n.format("entityTracker.info.creeper.fuse", Math.round((30 - this.creeperInFuseTime) / 20F * 10F) / 10F + "s !"));
                 } else {
-                    curInfo.add(TextFormatting.DARK_GREEN + I18n.format("entityTracker.info.creeper.coolDown", Math.round((30 - creeperInFuseTime) / 20F * 10F) / 10F + "s !"));
+                    curInfo.add(TextFormatting.DARK_GREEN + I18n.format("entityTracker.info.creeper.coolDown", Math.round((30 - this.creeperInFuseTime) / 20F * 10F) / 10F + "s !"));
                 }
             }
         }

@@ -18,25 +18,25 @@ public class RenderTargetCircle {
     private boolean renderAsTagged;
 
     public RenderTargetCircle() {
-        rand = new Random();
+        this.rand = new Random();
     }
 
     public void setRenderingAsTagged(boolean tagged) {
-        renderAsTagged = tagged;
+        this.renderAsTagged = tagged;
     }
 
     public void update() {
-        oldRotationAngle = rotationAngle;
-        if (rand.nextInt(15) == 0) rotationAcceleration = (rand.nextDouble() - 0.5D) / 2.5D;
-        rotationSpeed += rotationAcceleration;// * 0.05D;
+        this.oldRotationAngle = this.rotationAngle;
+        if (this.rand.nextInt(15) == 0) this.rotationAcceleration = (this.rand.nextDouble() - 0.5D) / 2.5D;
+        this.rotationSpeed += this.rotationAcceleration;// * 0.05D;
         double maxSpeed = 8.0D;
-        if (rotationSpeed >= maxSpeed) rotationSpeed = maxSpeed;
-        if (rotationSpeed <= -maxSpeed) rotationSpeed = -maxSpeed;
-        rotationAngle += rotationSpeed;// * 0.05D;
+        if (this.rotationSpeed >= maxSpeed) this.rotationSpeed = maxSpeed;
+        if (this.rotationSpeed <= -maxSpeed) this.rotationSpeed = -maxSpeed;
+        this.rotationAngle += this.rotationSpeed;// * 0.05D;
     }
 
     public void render(double size, float partialTicks) {
-        double renderRotationAngle = oldRotationAngle + (rotationAngle - oldRotationAngle) * partialTicks;
+        double renderRotationAngle = this.oldRotationAngle + (this.rotationAngle - this.oldRotationAngle) * partialTicks;
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
 
         GlStateManager.pushMatrix();
@@ -54,7 +54,7 @@ public class RenderTargetCircle {
             }
             Tessellator.getInstance().draw();
 
-            if (renderAsTagged) {
+            if (this.renderAsTagged) {
                 GlStateManager.color(1, 0, 0, 1);
                 wr.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION);
                 for (int i = 0; i < PneumaticCraftUtils.CIRCLE_POINTS / 4; i++) {

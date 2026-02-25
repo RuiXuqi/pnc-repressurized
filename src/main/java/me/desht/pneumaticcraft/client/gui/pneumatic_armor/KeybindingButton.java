@@ -16,32 +16,32 @@ class KeybindingButton extends GuiButtonSpecial {
         super(buttonID, startX, startY, xSize, ySize, buttonText);
         this.keyBinding = keyBinding;
         this.origButtonText = buttonText;
-        addTooltip();
+        this.addTooltip();
     }
 
     private void addTooltip() {
-        setTooltipText("Bound to: " + TextFormatting.GREEN + keyBinding.getDisplayName());
+        this.setTooltipText("Bound to: " + TextFormatting.GREEN + this.keyBinding.getDisplayName());
     }
 
     void toggleKeybindMode() {
-        bindingMode = !bindingMode;
+        this.bindingMode = !this.bindingMode;
 
-        if (bindingMode) {
-            displayString = TextFormatting.YELLOW + "Press a key to set keybind";
-            setTooltipText("");
+        if (this.bindingMode) {
+            this.displayString = TextFormatting.YELLOW + "Press a key to set keybind";
+            this.setTooltipText("");
         } else {
-            displayString = origButtonText;
-            addTooltip();
+            this.displayString = this.origButtonText;
+            this.addTooltip();
         }
     }
 
     boolean receiveKey(int key) {
-        if (bindingMode && !KeyModifier.isKeyCodeModifier(key)) {
-            keyBinding.setKeyModifierAndCode(KeyModifier.getActiveModifier(), key);
+        if (this.bindingMode && !KeyModifier.isKeyCodeModifier(key)) {
+            this.keyBinding.setKeyModifierAndCode(KeyModifier.getActiveModifier(), key);
             KeyBinding.resetKeyBindingArrayAndHash();
             FMLClientHandler.instance().getClient().gameSettings.saveOptions();
             FMLClientHandler.instance().getClient().player.playSound(SoundEvents.BLOCK_NOTE_CHIME, 1.0f, 1.0f);
-            toggleKeybindMode();
+            this.toggleKeybindMode();
             return true;
         } else {
             return false;

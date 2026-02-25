@@ -11,19 +11,19 @@ public class MovingSoundElevator extends MovingSound {
     protected MovingSoundElevator(TileEntityElevatorBase te) {
         super(Sounds.ELEVATOR_MOVING, SoundCategory.BLOCKS);
         this.te = te;
-        xPosF = te.getPos().getX();
-        yPosF = te.getPos().getY() + te.extension / 2;
-        zPosF = te.getPos().getZ();
-        repeat = true;
-        repeatDelay = 0;
-        volume = 0.9F - (0.05F * Math.min(8, te.multiElevatorCount));
+        this.xPosF = te.getPos().getX();
+        this.yPosF = te.getPos().getY() + te.extension / 2;
+        this.zPosF = te.getPos().getZ();
+        this.repeat = true;
+        this.repeatDelay = 0;
+        this.volume = 0.9F - (0.05F * Math.min(8, te.multiElevatorCount));
     }
 
     @Override
     public void update() {
-        if (te.isInvalid() || te.extension == te.getTargetExtension()) {
-            donePlaying = true;
+        if (this.te.isInvalid() || this.te.extension == this.te.getTargetExtension()) {
+            this.donePlaying = true;
         }
-        yPosF = te.getPos().getY() + te.extension / 2;
+        this.yPosF = this.te.getPos().getY() + this.te.extension / 2;
     }
 }

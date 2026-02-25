@@ -59,6 +59,7 @@ public interface ISensorSetting {
 
     /**
      * Get the air usage (per tick) for this sensor.  Default is 1mL/tick.
+     *
      * @return
      */
     default int getAirUsage(World world, BlockPos pos) {

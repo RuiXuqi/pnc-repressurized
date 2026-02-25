@@ -21,8 +21,8 @@ public interface IEntityTrackEntry {
     /**
      * Add info to the tab. This is only called when isApplicable returned true.
      *
-     * @param entity the tracked entity
-     * @param curInfo list of String to append information to
+     * @param entity            the tracked entity
+     * @param curInfo           list of String to append information to
      * @param isLookingAtTarget true if the player is focused on the tracked entity
      */
     void addInfo(Entity entity, List<String> curInfo, boolean isLookingAtTarget);
@@ -38,7 +38,7 @@ public interface IEntityTrackEntry {
     /**
      * Called every render tick, this method can be used to render additional info. Used for Drone AI visualisation.
      *
-     * @param entity the tracked entity
+     * @param entity       the tracked entity
      * @param partialTicks partial ticks since last full ticks
      */
     void render(Entity entity, float partialTicks);

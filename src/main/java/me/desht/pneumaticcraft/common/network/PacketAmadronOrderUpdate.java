@@ -20,16 +20,16 @@ public class PacketAmadronOrderUpdate extends AbstractPacket<PacketAmadronOrderU
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        orderId = buf.readInt();
-        mouseButton = buf.readByte();
-        sneaking = buf.readBoolean();
+        this.orderId = buf.readInt();
+        this.mouseButton = buf.readByte();
+        this.sneaking = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(orderId);
-        buf.writeByte(mouseButton);
-        buf.writeBoolean(sneaking);
+        buf.writeInt(this.orderId);
+        buf.writeByte(this.mouseButton);
+        buf.writeBoolean(this.sneaking);
     }
 
     @Override

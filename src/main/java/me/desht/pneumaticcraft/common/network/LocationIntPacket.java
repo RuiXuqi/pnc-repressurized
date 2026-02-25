@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
  * MineChess
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
@@ -29,27 +29,27 @@ public abstract class LocationIntPacket<REQ extends AbstractPacket<REQ>> extends
 
     @Override
     public void toBytes(ByteBuf buf) {
-        NetworkUtils.writeBlockPos(buf, pos);
+        NetworkUtils.writeBlockPos(buf, this.pos);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        pos = NetworkUtils.readBlockPos(buf);
+        this.pos = NetworkUtils.readBlockPos(buf);
     }
 
     NetworkRegistry.TargetPoint getTargetPoint(World world) {
-        return getTargetPoint(world, TileEntityConstants.PACKET_UPDATE_DISTANCE);
+        return this.getTargetPoint(world, TileEntityConstants.PACKET_UPDATE_DISTANCE);
     }
 
     NetworkRegistry.TargetPoint getTargetPoint(World world, double updateDistance) {
-        return new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), updateDistance);
+        return new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), updateDistance);
     }
 
     protected Block getBlock(World world) {
-        return world.getBlockState(pos).getBlock();
+        return world.getBlockState(this.pos).getBlock();
     }
 
     protected TileEntity getTileEntity(World world) {
-        return world.getTileEntity(pos);
+        return world.getTileEntity(this.pos);
     }
 }

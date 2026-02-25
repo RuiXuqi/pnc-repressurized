@@ -53,18 +53,18 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
             byte connected = nbt.getByte("sidesConnected");
             byte closed = nbt.getByte("sidesClosed");
             for (int i = 0; i < 6; i++) {
-                sidesConnected[i] = ((connected & 1 << i) != 0);
-                sidesClosed[i] = ((closed & 1 << i) != 0);
+                this.sidesConnected[i] = ((connected & 1 << i) != 0);
+                this.sidesClosed[i] = ((closed & 1 << i) != 0);
             }
         } else {
             // old-style
             for (int i = 0; i < 6; i++) {
-                sidesConnected[i] = nbt.getBoolean("sideConnected" + i);
-                sidesClosed[i] = nbt.getBoolean("sideClosed" + i);
+                this.sidesConnected[i] = nbt.getBoolean("sideConnected" + i);
+                this.sidesClosed[i] = nbt.getBoolean("sideClosed" + i);
             }
         }
-        camoStack = ICamouflageableTE.readCamoStackFromNBT(nbt);
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoStack = ICamouflageableTE.readCamoStackFromNBT(nbt);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
     }
 
     @Override
@@ -73,28 +73,28 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
 
         byte connected = 0, closed = 0;
         for (int i = 0; i < 6; i++) {
-            if (sidesConnected[i]) connected |= 1 << i;
-            if (sidesClosed[i]) closed |= 1 << i;
+            if (this.sidesConnected[i]) connected |= 1 << i;
+            if (this.sidesClosed[i]) closed |= 1 << i;
         }
         nbt.setByte("sidesConnected", connected);
         nbt.setByte("sidesClosed", closed);
-        ICamouflageableTE.writeCamoStackToNBT(camoStack, nbt);
+        ICamouflageableTE.writeCamoStackToNBT(this.camoStack, nbt);
         return nbt;
     }
 
     @Override
     public void writeToPacket(NBTTagCompound tag) {
         super.writeToPacket(tag);
-        writeModulesToNBT(tag);
+        this.writeModulesToNBT(tag);
     }
 
     public void writeModulesToNBT(NBTTagCompound tag) {
         NBTTagList moduleList = new NBTTagList();
-        for (int i = 0; i < modules.length; i++) {
-            if (modules[i] != null) {
+        for (int i = 0; i < this.modules.length; i++) {
+            if (this.modules[i] != null) {
                 NBTTagCompound moduleTag = new NBTTagCompound();
-                moduleTag.setString("type", modules[i].getType());
-                modules[i].writeToNBT(moduleTag);
+                moduleTag.setString("type", this.modules[i].getType());
+                this.modules[i].writeToNBT(moduleTag);
                 moduleTag.setInteger("side", i);
                 moduleList.appendTag(moduleTag);
             }
@@ -105,28 +105,28 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
     @Override
     public void readFromPacket(NBTTagCompound tag) {
         super.readFromPacket(tag);
-        modules = new TubeModule[6];
+        this.modules = new TubeModule[6];
         NBTTagList moduleList = tag.getTagList("modules", 10);
         for (int i = 0; i < moduleList.tagCount(); i++) {
             NBTTagCompound moduleTag = moduleList.getCompoundTagAt(i);
             TubeModule module = ModuleRegistrator.getModule(moduleTag.getString("type"));
             if (module != null) {
                 module.readFromNBT(moduleTag);
-                setModule(module, EnumFacing.byIndex(moduleTag.getInteger("side")));
+                this.setModule(module, EnumFacing.byIndex(moduleTag.getInteger("side")));
             }
         }
-        updateRenderBoundingBox();
-        if (hasWorld() && getWorld().isRemote) {
-            rerenderTileEntity();
+        this.updateRenderBoundingBox();
+        if (this.hasWorld() && this.getWorld().isRemote) {
+            this.rerenderTileEntity();
         }
     }
 
     private void updateRenderBoundingBox() {
-        renderBoundingBox = new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        this.renderBoundingBox = new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
 
         for (int i = 0; i < 6; i++) {
-            if (modules[i] != null && modules[i].getRenderBoundingBox() != null) {
-                renderBoundingBox = renderBoundingBox.union(modules[i].getRenderBoundingBox());
+            if (this.modules[i] != null && this.modules[i].getRenderBoundingBox() != null) {
+                this.renderBoundingBox = this.renderBoundingBox.union(this.modules[i].getRenderBoundingBox());
             }
         }
     }
@@ -136,7 +136,7 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
         super.update();
 
         boolean hasModules = false;
-        for (TubeModule module : modules) {
+        for (TubeModule module : this.modules) {
             if (module != null) {
                 hasModules = true;
                 module.shouldDrop = true;
@@ -144,12 +144,12 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
             }
         }
 
-        List<Pair<EnumFacing, IAirHandler>> teList = getAirHandler(null).getConnectedPneumatics();
+        List<Pair<EnumFacing, IAirHandler>> teList = this.getAirHandler(null).getConnectedPneumatics();
 
-        if (!hasModules && teList.size() == 1 && !getWorld().isRemote) {
+        if (!hasModules && teList.size() == 1 && !this.getWorld().isRemote) {
             for (Pair<EnumFacing, IAirHandler> entry : teList) {
-                if (entry.getKey() != null && modules[entry.getKey().getOpposite().ordinal()] == null && isConnectedTo(entry.getKey().getOpposite()))
-                    getAirHandler(null).airLeak(entry.getKey().getOpposite());
+                if (entry.getKey() != null && this.modules[entry.getKey().getOpposite().ordinal()] == null && this.isConnectedTo(entry.getKey().getOpposite()))
+                    this.getAirHandler(null).airLeak(entry.getKey().getOpposite());
             }
         }
     }
@@ -158,8 +158,8 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
     public void onAirDispersion(IAirHandler handler, EnumFacing side, int amount) {
         if (side != null) {
             int intSide = side.ordinal();
-            if (modules[intSide] instanceof IInfluenceDispersing) {
-                ((IInfluenceDispersing) modules[intSide]).onAirDispersion(amount);
+            if (this.modules[intSide] instanceof IInfluenceDispersing) {
+                ((IInfluenceDispersing) this.modules[intSide]).onAirDispersion(amount);
             }
         }
     }
@@ -168,8 +168,8 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
     public int getMaxDispersion(IAirHandler handler, EnumFacing side) {
         if (side != null) {
             int intSide = side.ordinal();
-            if (modules[intSide] instanceof IInfluenceDispersing) {
-                return ((IInfluenceDispersing) modules[intSide]).getMaxDispersion();
+            if (this.modules[intSide] instanceof IInfluenceDispersing) {
+                return ((IInfluenceDispersing) this.modules[intSide]).getMaxDispersion();
             }
         }
         return Integer.MAX_VALUE;
@@ -184,24 +184,24 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
             module.setDirection(side);
             module.setTube(this);
         }
-        modules[side.ordinal()] = module;
-        if (getWorld() != null && !getWorld().isRemote) {
-            sendDescriptionPacket();
+        this.modules[side.ordinal()] = module;
+        if (this.getWorld() != null && !this.getWorld().isRemote) {
+            this.sendDescriptionPacket();
         }
-        markDirty();
+        this.markDirty();
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return !sidesClosed[side.ordinal()]
-                && (modules[side.ordinal()] == null || modules[side.ordinal()].isInline());
+        return !this.sidesClosed[side.ordinal()]
+                && (this.modules[side.ordinal()] == null || this.modules[side.ordinal()].isInline());
     }
 
     @Override
     public void onNeighborTileUpdate() {
         super.onNeighborTileUpdate();
-        updateConnections();
-        for (TubeModule module : modules) {
+        this.updateConnections();
+        for (TubeModule module : this.modules) {
             if (module != null) module.onNeighborTileUpdate();
         }
     }
@@ -209,49 +209,49 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        updateConnections();
-        for (TubeModule module : modules) {
+        this.updateConnections();
+        for (TubeModule module : this.modules) {
             if (module != null) module.onNeighborBlockUpdate();
         }
     }
 
     private void updateConnections() {
-        List<Pair<EnumFacing, IAirHandler>> connections = getAirHandler(null).getConnectedPneumatics();
-        Arrays.fill(sidesConnected, false);
+        List<Pair<EnumFacing, IAirHandler>> connections = this.getAirHandler(null).getConnectedPneumatics();
+        Arrays.fill(this.sidesConnected, false);
         for (Pair<EnumFacing, IAirHandler> entry : connections) {
-            sidesConnected[entry.getKey().ordinal()] = true;
+            this.sidesConnected[entry.getKey().ordinal()] = true;
         }
 
         boolean hasModule = false;
         for (int i = 0; i < 6; i++) {
-            if (modules[i] != null) {
+            if (this.modules[i] != null) {
                 hasModule = true;
                 break;
             }
         }
 
         int sidesCount = 0;
-        for (boolean bool : sidesConnected) {
+        for (boolean bool : this.sidesConnected) {
             if (bool) sidesCount++;
         }
         if (sidesCount == 1 && !hasModule) {
             for (int i = 0; i < 6; i++) {
-                if (sidesConnected[i]) {
+                if (this.sidesConnected[i]) {
                     EnumFacing opposite = EnumFacing.byIndex(i).getOpposite();
-                    if (isConnectedTo(opposite)) sidesConnected[opposite.ordinal()] = true;
+                    if (this.isConnectedTo(opposite)) this.sidesConnected[opposite.ordinal()] = true;
                     break;
                 }
             }
         }
         for (int i = 0; i < 6; i++) {
-            if (modules[i] != null && modules[i].isInline()) sidesConnected[i] = false;
+            if (this.modules[i] != null && this.modules[i].isInline()) this.sidesConnected[i] = false;
         }
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return renderBoundingBox != null ? renderBoundingBox : new AxisAlignedBB(getPos());
+        return this.renderBoundingBox != null ? this.renderBoundingBox : new AxisAlignedBB(this.getPos());
     }
 
     @Override
@@ -259,28 +259,28 @@ public class TileEntityPressureTube extends TileEntityPneumaticBase implements I
         RayTraceResult mop = PneumaticCraftUtils.getEntityLookedObject(player);
         if (mop != null && mop.hitInfo instanceof EnumFacing) {
             EnumFacing dir = (EnumFacing) mop.hitInfo;
-            if (modules[dir.ordinal()] != null) {
-                modules[dir.ordinal()].addInfo(text);
+            if (this.modules[dir.ordinal()] != null) {
+                this.modules[dir.ordinal()].addInfo(text);
             }
         }
     }
 
     @Override
     public IBlockState getCamouflage() {
-        return camoState;
+        return this.camoState;
     }
 
     @Override
     public void setCamouflage(IBlockState state) {
-        camoState = state;
-        camoStack = ICamouflageableTE.getStackForState(state);
-        sendDescriptionPacket();
-        markDirty();
+        this.camoState = state;
+        this.camoStack = ICamouflageableTE.getStackForState(state);
+        this.sendDescriptionPacket();
+        this.markDirty();
     }
 
     @Override
     public void onDescUpdate() {
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
 
         super.onDescUpdate();
     }

@@ -18,16 +18,16 @@ public class ContainerRefinery extends ContainerPneumaticBase<TileEntityRefinery
         refinery.onNeighborTileUpdate();
         while (refinery.getTileCache()[EnumFacing.UP.ordinal()].getTileEntity() instanceof TileEntityRefinery) {
             refinery = (TileEntityRefinery) refinery.getTileCache()[EnumFacing.UP.ordinal()].getTileEntity();
-            addSyncedFields(refinery);
+            this.addSyncedFields(refinery);
             refinery.onNeighborTileUpdate();
         }
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        return te.isGuiUseableByPlayer(player);
+        return this.te.isGuiUseableByPlayer(player);
     }
 
 
@@ -36,17 +36,17 @@ public class ContainerRefinery extends ContainerPneumaticBase<TileEntityRefinery
     public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex) {
         // Refinery itself has no item slots, but this allows shift-clicking items between player's inventory & hotbar
         ItemStack stack = ItemStack.EMPTY;
-        Slot srcSlot = inventorySlots.get(slotIndex);
+        Slot srcSlot = this.inventorySlots.get(slotIndex);
 
         if (srcSlot != null && srcSlot.getHasStack()) {
             ItemStack stackInSlot = srcSlot.getStack();
             stack = stackInSlot.copy();
 
             if (slotIndex < 27) {
-                if (!mergeItemStack(stackInSlot, 27, 36, false)) return ItemStack.EMPTY;
+                if (!this.mergeItemStack(stackInSlot, 27, 36, false)) return ItemStack.EMPTY;
                 srcSlot.onSlotChange(stackInSlot, stack);
             } else {
-                if (!mergeItemStack(stackInSlot, 0, 27, false)) return ItemStack.EMPTY;
+                if (!this.mergeItemStack(stackInSlot, 0, 27, false)) return ItemStack.EMPTY;
                 srcSlot.onSlotChange(stackInSlot, stack);
             }
 

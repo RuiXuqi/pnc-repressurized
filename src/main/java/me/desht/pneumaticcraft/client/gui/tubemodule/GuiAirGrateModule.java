@@ -23,7 +23,7 @@ public class GuiAirGrateModule extends GuiTubeModule {
 
     public GuiAirGrateModule(EntityPlayer player, int x, int y, int z) {
         super(player, x, y, z);
-        ySize = 61;
+        this.ySize = 61;
     }
 
     private GuiTextField textfield;
@@ -31,29 +31,29 @@ public class GuiAirGrateModule extends GuiTubeModule {
     @Override
     public void initGui() {
         super.initGui();
-        addLabel(I18n.format("gui.entityFilter"), guiLeft + 10, guiTop + 14);
+        this.addLabel(I18n.format("gui.entityFilter"), this.guiLeft + 10, this.guiTop + 14);
 
-        textfield = new GuiTextField(-1, fontRenderer, guiLeft + 10, guiTop + 25, 140, 10);
-        textfield.setText(((ModuleAirGrate) module).getEntityFilterString());
+        this.textfield = new GuiTextField(-1, this.fontRenderer, this.guiLeft + 10, this.guiTop + 25, 140, 10);
+        this.textfield.setText(((ModuleAirGrate) this.module).getEntityFilterString());
 
-        warningButton = new GuiButtonSpecial(3, guiLeft + 152, guiTop + 20, 20, 20, "");
-        warningButton.setVisible(false);
-        warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
-        buttonList.add(warningButton);
+        this.warningButton = new GuiButtonSpecial(3, this.guiLeft + 152, this.guiTop + 20, 20, 20, "");
+        this.warningButton.setVisible(false);
+        this.warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
+        this.buttonList.add(this.warningButton);
 
-        textfield.setFocused(true);
-        validateEntityFilter(textfield.getText());
+        this.textfield.setFocused(true);
+        this.validateEntityFilter(this.textfield.getText());
     }
 
     private boolean validateEntityFilter(String filter) {
         try {
-            warningButton.visible = false;
-            warningButton.setTooltipText("");
+            this.warningButton.visible = false;
+            this.warningButton.setTooltipText("");
             EntityFilter f = new EntityFilter(filter);  // syntax check
             return true;
         } catch (Exception e) {
-            warningButton.visible = true;
-            warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
+            this.warningButton.visible = true;
+            this.warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
             return false;
         }
     }
@@ -61,10 +61,10 @@ public class GuiAirGrateModule extends GuiTubeModule {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        if (!textfield.isFocused()) textfield.setText(((ModuleAirGrate) module).getEntityFilterString());
-        textfield.drawTextBox();
+        if (!this.textfield.isFocused()) this.textfield.setText(((ModuleAirGrate) this.module).getEntityFilterString());
+        this.textfield.drawTextBox();
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-            GuiUtils.showPopupHelpScreen(this, fontRenderer,
+            GuiUtils.showPopupHelpScreen(this, this.fontRenderer,
                     PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.entityFilter.helpText"), 60));
         }
     }
@@ -72,16 +72,16 @@ public class GuiAirGrateModule extends GuiTubeModule {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int par3) throws IOException {
         super.mouseClicked(mouseX, mouseY, par3);
-        textfield.mouseClicked(mouseX, mouseY, par3);
+        this.textfield.mouseClicked(mouseX, mouseY, par3);
     }
 
     @Override
     public void keyTyped(char par1, int par2) throws IOException {
-        if (textfield.isFocused() && par2 != Keyboard.KEY_ESCAPE) {
-            textfield.textboxKeyTyped(par1, par2);
-            String filterStr = textfield.getText();
-            if (validateEntityFilter(filterStr)) {
-                sendTimer = 5;  // delayed send to reduce packet spam while typing
+        if (this.textfield.isFocused() && par2 != Keyboard.KEY_ESCAPE) {
+            this.textfield.textboxKeyTyped(par1, par2);
+            String filterStr = this.textfield.getText();
+            if (this.validateEntityFilter(filterStr)) {
+                this.sendTimer = 5;  // delayed send to reduce packet spam while typing
             }
         } else {
             super.keyTyped(par1, par2);
@@ -91,8 +91,8 @@ public class GuiAirGrateModule extends GuiTubeModule {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (sendTimer > 0 && --sendTimer == 0) {
-            NetworkHandler.sendToServer(new PacketUpdateAirGrateModule(module, textfield.getText()));
+        if (this.sendTimer > 0 && --this.sendTimer == 0) {
+            NetworkHandler.sendToServer(new PacketUpdateAirGrateModule(this.module, this.textfield.getText()));
         }
     }
 

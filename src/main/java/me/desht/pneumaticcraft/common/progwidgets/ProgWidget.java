@@ -36,26 +36,26 @@ public abstract class ProgWidget implements IProgWidget {
 
     // private static Gui gui;
     public ProgWidget() {
-        if (getParameters() != null)
-            connectedParameters = new IProgWidget[getParameters().length * 2]; //times two because black- and whitelist.
+        if (this.getParameters() != null)
+            this.connectedParameters = new IProgWidget[this.getParameters().length * 2]; //times two because black- and whitelist.
     }
 
     @Override
     public void getTooltip(List<String> curTooltip) {
-        curTooltip.add(TextFormatting.DARK_AQUA + I18n.format("programmingPuzzle." + getWidgetString() + ".name"));
+        curTooltip.add(TextFormatting.DARK_AQUA + I18n.format("programmingPuzzle." + this.getWidgetString() + ".name"));
     }
 
     @Override
     public void renderExtraInfo() {
-        if (getExtraStringInfo() != null) {
+        if (this.getExtraStringInfo() != null) {
             GlStateManager.pushMatrix();
             GlStateManager.scale(0.5, 0.5, 0.5);
             FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
-            String[] splittedInfo = WordUtils.wrap(getExtraStringInfo(), 40).split(System.getProperty("line.separator"));
+            String[] splittedInfo = WordUtils.wrap(this.getExtraStringInfo(), 40).split(System.getProperty("line.separator"));
             for (int i = 0; i < splittedInfo.length; i++) {
                 int stringLength = fr.getStringWidth(splittedInfo[i]);
-                int startX = getWidth() / 2 - stringLength / 4;
-                int startY = getHeight() / 2 - (fr.FONT_HEIGHT + 1) * (splittedInfo.length - 1) / 4 + (fr.FONT_HEIGHT + 1) * i / 2 - fr.FONT_HEIGHT / 4;
+                int startX = this.getWidth() / 2 - stringLength / 4;
+                int startY = this.getHeight() / 2 - (fr.FONT_HEIGHT + 1) * (splittedInfo.length - 1) / 4 + (fr.FONT_HEIGHT + 1) * i / 2 - fr.FONT_HEIGHT / 4;
                 Gui.drawRect(startX * 2 - 1, startY * 2 - 1, startX * 2 + stringLength + 1, startY * 2 + fr.FONT_HEIGHT + 1, 0xFFFFFFFF);
                 fr.drawString(splittedInfo[i], startX * 2, startY * 2, 0xFF000000);
             }
@@ -74,7 +74,7 @@ public abstract class ProgWidget implements IProgWidget {
             Set<String> variables = new HashSet<>();
             ((IVariableWidget) this).addVariables(variables);
             for (String variable : variables) {
-                if (!variable.equals("") && !variable.startsWith("#") && !variable.startsWith("$") && !isVariableSetAnywhere(widgets, variable)) {
+                if (!variable.equals("") && !variable.startsWith("#") && !variable.startsWith("$") && !this.isVariableSetAnywhere(widgets, variable)) {
                     curInfo.add(I18n.format("gui.progWidget.general.warning.variableNeverSet", variable));
                 }
             }
@@ -95,19 +95,19 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
-        if (!hasStepInput() && hasStepOutput() && outputStepConnection == null) {
+        if (!this.hasStepInput() && this.hasStepOutput() && this.outputStepConnection == null) {
             curInfo.add("gui.progWidget.general.error.noPieceConnected");
         }
     }
 
     @Override
     public int getX() {
-        return x;
+        return this.x;
     }
 
     @Override
     public int getY() {
-        return y;
+        return this.y;
     }
 
     @Override
@@ -127,25 +127,25 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public int getHeight() {
-        return getParameters() != null ? getParameters().length * 22 : 22;
+        return this.getParameters() != null ? this.getParameters().length * 22 : 22;
     }
 
     @Override
     public void setParent(IProgWidget widget) {
-        parent = widget;
+        this.parent = widget;
     }
 
     @Override
     public IProgWidget getParent() {
-        return parent;
+        return this.parent;
     }
 
     @Override
     public void render() {
-        FMLClientHandler.instance().getClient().getTextureManager().bindTexture(getTexture());
-        int width = getWidth() + (getParameters() != null && getParameters().length > 0 ? 10 : 0);
-        int height = getHeight() + (hasStepOutput() ? 10 : 0);
-        Pair<Double, Double> maxUV = getMaxUV();
+        FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.getTexture());
+        int width = this.getWidth() + (this.getParameters() != null && this.getParameters().length > 0 ? 10 : 0);
+        int height = this.getHeight() + (this.hasStepOutput() ? 10 : 0);
+        Pair<Double, Double> maxUV = this.getMaxUV();
         double u = maxUV.getLeft();
         double v = maxUV.getRight();
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
@@ -159,9 +159,9 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public Pair<Double, Double> getMaxUV() {
-        int width = getWidth() + (getParameters() != null && getParameters().length > 0 ? 10 : 0);
-        int height = getHeight() + (hasStepOutput() ? 10 : 0);
-        int textureSize = getTextureSize();
+        int width = this.getWidth() + (this.getParameters() != null && this.getParameters().length > 0 ? 10 : 0);
+        int height = this.getHeight() + (this.hasStepOutput() ? 10 : 0);
+        int textureSize = this.getTextureSize();
         double u = (double) width / textureSize;
         double v = (double) height / textureSize;
         return new ImmutablePair<>(u, v);
@@ -169,8 +169,8 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public int getTextureSize() {
-        int width = getWidth() + (getParameters() != null && getParameters().length > 0 ? 10 : 0);
-        int height = getHeight() + (hasStepOutput() ? 10 : 0);
+        int width = this.getWidth() + (this.getParameters() != null && this.getParameters().length > 0 ? 10 : 0);
+        int height = this.getHeight() + (this.hasStepOutput() ? 10 : 0);
         int maxSize = Math.max(width, height);
 
         int textureSize = 1;
@@ -182,7 +182,7 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public boolean hasStepOutput() {
-        return hasStepInput();
+        return this.hasStepInput();
     }
 
     @Override
@@ -197,15 +197,15 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public void setParameter(int index, IProgWidget parm) {
-        int index2 = index >= getParameters().length ? index - getParameters().length : index;
-        if (connectedParameters != null && (parm == null || parm.getClass() == getParameters()[index2]))
-            connectedParameters[index] = parm;
+        int index2 = index >= this.getParameters().length ? index - this.getParameters().length : index;
+        if (this.connectedParameters != null && (parm == null || parm.getClass() == this.getParameters()[index2]))
+            this.connectedParameters[index] = parm;
     }
 
     @Override
     public boolean canSetParameter(int index) {
-        if (connectedParameters != null) {
-            return hasBlacklist() || index < connectedParameters.length / 2;
+        if (this.connectedParameters != null) {
+            return this.hasBlacklist() || index < this.connectedParameters.length / 2;
         }
         return false;
     }
@@ -216,22 +216,22 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public IProgWidget[] getConnectedParameters() {
-        return connectedParameters;
+        return this.connectedParameters;
     }
 
     @Override
     public void setOutputWidget(IProgWidget widget) {
-        outputStepConnection = widget;
+        this.outputStepConnection = widget;
     }
 
     @Override
     public IProgWidget getOutputWidget() {
-        return outputStepConnection;
+        return this.outputStepConnection;
     }
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        return outputStepConnection;
+        return this.outputStepConnection;
     }
 
     @Override
@@ -239,11 +239,11 @@ public abstract class ProgWidget implements IProgWidget {
         try {
             IProgWidget copy = this.getClass().newInstance();
             NBTTagCompound tag = new NBTTagCompound();
-            writeToNBT(tag);
+            this.writeToNBT(tag);
             copy.readFromNBT(tag);
             return copy;
         } catch (Exception e) {
-            Log.error("Error occured when trying to copy an " + getWidgetString() + " widget.");
+            Log.error("Error occured when trying to copy an " + this.getWidgetString() + " widget.");
             e.printStackTrace();
             return null;
         }
@@ -252,15 +252,15 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setString("name", getWidgetString());
-        tag.setInteger("x", x);
-        tag.setInteger("y", y);
+        tag.setString("name", this.getWidgetString());
+        tag.setInteger("x", this.x);
+        tag.setInteger("y", this.y);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        x = tag.getInteger("x");
-        y = tag.getInteger("y");
+        this.x = tag.getInteger("x");
+        this.y = tag.getInteger("y");
     }
 
     @Override
@@ -285,7 +285,7 @@ public abstract class ProgWidget implements IProgWidget {
 
     @Override
     public boolean canBeRunByComputers(IDroneBase drone, IProgWidget widget) {
-        return getWidgetAI(drone, widget) != null;
+        return this.getWidgetAI(drone, widget) != null;
     }
 
 }

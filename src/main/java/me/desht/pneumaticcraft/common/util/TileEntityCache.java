@@ -13,16 +13,16 @@ public class TileEntityCache {
     public TileEntityCache(World world, BlockPos pos) {
         this.world = world;
         this.pos = pos;
-        update();
+        this.update();
     }
 
     public void update() {
-        te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
+        this.te = this.world.isBlockLoaded(this.pos) ? this.world.getTileEntity(this.pos) : null;
     }
 
     public TileEntity getTileEntity() {
-        if (te != null && te.isInvalid()) te = null;
-        return te;
+        if (this.te != null && this.te.isInvalid()) this.te = null;
+        return this.te;
     }
 
     public static TileEntityCache[] getDefaultCache(World world, BlockPos pos) {

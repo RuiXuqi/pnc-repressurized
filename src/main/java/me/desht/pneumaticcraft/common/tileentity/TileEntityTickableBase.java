@@ -18,6 +18,6 @@ public class TileEntityTickableBase extends TileEntityBase implements ITickable 
 
     @Override
     public void update() {
-        updateImpl();
+        this.updateImpl();
     }
 }

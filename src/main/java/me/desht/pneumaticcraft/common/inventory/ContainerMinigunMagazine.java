@@ -17,21 +17,21 @@ public class ContainerMinigunMagazine extends ContainerPneumaticBase {
     public ContainerMinigunMagazine(EntityPlayer player) {
         super(null);
 
-        gunInv = ItemMinigun.getMagazine(ItemMinigun.getHeldMinigun(player));
-        if (gunInv != null) {
-            for (int i = 0; i < gunInv.getSlots(); i++) {
-                addSlotToContainer(new SlotItemHandler(gunInv, i, 26 + (i % 2) * 18, 26 + (i / 2) * 18));
+        this.gunInv = ItemMinigun.getMagazine(ItemMinigun.getHeldMinigun(player));
+        if (this.gunInv != null) {
+            for (int i = 0; i < this.gunInv.getSlots(); i++) {
+                this.addSlotToContainer(new SlotItemHandler(this.gunInv, i, 26 + (i % 2) * 18, 26 + (i / 2) * 18));
             }
         }
 
-        addPlayerSlots(player.inventory, 84);
+        this.addPlayerSlots(player.inventory, 84);
     }
 
     @Override
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
 
-        gunInv.save();
+        this.gunInv.save();
     }
 
     @Override

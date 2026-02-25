@@ -34,13 +34,13 @@ public class ModuleCharging extends TubeModule {
     @Override
     public void update() {
         super.update();
-        if (pressureTube.world().isRemote || (pressureTube.world().getTotalWorldTime() & 0x7) != 0) return;
+        if (this.pressureTube.world().isRemote || (this.pressureTube.world().getTotalWorldTime() & 0x7) != 0) return;
 
-        IItemHandler handler = getConnectedInventory();
+        IItemHandler handler = this.getConnectedInventory();
         if (handler != null) {
             // times 8 because we only run every 8 ticks
-            int airToTransfer = 8 * PneumaticValues.CHARGING_STATION_CHARGE_RATE * (upgraded ? 10 : 1);
-            IAirHandler airHandler = pressureTube.getAirHandler(null);
+            int airToTransfer = 8 * PneumaticValues.CHARGING_STATION_CHARGE_RATE * (this.upgraded ? 10 : 1);
+            IAirHandler airHandler = this.pressureTube.getAirHandler(null);
             int airInTube = (int) (airHandler.getPressure() * airHandler.getVolume());
 
             for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -72,16 +72,16 @@ public class ModuleCharging extends TubeModule {
 
     @Override
     public void onNeighborTileUpdate() {
-        connectedInventory = null;
+        this.connectedInventory = null;
     }
 
     private IItemHandler getConnectedInventory() {
-        if (connectedInventory == null) {
-            connectedInventory = new TileEntityCache(pressureTube.world(), pressureTube.pos().offset(dir));
+        if (this.connectedInventory == null) {
+            this.connectedInventory = new TileEntityCache(this.pressureTube.world(), this.pressureTube.pos().offset(this.dir));
         }
-        TileEntity te = connectedInventory.getTileEntity();
-        return te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()) ?
-                te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite()) :
+        TileEntity te = this.connectedInventory.getTileEntity();
+        return te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.dir.getOpposite()) ?
+                te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, this.dir.getOpposite()) :
                 null;
     }
 }

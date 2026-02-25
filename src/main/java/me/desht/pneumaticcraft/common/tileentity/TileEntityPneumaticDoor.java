@@ -19,22 +19,22 @@ public class TileEntityPneumaticDoor extends TileEntityTickableBase {
     public boolean rightGoing;
 
     public void setRotationAngle(float rotationAngle) {
-        oldRotationAngle = this.rotationAngle;
+        this.oldRotationAngle = this.rotationAngle;
         this.rotationAngle = rotationAngle;
 
-        if (rotationAngle != oldRotationAngle &&
-                (oldRotationAngle == 0f || oldRotationAngle == 90f || rotationAngle == 0f || rotationAngle == 90f)) {
-            if (getWorld().isRemote) {
+        if (rotationAngle != this.oldRotationAngle &&
+                (this.oldRotationAngle == 0f || this.oldRotationAngle == 90f || rotationAngle == 0f || rotationAngle == 90f)) {
+            if (this.getWorld().isRemote) {
                 // force a redraw to make the static door model appear or disappear
-                getWorld().markBlockRangeForRenderUpdate(pos, pos);
+                this.getWorld().markBlockRangeForRenderUpdate(this.pos, this.pos);
             }
         }
 
         // also rotate the TE for the other half of the door
-        TileEntity otherTE = getWorld().getTileEntity(getPos().offset(isTopDoor() ? EnumFacing.DOWN : EnumFacing.UP));
+        TileEntity otherTE = this.getWorld().getTileEntity(this.getPos().offset(this.isTopDoor() ? EnumFacing.DOWN : EnumFacing.UP));
         if (otherTE instanceof TileEntityPneumaticDoor) {
             TileEntityPneumaticDoor otherDoorHalf = (TileEntityPneumaticDoor) otherTE;
-            otherDoorHalf.rightGoing = rightGoing;
+            otherDoorHalf.rightGoing = this.rightGoing;
             if (rotationAngle != otherDoorHalf.rotationAngle) {
                 otherDoorHalf.setRotationAngle(rotationAngle);
             }
@@ -42,26 +42,26 @@ public class TileEntityPneumaticDoor extends TileEntityTickableBase {
     }
 
     public boolean isTopDoor() {
-        return BlockPneumaticDoor.isTopDoor(getWorld().getBlockState(getPos()));
+        return BlockPneumaticDoor.isTopDoor(this.getWorld().getBlockState(this.getPos()));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("rightGoing", rightGoing);
+        tag.setBoolean("rightGoing", this.rightGoing);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        rightGoing = tag.getBoolean("rightGoing");
+        this.rightGoing = tag.getBoolean("rightGoing");
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 2, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 2, this.getPos().getZ() + 1);
     }
 
     @Override

@@ -31,17 +31,17 @@ public class ItemPneumaticWrench extends ItemPressurizable {
             Block block = state.getBlock();
 
             boolean didWork = true;
-            float pressure = getPressure(stack);
+            float pressure = this.getPressure(stack);
             IPneumaticWrenchable wrenchable = IPneumaticWrenchable.forBlock(block);
             if (wrenchable != null && pressure > 0) {
                 if (wrenchable.rotateBlock(world, player, pos, side, hand) && !player.capabilities.isCreativeMode) {
-                    addAir(stack, -PneumaticValues.USAGE_PNEUMATIC_WRENCH);
+                    this.addAir(stack, -PneumaticValues.USAGE_PNEUMATIC_WRENCH);
                 }
             } else {
                 // rotating normal blocks doesn't use pressure
                 didWork = block.rotateBlock(world, pos, side);
             }
-            if (didWork) playWrenchSound(world, pos);
+            if (didWork) this.playWrenchSound(world, pos);
             return didWork ? EnumActionResult.SUCCESS : EnumActionResult.PASS;
         } else {
             // client-side: prevent GUI's opening etc.
@@ -56,10 +56,10 @@ public class ItemPneumaticWrench extends ItemPressurizable {
     @Override
     public boolean itemInteractionForEntity(ItemStack iStack, EntityPlayer player, EntityLivingBase target, EnumHand hand) {
         if (!player.world.isRemote) {
-            if (target.isEntityAlive() && target instanceof IPneumaticWrenchable && getPressure(iStack) > 0) {
+            if (target.isEntityAlive() && target instanceof IPneumaticWrenchable && this.getPressure(iStack) > 0) {
                 if (((IPneumaticWrenchable) target).rotateBlock(target.world, player, null, null, hand)) {
                     if (!player.capabilities.isCreativeMode) {
-                        addAir(iStack, -PneumaticValues.USAGE_PNEUMATIC_WRENCH);
+                        this.addAir(iStack, -PneumaticValues.USAGE_PNEUMATIC_WRENCH);
                     }
                     NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.PNEUMATIC_WRENCH, SoundCategory.PLAYERS, target.posX, target.posY, target.posZ, 1.0F, 1.0F, false), target.world);
                     return true;

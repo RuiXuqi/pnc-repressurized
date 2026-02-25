@@ -8,8 +8,8 @@ public class ContainerThermalCompressor extends ContainerPneumaticBase<TileEntit
     public ContainerThermalCompressor(InventoryPlayer inventoryPlayer, TileEntityThermalCompressor te) {
         super(te);
 
-        addUpgradeSlots(23, 29);
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addUpgradeSlots(23, 29);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
 }

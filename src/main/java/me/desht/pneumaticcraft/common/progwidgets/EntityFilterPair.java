@@ -20,8 +20,8 @@ class EntityFilterPair {
 
     EntityFilterPair(IProgWidget widget) {
         this.widget = widget;
-        entityWhitelist = getFilter(widget, true);
-        entityBlacklist = getFilter(widget, false);
+        this.entityWhitelist = this.getFilter(widget, true);
+        this.entityBlacklist = this.getFilter(widget, false);
     }
 
     public static void addErrors(IProgWidget widget, List<String> errors) {
@@ -39,23 +39,23 @@ class EntityFilterPair {
             return EntityFilter.fromProgWidget(widget, whitelist);
         } catch (IllegalArgumentException e) {
             if (whitelist) {
-                errorWhite = e.getMessage();
+                this.errorWhite = e.getMessage();
                 return EntityFilter.allow();
             } else {
-                errorBlack = e.getMessage();
+                this.errorBlack = e.getMessage();
                 return EntityFilter.deny();
             }
         }
     }
 
     boolean isEntityValid(Entity e) {
-        return entityWhitelist.test(e) && !entityBlacklist.test(e);
+        return this.entityWhitelist.test(e) && !this.entityBlacklist.test(e);
     }
 
     List<Entity> getValidEntities(World world) {
-        return getEntitiesInArea(
-                (ProgWidgetArea) widget.getConnectedParameters()[0],
-                (ProgWidgetArea) widget.getConnectedParameters()[widget.getParameters().length],
+        return this.getEntitiesInArea(
+                (ProgWidgetArea) this.widget.getConnectedParameters()[0],
+                (ProgWidgetArea) this.widget.getConnectedParameters()[this.widget.getParameters().length],
                 world
         );
     }
@@ -67,16 +67,16 @@ class EntityFilterPair {
         Set<Entity> entities = new HashSet<>();
         ProgWidgetArea widget = whitelistWidget;
         while (widget != null) {
-            entities.addAll(widget.getEntitiesWithinArea(world, entityWhitelist));
+            entities.addAll(widget.getEntitiesWithinArea(world, this.entityWhitelist));
             widget = (ProgWidgetArea) widget.getConnectedParameters()[0];
         }
         widget = blacklistWidget;
         while (widget != null) {
-            entities.removeAll(widget.getEntitiesWithinArea(world, entityWhitelist));
+            entities.removeAll(widget.getEntitiesWithinArea(world, this.entityWhitelist));
             widget = (ProgWidgetArea) widget.getConnectedParameters()[0];
         }
-        if (entityBlacklist != null) {
-            entities.removeIf(entityBlacklist);
+        if (this.entityBlacklist != null) {
+            entities.removeIf(this.entityBlacklist);
         }
         return new ArrayList<>(entities);
     }

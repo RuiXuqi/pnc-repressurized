@@ -19,18 +19,18 @@ public abstract class ActionWidgetVariable<Widget extends IGuiWidget> extends Ac
     @Override
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
         super.readFromNBT(tag, guiLeft, guiTop);
-        variableName = tag.getString("variableName");
+        this.variableName = tag.getString("variableName");
     }
 
     @Override
     public NBTTagCompound toNBT(int guiLeft, int guiTop) {
         NBTTagCompound tag = super.toNBT(guiLeft, guiTop);
-        tag.setString("variableName", variableName);
+        tag.setString("variableName", this.variableName);
         return tag;
     }
 
     public String getVariableName() {
-        return variableName;
+        return this.variableName;
     }
 
     public void setVariableName(String variableName) {

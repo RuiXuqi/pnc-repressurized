@@ -15,19 +15,19 @@ public class PacketSendDroneDebugEntry extends AbstractPacket<PacketSendDroneDeb
 
     public PacketSendDroneDebugEntry(DebugEntry entry, EntityDrone drone) {
         this.entry = entry;
-        entityId = drone.getEntityId();
+        this.entityId = drone.getEntityId();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        entry = new DebugEntry(buf);
-        entityId = buf.readInt();
+        this.entry = new DebugEntry(buf);
+        this.entityId = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        entry.toBytes(buf);
-        buf.writeInt(entityId);
+        this.entry.toBytes(buf);
+        buf.writeInt(this.entityId);
     }
 
     @Override

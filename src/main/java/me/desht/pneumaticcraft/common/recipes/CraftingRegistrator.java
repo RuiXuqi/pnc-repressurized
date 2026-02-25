@@ -112,7 +112,7 @@ public class CraftingRegistrator {
         // Transistor
         registry.registerPressureChamberRecipe(
                 new ItemIngredient[]{
-                new ItemIngredient(Itemss.PLASTIC, 1, ItemPlastic.BLACK),
+                        new ItemIngredient(Itemss.PLASTIC, 1, ItemPlastic.BLACK),
                         new ItemIngredient("ingotIronCompressed", 1),
                         new ItemIngredient("dustRedstone", 1)},
                 1.0F,
@@ -129,7 +129,7 @@ public class CraftingRegistrator {
 
         // Pressure enchanting
         registry.registerPressureChamberRecipe(new PressureChamberPressureEnchantHandler());
-        
+
         // Vacuum dis-enchanting
         registry.registerPressureChamberRecipe(new PressureChamberVacuumEnchantHandler());
     }

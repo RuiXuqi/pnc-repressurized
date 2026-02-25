@@ -57,7 +57,7 @@ public class ProgWidgetItemAssign extends ProgWidget implements IVariableSetWidg
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (variable.equals("")) {
+        if (this.variable.equals("")) {
             curInfo.add("gui.progWidget.general.error.emptyVariable");
         }
     }
@@ -74,9 +74,9 @@ public class ProgWidgetItemAssign extends ProgWidget implements IVariableSetWidg
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        if (!variable.equals("")) {
-            ProgWidgetItemFilter filter = (ProgWidgetItemFilter) getConnectedParameters()[0];
-            aiManager.setItem(variable, filter != null ? filter.getFilter() : null);
+        if (!this.variable.equals("")) {
+            ProgWidgetItemFilter filter = (ProgWidgetItemFilter) this.getConnectedParameters()[0];
+            this.aiManager.setItem(this.variable, filter != null ? filter.getFilter() : null);
         }
         return super.getOutputWidget(drone, allWidgets);
     }
@@ -84,18 +84,18 @@ public class ProgWidgetItemAssign extends ProgWidget implements IVariableSetWidg
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setString("variable", variable);
+        tag.setString("variable", this.variable);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        variable = tag.getString("variable");
+        this.variable = tag.getString("variable");
     }
 
     @Override
     public String getVariable() {
-        return variable;
+        return this.variable;
     }
 
     @Override
@@ -106,12 +106,12 @@ public class ProgWidgetItemAssign extends ProgWidget implements IVariableSetWidg
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Setting variable: \"" + variable + "\"");
+        curTooltip.add("Setting variable: \"" + this.variable + "\"");
     }
 
     @Override
     public String getExtraStringInfo() {
-        return "\"" + variable + "\"";
+        return "\"" + this.variable + "\"";
     }
 
     @Override
@@ -122,6 +122,6 @@ public class ProgWidgetItemAssign extends ProgWidget implements IVariableSetWidg
 
     @Override
     public void addVariables(Set<String> variables) {
-        variables.add(variable);
+        variables.add(this.variable);
     }
 }

@@ -22,13 +22,13 @@ public class EntityLogisticsDrone extends EntityBasicDrone {
     }
 
     @Override
-    protected Item getDroneItem(){
+    protected Item getDroneItem() {
         return Itemss.LOGISTICS_DRONE;
     }
 
     @Override
     public void addProgram(BlockPos clickPos, EnumFacing facing, BlockPos pos, List<IProgWidget> widgets) {
-        addBasicProgram(pos, widgets, new ProgWidgetLogistics());
+        this.addBasicProgram(pos, widgets, new ProgWidgetLogistics());
     }
-    
+
 }

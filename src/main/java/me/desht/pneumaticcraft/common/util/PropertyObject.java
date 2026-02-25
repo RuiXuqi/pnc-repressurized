@@ -25,21 +25,21 @@ public class PropertyObject<T> implements IUnlistedProperty<T> {
 
     @Override
     public String getName() {
-        return name;
+        return this.name;
     }
 
     @Override
     public boolean isValid(T value) {
-        return validator.test(value);
+        return this.validator.test(value);
     }
 
     @Override
     public Class<T> getType() {
-        return clazz;
+        return this.clazz;
     }
 
     @Override
     public String valueToString(T value) {
-        return stringFunction.apply(value);
+        return this.stringFunction.apply(value);
     }
 }

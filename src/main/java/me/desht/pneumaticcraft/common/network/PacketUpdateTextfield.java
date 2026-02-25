@@ -16,22 +16,22 @@ public class PacketUpdateTextfield extends LocationIntPacket<PacketUpdateTextfie
 
     public PacketUpdateTextfield(TileEntity te, int textfieldID) {
         super(te.getPos());
-        textFieldID = textfieldID;
-        text = ((IGUITextFieldSensitive) te).getText(textfieldID);
+        this.textFieldID = textfieldID;
+        this.text = ((IGUITextFieldSensitive) te).getText(textfieldID);
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(textFieldID);
-        ByteBufUtils.writeUTF8String(buffer, text);
+        buffer.writeInt(this.textFieldID);
+        ByteBufUtils.writeUTF8String(buffer, this.text);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        textFieldID = buffer.readInt();
-        text = ByteBufUtils.readUTF8String(buffer);
+        this.textFieldID = buffer.readInt();
+        this.text = ByteBufUtils.readUTF8String(buffer);
     }
 
     @Override

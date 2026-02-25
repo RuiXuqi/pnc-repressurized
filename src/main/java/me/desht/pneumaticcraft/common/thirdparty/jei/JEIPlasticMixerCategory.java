@@ -41,19 +41,19 @@ public class JEIPlasticMixerCategory extends PneumaticCraftCategory<PlasticMixer
         private final boolean solidify;
 
         private PlasticMixerRecipeWrapper(ItemStack input, FluidStack output, int temperature) {
-            addOutputLiquid(output, 146, 11);
-            addIngredient(new PositionedStack(input, 92, 23));
-            setUsedTemperature(76, 22, temperature);
-            solidify = false;
+            this.addOutputLiquid(output, 146, 11);
+            this.addIngredient(new PositionedStack(input, 92, 23));
+            this.setUsedTemperature(76, 22, temperature);
+            this.solidify = false;
         }
 
         private PlasticMixerRecipeWrapper(FluidStack input, ItemStack output) {
-            addInputLiquid(input, 146, 11);
-            addIngredient(new PositionedStack(getDye("dyeRed", 1), 122, 17));
-            addIngredient(new PositionedStack(getDye("dyeGreen", 2), 122, 35));
-            addIngredient(new PositionedStack(getDye("dyeBlue", 4), 122, 53));
-            addOutput(new PositionedStack(output, 92, 55));
-            solidify = true;
+            this.addInputLiquid(input, 146, 11);
+            this.addIngredient(new PositionedStack(this.getDye("dyeRed", 1), 122, 17));
+            this.addIngredient(new PositionedStack(this.getDye("dyeGreen", 2), 122, 35));
+            this.addIngredient(new PositionedStack(this.getDye("dyeBlue", 4), 122, 53));
+            this.addOutput(new PositionedStack(output, 92, 55));
+            this.solidify = true;
         }
 
         private ItemStack getDye(String oreDictName, int fallbackMeta) {
@@ -65,7 +65,7 @@ public class JEIPlasticMixerCategory extends PneumaticCraftCategory<PlasticMixer
         public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
             super.drawInfo(minecraft, recipeWidth, recipeHeight, mouseX, mouseY);
 
-            String s = solidify ? "Solidify" : "Melt";
+            String s = this.solidify ? "Solidify" : "Melt";
             minecraft.fontRenderer.drawString(s, 1, 0, 0xFF404040);
         }
     }

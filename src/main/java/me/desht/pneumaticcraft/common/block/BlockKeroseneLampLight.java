@@ -7,8 +7,8 @@ import net.minecraft.world.IBlockAccess;
 
 public class BlockKeroseneLampLight extends BlockAir {
     BlockKeroseneLampLight() {
-        setRegistryName("kerosene_lamp_light");
-        setTranslationKey("kerosene_lamp_light");
+        this.setRegistryName("kerosene_lamp_light");
+        this.setTranslationKey("kerosene_lamp_light");
     }
 
     @Override

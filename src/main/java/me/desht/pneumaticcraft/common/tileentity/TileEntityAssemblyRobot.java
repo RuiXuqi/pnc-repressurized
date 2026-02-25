@@ -31,10 +31,10 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
     }
 
     public TileEntityAssemblyRobot() {
-        gotoHomePosition();
+        this.gotoHomePosition();
         for (int i = 0; i < 5; i++) {
-            angles[i] = targetAngles[i];
-            oldAngles[i] = targetAngles[i];
+            this.angles[i] = this.targetAngles[i];
+            this.oldAngles[i] = this.targetAngles[i];
         }
     }
 
@@ -47,12 +47,12 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        invalidateSystem();
+        this.invalidateSystem();
     }
 
     void invalidateSystem() {
-        if (controllerPos != null) {
-            TileEntity te = getWorld().getTileEntity(controllerPos);
+        if (this.controllerPos != null) {
+            TileEntity te = this.getWorld().getTileEntity(this.controllerPos);
             if (te instanceof TileEntityAssemblyController) {
                 ((TileEntityAssemblyController) te).invalidateAssemblySystem();
             }
@@ -69,157 +69,157 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
         //     gotoHomePosition();
         // 
 
-        System.arraycopy(angles, 0, oldAngles, 0, 5);
+        System.arraycopy(this.angles, 0, this.oldAngles, 0, 5);
         //move the arms and claw more to their destination
         for (int i = 0; i < 5; i++) {
-            if (angles[i] > targetAngles[i]) {
-                angles[i] = Math.max(angles[i] - TileEntityConstants.ASSEMBLY_IO_UNIT_ARM_SPEED * (slowMode ? 0.1F : 1) * speed, targetAngles[i]);
-            } else if (angles[i] < targetAngles[i]) {
-                angles[i] = Math.min(angles[i] + TileEntityConstants.ASSEMBLY_IO_UNIT_ARM_SPEED * (slowMode ? 0.1F : 1) * speed, targetAngles[i]);
+            if (this.angles[i] > this.targetAngles[i]) {
+                this.angles[i] = Math.max(this.angles[i] - TileEntityConstants.ASSEMBLY_IO_UNIT_ARM_SPEED * (this.slowMode ? 0.1F : 1) * this.speed, this.targetAngles[i]);
+            } else if (this.angles[i] < this.targetAngles[i]) {
+                this.angles[i] = Math.min(this.angles[i] + TileEntityConstants.ASSEMBLY_IO_UNIT_ARM_SPEED * (this.slowMode ? 0.1F : 1) * this.speed, this.targetAngles[i]);
             }
         }
     }
 
     public void gotoHomePosition() {
-        targetAngles[EnumAngles.TURN.ordinal()] = 0F;
-        targetAngles[EnumAngles.BASE.ordinal()] = 0F;
-        targetAngles[EnumAngles.MIDDLE.ordinal()] = 55F;
-        targetAngles[EnumAngles.TAIL.ordinal()] = 35F;
-        targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
+        this.targetAngles[EnumAngles.TURN.ordinal()] = 0F;
+        this.targetAngles[EnumAngles.BASE.ordinal()] = 0F;
+        this.targetAngles[EnumAngles.MIDDLE.ordinal()] = 55F;
+        this.targetAngles[EnumAngles.TAIL.ordinal()] = 35F;
+        this.targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
     }
 
     boolean gotoTarget() {
-        if (targetDirection == null) return false;
+        if (this.targetDirection == null) return false;
 
-        this.gotoNeighbour(targetDirection[0], targetDirection[1]);
-        return isDoneMoving();
+        this.gotoNeighbour(this.targetDirection[0], this.targetDirection[1]);
+        return this.isDoneMoving();
     }
 
     public void gotoNeighbour(EnumFacing direction) {
-        gotoNeighbour(direction, null);
+        this.gotoNeighbour(direction, null);
     }
 
     /**
      * Goes to the neighbour in the given direction(s).
      *
-     * @param primaryDir the first horizontal direction to move in
+     * @param primaryDir   the first horizontal direction to move in
      * @param secondaryDir the second horizontal direction to move in (may be null)
      * @return true if the neighbour is diagonal to this arm
      */
     @SuppressWarnings("incomplete-switch")
     public boolean gotoNeighbour(EnumFacing primaryDir, EnumFacing secondaryDir) {
-        targetDirection = new EnumFacing[]{primaryDir, secondaryDir};
+        this.targetDirection = new EnumFacing[]{primaryDir, secondaryDir};
         boolean diagonal = true;
-        boolean diagonalAllowed = canMoveToDiagonalNeighbours();
+        boolean diagonalAllowed = this.canMoveToDiagonalNeighbours();
         switch (primaryDir) {
             case SOUTH:
                 if (secondaryDir == EnumFacing.EAST && diagonalAllowed) {
-                    targetAngles[EnumAngles.TURN.ordinal()] = -45F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = 40F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = -45F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = 40F;
                 } else if (secondaryDir == EnumFacing.WEST && diagonalAllowed) {
-                    targetAngles[EnumAngles.TURN.ordinal()] = 45F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = -40F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = 45F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = -40F;
                 } else {
-                    targetAngles[EnumAngles.TURN.ordinal()] = 0F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = 90F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = 0F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = 90F;
                     diagonal = false;
                 }
                 break;
             case EAST:
-                targetAngles[EnumAngles.TURN.ordinal()] = -90F;
-                targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
+                this.targetAngles[EnumAngles.TURN.ordinal()] = -90F;
+                this.targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
                 diagonal = false;
                 break;
             case NORTH:
                 if (secondaryDir == EnumFacing.EAST && diagonalAllowed) {
-                    targetAngles[EnumAngles.TURN.ordinal()] = -135F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = -40F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = -135F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = -40F;
                 } else if (secondaryDir == EnumFacing.WEST && diagonalAllowed) {
-                    targetAngles[EnumAngles.TURN.ordinal()] = 135F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = 40F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = 135F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = 40F;
                 } else {
-                    targetAngles[EnumAngles.TURN.ordinal()] = 180F;
-                    targetAngles[EnumAngles.HEAD.ordinal()] = 90F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] = 180F;
+                    this.targetAngles[EnumAngles.HEAD.ordinal()] = 90F;
                     diagonal = false;
                 }
                 break;
             case WEST:
-                targetAngles[EnumAngles.TURN.ordinal()] = 90F;
-                targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
+                this.targetAngles[EnumAngles.TURN.ordinal()] = 90F;
+                this.targetAngles[EnumAngles.HEAD.ordinal()] = 0F;
                 diagonal = false;
                 break;
         }
         if (diagonal) {
-            targetAngles[EnumAngles.BASE.ordinal()] = 160F;
-            targetAngles[EnumAngles.MIDDLE.ordinal()] = -85F;
-            targetAngles[EnumAngles.TAIL.ordinal()] = -20F;
+            this.targetAngles[EnumAngles.BASE.ordinal()] = 160F;
+            this.targetAngles[EnumAngles.MIDDLE.ordinal()] = -85F;
+            this.targetAngles[EnumAngles.TAIL.ordinal()] = -20F;
         } else {
-            targetAngles[EnumAngles.BASE.ordinal()] = 100F;
-            targetAngles[EnumAngles.MIDDLE.ordinal()] = -10F;
-            targetAngles[EnumAngles.TAIL.ordinal()] = 0F;
+            this.targetAngles[EnumAngles.BASE.ordinal()] = 100F;
+            this.targetAngles[EnumAngles.MIDDLE.ordinal()] = -10F;
+            this.targetAngles[EnumAngles.TAIL.ordinal()] = 0F;
         }
         return diagonal;
     }
 
     boolean hoverOverTarget() {
-        if (targetDirection == null) return false;
+        if (this.targetDirection == null) return false;
 
-        return this.hoverOverNeighbour(targetDirection);
+        return this.hoverOverNeighbour(this.targetDirection);
     }
 
     private boolean hoverOverNeighbour(EnumFacing[] directions) {
-        hoverOverNeighbour(directions[0], directions[1]);
-        return isDoneMoving();
+        this.hoverOverNeighbour(directions[0], directions[1]);
+        return this.isDoneMoving();
     }
 
     void hoverOverNeighbour(EnumFacing primaryDir, EnumFacing secondaryDir) {
-        boolean diagonal = gotoNeighbour(primaryDir, secondaryDir);
+        boolean diagonal = this.gotoNeighbour(primaryDir, secondaryDir);
         if (diagonal) {
-            targetAngles[EnumAngles.BASE.ordinal()] = 160F;
-            targetAngles[EnumAngles.MIDDLE.ordinal()] = -95F;
-            targetAngles[EnumAngles.TAIL.ordinal()] = -10F;
+            this.targetAngles[EnumAngles.BASE.ordinal()] = 160F;
+            this.targetAngles[EnumAngles.MIDDLE.ordinal()] = -95F;
+            this.targetAngles[EnumAngles.TAIL.ordinal()] = -10F;
         } else {
-            targetAngles[EnumAngles.BASE.ordinal()] = 100F;
-            targetAngles[EnumAngles.MIDDLE.ordinal()] = -20F;
-            targetAngles[EnumAngles.TAIL.ordinal()] = 10F;
+            this.targetAngles[EnumAngles.BASE.ordinal()] = 100F;
+            this.targetAngles[EnumAngles.MIDDLE.ordinal()] = -20F;
+            this.targetAngles[EnumAngles.TAIL.ordinal()] = 10F;
         }
     }
 
     TileEntity getTileEntityForCurrentDirection() {
-        return getTileEntityForDirection(targetDirection[0], targetDirection[1]);
+        return this.getTileEntityForDirection(this.targetDirection[0], this.targetDirection[1]);
     }
 
     public TileEntity getTileEntityForDirection(EnumFacing[] directions) {
-        return getTileEntityForDirection(directions[0], directions[1]);
+        return this.getTileEntityForDirection(directions[0], directions[1]);
     }
 
     private TileEntity getTileEntityForDirection(EnumFacing firstDir, EnumFacing secondDir) {
-        BlockPos pos = getPos().offset(firstDir);
-        return getWorld().getTileEntity(secondDir == null ? pos : pos.offset(secondDir));
+        BlockPos pos = this.getPos().offset(firstDir);
+        return this.getWorld().getTileEntity(secondDir == null ? pos : pos.offset(secondDir));
     }
 
     boolean isDoneMoving() {
         for (int i = 0; i < 5; i++) {
-            if (!PneumaticCraftUtils.areFloatsEqual(angles[i], targetAngles[i])) return false;
+            if (!PneumaticCraftUtils.areFloatsEqual(this.angles[i], this.targetAngles[i])) return false;
         }
         return true;
     }
 
     public boolean isDoneRotatingYaw() {
-        return PneumaticCraftUtils.areFloatsEqual(angles[EnumAngles.TURN.ordinal()], targetAngles[EnumAngles.TURN.ordinal()]);
+        return PneumaticCraftUtils.areFloatsEqual(this.angles[EnumAngles.TURN.ordinal()], this.targetAngles[EnumAngles.TURN.ordinal()]);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
         for (int i = 0; i < 5; i++) {
-            angles[i] = tag.getFloat("angle" + i);
-            targetAngles[i] = tag.getFloat("targetAngle" + i);
+            this.angles[i] = tag.getFloat("angle" + i);
+            this.targetAngles[i] = tag.getFloat("targetAngle" + i);
         }
-        slowMode = tag.getBoolean("slowMode");
-        speed = tag.getFloat("speed");
-        targetDirection[0] = tag.hasKey("targetDir1") ? EnumFacing.VALUES[tag.getInteger("targetDir1")] : null;
-        targetDirection[1] = tag.hasKey("targetDir2") ? EnumFacing.VALUES[tag.getInteger("targetDir2")] : null;
+        this.slowMode = tag.getBoolean("slowMode");
+        this.speed = tag.getFloat("speed");
+        this.targetDirection[0] = tag.hasKey("targetDir1") ? EnumFacing.VALUES[tag.getInteger("targetDir1")] : null;
+        this.targetDirection[1] = tag.hasKey("targetDir2") ? EnumFacing.VALUES[tag.getInteger("targetDir2")] : null;
 
     }
 
@@ -227,16 +227,16 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         for (int i = 0; i < 5; i++) {
-            tag.setFloat("angle" + i, angles[i]);
-            tag.setFloat("targetAngle" + i, targetAngles[i]);
+            tag.setFloat("angle" + i, this.angles[i]);
+            tag.setFloat("targetAngle" + i, this.targetAngles[i]);
         }
-        tag.setBoolean("slowMode", slowMode);
-        tag.setFloat("speed", speed);
+        tag.setBoolean("slowMode", this.slowMode);
+        tag.setFloat("speed", this.speed);
 
-        if (targetDirection != null) {
-            if (targetDirection[0] != null) tag.setInteger("targetDir1", targetDirection[0].ordinal());
+        if (this.targetDirection != null) {
+            if (this.targetDirection[0] != null) tag.setInteger("targetDir1", this.targetDirection[0].ordinal());
 
-            if (targetDirection[1] != null) tag.setInteger("targetDir2", targetDirection[1].ordinal());
+            if (this.targetDirection[1] != null) tag.setInteger("targetDir2", this.targetDirection[1].ordinal());
         }
         return tag;
     }
@@ -245,13 +245,13 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
 
     EnumFacing[] getPlatformDirection() {
         for (EnumFacing dir : EnumFacing.HORIZONTALS) {
-            if (getWorld().getTileEntity(getPos().offset(dir)) instanceof TileEntityAssemblyPlatform)
+            if (this.getWorld().getTileEntity(this.getPos().offset(dir)) instanceof TileEntityAssemblyPlatform)
                 return new EnumFacing[]{dir, null};
         }
-        if (canMoveToDiagonalNeighbours()) {
+        if (this.canMoveToDiagonalNeighbours()) {
             for (EnumFacing secDir : new EnumFacing[]{EnumFacing.WEST, EnumFacing.EAST}) {
                 for (EnumFacing primDir : new EnumFacing[]{EnumFacing.NORTH, EnumFacing.SOUTH}) {
-                    if (getWorld().getTileEntity(getPos().offset(primDir).offset(secDir)) instanceof TileEntityAssemblyPlatform) {
+                    if (this.getWorld().getTileEntity(this.getPos().offset(primDir).offset(secDir)) instanceof TileEntityAssemblyPlatform) {
                         return new EnumFacing[]{primDir, secDir};
                     }
                 }
@@ -263,7 +263,7 @@ public abstract class TileEntityAssemblyRobot extends TileEntityTickableBase imp
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX() - 1, getPos().getY() - 1, getPos().getZ() - 1, getPos().getX() + 2, getPos().getY() + 2, getPos().getZ() + 2);
+        return new AxisAlignedBB(this.getPos().getX() - 1, this.getPos().getY() - 1, this.getPos().getZ() - 1, this.getPos().getX() + 2, this.getPos().getY() + 2, this.getPos().getZ() + 2);
     }
 
     @Override

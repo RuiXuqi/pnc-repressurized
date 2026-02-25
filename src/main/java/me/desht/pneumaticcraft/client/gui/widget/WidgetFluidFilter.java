@@ -16,14 +16,14 @@ public class WidgetFluidFilter extends WidgetBase {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        if (fluid != null) {
-            GuiUtils.drawFluid(new Rectangle(x, y, 16, 16), new FluidStack(fluid, 1000), null);
+        if (this.fluid != null) {
+            GuiUtils.drawFluid(new Rectangle(this.x, this.y, 16, 16), new FluidStack(this.fluid, 1000), null);
         }
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shiftPressed) {
-        if (fluid != null) curTip.add(fluid.getLocalizedName(new FluidStack(fluid, 1)));
+        if (this.fluid != null) curTip.add(this.fluid.getLocalizedName(new FluidStack(this.fluid, 1)));
     }
 
     public WidgetFluidFilter setFluid(Fluid fluid) {
@@ -32,6 +32,6 @@ public class WidgetFluidFilter extends WidgetBase {
     }
 
     public Fluid getFluid() {
-        return fluid;
+        return this.fluid;
     }
 }

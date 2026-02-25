@@ -14,19 +14,19 @@ public class PacketSetEntityMotion extends LocationDoublePacket<PacketSetEntityM
 
     public PacketSetEntityMotion(Entity entity, double dx, double dy, double dz) {
         super(dx, dy, dz);
-        entityId = entity.getEntityId();
+        this.entityId = entity.getEntityId();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeInt(entityId);
+        buf.writeInt(this.entityId);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        entityId = buf.readInt();
+        this.entityId = buf.readInt();
     }
 
     @Override

@@ -10,23 +10,23 @@ import me.desht.pneumaticcraft.lib.Names;
 
 public class ModulePressureGauge extends TubeModuleRedstoneEmitting {
     public ModulePressureGauge() {
-        lowerBound = 0;
-        higherBound = 7.5F;
+        this.lowerBound = 0;
+        this.higherBound = 7.5F;
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!pressureTube.world().isRemote) {
-            if (pressureTube.world().getTotalWorldTime() % 20 == 0)
-                NetworkHandler.sendToAllAround(new PacketUpdatePressureBlock((TileEntityPneumaticBase) getTube()), getTube().world());
-            setRedstone(getRedstone(pressureTube.getAirHandler(null).getPressure()));
+        if (!this.pressureTube.world().isRemote) {
+            if (this.pressureTube.world().getTotalWorldTime() % 20 == 0)
+                NetworkHandler.sendToAllAround(new PacketUpdatePressureBlock((TileEntityPneumaticBase) this.getTube()), this.getTube().world());
+            this.setRedstone(this.getRedstone(this.pressureTube.getAirHandler(null).getPressure()));
         }
     }
 
     private int getRedstone(float pressure) {
-        return (int) ((pressure - lowerBound) / (higherBound - lowerBound) * 15);
+        return (int) ((pressure - this.lowerBound) / (this.higherBound - this.lowerBound) * 15);
     }
 
     @Override

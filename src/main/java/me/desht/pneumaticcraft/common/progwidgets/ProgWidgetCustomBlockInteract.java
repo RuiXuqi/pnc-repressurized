@@ -18,23 +18,23 @@ public class ProgWidgetCustomBlockInteract extends ProgWidgetInventoryBase {
     @Override
     public IProgWidget copy() {
         ProgWidgetCustomBlockInteract widget = (ProgWidgetCustomBlockInteract) super.copy();
-        widget.setInteractor(interactor);
+        widget.setInteractor(this.interactor);
         return widget;
     }
 
     @Override
     public String getWidgetString() {
-        return interactor.getName();
+        return this.interactor.getName();
     }
 
     @Override
     public ResourceLocation getTexture() {
-        return interactor.getTexture();
+        return this.interactor.getTexture();
     }
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        return new DroneAICustomBlockInteract(drone, (ProgWidgetAreaItemBase) widget, interactor);
+        return new DroneAICustomBlockInteract(drone, (ProgWidgetAreaItemBase) widget, this.interactor);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ProgWidgetCustomBlockInteract extends ProgWidgetInventoryBase {
 
     @Override
     public int getCraftingColorIndex() {
-        return interactor.getCraftingColorIndex();
+        return this.interactor.getCraftingColorIndex();
     }
 
 }

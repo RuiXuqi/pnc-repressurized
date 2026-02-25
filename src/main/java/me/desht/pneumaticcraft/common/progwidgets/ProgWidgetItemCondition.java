@@ -21,10 +21,10 @@ public class ProgWidgetItemCondition extends ProgWidgetConditionBase {
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null && getConnectedParameters()[3] == null) {
+        if (this.getConnectedParameters()[0] == null && this.getConnectedParameters()[3] == null) {
             curInfo.add("gui.progWidget.conditionItem.error.noCheckingItem");
         }
-        if (getConnectedParameters()[1] == null && getConnectedParameters()[4] == null) {
+        if (this.getConnectedParameters()[1] == null && this.getConnectedParameters()[4] == null) {
             curInfo.add("gui.progWidget.conditionItem.error.noFilter");
         }
     }
@@ -33,14 +33,14 @@ public class ProgWidgetItemCondition extends ProgWidgetConditionBase {
     public boolean evaluate(IDroneBase drone, IProgWidget widget) {
         ProgWidgetItemFilter checkedFilter = (ProgWidgetItemFilter) widget.getConnectedParameters()[0];
         while (checkedFilter != null) {
-            if (!ProgWidgetItemFilter.isItemValidForFilters(checkedFilter.getFilter(), ProgWidget.getConnectedWidgetList(this, 1), ProgWidget.getConnectedWidgetList(this, getParameters().length + 1), null))
+            if (!ProgWidgetItemFilter.isItemValidForFilters(checkedFilter.getFilter(), ProgWidget.getConnectedWidgetList(this, 1), ProgWidget.getConnectedWidgetList(this, this.getParameters().length + 1), null))
                 return false;
             checkedFilter = (ProgWidgetItemFilter) checkedFilter.getConnectedParameters()[0];
         }
 
         checkedFilter = (ProgWidgetItemFilter) widget.getConnectedParameters()[3];
         while (checkedFilter != null) {
-            if (ProgWidgetItemFilter.isItemValidForFilters(checkedFilter.getFilter(), ProgWidget.getConnectedWidgetList(this, 1), ProgWidget.getConnectedWidgetList(this, getParameters().length + 1), null))
+            if (ProgWidgetItemFilter.isItemValidForFilters(checkedFilter.getFilter(), ProgWidget.getConnectedWidgetList(this, 1), ProgWidget.getConnectedWidgetList(this, this.getParameters().length + 1), null))
                 return false;
             checkedFilter = (ProgWidgetItemFilter) checkedFilter.getConnectedParameters()[0];
         }

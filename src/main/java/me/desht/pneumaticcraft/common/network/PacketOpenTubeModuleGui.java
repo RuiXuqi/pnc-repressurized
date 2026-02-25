@@ -22,13 +22,13 @@ public class PacketOpenTubeModuleGui extends LocationIntPacket<PacketOpenTubeMod
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        guiID = buf.readInt();
+        this.guiID = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeInt(guiID);
+        buf.writeInt(this.guiID);
     }
 
     @Override

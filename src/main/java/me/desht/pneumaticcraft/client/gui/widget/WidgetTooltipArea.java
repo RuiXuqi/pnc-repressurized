@@ -17,6 +17,6 @@ public class WidgetTooltipArea extends WidgetBase {
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shiftPressed) {
-        Collections.addAll(curTip, tooltip);
+        Collections.addAll(curTip, this.tooltip);
     }
 }

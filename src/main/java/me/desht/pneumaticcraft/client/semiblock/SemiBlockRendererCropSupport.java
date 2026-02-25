@@ -19,11 +19,11 @@ public class SemiBlockRendererCropSupport implements ISemiBlockRenderer<SemiBloc
         GlStateManager.color(brightness, brightness, brightness, 1F);
 
         AxisAlignedBB aabb = new AxisAlignedBB(3 / 16D, -6 / 16D, 3 / 16D, 13 / 16D, 17 / 16D, 13 / 16D);
-       
+
         GlStateManager.translate(aabb.minX, aabb.minY, aabb.minZ);
         GlStateManager.scale(aabb.maxX - aabb.minX, aabb.maxY - aabb.minY, aabb.maxZ - aabb.minZ);
         GlStateManager.translate(0.5, -0.5, 0.5);
-        model.render(null, 0, 0, 0, 0, 0, 1 / 16F);
+        this.model.render(null, 0, 0, 0, 0, 0, 1 / 16F);
         GlStateManager.popMatrix();
         GlStateManager.color(1, 1, 1, 1);
     }

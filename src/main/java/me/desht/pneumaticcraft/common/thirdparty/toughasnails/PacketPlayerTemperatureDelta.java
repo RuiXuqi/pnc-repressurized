@@ -26,11 +26,11 @@ public class PacketPlayerTemperatureDelta extends AbstractPacket<PacketPlayerTem
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        deltaTemp = buf.readByte();
+        this.deltaTemp = buf.readByte();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(deltaTemp);
+        buf.writeByte(this.deltaTemp);
     }
 }

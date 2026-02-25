@@ -71,7 +71,7 @@ public class ModelProgrammingPuzzle implements IModel {
 
     @Override
     public IBakedModel bake(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter) {
-        Pair<Double, Double> maxUV = widget.getMaxUV();
+        Pair<Double, Double> maxUV = this.widget.getMaxUV();
         float scale = 1F / (float) Math.max(maxUV.getLeft(), maxUV.getRight());
         float transX = 0; //maxUV.getLeft().floatValue();
         float transY = -1 + maxUV.getRight().floatValue();
@@ -80,7 +80,7 @@ public class ModelProgrammingPuzzle implements IModel {
                 .compose(new TRSRTransformation(new Vector3f(0, 0, 0), null, new Vector3f(scale, scale, 1), null))
                 .compose(new TRSRTransformation(new Vector3f(transX, transY, 0), null, new Vector3f(1, 1, 1), null));
 
-        TextureAtlasSprite widgetSprite = bakedTextureGetter.apply(getWidgetTexture(widget));
+        TextureAtlasSprite widgetSprite = bakedTextureGetter.apply(getWidgetTexture(this.widget));
 
         ImmutableList.Builder<BakedQuad> builder = ImmutableList.builder();
         builder.add(ItemTextureQuadConverter.genQuad(format, transform, 0, 0, 16 * maxUV.getLeft().floatValue(), 16 * maxUV.getRight().floatValue(), NORTH_Z_BASE, widgetSprite, EnumFacing.NORTH, 0xffffffff, -1))
@@ -151,7 +151,7 @@ public class ModelProgrammingPuzzle implements IModel {
 
         @Override
         public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-            return quads;
+            return this.quads;
         }
 
         @Override
@@ -171,17 +171,17 @@ public class ModelProgrammingPuzzle implements IModel {
 
         @Override
         public TextureAtlasSprite getParticleTexture() {
-            return particle;
+            return this.particle;
         }
 
         @Override
         public ItemOverrideList getOverrides() {
-            return overridesList;
+            return this.overridesList;
         }
 
         @Override
         public Pair<? extends IBakedModel, Matrix4f> handlePerspective(TransformType cameraTransformType) {
-            return PerspectiveMapWrapper.handlePerspective(this, transforms, cameraTransformType);
+            return PerspectiveMapWrapper.handlePerspective(this, this.transforms, cameraTransformType);
         }
     }
 
@@ -199,17 +199,17 @@ public class ModelProgrammingPuzzle implements IModel {
             if (widget == null) return originalModel;
             String name = widget.getWidgetString();
 
-            if (!puzzle.cache.containsKey(name)) {
-                IModel model = puzzle.parent.process(ImmutableMap.of("progWidget", name));
+            if (!this.puzzle.cache.containsKey(name)) {
+                IModel model = this.puzzle.parent.process(ImmutableMap.of("progWidget", name));
                 Function<ResourceLocation, TextureAtlasSprite> textureGetter;
                 textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
-                IBakedModel bakedModel = model.bake(new SimpleModelState(puzzle.transforms), puzzle.format, textureGetter);
-                puzzle.cache.put(name, bakedModel);
+                IBakedModel bakedModel = model.bake(new SimpleModelState(this.puzzle.transforms), this.puzzle.format, textureGetter);
+                this.puzzle.cache.put(name, bakedModel);
                 return bakedModel;
             }
 
-            return puzzle.cache.get(name);
+            return this.puzzle.cache.get(name);
         }
     }
 }

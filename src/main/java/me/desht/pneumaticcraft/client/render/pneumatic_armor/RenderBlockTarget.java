@@ -51,21 +51,21 @@ public class RenderBlockTarget {
         ItemStack stack = ItemStack.EMPTY;
         String title = world.getBlockState(pos).getBlock().getLocalizedName();
 //        if (title.contains(".name")) {
-            try {
-                IBlockState state = world.getBlockState(pos);
-                stack = state.getBlock().getPickBlock(state, Minecraft.getMinecraft().objectMouseOver, world, pos, player);
-                if (!stack.isEmpty()) {
-                    title = stack.getDisplayName();
-                }
-            } catch (Throwable ignored) {
+        try {
+            IBlockState state = world.getBlockState(pos);
+            stack = state.getBlock().getPickBlock(state, Minecraft.getMinecraft().objectMouseOver, world, pos, player);
+            if (!stack.isEmpty()) {
+                title = stack.getDisplayName();
             }
+        } catch (Throwable ignored) {
+        }
 //        }
         if (title.contains(".name")) {
             ITextComponent text = te.getDisplayName();
             title = text == null ? "???" : text.getFormattedText();
         }
-        stat = new GuiAnimatedStat(null, title, GuiAnimatedStat.StatIcon.of(stack), 20, -20, 0x3000AA00, null, false);
-        stat.setMinDimensionsAndReset(0, 0);
+        this.stat = new GuiAnimatedStat(null, title, GuiAnimatedStat.StatIcon.of(stack), 20, -20, 0x3000AA00, null, false);
+        this.stat.setMinDimensionsAndReset(0, 0);
     }
 
     public void setTileEntity(TileEntity te) {
@@ -78,75 +78,75 @@ public class RenderBlockTarget {
      * @return true if valid, false otherwise
      */
     public boolean isTargetStillValid() {
-        return nEntries > 0;
+        return this.nEntries > 0;
     }
 
     private List<IBlockTrackEntry> getApplicableEntries() {
-        return BlockTrackEntryList.instance.getEntriesForCoordinate(world, pos, te);
+        return BlockTrackEntryList.instance.getEntriesForCoordinate(this.world, this.pos, this.te);
     }
 
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     public double getDistanceToEntity(Entity entity) {
-        return entity.getDistance(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D);
+        return entity.getDistance(this.pos.getX() + 0.5D, this.pos.getY() + 0.5D, this.pos.getZ() + 0.5D);
     }
 
     public void maybeRefreshFromServer(List<IBlockTrackEntry> applicableTrackEntries) {
-        if (applicableTrackEntries.stream().anyMatch(entry -> entry.shouldBeUpdatedFromServer(te))) {
-            NetworkHandler.sendToServer(new PacketDescriptionPacketRequest(pos));
+        if (applicableTrackEntries.stream().anyMatch(entry -> entry.shouldBeUpdatedFromServer(this.te))) {
+            NetworkHandler.sendToServer(new PacketDescriptionPacketRequest(this.pos));
         }
     }
 
     public void update() {
-        if (te != null && te.isInvalid()) te = null;
+        if (this.te != null && this.te.isInvalid()) this.te = null;
 
-        stat.update();
+        this.stat.update();
 
-        List<IBlockTrackEntry> applicableTrackEntries = getApplicableEntries();
-        nEntries = applicableTrackEntries.size();
+        List<IBlockTrackEntry> applicableTrackEntries = this.getApplicableEntries();
+        this.nEntries = applicableTrackEntries.size();
 
-        if (world.getTotalWorldTime() % 100 == 7) {
-            maybeRefreshFromServer(applicableTrackEntries);
+        if (this.world.getTotalWorldTime() % 100 == 7) {
+            this.maybeRefreshFromServer(applicableTrackEntries);
         }
 
-        if (!world.isAirBlock(pos)) {
-            textList = new ArrayList<>();
-            if (ticksExisted > 120) {
-                stat.closeWindow();
+        if (!this.world.isAirBlock(this.pos)) {
+            this.textList = new ArrayList<>();
+            if (this.ticksExisted > 120) {
+                this.stat.closeWindow();
                 for (IBlockTrackEntry entry : applicableTrackEntries) {
-                    if (blockTracker.countBlockTrackersOfType(entry) <= entry.spamThreshold()) {
-                        stat.openWindow();
+                    if (this.blockTracker.countBlockTrackersOfType(entry) <= entry.spamThreshold()) {
+                        this.stat.openWindow();
                         break;
                     }
                 }
-                if (isPlayerLookingAtTarget()) {
-                    stat.openWindow();
-                    addBlockTrackInfo(textList, applicableTrackEntries);
+                if (this.isPlayerLookingAtTarget()) {
+                    this.stat.openWindow();
+                    this.addBlockTrackInfo(this.textList, applicableTrackEntries);
                 }
-                stat.setText(textList);
-            } else if (ticksExisted < -30) {
-                stat.closeWindow();
-                stat.setText(textList);
+                this.stat.setText(this.textList);
+            } else if (this.ticksExisted < -30) {
+                this.stat.closeWindow();
+                this.stat.setText(this.textList);
             }
         }
 
-        if (hackTime > 0) {
-            IHackableBlock hackableBlock = HackableHandler.getHackableForCoord(world, pos, player);
+        if (this.hackTime > 0) {
+            IHackableBlock hackableBlock = HackableHandler.getHackableForCoord(this.world, this.pos, this.player);
             if (hackableBlock != null) {
-                hackTime++;
+                this.hackTime++;
             } else {
-                hackTime = 0;
+                this.hackTime = 0;
             }
         }
     }
 
     public void render(float partialTicks) {
 
-        double x = pos.getX() + 0.5D;
-        double y = pos.getY() + 0.5D;
-        double z = pos.getZ() + 0.5D;
+        double x = this.pos.getX() + 0.5D;
+        double y = this.pos.getY() + 0.5D;
+        double z = this.pos.getZ() + 0.5D;
 
         GlStateManager.disableTexture2D();
         GlStateManager.pushMatrix();
@@ -155,33 +155,33 @@ public class RenderBlockTarget {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        if (!world.isAirBlock(pos)) {
-            highlightRenderer.render(world, pos, partialTicks);
+        if (!this.world.isAirBlock(this.pos)) {
+            this.highlightRenderer.render(this.world, this.pos, partialTicks);
         }
 
-        float targetAcquireProgress = (ticksExisted + partialTicks) / 1.20f;
+        float targetAcquireProgress = (this.ticksExisted + partialTicks) / 1.20f;
 
         GlStateManager.rotate(180.0F - Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
         GlStateManager.rotate(180.0F - Minecraft.getMinecraft().getRenderManager().playerViewX, 1.0F, 0.0F, 0.0F);
-        if (ticksExisted <= 120 && ticksExisted > 50) {
+        if (this.ticksExisted <= 120 && this.ticksExisted > 50) {
             RenderProgressBar.render(0D, 0.4D, 1.8D, 0.9D, 0, targetAcquireProgress, 0xD0FFFF00, 0xD000FF00);
         }
 
         GlStateManager.enableTexture2D();
-        if (!world.isAirBlock(pos)) {
+        if (!this.world.isAirBlock(this.pos)) {
             FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 
             GlStateManager.color(0.5F, 1.0F, 0.5F, 0.5F);
-            if (ticksExisted > 120) {
+            if (this.ticksExisted > 120) {
                 GlStateManager.scale(0.02D, 0.02D, 0.02D);
-                stat.render(-1, -1, partialTicks);
-            } else if (ticksExisted > 50) {
+                this.stat.render(-1, -1, partialTicks);
+            } else if (this.ticksExisted > 50) {
                 GlStateManager.scale(0.02D, 0.02D, 0.02D);
                 fontRenderer.drawString("Acquiring Target...", 0, 0, 0x7F7F7F);
-                fontRenderer.drawString((int)targetAcquireProgress + "%", 37, 28, 0x002F00);
-            } else if (ticksExisted < -30) {
+                fontRenderer.drawString((int) targetAcquireProgress + "%", 37, 28, 0x002F00);
+            } else if (this.ticksExisted < -30) {
                 GlStateManager.scale(0.03D, 0.03D, 0.03D);
-                stat.render(-1, -1, partialTicks);
+                this.stat.render(-1, -1, partialTicks);
                 fontRenderer.drawString("Lost Target!", 0, 0, 0xFF0000);
             }
         }
@@ -190,36 +190,36 @@ public class RenderBlockTarget {
     }
 
     private boolean isInitialized() {
-        return ticksExisted >= 120;
+        return this.ticksExisted >= 120;
     }
 
     private void addBlockTrackInfo(List<String> textList, List<IBlockTrackEntry> entries) {
-        entries.forEach(e -> e.addInformation(world, pos, te, isPlayerLookingAtTarget() ? blockTracker.getFocusedFace() : null, textList));
+        entries.forEach(e -> e.addInformation(this.world, this.pos, this.te, this.isPlayerLookingAtTarget() ? this.blockTracker.getFocusedFace() : null, textList));
     }
 
     private boolean isPlayerLookingAtTarget() {
-        return pos.equals(blockTracker.getFocusedPos());
+        return this.pos.equals(this.blockTracker.getFocusedPos());
     }
 
     public void hack() {
-        if (isInitialized() && isPlayerLookingAtTarget()) {
-            IHackableBlock block = HackableHandler.getHackableForCoord(world, pos, player);
-            if (block != null && (hackTime == 0 || hackTime > block.getHackTime(world, pos, player)))
-                NetworkHandler.sendToServer(new PacketHackingBlockStart(pos));
+        if (this.isInitialized() && this.isPlayerLookingAtTarget()) {
+            IHackableBlock block = HackableHandler.getHackableForCoord(this.world, this.pos, this.player);
+            if (block != null && (this.hackTime == 0 || this.hackTime > block.getHackTime(this.world, this.pos, this.player)))
+                NetworkHandler.sendToServer(new PacketHackingBlockStart(this.pos));
         }
     }
 
     public void onHackConfirmServer() {
-        hackTime = 1;
+        this.hackTime = 1;
     }
 
     public int getHackTime() {
-        return hackTime;
+        return this.hackTime;
     }
 
     public boolean scroll(MouseEvent event) {
-        if (isInitialized() && isPlayerLookingAtTarget()) {
-            return stat.handleMouseWheel(event.getDwheel());
+        if (this.isInitialized() && this.isPlayerLookingAtTarget()) {
+            return this.stat.handleMouseWheel(event.getDwheel());
         }
         return false;
     }

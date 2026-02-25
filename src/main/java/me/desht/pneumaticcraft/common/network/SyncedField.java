@@ -37,9 +37,9 @@ public abstract class SyncedField<T> {
 
     @Override
     public String toString() {
-        return arrayIndex == -1 ?
-                "[" + te + "/" + field.getName() + "=" + getValue() + "]" :
-                "[" + te + "/" + field.getName() + "[" + arrayIndex + "]=" + getValue() + "]";
+        return this.arrayIndex == -1 ?
+                "[" + this.te + "/" + this.field.getName() + "=" + this.getValue() + "]" :
+                "[" + this.te + "/" + this.field.getName() + "[" + this.arrayIndex + "]=" + this.getValue() + "]";
     }
 
     /**
@@ -50,13 +50,13 @@ public abstract class SyncedField<T> {
      */
     public boolean update() {
         try {
-            T value = arrayIndex >= 0 ? getValueForArray(field.get(te), arrayIndex) : retrieveValue(field, te);
-            if (lastValue == null && value != null || lastValue != null && !equals(lastValue, value)) {
-                lastValue = value == null ? null : copyWhenNecessary(value);
-                return !isLazy;
+            T value = this.arrayIndex >= 0 ? this.getValueForArray(this.field.get(this.te), this.arrayIndex) : this.retrieveValue(this.field, this.te);
+            if (this.lastValue == null && value != null || this.lastValue != null && !this.equals(this.lastValue, value)) {
+                this.lastValue = value == null ? null : this.copyWhenNecessary(value);
+                return !this.isLazy;
             }
         } catch (Throwable e) {
-            Log.error("A problem occurred when trying to sync the field of " + te.toString() + ". Field: " + field.toString());
+            Log.error("A problem occurred when trying to sync the field of " + this.te.toString() + ". Field: " + this.field.toString());
             e.printStackTrace();
         }
         return false;
@@ -84,19 +84,19 @@ public abstract class SyncedField<T> {
     protected abstract void setValueForArray(Object array, int index, T value) throws Exception;
 
     public T getValue() {
-        return lastValue;
+        return this.lastValue;
     }
 
     @SideOnly(Side.CLIENT)
     public void setValue(T value) {
         try {
-            if (arrayIndex >= 0) {
-                setValueForArray(field.get(te), arrayIndex, value);
+            if (this.arrayIndex >= 0) {
+                this.setValueForArray(this.field.get(this.te), this.arrayIndex, value);
             } else {
-                injectValue(field, te, value);
+                this.injectValue(this.field, this.te, value);
             }
         } catch (Exception e) {
-            Log.error("A problem occurred when trying to sync the field of " + te.toString() + ". Field: " + field.toString());
+            Log.error("A problem occurred when trying to sync the field of " + this.te.toString() + ". Field: " + this.field.toString());
             e.printStackTrace();
         }
     }
@@ -106,7 +106,7 @@ public abstract class SyncedField<T> {
     }
 
     public Class getAnnotation() {
-        return annotation;
+        return this.annotation;
     }
 
     public static class SyncedInt extends SyncedField<Integer> {

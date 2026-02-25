@@ -9,6 +9,7 @@ import java.util.List;
 
 public class RenderLiquidHopper extends FastFluidTESR<TileEntityLiquidHopper> {
     private static final AxisAlignedBB[] BOUNDS = new AxisAlignedBB[6];
+
     static {
         BOUNDS[EnumFacing.DOWN.getIndex()] = new AxisAlignedBB(1 / 16f, 1.01 / 16f, 1 / 16f, 15 / 16f, 5 / 16f, 15 / 16f);
         BOUNDS[EnumFacing.UP.getIndex()] = new AxisAlignedBB(1 / 16f, 11.01 / 16f, 1 / 16f, 15 / 16f, 15 / 16f, 15 / 16f);

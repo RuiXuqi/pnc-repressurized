@@ -28,19 +28,19 @@ public class TileEntityVortexTube extends TileEntityPneumaticBase implements IHe
 
     public TileEntityVortexTube() {
         super(20, 25, 2000, 0);
-        coldHeatExchanger.setThermalResistance(0.01);
-        hotHeatExchanger.setThermalResistance(0.01);
-        connectingExchanger.setThermalResistance(100);
-        connectingExchanger.addConnectedExchanger(coldHeatExchanger);
-        connectingExchanger.addConnectedExchanger(hotHeatExchanger);
+        this.coldHeatExchanger.setThermalResistance(0.01);
+        this.hotHeatExchanger.setThermalResistance(0.01);
+        this.connectingExchanger.setThermalResistance(100);
+        this.connectingExchanger.addConnectedExchanger(this.coldHeatExchanger);
+        this.connectingExchanger.addConnectedExchanger(this.hotHeatExchanger);
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        if (side == null || side == getRotation().getOpposite()) {
-            return hotHeatExchanger;
-        } else if (side == getRotation()) {
-            return coldHeatExchanger;
+        if (side == null || side == this.getRotation().getOpposite()) {
+            return this.hotHeatExchanger;
+        } else if (side == this.getRotation()) {
+            return this.coldHeatExchanger;
         } else {
             return null;
         }
@@ -48,28 +48,28 @@ public class TileEntityVortexTube extends TileEntityPneumaticBase implements IHe
 
     @Override
     protected EnumFacing[] getConnectedHeatExchangerSides() {
-        return new EnumFacing[]{getRotation().getOpposite()};
+        return new EnumFacing[]{this.getRotation().getOpposite()};
     }
 
     @Override
     protected void initializeIfHeatExchanger() {
         super.initializeIfHeatExchanger();
-        initializeHeatExchanger(coldHeatExchanger, getRotation());
+        this.initializeHeatExchanger(this.coldHeatExchanger, this.getRotation());
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return side != getRotation() && side != getRotation().getOpposite();
+        return side != this.getRotation() && side != this.getRotation().getOpposite();
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         NBTTagCompound coldHeatTag = new NBTTagCompound();
-        coldHeatExchanger.writeToNBT(coldHeatTag);
+        this.coldHeatExchanger.writeToNBT(coldHeatTag);
         tag.setTag("coldHeat", coldHeatTag);
         for (int i = 0; i < 6; i++) {
-            tag.setBoolean("sideConnected" + i, sidesConnected[i]);
+            tag.setBoolean("sideConnected" + i, this.sidesConnected[i]);
         }
         return tag;
     }
@@ -77,57 +77,57 @@ public class TileEntityVortexTube extends TileEntityPneumaticBase implements IHe
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        coldHeatExchanger.readFromNBT(tag.getCompoundTag("coldHeat"));
+        this.coldHeatExchanger.readFromNBT(tag.getCompoundTag("coldHeat"));
         for (int i = 0; i < 6; i++) {
-            sidesConnected[i] = tag.getBoolean("sideConnected" + i);
+            this.sidesConnected[i] = tag.getBoolean("sideConnected" + i);
         }
     }
 
     public int getColdHeatLevel() {
-        return visualize ? 0 : coldHeatLevel;
+        return this.visualize ? 0 : this.coldHeatLevel;
     }
 
     public int getHotHeatLevel() {
-        return visualize ? 20 : hotHeatLevel;
+        return this.visualize ? 20 : this.hotHeatLevel;
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
+        if (!this.getWorld().isRemote) {
             // Only update the cold and connecting side, the hot side is handled in TileEntityBase.
-            connectingExchanger.update();
-            coldHeatExchanger.update();
-            int usedAir = (int) (getPressure() * 10);
+            this.connectingExchanger.update();
+            this.coldHeatExchanger.update();
+            int usedAir = (int) (this.getPressure() * 10);
             if (usedAir > 0) {
-                addAir(-usedAir);
+                this.addAir(-usedAir);
                 double generatedHeat = usedAir / 10D;
-                coldHeatExchanger.addHeat(-generatedHeat);
-                hotHeatExchanger.addHeat(generatedHeat);
+                this.coldHeatExchanger.addHeat(-generatedHeat);
+                this.hotHeatExchanger.addHeat(generatedHeat);
             }
-            visualize = visualizationTimer > 0;
-            if (visualize) visualizationTimer--;
-            coldHeatLevel = HeatUtil.getHeatLevelForTemperature(coldHeatExchanger.getTemperature());
-            hotHeatLevel = HeatUtil.getHeatLevelForTemperature(hotHeatExchanger.getTemperature());
+            this.visualize = this.visualizationTimer > 0;
+            if (this.visualize) this.visualizationTimer--;
+            this.coldHeatLevel = HeatUtil.getHeatLevelForTemperature(this.coldHeatExchanger.getTemperature());
+            this.hotHeatLevel = HeatUtil.getHeatLevelForTemperature(this.hotHeatExchanger.getTemperature());
         }
     }
 
     @Override
     public void onBlockRotated() {
-        visualizationTimer = 60;
+        this.visualizationTimer = 60;
     }
 
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        updateConnections();
+        this.updateConnections();
     }
 
     private void updateConnections() {
-        List<Pair<EnumFacing, IAirHandler>> connections = getAirHandler(null).getConnectedPneumatics();
-        Arrays.fill(sidesConnected, false);
+        List<Pair<EnumFacing, IAirHandler>> connections = this.getAirHandler(null).getConnectedPneumatics();
+        Arrays.fill(this.sidesConnected, false);
         for (Pair<EnumFacing, IAirHandler> entry : connections) {
-            sidesConnected[entry.getKey().ordinal()] = true;
+            this.sidesConnected[entry.getKey().ordinal()] = true;
         }
     }
 
@@ -139,9 +139,12 @@ public class TileEntityVortexTube extends TileEntityPneumaticBase implements IHe
     @Override
     public int getHeatLevelForTintIndex(int tintIndex) {
         switch (tintIndex) {
-            case 0: return visualize ? 20 : hotHeatLevel;
-            case 1: return visualize ? 0 : coldHeatLevel;
-            default: return 0xFFFFFFFF;
+            case 0:
+                return this.visualize ? 20 : this.hotHeatLevel;
+            case 1:
+                return this.visualize ? 0 : this.coldHeatLevel;
+            default:
+                return 0xFFFFFFFF;
         }
     }
 }

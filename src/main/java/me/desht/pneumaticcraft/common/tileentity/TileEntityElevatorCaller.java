@@ -24,47 +24,47 @@ public class TileEntityElevatorCaller extends TileEntityTickableBase implements 
     public void setEmittingRedstone(boolean emittingRedstone) {
         if (emittingRedstone != this.emittingRedstone) {
             this.emittingRedstone = emittingRedstone;
-            shouldUpdateNeighbors = true;
+            this.shouldUpdateNeighbors = true;
         }
     }
 
     @Override
     public void update() {
         super.update();
-        if (shouldUpdateNeighbors) {
-            updateNeighbours();
-            shouldUpdateNeighbors = false;
+        if (this.shouldUpdateNeighbors) {
+            this.updateNeighbours();
+            this.shouldUpdateNeighbors = false;
         }
     }
 
     @Override
     public void onDescUpdate() {
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
 
         super.onDescUpdate();
     }
 
     public boolean getEmittingRedstone() {
-        return emittingRedstone;
+        return this.emittingRedstone;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        emittingRedstone = tag.getBoolean("emittingRedstone");
-        thisFloor = tag.getInteger("thisFloor");
-        camoStack = ICamouflageableTE.readCamoStackFromNBT(tag);
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
-        shouldUpdateNeighbors = tag.getBoolean("shouldUpdateNeighbors");
+        this.emittingRedstone = tag.getBoolean("emittingRedstone");
+        this.thisFloor = tag.getInteger("thisFloor");
+        this.camoStack = ICamouflageableTE.readCamoStackFromNBT(tag);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
+        this.shouldUpdateNeighbors = tag.getBoolean("shouldUpdateNeighbors");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("emittingRedstone", emittingRedstone);
-        tag.setInteger("thisFloor", thisFloor);
-        ICamouflageableTE.writeCamoStackToNBT(camoStack, tag);
-        tag.setBoolean("shouldUpdateNeighbors", shouldUpdateNeighbors);
+        tag.setBoolean("emittingRedstone", this.emittingRedstone);
+        tag.setInteger("thisFloor", this.thisFloor);
+        ICamouflageableTE.writeCamoStackToNBT(this.camoStack, tag);
+        tag.setBoolean("shouldUpdateNeighbors", this.shouldUpdateNeighbors);
         return tag;
     }
 
@@ -72,19 +72,19 @@ public class TileEntityElevatorCaller extends TileEntityTickableBase implements 
     public void readFromPacket(NBTTagCompound tag) {
         super.readFromPacket(tag);
         int floorAmount = tag.getInteger("floors");
-        floors = new ElevatorButton[floorAmount];
+        this.floors = new ElevatorButton[floorAmount];
         for (int i = 0; i < floorAmount; i++) {
             NBTTagCompound buttonTag = tag.getCompoundTag("floor" + i);
-            floors[i] = new ElevatorButton();
-            floors[i].readFromNBT(buttonTag);
+            this.floors[i] = new ElevatorButton();
+            this.floors[i].readFromNBT(buttonTag);
         }
     }
 
     @Override
     public void writeToPacket(NBTTagCompound tag) {
         super.writeToPacket(tag);
-        tag.setInteger("floors", floors.length);
-        for (ElevatorButton floor : floors) {
+        tag.setInteger("floors", this.floors.length);
+        for (ElevatorButton floor : this.floors) {
             NBTTagCompound buttonTag = new NBTTagCompound();
             floor.writeToNBT(buttonTag);
             tag.setTag("floor" + floor.floorNumber, buttonTag);
@@ -93,40 +93,40 @@ public class TileEntityElevatorCaller extends TileEntityTickableBase implements 
 
     @Override
     public void onNeighborBlockUpdate() {
-        boolean wasPowered = poweredRedstone > 0;
+        boolean wasPowered = this.poweredRedstone > 0;
         super.onNeighborBlockUpdate();
-        if (poweredRedstone > 0 && !wasPowered) {
-            BlockElevatorCaller.setSurroundingElevators(getWorld(), getPos(), thisFloor);
+        if (this.poweredRedstone > 0 && !wasPowered) {
+            BlockElevatorCaller.setSurroundingElevators(this.getWorld(), this.getPos(), this.thisFloor);
         }
     }
 
     void setFloors(ElevatorButton[] floors, int thisFloorLevel) {
         this.floors = floors;
-        thisFloor = thisFloorLevel;
-        sendDescriptionPacket();
+        this.thisFloor = thisFloorLevel;
+        this.sendDescriptionPacket();
     }
 
     public ElevatorButton[] getFloors() {
-        return floors;
+        return this.floors;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     @Override
     public IBlockState getCamouflage() {
-        return camoState;
+        return this.camoState;
     }
 
     @Override
     public void setCamouflage(IBlockState state) {
-        camoState = state;
-        camoStack = ICamouflageableTE.getStackForState(state);
-        sendDescriptionPacket();
-        markDirty();
+        this.camoState = state;
+        this.camoStack = ICamouflageableTE.getStackForState(state);
+        this.sendDescriptionPacket();
+        this.markDirty();
     }
 
     public static class ElevatorButton {
@@ -143,7 +143,7 @@ public class TileEntityElevatorCaller extends TileEntityTickableBase implements 
             this.height = height;
             this.floorNumber = floorNumber;
             this.floorHeight = floorHeight;
-            buttonText = floorNumber + 1 + "";
+            this.buttonText = floorNumber + 1 + "";
         }
 
         public ElevatorButton() {
@@ -156,29 +156,29 @@ public class TileEntityElevatorCaller extends TileEntityTickableBase implements 
         }
 
         public void writeToNBT(NBTTagCompound tag) {
-            tag.setDouble("posX", posX);
-            tag.setDouble("posY", posY);
-            tag.setDouble("width", width);
-            tag.setDouble("height", height);
-            tag.setString("buttonText", buttonText);
-            tag.setInteger("floorNumber", floorNumber);
-            tag.setInteger("floorHeight", floorHeight);
-            tag.setFloat("red", red);
-            tag.setFloat("green", green);
-            tag.setFloat("blue", blue);
+            tag.setDouble("posX", this.posX);
+            tag.setDouble("posY", this.posY);
+            tag.setDouble("width", this.width);
+            tag.setDouble("height", this.height);
+            tag.setString("buttonText", this.buttonText);
+            tag.setInteger("floorNumber", this.floorNumber);
+            tag.setInteger("floorHeight", this.floorHeight);
+            tag.setFloat("red", this.red);
+            tag.setFloat("green", this.green);
+            tag.setFloat("blue", this.blue);
         }
 
         public void readFromNBT(NBTTagCompound tag) {
-            posX = tag.getDouble("posX");
-            posY = tag.getDouble("posY");
-            width = tag.getDouble("width");
-            height = tag.getDouble("height");
-            buttonText = tag.getString("buttonText");
-            floorNumber = tag.getInteger("floorNumber");
-            floorHeight = tag.getInteger("floorHeight");
-            red = tag.getFloat("red");
-            green = tag.getFloat("green");
-            blue = tag.getFloat("blue");
+            this.posX = tag.getDouble("posX");
+            this.posY = tag.getDouble("posY");
+            this.width = tag.getDouble("width");
+            this.height = tag.getDouble("height");
+            this.buttonText = tag.getString("buttonText");
+            this.floorNumber = tag.getInteger("floorNumber");
+            this.floorHeight = tag.getInteger("floorHeight");
+            this.red = tag.getFloat("red");
+            this.green = tag.getFloat("green");
+            this.blue = tag.getFloat("blue");
         }
     }
 }

@@ -11,7 +11,7 @@ import net.minecraft.world.World;
  * and store it as a field in your tile entity.
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  */
 public interface IHeatExchangerLogic {
 
@@ -28,8 +28,8 @@ public interface IHeatExchangerLogic {
      * You don't <i>have</i> to call this method if this heat exchanger is not connected to the outside world (for example
      * the heat of the liquid plastic in the Plastic Mixer).
      *
-     * @param world the world
-     * @param pos  the position
+     * @param world      the world
+     * @param pos        the position
      * @param validSides Can be left out as vararg, meaning every side can be connected. When one or more sides are
      *                   specified this will constrain this heat exchanger to only connect to other heat exchangers on
      *                   these sides.
@@ -43,7 +43,7 @@ public interface IHeatExchangerLogic {
      * are automatically initialized by {@link IHeatExchangerLogic#initializeAsHull(World, BlockPos, EnumFacing...)}
      *
      * @param world the world
-     * @param pos the position
+     * @param pos   the position
      */
     void initializeAmbientTemperature(World world, BlockPos pos);
 

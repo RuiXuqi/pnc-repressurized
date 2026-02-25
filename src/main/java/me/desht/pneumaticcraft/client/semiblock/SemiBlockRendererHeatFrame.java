@@ -22,14 +22,14 @@ public class SemiBlockRendererHeatFrame implements ISemiBlockRenderer<SemiBlockH
         GlStateManager.enableTexture2D();
         int heatLevel = semiBlock.getHeatLevel();
         float[] color = HeatUtil.getColorForHeatLevel(heatLevel);
-        float lightMul = getLightMultiplier(semiBlock);
+        float lightMul = this.getLightMultiplier(semiBlock);
         GlStateManager.color(color[0] * lightMul, color[1] * lightMul, color[2] * lightMul, 1);
         AxisAlignedBB aabb = semiBlock.getWorld() != null ?
                 semiBlock.getBlockState().getBoundingBox(semiBlock.getWorld(), semiBlock.getPos()) : DEFAULT_BOX;
         GlStateManager.translate(aabb.minX, aabb.minY, aabb.minZ);
         GlStateManager.scale(aabb.maxX - aabb.minX, aabb.maxY - aabb.minY, aabb.maxZ - aabb.minZ);
         GlStateManager.translate(0.5, -0.5, 0.5);
-        model.render(null, 0, 0, 0, 0, 0, 1 / 16F);
+        this.model.render(null, 0, 0, 0, 0, 0, 1 / 16F);
         GlStateManager.color(1, 1, 1, 1);
     }
 

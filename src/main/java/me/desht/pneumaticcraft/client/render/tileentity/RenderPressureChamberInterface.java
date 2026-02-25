@@ -11,7 +11,7 @@ public class RenderPressureChamberInterface extends AbstractModelRenderer<TileEn
     private final ModelPressureChamberInterface model;
 
     public RenderPressureChamberInterface() {
-        model = new ModelPressureChamberInterface();
+        this.model = new ModelPressureChamberInterface();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RenderPressureChamberInterface extends AbstractModelRenderer<TileEn
                 ghostEntityItem.setItem(te.getStackInInterface());
             }
             RenderUtils.rotateMatrixByMetadata(te.getRotation().ordinal());
-            model.renderModel(0.0625f, te, partialTicks, ghostEntityItem);
+            this.model.renderModel(0.0625f, te, partialTicks, ghostEntityItem);
         }
     }
 }

@@ -18,50 +18,50 @@ public class DroneEntityAIInventoryExport extends DroneAIImExBase {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return export(pos, true);
+        return this.export(pos, true);
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return export(pos, false) && super.doBlockInteraction(pos, distToBlock);
+        return this.export(pos, false) && super.doBlockInteraction(pos, distToBlock);
     }
 
     private boolean export(BlockPos pos, boolean simulate) {
-        TileEntity te = drone.world().getTileEntity(pos);
+        TileEntity te = this.drone.world().getTileEntity(pos);
         if (te != null) {
-            for (int i = 0; i < drone.getInv().getSlots(); i++) {
-                ItemStack droneStack = drone.getInv().getStackInSlot(i);
+            for (int i = 0; i < this.drone.getInv().getSlots(); i++) {
+                ItemStack droneStack = this.drone.getInv().getStackInSlot(i);
                 if (!droneStack.isEmpty()) {
-                    if (widget.isItemValidForFilters(droneStack)) {
+                    if (this.widget.isItemValidForFilters(droneStack)) {
                         for (int side = 0; side < 6; side++) {
-                            if (((ISidedWidget) widget).getSides()[side]) {
+                            if (((ISidedWidget) this.widget).getSides()[side]) {
                                 droneStack = droneStack.copy();
                                 int oldCount = droneStack.getCount();
-                                if (((ICountWidget) widget).useCount()) {
-                                    droneStack.setCount(Math.min(droneStack.getCount(), getRemainingCount()));
+                                if (((ICountWidget) this.widget).useCount()) {
+                                    droneStack.setCount(Math.min(droneStack.getCount(), this.getRemainingCount()));
                                 }
                                 ItemStack remainder = IOHelper.insert(te, droneStack.copy(), EnumFacing.byIndex(side), simulate);
-                                int stackSize = drone.getInv().getStackInSlot(i).getCount() - (remainder.isEmpty() ? droneStack.getCount() : droneStack.getCount() - remainder.getCount());
+                                int stackSize = this.drone.getInv().getStackInSlot(i).getCount() - (remainder.isEmpty() ? droneStack.getCount() : droneStack.getCount() - remainder.getCount());
                                 droneStack.setCount(stackSize);
                                 int exportedItems = oldCount - stackSize;
                                 if (!simulate) {
-                                    drone.getInv().setStackInSlot(i, stackSize > 0 ? droneStack : ItemStack.EMPTY);
-                                    decreaseCount(exportedItems);
+                                    this.drone.getInv().setStackInSlot(i, stackSize > 0 ? droneStack : ItemStack.EMPTY);
+                                    this.decreaseCount(exportedItems);
                                 }
                                 if (simulate && exportedItems > 0) return true;
 //                                if (!(inv instanceof ISidedInventory))
 //                                    break; //doing it for every side for no side sensitive inventories would be a waste.
                             }
                         }
-                        if (droneStack.isEmpty() && !simulate) drone.addAir(null, -PneumaticValues.DRONE_USAGE_INV);
-                        else drone.addDebugEntry("gui.progWidget.inventoryExport.debug.filledToMax", pos);
+                        if (droneStack.isEmpty() && !simulate) this.drone.addAir(null, -PneumaticValues.DRONE_USAGE_INV);
+                        else this.drone.addDebugEntry("gui.progWidget.inventoryExport.debug.filledToMax", pos);
                     } else {
-                        drone.addDebugEntry("gui.progWidget.inventoryExport.debug.stackdoesntPassFilter", pos);
+                        this.drone.addDebugEntry("gui.progWidget.inventoryExport.debug.stackdoesntPassFilter", pos);
                     }
                 }
             }
         } else {
-            drone.addDebugEntry("gui.progWidget.inventory.debug.noInventory", pos);
+            this.drone.addDebugEntry("gui.progWidget.inventory.debug.noInventory", pos);
         }
         return false;
     }

@@ -22,62 +22,50 @@ public enum TintedOBJLoader implements ICustomModelLoader {
     private final Map<ResourceLocation, TintedOBJModel> cache = new HashMap<>();
     private final Map<ResourceLocation, Exception> errors = new HashMap<>();
 
-    public void addDomain(String domain)
-    {
-        enabledDomains.add(domain.toLowerCase());
+    public void addDomain(String domain) {
+        this.enabledDomains.add(domain.toLowerCase());
         FMLLog.log.info("OBJLoader: Domain {} has been added.", domain.toLowerCase());
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager)
-    {
+    public void onResourceManagerReload(IResourceManager resourceManager) {
         this.manager = resourceManager;
-        cache.clear();
-        errors.clear();
+        this.cache.clear();
+        this.errors.clear();
     }
 
     @Override
-    public boolean accepts(ResourceLocation modelLocation)
-    {
-        return enabledDomains.contains(modelLocation.getNamespace()) && modelLocation.getPath().endsWith(".obj");
+    public boolean accepts(ResourceLocation modelLocation) {
+        return this.enabledDomains.contains(modelLocation.getNamespace()) && modelLocation.getPath().endsWith(".obj");
     }
 
     @Override
-    public IModel loadModel(ResourceLocation modelLocation) throws Exception
-    {
+    public IModel loadModel(ResourceLocation modelLocation) throws Exception {
         ResourceLocation file = new ResourceLocation(modelLocation.getNamespace(), modelLocation.getPath());
-        if (!cache.containsKey(file))
-        {
+        if (!this.cache.containsKey(file)) {
             IResource resource;
-            try
-            {
-                resource = manager.getResource(file);
-            }
-            catch (FileNotFoundException e)
-            {
+            try {
+                resource = this.manager.getResource(file);
+            } catch (FileNotFoundException e) {
                 if (modelLocation.getPath().startsWith("models/block/"))
-                    resource = manager.getResource(new ResourceLocation(file.getNamespace(), "models/item/" + file.getPath().substring("models/block/".length())));
+                    resource = this.manager.getResource(new ResourceLocation(file.getNamespace(), "models/item/" + file.getPath().substring("models/block/".length())));
                 else if (modelLocation.getPath().startsWith("models/item/"))
-                    resource = manager.getResource(new ResourceLocation(file.getNamespace(), "models/block/" + file.getPath().substring("models/item/".length())));
+                    resource = this.manager.getResource(new ResourceLocation(file.getNamespace(), "models/block/" + file.getPath().substring("models/item/".length())));
                 else throw e;
             }
-            TintedOBJModel.Parser parser = new TintedOBJModel.Parser(resource, manager);
+            TintedOBJModel.Parser parser = new TintedOBJModel.Parser(resource, this.manager);
             TintedOBJModel model = null;
-            try
-            {
+            try {
                 model = parser.parse();
-            }
-            catch (Exception e)
-            {
-                errors.put(modelLocation, e);
-            }
-            finally
-            {
-                cache.put(modelLocation, model);
+            } catch (Exception e) {
+                this.errors.put(modelLocation, e);
+            } finally {
+                this.cache.put(modelLocation, model);
             }
         }
-        TintedOBJModel model = cache.get(file);
-        if (model == null) throw new ModelLoaderRegistry.LoaderException("Error loading model previously: " + file, errors.get(modelLocation));
+        TintedOBJModel model = this.cache.get(file);
+        if (model == null)
+            throw new ModelLoaderRegistry.LoaderException("Error loading model previously: " + file, this.errors.get(modelLocation));
         return model;
     }
 }

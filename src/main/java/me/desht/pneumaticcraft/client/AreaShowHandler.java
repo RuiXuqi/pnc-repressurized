@@ -22,7 +22,7 @@ public class AreaShowHandler {
         this.color = color;
         this.size = size;
         this.disableDepthTest = disableDepthTest;
-        this.renderList = compileRenderList();
+        this.renderList = this.compileRenderList();
     }
 
     AreaShowHandler(Set<BlockPos> area, int color, boolean disableDepthTest) {
@@ -33,46 +33,46 @@ public class AreaShowHandler {
         int renderList = GlStateManager.glGenLists(1);
         GlStateManager.glNewList(renderList, GL11.GL_COMPILE);
 
-        if(disableDepthTest) GlStateManager.disableDepth();
-        
+        if (this.disableDepthTest) GlStateManager.disableDepth();
+
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
-        RenderUtils.glColorHex(color);
+        RenderUtils.glColorHex(this.color);
         wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
 
-        double start = (1 - size) / 2.0;
-        
-        for (BlockPos pos : showingPositions) {
+        double start = (1 - this.size) / 2.0;
+
+        for (BlockPos pos : this.showingPositions) {
             wr.setTranslation(pos.getX() + start, pos.getY() + start, pos.getZ() + start);
 
             wr.pos(0, 0, 0).endVertex();
-            wr.pos(0, size, 0).endVertex();
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(size, 0, 0).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
 
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(0, size, size).endVertex();
-            wr.pos(0, 0, size).endVertex();
-
-            wr.pos(0, 0, 0).endVertex();
-            wr.pos(0, 0, size).endVertex();
-            wr.pos(0, size, size).endVertex();
-            wr.pos(0, size, 0).endVertex();
-
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(size, 0, 0).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
 
             wr.pos(0, 0, 0).endVertex();
-            wr.pos(size, 0, 0).endVertex();
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(0, 0, size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
 
-            wr.pos(0, size, size).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(0, size, 0).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
+
+            wr.pos(0, 0, 0).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
+
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
         }
 
         Tessellator.getInstance().draw();
@@ -80,45 +80,45 @@ public class AreaShowHandler {
         wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         RenderUtils.glColorHex(0X404040, 128);
 
-        for (BlockPos pos : showingPositions) {
+        for (BlockPos pos : this.showingPositions) {
             wr.setTranslation(pos.getX() + start, pos.getY() + start, pos.getZ() + start);
 
             wr.pos(0, 0, 0).endVertex();
-            wr.pos(0, size, 0).endVertex();
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(size, 0, 0).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
 
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(0, size, size).endVertex();
-            wr.pos(0, 0, size).endVertex();
-
-            wr.pos(0, 0, 0).endVertex();
-            wr.pos(0, 0, size).endVertex();
-            wr.pos(0, size, size).endVertex();
-            wr.pos(0, size, 0).endVertex();
-
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(size, 0, 0).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
 
             wr.pos(0, 0, 0).endVertex();
-            wr.pos(size, 0, 0).endVertex();
-            wr.pos(size, 0, size).endVertex();
-            wr.pos(0, 0, size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
 
-            wr.pos(0, size, size).endVertex();
-            wr.pos(size, size, size).endVertex();
-            wr.pos(size, size, 0).endVertex();
-            wr.pos(0, size, 0).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
+
+            wr.pos(0, 0, 0).endVertex();
+            wr.pos(this.size, 0, 0).endVertex();
+            wr.pos(this.size, 0, this.size).endVertex();
+            wr.pos(0, 0, this.size).endVertex();
+
+            wr.pos(0, this.size, this.size).endVertex();
+            wr.pos(this.size, this.size, this.size).endVertex();
+            wr.pos(this.size, this.size, 0).endVertex();
+            wr.pos(0, this.size, 0).endVertex();
         }
 
         wr.setTranslation(0, 0, 0);
         Tessellator.getInstance().draw();
-        
-        if(disableDepthTest) GlStateManager.enableDepth();
-        
+
+        if (this.disableDepthTest) GlStateManager.enableDepth();
+
         GlStateManager.glEndList();
         return renderList;
     }
@@ -129,7 +129,7 @@ public class AreaShowHandler {
             GlStateManager.callList(renderList);
             GlStateManager.enableDepth();
         }else{*/
-            GlStateManager.callList(renderList);
+        GlStateManager.callList(this.renderList);
         //}
     }
 }

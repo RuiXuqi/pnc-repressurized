@@ -44,62 +44,62 @@ public class SideConfigurator<T> implements INBTSerializable<NBTTagCompound> {
     /**
      * Constructor
      *
-     * @param id a unique string for this configurator's title (I18n: gui.sideConfigurator.title.&lt;titleKey&gt;)
+     * @param id               a unique string for this configurator's title (I18n: gui.sideConfigurator.title.&lt;titleKey&gt;)
      * @param sideConfigurable the owning object
-     * @param baseButtonID id of the first GUI button; there are six in total, one for each side of the block
+     * @param baseButtonID     id of the first GUI button; there are six in total, one for each side of the block
      */
     SideConfigurator(String id, ISideConfigurable sideConfigurable, int baseButtonID) {
         this.id = id;
         this.sideConfigurable = sideConfigurable;
         this.baseButtonID = baseButtonID;
-        entries.add(null);  // null represents "unconnected"
+        this.entries.add(null);  // null represents "unconnected"
 
-        setupFacingMatrix();
+        this.setupFacingMatrix();
     }
 
     int registerHandler(String id, ItemStack textureStack, Capability<T> cap, T handler, RelativeFace... defaultRelativeFaces) {
-        entries.add(new ConnectionEntry<>(id, textureStack, cap, handler));
-        idxMap.put(id, entries.size() - 1);
-        return setDefaultSides(defaultRelativeFaces);
+        this.entries.add(new ConnectionEntry<>(id, textureStack, cap, handler));
+        this.idxMap.put(id, this.entries.size() - 1);
+        return this.setDefaultSides(defaultRelativeFaces);
     }
 
     int registerHandler(String id, ResourceLocation texture, Capability<T> cap, T handler, RelativeFace... defaultRelativeFaces) {
-        entries.add(new ConnectionEntry<>(id, texture, cap, handler));
-        idxMap.put(id, entries.size() - 1);
-        return setDefaultSides(defaultRelativeFaces);
+        this.entries.add(new ConnectionEntry<>(id, texture, cap, handler));
+        this.idxMap.put(id, this.entries.size() - 1);
+        return this.setDefaultSides(defaultRelativeFaces);
     }
 
     private int setDefaultSides(RelativeFace... defaultRelativeFaces) {
-        Validate.isTrue(entries.size() <= Byte.MAX_VALUE, "No more than " + Byte.MAX_VALUE + " entries allowed");
-        byte idx = (byte) (entries.size() - 1);
+        Validate.isTrue(this.entries.size() <= Byte.MAX_VALUE, "No more than " + Byte.MAX_VALUE + " entries allowed");
+        byte idx = (byte) (this.entries.size() - 1);
         for (RelativeFace relativeFace : defaultRelativeFaces) {
-            faces[relativeFace.ordinal()] = idx;
-            defaultFaces[relativeFace.ordinal()] = idx;
+            this.faces[relativeFace.ordinal()] = idx;
+            this.defaultFaces[relativeFace.ordinal()] = idx;
         }
         return idx;
     }
 
     void setNullFaceHandler(String id) {
-        nullFaceHandler = entries.get(idxMap.get(id)).handler;
+        this.nullFaceHandler = this.entries.get(this.idxMap.get(id)).handler;
     }
 
     private boolean shouldSaveNBT() {
-        return !Arrays.equals(faces, defaultFaces);
+        return !Arrays.equals(this.faces, this.defaultFaces);
     }
 
     void updateHandler(String id, T handler) {
-        int idx = idxMap.get(id);
-        ConnectionEntry e = entries.get(idx);
-        entries.set(idx, new ConnectionEntry<T>(e.id, e.texture, e.cap, handler));
-        setNullFaceHandler(id);
+        int idx = this.idxMap.get(id);
+        ConnectionEntry e = this.entries.get(idx);
+        this.entries.set(idx, new ConnectionEntry<T>(e.id, e.texture, e.cap, handler));
+        this.setNullFaceHandler(id);
     }
 
     public int getBaseButtonID() {
-        return baseButtonID;
+        return this.baseButtonID;
     }
 
     public byte[] getFaces() {
-        return faces;
+        return this.faces;
     }
 
     public void setFaces(byte[] faces) {
@@ -107,62 +107,66 @@ public class SideConfigurator<T> implements INBTSerializable<NBTTagCompound> {
     }
 
     public boolean handleButtonPress(int buttonID) {
-        if (buttonID >= baseButtonID && buttonID < baseButtonID + 6) {
-            RelativeFace relativeFace = RelativeFace.values()[buttonID - baseButtonID];
-            cycleValue(relativeFace);
+        if (buttonID >= this.baseButtonID && buttonID < this.baseButtonID + 6) {
+            RelativeFace relativeFace = RelativeFace.values()[buttonID - this.baseButtonID];
+            this.cycleValue(relativeFace);
             return true;
         }
         return false;
     }
 
     public int getButtonId(RelativeFace relativeFace) {
-        return baseButtonID + relativeFace.ordinal();
+        return this.baseButtonID + relativeFace.ordinal();
     }
 
     private void cycleValue(RelativeFace relativeFace) {
         int idx = relativeFace.ordinal();
         int n = 0;
-        while (n++ < entries.size()) {
-            faces[idx]++;
-            if (faces[idx] >= entries.size()) {
-                faces[idx] = 0;
+        while (n++ < this.entries.size()) {
+            this.faces[idx]++;
+            if (this.faces[idx] >= this.entries.size()) {
+                this.faces[idx] = 0;
             }
-            ConnectionEntry<T> c = entries.get(faces[idx]);
-            if (sideConfigurable.isValid(relativeFace, c == null ? null : c.cap)) return;
+            ConnectionEntry<T> c = this.entries.get(this.faces[idx]);
+            if (this.sideConfigurable.isValid(relativeFace, c == null ? null : c.cap)) return;
         }
     }
 
     public String getID() {
-        return id;
+        return this.id;
     }
 
     public String getTranslationKey() {
-        return "gui.sideConfigurator.title." + id;
+        return "gui.sideConfigurator.title." + this.id;
     }
 
 
     T getHandler(EnumFacing facing) {
-        if (facing == null) return nullFaceHandler;
-        ConnectionEntry<T> c = entries.get(faces[getRelativeFace(facing).ordinal()]);
+        if (facing == null) return this.nullFaceHandler;
+        ConnectionEntry<T> c = this.entries.get(this.faces[this.getRelativeFace(facing).ordinal()]);
         return c == null ? null : c.handler;
     }
 
     void setupFacingMatrix() {
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
-            facingMatrix[f.getHorizontalIndex()] = new RelativeFace[4];
+            this.facingMatrix[f.getHorizontalIndex()] = new RelativeFace[4];
             for (RelativeFace rf : RelativeFace.HORIZONTALS) {
-                EnumFacing f2 = rot(f, rf);
-                facingMatrix[f.getHorizontalIndex()][f2.getHorizontalIndex()] = rf;
+                EnumFacing f2 = this.rot(f, rf);
+                this.facingMatrix[f.getHorizontalIndex()][f2.getHorizontalIndex()] = rf;
             }
         }
     }
 
     private EnumFacing rot(EnumFacing in, RelativeFace rf) {
         switch (rf) {
-            case RIGHT: return in.rotateYCCW();
-            case LEFT: return in.rotateY();
-            case BACK: return in.getOpposite();
-            default: return in;
+            case RIGHT:
+                return in.rotateYCCW();
+            case LEFT:
+                return in.rotateY();
+            case BACK:
+                return in.getOpposite();
+            default:
+                return in;
         }
     }
 
@@ -172,14 +176,14 @@ public class SideConfigurator<T> implements INBTSerializable<NBTTagCompound> {
         } else if (facing == EnumFacing.DOWN) {
             return RelativeFace.BOTTOM;
         } else {
-            return facingMatrix[sideConfigurable.byIndex().getHorizontalIndex()][facing.getHorizontalIndex()];
+            return this.facingMatrix[this.sideConfigurable.byIndex().getHorizontalIndex()][facing.getHorizontalIndex()];
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void setupButton(GuiButtonSpecial button) {
-        RelativeFace relativeFace = RelativeFace.values()[button.getID() - baseButtonID];
-        ConnectionEntry c = entries.get(faces[relativeFace.ordinal()]);
+        RelativeFace relativeFace = RelativeFace.values()[button.getID() - this.baseButtonID];
+        ConnectionEntry c = this.entries.get(this.faces[relativeFace.ordinal()]);
         if (c != null) {
             if (c.texture instanceof ItemStack) {
                 button.setRenderStacks((ItemStack) c.texture);
@@ -192,19 +196,19 @@ public class SideConfigurator<T> implements INBTSerializable<NBTTagCompound> {
             button.setRenderStacks(ItemStack.EMPTY);
             button.setRenderedIcon(Textures.GUI_X_BUTTON);
         }
-        button.setTooltipText(Lists.newArrayList(TextFormatting.YELLOW + relativeFace.toString(), I18n.format(getFaceKey(relativeFace))));
+        button.setTooltipText(Lists.newArrayList(TextFormatting.YELLOW + relativeFace.toString(), I18n.format(this.getFaceKey(relativeFace))));
     }
 
     private String getFaceKey(RelativeFace relativeFace) {
-        ConnectionEntry<T> c = entries.get(faces[relativeFace.ordinal()]);
-        return c == null ? "gui.sideConfigurator.unconnected" : "gui.sideConfigurator." + id + "." + c.id;
+        ConnectionEntry<T> c = this.entries.get(this.faces[relativeFace.ordinal()]);
+        return c == null ? "gui.sideConfigurator.unconnected" : "gui.sideConfigurator." + this.id + "." + c.id;
     }
 
     @Override
     public NBTTagCompound serializeNBT() {
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagList l = new NBTTagList();
-        for (byte face : faces) {
+        for (byte face : this.faces) {
             l.appendTag(new NBTTagByte(face));
         }
         tag.setTag("faces", l);
@@ -214,8 +218,8 @@ public class SideConfigurator<T> implements INBTSerializable<NBTTagCompound> {
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         NBTTagList l = nbt.getTagList("faces", Constants.NBT.TAG_BYTE);
-        for (int i = 0; i < l.tagCount() && i < faces.length; i++) {
-            faces[i] = ((NBTTagByte) l.get(i)).getByte();
+        for (int i = 0; i < l.tagCount() && i < this.faces.length; i++) {
+            this.faces[i] = ((NBTTagByte) l.get(i)).getByte();
         }
     }
 

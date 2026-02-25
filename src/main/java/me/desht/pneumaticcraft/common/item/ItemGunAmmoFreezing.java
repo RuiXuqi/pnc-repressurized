@@ -58,7 +58,7 @@ public class ItemGunAmmoFreezing extends ItemGunAmmo {
                 // temporarily stop the target getting knocked back, since it might be knocked out of the freeze zone
                 knockback = living.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
                 living.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(1.0);
-                encaseInFakeIce(minigun, target);
+                this.encaseInFakeIce(minigun, target);
             }
         }
         if (knockback != -1) {
@@ -111,7 +111,7 @@ public class ItemGunAmmoFreezing extends ItemGunAmmo {
                 // freeze surface water
                 Vec3d eye = minigun.getPlayer().getPositionEyes(0f);
                 RayTraceResult res = world.rayTraceBlocks(eye, hitVec, true, false, false);
-                if (res!= null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
+                if (res != null && res.typeOfHit == RayTraceResult.Type.BLOCK) {
                     pos1 = res.getBlockPos();
                     newState = Blocks.ICE.getDefaultState();
                 }

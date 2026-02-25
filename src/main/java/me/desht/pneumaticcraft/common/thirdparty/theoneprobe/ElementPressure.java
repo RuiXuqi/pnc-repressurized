@@ -18,18 +18,18 @@ public class ElementPressure implements IElement {
     private static final float SCALE = 0.7f;
 
     ElementPressure(IPneumaticMachine te) {
-        min = te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) te).getMinWorkingPressure() : 0;
+        this.min = te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) te).getMinWorkingPressure() : 0;
         IAirHandler airHandler = te.getAirHandler(null);
-        pressure = airHandler.getPressure();
-        danger = airHandler.getDangerPressure();
-        crit = airHandler.getCriticalPressure();
+        this.pressure = airHandler.getPressure();
+        this.danger = airHandler.getDangerPressure();
+        this.crit = airHandler.getCriticalPressure();
     }
 
     ElementPressure(ByteBuf byteBuf) {
-        min = byteBuf.readFloat();
-        pressure = byteBuf.readFloat();
-        danger = byteBuf.readFloat();
-        crit = byteBuf.readFloat();
+        this.min = byteBuf.readFloat();
+        this.pressure = byteBuf.readFloat();
+        this.danger = byteBuf.readFloat();
+        this.crit = byteBuf.readFloat();
     }
 
     @Override
@@ -37,9 +37,9 @@ public class ElementPressure implements IElement {
         GlStateManager.pushMatrix();
 //        double scale = getWidth() / (GuiUtils.PRESSURE_GAUGE_RADIUS * 2.0);
         GlStateManager.scale(SCALE, SCALE, SCALE);
-        int x1 = (int)((x + getWidth() / 2) / SCALE);
-        int y1 = (int)((y + getHeight() / 2) / SCALE);
-        GuiUtils.drawPressureGauge(Minecraft.getMinecraft().fontRenderer, -1, crit, danger, min, pressure, x1, y1, 0, 0xFFC0C0C0);
+        int x1 = (int) ((x + this.getWidth() / 2) / SCALE);
+        int y1 = (int) ((y + this.getHeight() / 2) / SCALE);
+        GuiUtils.drawPressureGauge(Minecraft.getMinecraft().fontRenderer, -1, this.crit, this.danger, this.min, this.pressure, x1, y1, 0, 0xFFC0C0C0);
         GlStateManager.popMatrix();
     }
 
@@ -55,10 +55,10 @@ public class ElementPressure implements IElement {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeFloat(min);
-        buf.writeFloat(pressure);
-        buf.writeFloat(danger);
-        buf.writeFloat(crit);
+        buf.writeFloat(this.min);
+        buf.writeFloat(this.pressure);
+        buf.writeFloat(this.danger);
+        buf.writeFloat(this.crit);
     }
 
     @Override

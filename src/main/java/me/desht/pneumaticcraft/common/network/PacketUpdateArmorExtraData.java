@@ -16,9 +16,11 @@ import java.util.*;
 
 public class PacketUpdateArmorExtraData extends AbstractPacket<PacketUpdateArmorExtraData> {
     private static final List<Map<String, Integer>> VALID_KEYS = new ArrayList<>();
+
     private static void addKey(EntityEquipmentSlot slot, String key, int nbtType) {
         VALID_KEYS.get(slot.getIndex()).put(key, nbtType);
     }
+
     static {
         Arrays.stream(EntityEquipmentSlot.values())
                 .filter(slot -> slot.getSlotType() == EntityEquipmentSlot.Type.ARMOR)
@@ -67,13 +69,13 @@ public class PacketUpdateArmorExtraData extends AbstractPacket<PacketUpdateArmor
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        slot = EntityEquipmentSlot.values()[buf.readByte()];
-        data = ByteBufUtils.readTag(buf);
+        this.slot = EntityEquipmentSlot.values()[buf.readByte()];
+        this.data = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(slot.ordinal());
-        ByteBufUtils.writeTag(buf, data);
+        buf.writeByte(this.slot.ordinal());
+        ByteBufUtils.writeTag(buf, this.data);
     }
 }

@@ -9,35 +9,35 @@ import net.minecraft.util.math.Vec3d;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class AreaTypePyramid extends AreaType{
+public class AreaTypePyramid extends AreaType {
 
     public static final String ID = "pyramid";
-    
+
     private EnumAxis axis = EnumAxis.X;
     private EnumAreaTypePyramid pyramidType = EnumAreaTypePyramid.FILLED;
-    
-    private enum EnumAreaTypePyramid{
+
+    private enum EnumAreaTypePyramid {
         FILLED("filled"), HOLLOW("hollow");
-        
+
         private final String name;
-        
-        EnumAreaTypePyramid(String name){
+
+        EnumAreaTypePyramid(String name) {
             this.name = "gui.progWidget.area.type.pyramid.pyramidType." + name;
         }
-        
+
         @Override
-        public String toString(){
-            return I18n.format(name);
+        public String toString() {
+            return I18n.format(this.name);
         }
     }
-    
-    public AreaTypePyramid(){
+
+    public AreaTypePyramid() {
         super(ID);
     }
 
     @Override
-    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
-        switch (axis) {
+    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+        switch (this.axis) {
             case X:
                 if (p2.getX() != p1.getX()) {
                     Vec3d lineVec = new Vec3d(p2.getX() - p1.getX(), p2.getY() - p1.getY(), p2.getZ() - p1.getZ()).normalize();
@@ -52,15 +52,15 @@ public class AreaTypePyramid extends AreaType{
                         x += p2.getX() > p1.getX() ? 1 : -1;
                         curY += lineVec.y;
                         curZ += lineVec.z;
-                        
+
                         int dY = Math.abs((int) (curY - p1.getY()));
                         int dZ = Math.abs((int) (curZ - p1.getZ()));
-                        if(dY == prevDY) prevDY--;
-                        if(dZ == prevDZ) prevDZ--;
+                        if (dY == prevDY) prevDY--;
+                        if (dZ == prevDZ) prevDZ--;
 
                         for (int y = p1.getY() - dY; y <= p1.getY() + dY; y++) {
                             for (int z = p1.getZ() - dZ; z <= p1.getZ() + dZ; z++) {
-                                if(pyramidType == EnumAreaTypePyramid.FILLED || x == p2.getX() || z < p1.getZ() - prevDZ || z > p1.getZ() + prevDZ || y < p1.getY() - prevDY || y > p1.getY() + prevDY)
+                                if (this.pyramidType == EnumAreaTypePyramid.FILLED || x == p2.getX() || z < p1.getZ() - prevDZ || z > p1.getZ() + prevDZ || y < p1.getY() - prevDY || y > p1.getY() + prevDY)
                                     areaAdder.accept(new BlockPos(x, y, z));
                             }
                         }
@@ -83,11 +83,11 @@ public class AreaTypePyramid extends AreaType{
                         y += p2.getY() > p1.getY() ? 1 : -1;
                         curX += lineVec.x;
                         curZ += lineVec.z;
-                        
+
                         int dX = Math.abs((int) (curX - p1.getX()));
                         int dZ = Math.abs((int) (curZ - p1.getZ()));
-                        if(dX == prevDX) prevDX--;
-                        if(dZ == prevDZ) prevDZ--;
+                        if (dX == prevDX) prevDX--;
+                        if (dZ == prevDZ) prevDZ--;
 
                         int miniX = p1.getX() - dX;
                         int maxiX = p1.getX() + dX;
@@ -95,7 +95,7 @@ public class AreaTypePyramid extends AreaType{
                         int maxiZ = p1.getZ() + dZ;
                         for (int x = miniX; x <= maxiX; x++) {
                             for (int z = miniZ; z <= maxiZ; z++) {
-                                if(pyramidType == EnumAreaTypePyramid.FILLED || y == p2.getY() || z < p1.getZ() - prevDZ || z > p1.getZ() + prevDZ || x < p1.getX() - prevDX || x > p1.getX() + prevDX)
+                                if (this.pyramidType == EnumAreaTypePyramid.FILLED || y == p2.getY() || z < p1.getZ() - prevDZ || z > p1.getZ() + prevDZ || x < p1.getX() - prevDX || x > p1.getX() + prevDX)
                                     areaAdder.accept(new BlockPos(x, y, z));
                             }
                         }
@@ -120,12 +120,12 @@ public class AreaTypePyramid extends AreaType{
                         curY += lineVec.y;
                         int dX = Math.abs((int) (curX - p1.getX()));
                         int dY = Math.abs((int) (curY - p1.getY()));
-                        if(dX == prevDX) prevDX--;
-                        if(dY == prevDY) prevDY--;
-                        
+                        if (dX == prevDX) prevDX--;
+                        if (dY == prevDY) prevDY--;
+
                         for (int x = p1.getX() - dX; x <= p1.getX() + dX; x++) {
                             for (int y = p1.getY() - dY; y <= p1.getY() + dY; y++) {
-                                if(pyramidType == EnumAreaTypePyramid.FILLED || z == p2.getZ() || x < p1.getX() - prevDX || x > p1.getX() + prevDX || y < p1.getY() - prevDY || y > p1.getY() + prevDY)
+                                if (this.pyramidType == EnumAreaTypePyramid.FILLED || z == p2.getZ() || x < p1.getX() - prevDX || x > p1.getX() + prevDX || y < p1.getY() - prevDY || y > p1.getY() + prevDY)
                                     areaAdder.accept(new BlockPos(x, y, z));
                             }
                         }
@@ -135,42 +135,42 @@ public class AreaTypePyramid extends AreaType{
                 }
                 break;
             default:
-                throw new IllegalArgumentException(axis.toString());
-        }       
-    }
-    
-    @Override
-    public void addUIWidgets(List<AreaTypeWidget> widgets){
-        super.addUIWidgets(widgets);
-        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.general.axis", EnumAxis.class, () -> axis, axis -> this.axis = axis));
-        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.pyramid.pyramidType", EnumAreaTypePyramid.class, () -> pyramidType, pyramidType -> this.pyramidType = pyramidType));
-    }
-    
-    @Override
-    public void writeToNBT(NBTTagCompound tag){
-        super.writeToNBT(tag);
-        tag.setByte("axis", (byte)axis.ordinal());
-        tag.setByte("pyramidType", (byte)pyramidType.ordinal());
-    }
-    
-    @Override
-    public void readFromNBT(NBTTagCompound tag){
-        super.readFromNBT(tag);
-        axis = EnumAxis.values()[tag.getByte("axis")];
-        pyramidType = EnumAreaTypePyramid.values()[tag.getByte("pyramidType")];
+                throw new IllegalArgumentException(this.axis.toString());
+        }
     }
 
     @Override
-    public void convertFromLegacy(EnumAreaType oldAreaType, int typeInfo){
-        switch(oldAreaType){
+    public void addUIWidgets(List<AreaTypeWidget> widgets) {
+        super.addUIWidgets(widgets);
+        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.general.axis", EnumAxis.class, () -> this.axis, axis -> this.axis = axis));
+        widgets.add(new AreaTypeWidgetEnum<>("gui.progWidget.area.type.pyramid.pyramidType", EnumAreaTypePyramid.class, () -> this.pyramidType, pyramidType -> this.pyramidType = pyramidType));
+    }
+
+    @Override
+    public void writeToNBT(NBTTagCompound tag) {
+        super.writeToNBT(tag);
+        tag.setByte("axis", (byte) this.axis.ordinal());
+        tag.setByte("pyramidType", (byte) this.pyramidType.ordinal());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        this.axis = EnumAxis.values()[tag.getByte("axis")];
+        this.pyramidType = EnumAreaTypePyramid.values()[tag.getByte("pyramidType")];
+    }
+
+    @Override
+    public void convertFromLegacy(EnumAreaType oldAreaType, int typeInfo) {
+        switch (oldAreaType) {
             case X_PYRAMID:
-                axis = EnumAxis.X;
+                this.axis = EnumAxis.X;
                 break;
             case Y_PYRAMID:
-                axis = EnumAxis.Y;
+                this.axis = EnumAxis.Y;
                 break;
             case Z_PYRAMID:
-                axis = EnumAxis.Z;
+                this.axis = EnumAxis.Z;
                 break;
             default:
                 throw new IllegalArgumentException();

@@ -18,9 +18,9 @@ import java.util.List;
 public class BlockDroneRedstoneEmitter extends BlockAir {
     BlockDroneRedstoneEmitter() {
         super();
-        setRegistryName("drone_redstone_emitter");
-        setTranslationKey("drone_redstone_emitter");
-        setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
+        this.setRegistryName("drone_redstone_emitter");
+        this.setTranslationKey("drone_redstone_emitter");
+        this.setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
     }
 
     @Override

@@ -59,69 +59,69 @@ public class AirHandler implements IAirHandler {
         Validate.isTrue(volume > 0, "Volume can't be lower than or equal to 0!");
         this.dangerPressure = dangerPressure;
         this.criticalPressure = criticalPressure;
-        maxPressure = dangerPressure + (criticalPressure - dangerPressure) * (float) Math.random();
+        this.maxPressure = dangerPressure + (criticalPressure - dangerPressure) * (float) Math.random();
         this.volume = volume;
-        defaultVolume = volume;
+        this.defaultVolume = volume;
     }
 
     public TileEntityCache[] getTileCache() {
-        if (tileCache == null) tileCache = TileEntityCache.getDefaultCache(getWorld(), getPos());
-        return tileCache;
+        if (this.tileCache == null) this.tileCache = TileEntityCache.getDefaultCache(this.getWorld(), this.getPos());
+        return this.tileCache;
     }
 
     @Override
     public void createConnection(@Nonnull IAirHandler otherHandler) {
-        if (specialConnectedHandlers.add(otherHandler)) {
+        if (this.specialConnectedHandlers.add(otherHandler)) {
             otherHandler.createConnection(this);
         }
     }
 
     @Override
     public void removeConnection(@Nonnull IAirHandler otherHandler) {
-        if (specialConnectedHandlers.remove(otherHandler)) {
+        if (this.specialConnectedHandlers.remove(otherHandler)) {
             otherHandler.removeConnection(this);
         }
     }
 
     @Override
     public void printManometerMessage(EntityPlayer player, List<String> curInfo) {
-        curInfo.add(TextFormatting.GREEN + "Current pressure: " + PneumaticCraftUtils.roundNumberTo(getPressure(), 1) + " bar.");
+        curInfo.add(TextFormatting.GREEN + "Current pressure: " + PneumaticCraftUtils.roundNumberTo(this.getPressure(), 1) + " bar.");
     }
 
     @Override
     public void update() {
-        if (!getWorld().isRemote) {
-            updateVolume();
+        if (!this.getWorld().isRemote) {
+            this.updateVolume();
 
-            if (getUpgrades(EnumUpgrade.SECURITY) > 0) {
-                doSecurityAirChecks();
+            if (this.getUpgrades(EnumUpgrade.SECURITY) > 0) {
+                this.doSecurityAirChecks();
             }
 
-            if (getPressure() > maxPressure) {
-                getWorld().createExplosion(null, getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D, 1.0F, true);
-                getWorld().setBlockToAir(getPos());
+            if (this.getPressure() > this.maxPressure) {
+                this.getWorld().createExplosion(null, this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D, 1.0F, true);
+                this.getWorld().setBlockToAir(this.getPos());
             } else {
-                disperseAir();
+                this.disperseAir();
             }
         }
 
-        if (soundCounter > 0) soundCounter--;
+        if (this.soundCounter > 0) this.soundCounter--;
     }
 
     private void updateVolume() {
-        setVolume(defaultVolume + getVolumeFromUpgrades());
+        this.setVolume(this.defaultVolume + this.getVolumeFromUpgrades());
     }
 
     private void doSecurityAirChecks() {
-        if (getPressure() >= dangerPressure - 0.1) {
-            airLeak(EnumFacing.UP);
+        if (this.getPressure() >= this.dangerPressure - 0.1) {
+            this.airLeak(EnumFacing.UP);
         }
 
         // Remove any remaining air
-        int excessAir = getAir() - (int) (getVolume() * (dangerPressure - 0.1));
+        int excessAir = this.getAir() - (int) (this.getVolume() * (this.dangerPressure - 0.1));
         if (excessAir > 0) {
-            addAir(-excessAir);
-            onAirDispersion(null, -excessAir);
+            this.addAir(-excessAir);
+            this.onAirDispersion(null, -excessAir);
         }
     }
 
@@ -135,26 +135,26 @@ public class AirHandler implements IAirHandler {
     public void setVolume(int newVolume) {
         Validate.isTrue(newVolume > 0, "Volume can't be lower or equal than 0!");
 
-        if (newVolume < volume) {
-            air = (int) (air * (float) newVolume / volume); // lose air when we decrease in volume.
+        if (newVolume < this.volume) {
+            this.air = (int) (this.air * (float) newVolume / this.volume); // lose air when we decrease in volume.
         }
-        volume = newVolume;
+        this.volume = newVolume;
     }
 
     private void onAirDispersion(EnumFacing dir, int airAdded) {
-        if (airListener != null) airListener.onAirDispersion(this, dir, airAdded);
+        if (this.airListener != null) this.airListener.onAirDispersion(this, dir, airAdded);
     }
 
     private int getMaxDispersion(EnumFacing dir) {
-        return airListener != null ? airListener.getMaxDispersion(this, dir) : Integer.MAX_VALUE;
+        return this.airListener != null ? this.airListener.getMaxDispersion(this, dir) : Integer.MAX_VALUE;
     }
 
     private int getUpgrades(EnumUpgrade upgrade) {
-        return upgradeCache == null ? 0 : upgradeCache.getUpgrades(upgrade);
+        return this.upgradeCache == null ? 0 : this.upgradeCache.getUpgrades(upgrade);
     }
 
     private int getVolumeFromUpgrades() {
-        return getUpgrades(EnumUpgrade.VOLUME) * PneumaticValues.VOLUME_VOLUME_UPGRADE;
+        return this.getUpgrades(EnumUpgrade.VOLUME) * PneumaticValues.VOLUME_VOLUME_UPGRADE;
     }
 
     /**
@@ -162,8 +162,8 @@ public class AirHandler implements IAirHandler {
      * with this TE, and pushes air to those with a lower pressure than this one.
      */
     private void disperseAir() {
-        if (getWorld().isRemote) return;
-        disperseAir(getConnectedPneumatics());
+        if (this.getWorld().isRemote) return;
+        this.disperseAir(this.getConnectedPneumatics());
     }
 
     private void disperseAir(List<Pair<EnumFacing, IAirHandler>> teList) {
@@ -173,8 +173,8 @@ public class AirHandler implements IAirHandler {
         do {
             shouldRepeat = false;
             //Add up every volume and air.
-            int totalVolume = getVolume();
-            int totalAir = air;
+            int totalVolume = this.getVolume();
+            int totalAir = this.air;
             for (Pair<EnumFacing, IAirHandler> entry : teList) {
                 IAirHandler airHandler = entry.getValue();
                 totalVolume += airHandler.getVolume();
@@ -193,7 +193,7 @@ public class AirHandler implements IAirHandler {
                     dispersion.clear();
                     break;
                 } else {
-                    dispersion.add(new MutablePair<>(getMaxDispersion(entry.getKey()), airDispersed));
+                    dispersion.add(new MutablePair<>(this.getMaxDispersion(entry.getKey()), airDispersed));
                 }
             }
         } while (shouldRepeat);
@@ -229,9 +229,9 @@ public class AirHandler implements IAirHandler {
             IAirHandler neighbor = teList.get(i).getValue();
             int transferedAir = dispersion.get(i).getValue();
 
-            onAirDispersion(teList.get(i).getKey(), transferedAir);
+            this.onAirDispersion(teList.get(i).getKey(), transferedAir);
             neighbor.addAir(transferedAir);
-            addAir(-transferedAir);
+            this.addAir(-transferedAir);
         }
     }
 
@@ -242,7 +242,7 @@ public class AirHandler implements IAirHandler {
      */
     @Override
     public void addAir(int amount) {
-        air = Math.max(air + amount, -volume);  // floor at -1 bar otherwise negative air is reported
+        this.air = Math.max(this.air + amount, -this.volume);  // floor at -1 bar otherwise negative air is reported
     }
 
     @Override
@@ -252,43 +252,43 @@ public class AirHandler implements IAirHandler {
 
     @Override
     public float getPressure() {
-        return (float) air / volume;
+        return (float) this.air / this.volume;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         NBTTagCompound pneumaticTag = tag.getCompoundTag("pneumatic");
-        air = pneumaticTag.getInteger("air");
-        maxPressure = pneumaticTag.getFloat("maxPressure");
-        volume = pneumaticTag.getInteger("volume");
-        if (volume == 0 && PneumaticCraftRepressurized.proxy.getClientWorld() == null) {
+        this.air = pneumaticTag.getInteger("air");
+        this.maxPressure = pneumaticTag.getFloat("maxPressure");
+        this.volume = pneumaticTag.getInteger("volume");
+        if (this.volume == 0 && PneumaticCraftRepressurized.proxy.getClientWorld() == null) {
             // only warn about a zero volume on the server side
             Log.error("Volume was 0! Assigning default");
-            volume = defaultVolume;
+            this.volume = this.defaultVolume;
         }
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagCompound pneumaticTag = new NBTTagCompound();
-        pneumaticTag.setInteger("air", air);
-        pneumaticTag.setInteger("volume", volume);
-        pneumaticTag.setFloat("maxPressure", maxPressure);
+        pneumaticTag.setInteger("air", this.air);
+        pneumaticTag.setInteger("volume", this.volume);
+        pneumaticTag.setFloat("maxPressure", this.maxPressure);
         tag.setTag("pneumatic", pneumaticTag);
     }
 
     @Override
     public void validate(TileEntity parent) {
-        upgradeCache = parent instanceof TileEntityBase ? ((TileEntityBase) parent).getUpgradeCache() : null;
-        airListener = parent instanceof IAirListener ? (IAirListener) parent : null;
-        parentPneumatic = (IPneumaticMachine) parent;
-        setWorld(parent.getWorld());
-        setPos(parent.getPos());
+        this.upgradeCache = parent instanceof TileEntityBase ? ((TileEntityBase) parent).getUpgradeCache() : null;
+        this.airListener = parent instanceof IAirListener ? (IAirListener) parent : null;
+        this.parentPneumatic = (IPneumaticMachine) parent;
+        this.setWorld(parent.getWorld());
+        this.setPos(parent.getPos());
     }
 
     @Override
     public void setPneumaticMachine(IPneumaticMachine machine) {
-        parentPneumatic = machine;
+        this.parentPneumatic = machine;
     }
 
     @Override
@@ -298,30 +298,30 @@ public class AirHandler implements IAirHandler {
 
     @Override
     public void airLeak(EnumFacing side) {
-        if (getWorld().isRemote || Math.abs(getPressure()) < 0.01F) return;
+        if (this.getWorld().isRemote || Math.abs(this.getPressure()) < 0.01F) return;
         double motionX = side.getXOffset();
         double motionY = side.getYOffset();
         double motionZ = side.getZOffset();
-        if (soundCounter <= 0) {
-            float pitch = MathHelper.clamp(1.0f + ((getPressure() - 3) / 10), 0.8f, 1.2f);
-            soundCounter = (int) (20 / pitch);
-            NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.LEAKING_GAS_SOUND, SoundCategory.BLOCKS, getPos().getX(), getPos().getY(), getPos().getZ(), 0.1F, pitch, true), getWorld());
+        if (this.soundCounter <= 0) {
+            float pitch = MathHelper.clamp(1.0f + ((this.getPressure() - 3) / 10), 0.8f, 1.2f);
+            this.soundCounter = (int) (20 / pitch);
+            NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.LEAKING_GAS_SOUND, SoundCategory.BLOCKS, this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), 0.1F, pitch, true), this.getWorld());
         }
 
-        if (getPressure() < 0) {
-            double speed = getPressure() * 0.1F - 0.1F;
-            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, getPos().getX() + 0.5D + motionX / 2D, getPos().getY() + 0.5D + motionY / 2D, getPos().getZ() + 0.5D + motionZ / 2D, motionX * speed, motionY * speed, motionZ * speed), getWorld());
-            int dispersedAmount = -(int) (getPressure() * PneumaticValues.AIR_LEAK_FACTOR) + 20;
-            if (getAir() > dispersedAmount) dispersedAmount = -getAir();
-            onAirDispersion(side, dispersedAmount);
-            addAir(dispersedAmount);
+        if (this.getPressure() < 0) {
+            double speed = this.getPressure() * 0.1F - 0.1F;
+            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, this.getPos().getX() + 0.5D + motionX / 2D, this.getPos().getY() + 0.5D + motionY / 2D, this.getPos().getZ() + 0.5D + motionZ / 2D, motionX * speed, motionY * speed, motionZ * speed), this.getWorld());
+            int dispersedAmount = -(int) (this.getPressure() * PneumaticValues.AIR_LEAK_FACTOR) + 20;
+            if (this.getAir() > dispersedAmount) dispersedAmount = -this.getAir();
+            this.onAirDispersion(side, dispersedAmount);
+            this.addAir(dispersedAmount);
         } else {
-            double speed = getPressure() * 0.1F + 0.1F;
-            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, getPos().getX() + 0.5D + motionX / 2D, getPos().getY() + 0.5D + motionY / 2D, getPos().getZ() + 0.5D + motionZ / 2D, motionX * speed, motionY * speed, motionZ * speed), getWorld());
-            int dispersedAmount = (int) (getPressure() * PneumaticValues.AIR_LEAK_FACTOR) + 20;
-            if (dispersedAmount > getAir()) dispersedAmount = getAir();
-            onAirDispersion(side, -dispersedAmount);
-            addAir(-dispersedAmount);
+            double speed = this.getPressure() * 0.1F + 0.1F;
+            NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, this.getPos().getX() + 0.5D + motionX / 2D, this.getPos().getY() + 0.5D + motionY / 2D, this.getPos().getZ() + 0.5D + motionZ / 2D, motionX * speed, motionY * speed, motionZ * speed), this.getWorld());
+            int dispersedAmount = (int) (this.getPressure() * PneumaticValues.AIR_LEAK_FACTOR) + 20;
+            if (dispersedAmount > this.getAir()) dispersedAmount = this.getAir();
+            this.onAirDispersion(side, -dispersedAmount);
+            this.addAir(-dispersedAmount);
         }
     }
 
@@ -333,50 +333,50 @@ public class AirHandler implements IAirHandler {
     @Override
     public List<Pair<EnumFacing, IAirHandler>> getConnectedPneumatics() {
         List<Pair<EnumFacing, IAirHandler>> teList = new ArrayList<>();
-        for (IAirHandler specialConnection : specialConnectedHandlers) {
+        for (IAirHandler specialConnection : this.specialConnectedHandlers) {
             teList.add(new ImmutablePair<>(null, specialConnection));
         }
         for (EnumFacing direction : EnumFacing.VALUES) {
-            TileEntity te = getTileCache()[direction.ordinal()].getTileEntity();
+            TileEntity te = this.getTileCache()[direction.ordinal()].getTileEntity();
             IPneumaticMachine machine = IPneumaticMachine.getMachine(te);
-            if (machine != null && parentPneumatic.getAirHandler(direction) == this && machine.getAirHandler(direction.getOpposite()) != null) {
+            if (machine != null && this.parentPneumatic.getAirHandler(direction) == this && machine.getAirHandler(direction.getOpposite()) != null) {
                 teList.add(new ImmutablePair<>(direction, machine.getAirHandler(direction.getOpposite())));
             }
         }
-        if (airListener != null) airListener.addConnectedPneumatics(teList);
+        if (this.airListener != null) this.airListener.addConnectedPneumatics(teList);
         return teList;
     }
 
     @Override
     public void onNeighborChange() {
-        for (TileEntityCache cache : getTileCache()) {
+        for (TileEntityCache cache : this.getTileCache()) {
             cache.update();
         }
     }
 
     @Override
     public int getVolume() {
-        return volume;
+        return this.volume;
     }
 
     @Override
     public float getMaxPressure() {
-        return maxPressure;
+        return this.maxPressure;
     }
-    
+
     @Override
-    public float getDangerPressure(){
-        return dangerPressure;
+    public float getDangerPressure() {
+        return this.dangerPressure;
     }
-    
+
     @Override
-    public float getCriticalPressure(){
-        return criticalPressure;
+    public float getCriticalPressure() {
+        return this.criticalPressure;
     }
 
     @Override
     public int getAir() {
-        return air;
+        return this.air;
     }
 
     /**
@@ -394,7 +394,7 @@ public class AirHandler implements IAirHandler {
      * @param pressure the pressure, in bar
      */
     public void setPressure(float pressure) {
-        air = (int) (pressure * volume);
+        this.air = (int) (pressure * this.volume);
     }
 
     @Override
@@ -409,7 +409,7 @@ public class AirHandler implements IAirHandler {
 
     @Override
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     @Override
@@ -419,7 +419,7 @@ public class AirHandler implements IAirHandler {
 
     @Override
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     @Override

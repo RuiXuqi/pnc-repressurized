@@ -25,7 +25,7 @@ public class BlockUniversalActuator extends BlockPneumaticCraftModeled {
 
     BlockUniversalActuator() {
         super(Material.IRON, "universal_actuator");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Nullable

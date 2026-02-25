@@ -23,20 +23,20 @@ public class AirParticle extends Particle {
         if (sprite == null) {
             Calendar calendar = Calendar.getInstance();
             if (calendar.get(Calendar.MONTH) == Calendar.MARCH && calendar.get(Calendar.DAY_OF_MONTH) >= 31
-                || calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DAY_OF_MONTH) <= 2) {
+                    || calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DAY_OF_MONTH) <= 2) {
                 sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(AIR_PARTICLE_TEXTURE2.toString());
             } else {
                 sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(AIR_PARTICLE_TEXTURE.toString());
             }
         }
-        particleMaxAge = 50;
-        particleAlpha = 0.1f;
+        this.particleMaxAge = 50;
+        this.particleAlpha = 0.1f;
 
-        motionX = xSpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
-        motionY = ySpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
-        motionZ = zSpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
+        this.motionX = xSpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
+        this.motionY = ySpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
+        this.motionZ = zSpeedIn + worldIn.rand.nextDouble() * 0.1 - 0.05;
 
-        setParticleTexture(sprite);
+        this.setParticleTexture(sprite);
     }
 
     @Override
@@ -53,22 +53,22 @@ public class AirParticle extends Particle {
     public void onUpdate() {
         super.onUpdate();
 
-        if (!world.isAirBlock(new BlockPos(posX, posY, posZ)) || onGround) {
-            setExpired();
+        if (!this.world.isAirBlock(new BlockPos(this.posX, this.posY, this.posZ)) || this.onGround) {
+            this.setExpired();
         }
 
         // fades out and gets bigger as it gets older
-        multipleParticleScaleBy(1.04f);
-        particleAlpha *= 0.975;
+        this.multipleParticleScaleBy(1.04f);
+        this.particleAlpha *= 0.975;
 
-        if (world.rand.nextInt(5) == 0) {
-            motionX += world.rand.nextDouble() * 0.1 - 0.05;
+        if (this.world.rand.nextInt(5) == 0) {
+            this.motionX += this.world.rand.nextDouble() * 0.1 - 0.05;
         }
-        if (world.rand.nextInt(5) == 0) {
-            motionY += world.rand.nextDouble() * 0.1 - 0.05;
+        if (this.world.rand.nextInt(5) == 0) {
+            this.motionY += this.world.rand.nextDouble() * 0.1 - 0.05;
         }
-        if (world.rand.nextInt(5) == 0) {
-            motionY += world.rand.nextDouble() * 0.1 - 0.05;
+        if (this.world.rand.nextInt(5) == 0) {
+            this.motionY += this.world.rand.nextDouble() * 0.1 - 0.05;
         }
     }
 }

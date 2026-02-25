@@ -57,20 +57,20 @@ public class AreaShowManager {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-        for (AreaShowHandler handler : showHandlers.values()) {
+        for (AreaShowHandler handler : this.showHandlers.values()) {
             handler.render();
         }
 
-        maybeRenderPositionProvider(player);
-        maybeRenderCamo(player);
+        this.maybeRenderPositionProvider(player);
+        this.maybeRenderCamo(player);
 
         ItemStack helmet = player.getItemStackFromSlot(EntityEquipmentSlot.HEAD);
         if (helmet.getItem() == Itemss.PNEUMATIC_HELMET) {
-            if (droneDebugger == null)
-                droneDebugger = HUDHandler.instance().getSpecificRenderer(DroneDebugUpgradeHandler.class);
-            Set<BlockPos> set = droneDebugger.getShowingPositions();
+            if (this.droneDebugger == null)
+                this.droneDebugger = HUDHandler.instance().getSpecificRenderer(DroneDebugUpgradeHandler.class);
+            Set<BlockPos> set = this.droneDebugger.getShowingPositions();
             new AreaShowHandler(set, 0x90FF0000, true).render();
-            Set<BlockPos> areaSet = droneDebugger.getShownArea();
+            Set<BlockPos> areaSet = this.droneDebugger.getShownArea();
             new AreaShowHandler(areaSet, 0x4040FFA0, true).render();
         }
 
@@ -85,7 +85,7 @@ public class AreaShowManager {
             IPositionProvider positionProvider = (IPositionProvider) curItem.getItem();
             List<BlockPos> posList = positionProvider.getStoredPositions(curItem);
             if (posList != null) {
-                if (!posList.equals(cachedPositionProviderData)) { //Cache miss
+                if (!posList.equals(this.cachedPositionProviderData)) { //Cache miss
                     TIntObjectMap<Set<BlockPos>> colorsToPositions = new TIntObjectHashMap<>();
                     for (int i = 0; i < posList.size(); i++) {
                         int renderColor = positionProvider.getRenderColor(i);
@@ -98,15 +98,15 @@ public class AreaShowManager {
                             positionsForColor.add(posList.get(i));
                         }
                     }
-                    cachedPositionProviderData = posList;
-                    cachedPositionProviderShowers = new ArrayList<>(colorsToPositions.size());
+                    this.cachedPositionProviderData = posList;
+                    this.cachedPositionProviderShowers = new ArrayList<>(colorsToPositions.size());
                     colorsToPositions.forEachEntry((color, positions) -> {
-                        cachedPositionProviderShowers.add(new AreaShowHandler(positions, color, positionProvider.disableDepthTest()));
+                        this.cachedPositionProviderShowers.add(new AreaShowHandler(positions, color, positionProvider.disableDepthTest()));
                         return true;
                     });
                 }
 
-                cachedPositionProviderShowers.forEach(AreaShowHandler::render);
+                this.cachedPositionProviderShowers.forEach(AreaShowHandler::render);
             }
         }
     }
@@ -115,49 +115,49 @@ public class AreaShowManager {
         if (!(player.getHeldItemMainhand().getItem() instanceof ItemCamoApplicator)) {
             return;
         }
-        if (lastPlayerPos == null || camoPositionShower == null || player.getDistanceSq(lastPlayerPos) > 9) {
-            lastPlayerPos = player.getPosition();
+        if (this.lastPlayerPos == null || this.camoPositionShower == null || player.getDistanceSq(this.lastPlayerPos) > 9) {
+            this.lastPlayerPos = player.getPosition();
             Set<BlockPos> s = Minecraft.getMinecraft().world.loadedTileEntityList.stream()
                     .filter(te -> te instanceof ICamouflageableTE && te.getPos().distanceSq(player.posX, player.posY, player.posZ) < 144)
                     .map(TileEntity::getPos)
                     .collect(Collectors.toSet());
-            camoPositionShower = new AreaShowHandler(s, 0x2080FFFF, 0.75, true);
+            this.camoPositionShower = new AreaShowHandler(s, 0x2080FFFF, 0.75, true);
         }
-        if (camoPositionShower != null) {
-            camoPositionShower.render();
+        if (this.camoPositionShower != null) {
+            this.camoPositionShower.render();
         }
     }
 
     public AreaShowHandler showArea(BlockPos[] area, int color, TileEntity areaShower) {
-        return showArea(new HashSet<>(Arrays.asList(area)), color, areaShower);
+        return this.showArea(new HashSet<>(Arrays.asList(area)), color, areaShower);
     }
 
     public AreaShowHandler showArea(Set<BlockPos> area, int color, TileEntity areaShower) {
         if (areaShower == null) return null;
-        removeHandlers(areaShower);
+        this.removeHandlers(areaShower);
         AreaShowHandler handler = new AreaShowHandler(area, color, false);
-        showHandlers.put(new BlockPos(areaShower.getPos().getX(), areaShower.getPos().getY(), areaShower.getPos().getZ()), handler);
+        this.showHandlers.put(new BlockPos(areaShower.getPos().getX(), areaShower.getPos().getY(), areaShower.getPos().getZ()), handler);
         return handler;
     }
 
     public boolean isShowing(TileEntity te) {
-        return showHandlers.containsKey(new BlockPos(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+        return this.showHandlers.containsKey(new BlockPos(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
     }
 
     public void removeHandlers(TileEntity te) {
-        showHandlers.remove(new BlockPos(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
+        this.showHandlers.remove(new BlockPos(te.getPos().getX(), te.getPos().getY(), te.getPos().getZ()));
     }
 
     @SubscribeEvent
     public void tickEnd(TickEvent.ClientTickEvent event) {
         EntityPlayer player = PneumaticCraftRepressurized.proxy.getClientPlayer();
         if (player != null) {
-            if (player.world != world) {
-                world = player.world;
-                showHandlers.clear();
+            if (player.world != this.world) {
+                this.world = player.world;
+                this.showHandlers.clear();
             } else {
                 if (event.phase == TickEvent.Phase.END) {
-                    showHandlers.keySet().removeIf(pos -> PneumaticCraftUtils.distBetween(pos, player.posX, player.posY, player.posZ) < 32 && world.isAirBlock(pos));
+                    this.showHandlers.keySet().removeIf(pos -> PneumaticCraftUtils.distBetween(pos, player.posX, player.posY, player.posZ) < 32 && this.world.isAirBlock(pos));
                 }
             }
         }

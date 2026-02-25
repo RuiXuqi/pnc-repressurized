@@ -25,14 +25,14 @@ public class PressureChamberPressureEnchantHandler implements IPressureChamberRe
 
     @Override
     public boolean isValidRecipe(ItemStackHandler chamberHandler) {
-        return getRecipeIngredients(chamberHandler) != null;
+        return this.getRecipeIngredients(chamberHandler) != null;
     }
 
     private ItemStack[] getRecipeIngredients(ItemStackHandler inputStacks) {
         List<ItemStack> enchantedBooks = new ItemStackHandlerIterable(inputStacks)
-                                                    .stream()
-                                                    .filter(book -> book.getItem() == Items.ENCHANTED_BOOK)
-                                                    .collect(Collectors.toList());
+                .stream()
+                .filter(book -> book.getItem() == Items.ENCHANTED_BOOK)
+                .collect(Collectors.toList());
 
         if (enchantedBooks.isEmpty()) return null;
 
@@ -43,7 +43,7 @@ public class PressureChamberPressureEnchantHandler implements IPressureChamberRe
                     for (Map.Entry<Enchantment, Integer> entry : bookMap.entrySet()) {
                         // if the enchantment is applicable, AND the item doesn't have an existing enchantment of the
                         // same type which is equal or stronger to the book's enchantment level...
-                        if (isApplicable(entry.getKey(), entry.getValue(), inputStack)) {
+                        if (this.isApplicable(entry.getKey(), entry.getValue(), inputStack)) {
                             return new ItemStack[]{inputStack, enchantedBook};
                         }
                     }
@@ -65,17 +65,17 @@ public class PressureChamberPressureEnchantHandler implements IPressureChamberRe
 
     @Override
     public NonNullList<ItemStack> craftRecipe(ItemStackHandler chamberHandler) {
-        ItemStack[] recipeIngredients = getRecipeIngredients(chamberHandler);
+        ItemStack[] recipeIngredients = this.getRecipeIngredients(chamberHandler);
         if (recipeIngredients == null) return NonNullList.create(); // sanity check
         ItemStack enchantedTool = recipeIngredients[0];
         ItemStack enchantedBook = recipeIngredients[1];
-        
+
         Map<Enchantment, Integer> bookMap = EnchantmentHelper.getEnchantments(enchantedBook);
         Map<Enchantment, Integer> itemMap = EnchantmentHelper.getEnchantments(enchantedTool);
 
         List<Enchantment> toApply = new ArrayList<>();
         bookMap.forEach((ench, level) -> {
-            if (isApplicable(ench, level, enchantedTool)) {
+            if (this.isApplicable(ench, level, enchantedTool)) {
                 itemMap.put(ench, bookMap.get(ench));
                 toApply.add(ench);
             }

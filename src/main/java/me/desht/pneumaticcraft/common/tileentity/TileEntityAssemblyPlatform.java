@@ -21,74 +21,74 @@ public class TileEntityAssemblyPlatform extends TileEntityTickableBase implement
     public float clawProgress;
     public float oldClawProgress;
     @DescSynced
-    private final ItemStackHandler inventory = new BaseItemStackHandler(this,1);
+    private final ItemStackHandler inventory = new BaseItemStackHandler(this, 1);
     private float speed = 1.0F;
     private BlockPos controllerPos;
 
     @Override
     public void update() {
         super.update();
-        oldClawProgress = clawProgress;
-        if (!shouldClawClose && clawProgress > 0F) {
-            clawProgress = Math.max(clawProgress - TileEntityConstants.ASSEMBLY_IO_UNIT_CLAW_SPEED * speed, 0);
-        } else if (shouldClawClose && clawProgress < 1F) {
-            clawProgress = Math.min(clawProgress + TileEntityConstants.ASSEMBLY_IO_UNIT_CLAW_SPEED * speed, 1);
+        this.oldClawProgress = this.clawProgress;
+        if (!this.shouldClawClose && this.clawProgress > 0F) {
+            this.clawProgress = Math.max(this.clawProgress - TileEntityConstants.ASSEMBLY_IO_UNIT_CLAW_SPEED * this.speed, 0);
+        } else if (this.shouldClawClose && this.clawProgress < 1F) {
+            this.clawProgress = Math.min(this.clawProgress + TileEntityConstants.ASSEMBLY_IO_UNIT_CLAW_SPEED * this.speed, 1);
         }
     }
 
     private boolean isClawDone() {
-        return clawProgress == (shouldClawClose ? 1F : 0F);
+        return this.clawProgress == (this.shouldClawClose ? 1F : 0F);
     }
 
     @Override
     public boolean isIdle() {
-        return !shouldClawClose && isClawDone() && getHeldStack().isEmpty();
+        return !this.shouldClawClose && this.isClawDone() && this.getHeldStack().isEmpty();
     }
 
     @Override
     public boolean reset() {
-        openClaw();
-        return isIdle();
+        this.openClaw();
+        return this.isIdle();
     }
 
     boolean closeClaw() {
-        shouldClawClose = true;
-        sendDescriptionPacket();
-        return isClawDone();
+        this.shouldClawClose = true;
+        this.sendDescriptionPacket();
+        return this.isClawDone();
     }
 
     boolean openClaw() {
-        shouldClawClose = false;
-        sendDescriptionPacket();
-        return isClawDone();
+        this.shouldClawClose = false;
+        this.sendDescriptionPacket();
+        return this.isClawDone();
     }
 
     @Nonnull
     public ItemStack getHeldStack() {
-        return inventory.getStackInSlot(0);
+        return this.inventory.getStackInSlot(0);
     }
 
     public void setHeldStack(@Nonnull ItemStack stack) {
-        inventory.setStackInSlot(0, stack);
+        this.inventory.setStackInSlot(0, stack);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("clawClosing", shouldClawClose);
-        tag.setFloat("clawProgress", clawProgress);
-        tag.setFloat("speed", speed);
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setBoolean("clawClosing", this.shouldClawClose);
+        tag.setFloat("clawProgress", this.clawProgress);
+        tag.setFloat("speed", this.speed);
+        tag.setTag("Items", this.inventory.serializeNBT());
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        shouldClawClose = tag.getBoolean("clawClosing");
-        clawProgress = tag.getFloat("clawProgress");
-        speed = tag.getFloat("speed");
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.shouldClawClose = tag.getBoolean("clawClosing");
+        this.clawProgress = tag.getFloat("clawProgress");
+        this.speed = tag.getFloat("speed");
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
     }
 
     @Override
@@ -109,12 +109,12 @@ public class TileEntityAssemblyPlatform extends TileEntityTickableBase implement
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        invalidateSystem();
+        this.invalidateSystem();
     }
 
     private void invalidateSystem() {
-        if (controllerPos != null) {
-            TileEntity te = getWorld().getTileEntity(controllerPos);
+        if (this.controllerPos != null) {
+            TileEntity te = this.getWorld().getTileEntity(this.controllerPos);
             if (te instanceof TileEntityAssemblyController) {
                 ((TileEntityAssemblyController) te).invalidateAssemblySystem();
             }

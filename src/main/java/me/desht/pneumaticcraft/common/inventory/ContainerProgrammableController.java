@@ -13,15 +13,15 @@ public class ContainerProgrammableController extends ContainerPneumaticBase<Tile
     public ContainerProgrammableController(InventoryPlayer inventoryPlayer, final TileEntityProgrammableController te) {
         super(te);
 
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 89, 36));
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 89, 36));
 
-        addUpgradeSlots(39, 29);
+        this.addUpgradeSlots(39, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
 
         try {
             IEnergyStorage energyStorage = te.getCapability(CapabilityEnergy.ENERGY, null);
-            addSyncedField(new SyncedField.SyncedInt(energyStorage, EnergyStorage.class.getDeclaredField("energy")));
+            this.addSyncedField(new SyncedField.SyncedInt(energyStorage, EnergyStorage.class.getDeclaredField("energy")));
         } catch (Throwable e) {
             e.printStackTrace();
         }

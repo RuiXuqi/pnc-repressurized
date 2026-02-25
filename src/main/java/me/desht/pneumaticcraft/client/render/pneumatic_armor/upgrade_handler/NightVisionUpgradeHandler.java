@@ -14,7 +14,7 @@ public class NightVisionUpgradeHandler extends IUpgradeRenderHandler.SimpleToggl
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(IItemRegistry.EnumUpgrade.NIGHT_VISION) };
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.NIGHT_VISION)};
     }
 
     @Override

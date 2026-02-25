@@ -26,18 +26,18 @@ public class PositionedStack {
     }
 
     public String getTooltipKey() {
-        return tooltipKey;
+        return this.tooltipKey;
     }
 
     public List<ItemStack> getStacks() {
-        return stacks;
+        return this.stacks;
     }
 
     public int getX() {
-        return x;
+        return this.x;
     }
 
     public int getY() {
-        return y;
+        return this.y;
     }
 }

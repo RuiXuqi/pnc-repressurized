@@ -10,7 +10,7 @@ public class RenderAirCannon extends AbstractModelRenderer<TileEntityAirCannon> 
     private final ModelAirCannon model;
 
     public RenderAirCannon() {
-        model = new ModelAirCannon();
+        this.model = new ModelAirCannon();
     }
 
     @Override
@@ -22,6 +22,6 @@ public class RenderAirCannon extends AbstractModelRenderer<TileEntityAirCannon> 
     void renderModel(TileEntityAirCannon te, float partialTicks) {
         float angle = (float) RenderUtils.rotateMatrixByMetadata(te.getBlockMetadata());
         float rotationAngle = te.rotationAngle - angle + 180F;
-        model.renderModel(0.0625F, rotationAngle, te.heightAngle);
+        this.model.renderModel(0.0625F, rotationAngle, te.heightAngle);
     }
 }

@@ -47,7 +47,7 @@ public interface IItemRegistry {
         }
 
         public String getName() {
-            return name;
+            return this.name;
         }
 
         /**
@@ -57,7 +57,7 @@ public interface IItemRegistry {
          * @return true if this upgrade's dependent mod is loaded, false otherwise
          */
         public boolean isDepLoaded() {
-            return depModId == null || Loader.isModLoaded(depModId);
+            return this.depModId == null || Loader.isModLoaded(this.depModId);
         }
     }
 

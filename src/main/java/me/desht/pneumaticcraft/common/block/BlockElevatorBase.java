@@ -34,7 +34,7 @@ public class BlockElevatorBase extends BlockPneumaticCraftCamo {
     @Override
     protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this,
-                new IProperty[] { BlockPneumaticCraft.NORTH, BlockPneumaticCraft.SOUTH, BlockPneumaticCraft.WEST, BlockPneumaticCraft.EAST },
+                new IProperty[]{BlockPneumaticCraft.NORTH, BlockPneumaticCraft.SOUTH, BlockPneumaticCraft.WEST, BlockPneumaticCraft.EAST},
                 UNLISTED_CAMO_PROPERTIES);
     }
 

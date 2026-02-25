@@ -55,6 +55,6 @@ public interface IBlockInteractHandler {
      * @return true if the face is accessible
      */
     default boolean isSideAccessible(EnumFacing face) {
-        return getSides()[face.getIndex()];
+        return this.getSides()[face.getIndex()];
     }
 }

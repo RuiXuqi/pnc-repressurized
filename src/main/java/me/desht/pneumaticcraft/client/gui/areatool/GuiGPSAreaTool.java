@@ -7,42 +7,42 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
-public class GuiGPSAreaTool extends GuiGPSTool{
+public class GuiGPSAreaTool extends GuiGPSTool {
 
     private static final int CHANGE_AREA_BUTTON_ID = 23434;
     private static final int CHANGE_AREA_BUTTON_WIDTH = 4 * 22 + 40 + 5 * 2;
     private final int index;
-    
-    private GuiGPSAreaTool(BlockPos gpsLoc, String oldVarName, int metadata){
+
+    private GuiGPSAreaTool(BlockPos gpsLoc, String oldVarName, int metadata) {
         super(gpsLoc != null ? gpsLoc : BlockPos.ORIGIN, oldVarName, metadata);
         this.index = metadata;
     }
-    
-    public GuiGPSAreaTool(ItemStack stack, int index){
-        this(ItemGPSAreaTool.getGPSLocation(stack, index), ItemGPSAreaTool.getVariable(stack, index), index);        
+
+    public GuiGPSAreaTool(ItemStack stack, int index) {
+        this(ItemGPSAreaTool.getGPSLocation(stack, index), ItemGPSAreaTool.getVariable(stack, index), index);
     }
 
     @Override
-    public void initGui(){
+    public void initGui() {
         super.initGui();
-        
-        int xMiddle = width / 2;
-        int yMiddle = height / 2;
-        
+
+        int xMiddle = this.width / 2;
+        int yMiddle = this.height / 2;
+
         int x = xMiddle - CHANGE_AREA_BUTTON_WIDTH / 2;
         int y = yMiddle + 100;
-        buttonList.add(new GuiButton(CHANGE_AREA_BUTTON_ID, x, y, CHANGE_AREA_BUTTON_WIDTH, 20, "Change area type"));
-        
+        this.buttonList.add(new GuiButton(CHANGE_AREA_BUTTON_ID, x, y, CHANGE_AREA_BUTTON_WIDTH, 20, "Change area type"));
+
     }
-    
+
     @Override
-    protected void actionPerformed(GuiButton button){
-        if(button.id == CHANGE_AREA_BUTTON_ID){
-            ItemStack stack = mc.player.getHeldItemMainhand();
+    protected void actionPerformed(GuiButton button) {
+        if (button.id == CHANGE_AREA_BUTTON_ID) {
+            ItemStack stack = this.mc.player.getHeldItemMainhand();
             ProgWidgetArea area = ItemGPSAreaTool.getArea(stack);
-            Runnable returnAction = () -> mc.displayGuiScreen(new GuiGPSAreaTool(stack, index));
-            mc.displayGuiScreen(new GuiProgWidgetAreaTool(area, returnAction));
-        }else{
+            Runnable returnAction = () -> this.mc.displayGuiScreen(new GuiGPSAreaTool(stack, this.index));
+            this.mc.displayGuiScreen(new GuiProgWidgetAreaTool(area, returnAction));
+        } else {
             super.actionPerformed(button);
         }
     }

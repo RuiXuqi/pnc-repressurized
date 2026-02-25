@@ -18,16 +18,16 @@ public class GuiProgWidgetString extends GuiProgWidgetOptionBase {
     @Override
     public void initGui() {
         super.initGui();
-        textfield = new WidgetTextField(fontRenderer, guiLeft + 10, guiTop + 20, 160, 10);
-        textfield.setMaxStringLength(1000);
-        textfield.setText(((ProgWidgetString) widget).string);
-        textfield.setFocused(true);
-        addWidget(textfield);
+        this.textfield = new WidgetTextField(this.fontRenderer, this.guiLeft + 10, this.guiTop + 20, 160, 10);
+        this.textfield.setMaxStringLength(1000);
+        this.textfield.setText(((ProgWidgetString) this.widget).string);
+        this.textfield.setFocused(true);
+        this.addWidget(this.textfield);
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
-        if (keyCode == Keyboard.KEY_RETURN && textfield.isFocused()) {
+        if (keyCode == Keyboard.KEY_RETURN && this.textfield.isFocused()) {
             // pressing return also closes this gui
             super.keyTyped('\u001B', Keyboard.KEY_ESCAPE);
         } else {
@@ -38,6 +38,6 @@ public class GuiProgWidgetString extends GuiProgWidgetOptionBase {
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        ((ProgWidgetString) widget).string = textfield.getText();
+        ((ProgWidgetString) this.widget).string = this.textfield.getText();
     }
 }

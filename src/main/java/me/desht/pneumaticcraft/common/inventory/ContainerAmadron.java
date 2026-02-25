@@ -59,7 +59,7 @@ public class ContainerAmadron extends ContainerPneumaticBase {
     @GuiSynced
     private final int[] shoppingAmounts = new int[OFFERS_PER_PAGE];
     @GuiSynced
-    public final boolean[] buyableOffers = new boolean[offers.size()];
+    public final boolean[] buyableOffers = new boolean[this.offers.size()];
     @GuiSynced
     public EnumProblemState problemState = EnumProblemState.NO_PROBLEMS;
     @GuiSynced
@@ -86,7 +86,7 @@ public class ContainerAmadron extends ContainerPneumaticBase {
         }
 
         public String getLocalizationKey() {
-            return "gui.tab.problems.amadron." + locKey;
+            return "gui.tab.problems.amadron." + this.locKey;
         }
     }
 
@@ -95,41 +95,41 @@ public class ContainerAmadron extends ContainerPneumaticBase {
 
         for (int y = 0; y < ROWS; y++) {
             for (int x = 0; x < 2; x++) {
-                addSlotToContainer(new SlotUntouchable(inv, y * 4 + x * 2, x * 73 + 12, y * 35 + 70));
-                addSlotToContainer(new SlotUntouchable(inv, y * 4 + x * 2 + 1, x * 73 + 57, y * 35 + 70));
+                this.addSlotToContainer(new SlotUntouchable(this.inv, y * 4 + x * 2, x * 73 + 12, y * 35 + 70));
+                this.addSlotToContainer(new SlotUntouchable(this.inv, y * 4 + x * 2 + 1, x * 73 + 57, y * 35 + 70));
             }
         }
-        addSyncedFields(this);
-        Arrays.fill(shoppingItems, -1);
+        this.addSyncedFields(this);
+        Arrays.fill(this.shoppingItems, -1);
 
         if (!player.world.isRemote) {
             IItemHandler itemHandler = ItemAmadronTablet.getItemProvider(player.getHeldItemMainhand());
             IFluidHandler fluidHandler = ItemAmadronTablet.getLiquidProvider(player.getHeldItemMainhand());
-            for (int i = 0; i < offers.size(); i++) {
-                int amount = capShoppingAmount(offers.get(i), 1, itemHandler, fluidHandler, this);
-                buyableOffers[i] = amount > 0;
+            for (int i = 0; i < this.offers.size(); i++) {
+                int amount = capShoppingAmount(this.offers.get(i), 1, itemHandler, fluidHandler, this);
+                this.buyableOffers[i] = amount > 0;
             }
-            problemState = EnumProblemState.NO_PROBLEMS;
+            this.problemState = EnumProblemState.NO_PROBLEMS;
 
             Map<AmadronOffer, Integer> shoppingCart = ItemAmadronTablet.getShoppingCart(player.getHeldItemMainhand());
             for (Map.Entry<AmadronOffer, Integer> cartItem : shoppingCart.entrySet()) {
-                int offerId = offers.indexOf(cartItem.getKey());
+                int offerId = this.offers.indexOf(cartItem.getKey());
                 if (offerId >= 0) {
-                    int index = getCartSlot(offerId);
+                    int index = this.getCartSlot(offerId);
                     if (index >= 0) {
-                        shoppingItems[index] = offerId;
-                        shoppingAmounts[index] = cartItem.getValue();
+                        this.shoppingItems[index] = offerId;
+                        this.shoppingAmounts[index] = cartItem.getValue();
                     }
                 }
             }
-            basketEmpty = Arrays.stream(shoppingAmounts).noneMatch(shoppingAmount -> shoppingAmount > 0);
-            currentOffers = AmadronOfferManager.getInstance().countOffers(player.getGameProfile().getId().toString());
-            maxOffers = PneumaticCraftUtils.isPlayerOp(player) ? Integer.MAX_VALUE : AmadronOfferSettings.maxTradesPerPlayer;
+            this.basketEmpty = Arrays.stream(this.shoppingAmounts).noneMatch(shoppingAmount -> shoppingAmount > 0);
+            this.currentOffers = AmadronOfferManager.getInstance().countOffers(player.getGameProfile().getId().toString());
+            this.maxOffers = PneumaticCraftUtils.isPlayerOp(player) ? Integer.MAX_VALUE : AmadronOfferSettings.maxTradesPerPlayer;
         }
     }
 
     public boolean isBasketEmpty() {
-        return basketEmpty;
+        return this.basketEmpty;
     }
 
     @Override
@@ -151,13 +151,13 @@ public class ContainerAmadron extends ContainerPneumaticBase {
     }
 
     public void clearStacks() {
-        for (int i = 0; i < inv.getSlots(); i++) {
-            inv.setStackInSlot(i, ItemStack.EMPTY);
+        for (int i = 0; i < this.inv.getSlots(); i++) {
+            this.inv.setStackInSlot(i, ItemStack.EMPTY);
         }
     }
 
     public void setStack(int index, ItemStack stack) {
-        inv.setStackInSlot(index, stack);
+        this.inv.setStackInSlot(index, stack);
     }
 
     @Nonnull
@@ -167,42 +167,43 @@ public class ContainerAmadron extends ContainerPneumaticBase {
     }
 
     public void clickOffer(int offerId, int mouseButton, boolean sneaking, EntityPlayer player) {
-        problemState = EnumProblemState.NO_PROBLEMS;
-        int cartSlot = getCartSlot(offerId);
+        this.problemState = EnumProblemState.NO_PROBLEMS;
+        int cartSlot = this.getCartSlot(offerId);
         if (cartSlot >= 0) {
             if (mouseButton == 2) {  // middle-click
-                shoppingAmounts[cartSlot] = 0;
+                this.shoppingAmounts[cartSlot] = 0;
             } else if (sneaking) {
                 if (mouseButton == 0) { // sneak-left-click
-                    shoppingAmounts[cartSlot] /= 2;
+                    this.shoppingAmounts[cartSlot] /= 2;
                 } else { // sneak-right-click
-                    AmadronOffer offer = offers.get(offerId);
+                    AmadronOffer offer = this.offers.get(offerId);
                     if (offer instanceof AmadronOfferCustom) {
-                        removeCustomOffer(player, (AmadronOfferCustom) offer);
+                        this.removeCustomOffer(player, (AmadronOfferCustom) offer);
                     } else {
-                        shoppingAmounts[cartSlot] *= 2;
-                        if (shoppingAmounts[cartSlot] == 0) shoppingAmounts[cartSlot] = 1;
+                        this.shoppingAmounts[cartSlot] *= 2;
+                        if (this.shoppingAmounts[cartSlot] == 0) this.shoppingAmounts[cartSlot] = 1;
                     }
                 }
             } else { // left or right-click
-                if (mouseButton == 0) shoppingAmounts[cartSlot]--;
-                else shoppingAmounts[cartSlot]++;
+                if (mouseButton == 0) this.shoppingAmounts[cartSlot]--;
+                else this.shoppingAmounts[cartSlot]++;
             }
-            if (shoppingAmounts[cartSlot] <= 0) {
-                shoppingAmounts[cartSlot] = 0;
-                shoppingItems[cartSlot] = -1;
+            if (this.shoppingAmounts[cartSlot] <= 0) {
+                this.shoppingAmounts[cartSlot] = 0;
+                this.shoppingItems[cartSlot] = -1;
             } else {
-                shoppingAmounts[cartSlot] = capShoppingAmount(offerId, shoppingAmounts[cartSlot], player);
-                shoppingItems[cartSlot] = shoppingAmounts[cartSlot] > 0 ? offerId : -1;
+                this.shoppingAmounts[cartSlot] = this.capShoppingAmount(offerId, this.shoppingAmounts[cartSlot], player);
+                this.shoppingItems[cartSlot] = this.shoppingAmounts[cartSlot] > 0 ? offerId : -1;
             }
         }
-        basketEmpty = Arrays.stream(shoppingAmounts).noneMatch(shoppingAmount -> shoppingAmount > 0);
+        this.basketEmpty = Arrays.stream(this.shoppingAmounts).noneMatch(shoppingAmount -> shoppingAmount > 0);
     }
 
     private void removeCustomOffer(EntityPlayer player, AmadronOfferCustom offer) {
         if (offer.getPlayerId().equals(player.getGameProfile().getId().toString())) {
             if (AmadronOfferManager.getInstance().removeStaticOffer(offer)) {
-                if (AmadronOfferSettings.notifyOfTradeRemoval) NetworkHandler.sendToAll(new PacketAmadronTradeRemoved(offer));
+                if (AmadronOfferSettings.notifyOfTradeRemoval)
+                    NetworkHandler.sendToAll(new PacketAmadronTradeRemoved(offer));
                 offer.returnStock();
                 try {
                     AmadronOfferStaticConfig.INSTANCE.writeToFile();
@@ -219,9 +220,9 @@ public class ContainerAmadron extends ContainerPneumaticBase {
         super.handleGUIButtonPress(guiID, player);
         if (guiID == 1) {
             boolean placed = false;
-            for (int i = 0; i < shoppingItems.length; i++) {
-                if (shoppingItems[i] >= 0) {
-                    AmadronOffer offer = offers.get(shoppingItems[i]);
+            for (int i = 0; i < this.shoppingItems.length; i++) {
+                if (this.shoppingItems[i] >= 0) {
+                    AmadronOffer offer = this.offers.get(this.shoppingItems[i]);
                     BlockPos itemPos = ItemAmadronTablet.getItemProvidingLocation(player.getHeldItemMainhand());
                     World itemWorld;
                     if (itemPos == null) {
@@ -235,9 +236,9 @@ public class ContainerAmadron extends ContainerPneumaticBase {
                     if (liquidPos != null) {
                         liquidWorld = DimensionManager.getWorld(ItemAmadronTablet.getLiquidProvidingDimension(player.getHeldItemMainhand()));
                     }
-                    EntityDrone drone = retrieveOrderItems(offer, shoppingAmounts[i], itemWorld, itemPos, liquidWorld, liquidPos);
+                    EntityDrone drone = retrieveOrderItems(offer, this.shoppingAmounts[i], itemWorld, itemPos, liquidWorld, liquidPos);
                     if (drone != null) {
-                        drone.setHandlingOffer(offer, shoppingAmounts[i], player.getHeldItemMainhand(), player.getName());
+                        drone.setHandlingOffer(offer, this.shoppingAmounts[i], player.getHeldItemMainhand(), player.getName());
                         placed = true;
                     }
                 }
@@ -245,9 +246,9 @@ public class ContainerAmadron extends ContainerPneumaticBase {
                     NetworkHandler.sendTo(new PacketPlaySound(Sounds.CHIRP, SoundCategory.PLAYERS, player.posX, player.posY, player.posZ, 0.2f, 1.0f, false), (EntityPlayerMP) player);
                 }
             }
-            Arrays.fill(shoppingAmounts, 0);
-            Arrays.fill(shoppingItems, -1);
-            basketEmpty = true;
+            Arrays.fill(this.shoppingAmounts, 0);
+            Arrays.fill(this.shoppingItems, -1);
+            this.basketEmpty = true;
         } else if (guiID == 2) {
             player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.AMADRON_ADD_PLAYER_TRADE.ordinal(), player.world, 0, 0, 0);
         } else if (guiID == 3 && PermissionAPI.hasPermission(player, Names.AMADRON_ADD_PERIODIC_TRADE)) {
@@ -271,7 +272,7 @@ public class ContainerAmadron extends ContainerPneumaticBase {
             }
             if (stacks.isEmpty()) {
                 // shouldn't happen but see https://github.com/TeamPneumatic/pnc-repressurized/issues/399
-                Log.error(String.format("retrieveOrderItems: got empty itemstack list for offer %d x %s @ %s", times, queryingItems.toString(), itemPos.toString()));
+                Log.error(String.format("retrieveOrderItems: got empty itemstack list for offer %d x %s @ %s", times, queryingItems, itemPos));
                 return null;
             }
             return (EntityDrone) DroneRegistry.getInstance().retrieveItemsAmazonStyle(itemWorld, itemPos, stacks.toArray(new ItemStack[0]));
@@ -286,7 +287,7 @@ public class ContainerAmadron extends ContainerPneumaticBase {
     private int capShoppingAmount(int offerId, int wantedAmount, EntityPlayer player) {
         IItemHandler inv = ItemAmadronTablet.getItemProvider(player.getHeldItemMainhand());
         IFluidHandler fluidHandler = ItemAmadronTablet.getLiquidProvider(player.getHeldItemMainhand());
-        return capShoppingAmount(offers.get(offerId), wantedAmount, inv, fluidHandler, this);
+        return capShoppingAmount(this.offers.get(offerId), wantedAmount, inv, fluidHandler, this);
     }
 
     private static int capShoppingAmount(AmadronOffer offer, int wantedAmount, IItemHandler inv, IFluidHandler fluidHandler, ContainerAmadron container) {
@@ -369,10 +370,10 @@ public class ContainerAmadron extends ContainerPneumaticBase {
 
     private int getCartSlot(int offerId) {
         int freeSlot = -1;
-        for (int i = 0; i < shoppingItems.length; i++) {
-            if (shoppingItems[i] == offerId) {
+        for (int i = 0; i < this.shoppingItems.length; i++) {
+            if (this.shoppingItems[i] == offerId) {
                 return i;
-            } else if (freeSlot == -1 && shoppingItems[i] == -1) {
+            } else if (freeSlot == -1 && this.shoppingItems[i] == -1) {
                 freeSlot = i;
             }
         }
@@ -380,10 +381,10 @@ public class ContainerAmadron extends ContainerPneumaticBase {
     }
 
     public int getShoppingCartAmount(AmadronOffer offer) {
-        int offerId = offers.indexOf(offer);
-        for (int i = 0; i < shoppingItems.length; i++) {
-            if (shoppingItems[i] == offerId) {
-                return shoppingAmounts[i];
+        int offerId = this.offers.indexOf(offer);
+        for (int i = 0; i < this.shoppingItems.length; i++) {
+            if (this.shoppingItems[i] == offerId) {
+                return this.shoppingAmounts[i];
             }
         }
         return 0;
@@ -394,9 +395,9 @@ public class ContainerAmadron extends ContainerPneumaticBase {
         super.onContainerClosed(player);
         if (!player.world.isRemote && player.getHeldItemMainhand().getItem() == Itemss.AMADRON_TABLET) {
             Map<AmadronOffer, Integer> shoppingCart = new HashMap<>();
-            for (int i = 0; i < shoppingItems.length; i++) {
-                if (shoppingItems[i] >= 0) {
-                    shoppingCart.put(offers.get(shoppingItems[i]), shoppingAmounts[i]);
+            for (int i = 0; i < this.shoppingItems.length; i++) {
+                if (this.shoppingItems[i] >= 0) {
+                    shoppingCart.put(this.offers.get(this.shoppingItems[i]), this.shoppingAmounts[i]);
                 }
             }
             ItemAmadronTablet.setShoppingCart(player.getHeldItemMainhand(), shoppingCart);

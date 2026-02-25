@@ -14,11 +14,11 @@ public class SemiblockEvent extends Event {
     }
 
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     public static class PlaceEvent extends SemiblockEvent {

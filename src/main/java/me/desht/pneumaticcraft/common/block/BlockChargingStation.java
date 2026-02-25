@@ -29,7 +29,7 @@ public class BlockChargingStation extends BlockPneumaticCraftCamo {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new ExtendedBlockState(this, new IProperty[] { ROTATION, CHARGE_PAD }, UNLISTED_CAMO_PROPERTIES);
+        return new ExtendedBlockState(this, new IProperty[]{ROTATION, CHARGE_PAD}, UNLISTED_CAMO_PROPERTIES);
     }
 
     @Override

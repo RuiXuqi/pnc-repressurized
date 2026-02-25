@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 /**
  * Fired when a helmet Block Tracker is about to track a fluid tank. Can be canceled to prevent tracking.
  * Posted on MinecraftForge.EVENT_BUS
- *
+ * <p>
  * The tile inventory is known to support CapabilityFluidHandler.FLUID_CAPABILITY on at least one face
  * when the event is received.
  *
@@ -25,10 +25,10 @@ public class FluidTrackEvent extends Event {
     }
 
     public IFluidHandler getFluidHandler() {
-        return getFluidHandler(null);
+        return this.getFluidHandler(null);
     }
 
     public IFluidHandler getFluidHandler(EnumFacing face) {
-        return te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face);
+        return this.te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, face);
     }
 }

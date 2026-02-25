@@ -17,21 +17,21 @@ public class TileEntityCreativeCompressor extends TileEntityPneumaticBase {
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        pressureSetpoint = nbt.getFloat("setpoint");
+        this.pressureSetpoint = nbt.getFloat("setpoint");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setFloat("setpoint", pressureSetpoint);
+        nbt.setFloat("setpoint", this.pressureSetpoint);
         return nbt;
     }
 
     @Override
     public void update() {
         super.update();
-        if (!world.isRemote) {
-            ((AirHandler) getAirHandler(null)).setPressure(pressureSetpoint);
+        if (!this.world.isRemote) {
+            ((AirHandler) this.getAirHandler(null)).setPressure(this.pressureSetpoint);
         }
     }
 
@@ -39,20 +39,20 @@ public class TileEntityCreativeCompressor extends TileEntityPneumaticBase {
     public void handleGUIButtonPress(int guiID, EntityPlayer player) {
         switch (guiID) {
             case 0:
-                pressureSetpoint -= 1;
+                this.pressureSetpoint -= 1;
                 break;
             case 1:
-                pressureSetpoint -= 0.1F;
+                this.pressureSetpoint -= 0.1F;
                 break;
             case 2:
-                pressureSetpoint += 0.1F;
+                this.pressureSetpoint += 0.1F;
                 break;
             case 3:
-                pressureSetpoint += 1.0F;
+                this.pressureSetpoint += 1.0F;
                 break;
         }
-        if (pressureSetpoint > 30) pressureSetpoint = 30;
-        if (pressureSetpoint < -1) pressureSetpoint = -1;
+        if (this.pressureSetpoint > 30) this.pressureSetpoint = 30;
+        if (this.pressureSetpoint < -1) this.pressureSetpoint = -1;
     }
 
     @Override

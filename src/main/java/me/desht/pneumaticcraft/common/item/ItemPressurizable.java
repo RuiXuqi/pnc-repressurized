@@ -19,17 +19,17 @@ public class ItemPressurizable extends ItemPneumatic implements IPressurizable {
 
     public ItemPressurizable(String registryName, int maxAir, int volume) {
         super(registryName);
-        setMaxStackSize(1);
-        setMaxDamage(maxAir);
+        this.setMaxStackSize(1);
+        this.setMaxDamage(maxAir);
         this.volume = volume;
-        maxPressure = (float)maxAir / volume;
-        setNoRepair();
+        this.maxPressure = (float) maxAir / volume;
+        this.setNoRepair();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> par3List) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             ItemStack stack = new ItemStack(this, 1, 0);
             ItemStack stack2 = new ItemStack(this, 1, stack.getMaxDamage());
             par3List.add(stack);
@@ -39,7 +39,7 @@ public class ItemPressurizable extends ItemPneumatic implements IPressurizable {
 
     @Override
     public float getPressure(ItemStack iStack) {
-        return (float) (iStack.getMaxDamage() - iStack.getItemDamage()) / (float) volume;
+        return (float) (iStack.getMaxDamage() - iStack.getItemDamage()) / (float) this.volume;
     }
 
     @Override
@@ -49,13 +49,13 @@ public class ItemPressurizable extends ItemPneumatic implements IPressurizable {
 
     @Override
     public float maxPressure(ItemStack iStack) {
-        return maxPressure;
+        return this.maxPressure;
     }
 
     @Override
     public int getVolume(ItemStack itemStack) {
         // note: no volume upgrade support by default
-        return volume;
+        return this.volume;
     }
 
     @Override

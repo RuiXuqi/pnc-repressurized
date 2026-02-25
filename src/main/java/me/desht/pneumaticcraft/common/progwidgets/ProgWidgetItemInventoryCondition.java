@@ -32,9 +32,9 @@ public class ProgWidgetItemInventoryCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                TileEntity te = drone.world().getTileEntity(pos);
+                TileEntity te = this.drone.world().getTileEntity(pos);
 
-                boolean[] sides = ((ISidedWidget) widget).getSides();
+                boolean[] sides = ((ISidedWidget) this.widget).getSides();
 
                 // item handlers won't typically override hashCode/equals, but this should be OK: we just
                 // want a set of distinct item handler objects, which Object#hashCode() should give us
@@ -50,12 +50,12 @@ public class ProgWidgetItemInventoryCondition extends ProgWidgetCondition {
                 for (IItemHandler handler : handlers) {
                     for (int i = 0; i < handler.getSlots(); i++) {
                         ItemStack stack = handler.getStackInSlot(i);
-                        if (widget.isItemValidForFilters(stack)) {
+                        if (this.widget.isItemValidForFilters(stack)) {
                             count += stack.getCount();
                         }
                     }
                 }
-                return ((ICondition) widget).getOperator().evaluate(count, ((ICondition) widget).getRequiredCount());
+                return ((ICondition) this.widget).getOperator().evaluate(count, ((ICondition) this.widget).getRequiredCount());
             }
 
         };

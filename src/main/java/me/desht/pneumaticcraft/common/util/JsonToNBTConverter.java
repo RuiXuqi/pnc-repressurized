@@ -19,7 +19,7 @@ public class JsonToNBTConverter {
 
     public NBTTagCompound convert() {
         JsonParser parser = new JsonParser();
-        JsonElement el = parser.parse(jsonString);
+        JsonElement el = parser.parse(this.jsonString);
         return getTag((JsonObject) el);
     }
 

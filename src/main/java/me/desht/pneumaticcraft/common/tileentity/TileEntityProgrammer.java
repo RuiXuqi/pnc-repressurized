@@ -56,23 +56,23 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
     public boolean recentreStartPiece = false;
 
     public TileEntityProgrammer() {
-        saveToHistory();
+        this.saveToHistory();
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstoneMode = tag.getInteger("redstoneMode");
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        history = tag.getTagList("history", 10);
-        if (history.tagCount() == 0) saveToHistory();
+        this.redstoneMode = tag.getInteger("redstoneMode");
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.history = tag.getTagList("history", 10);
+        if (this.history.tagCount() == 0) this.saveToHistory();
     }
 
     @Override
     public void readFromPacket(NBTTagCompound tag) {
         super.readFromPacket(tag);
-        readProgWidgetsFromNBT(tag);
-        recentreStartPiece = tag.getBoolean("recentreStartPiece");
+        this.readProgWidgetsFromNBT(tag);
+        this.recentreStartPiece = tag.getBoolean("recentreStartPiece");
     }
 
     @Override
@@ -83,37 +83,37 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setTag("Items", inventory.serializeNBT());
-        tag.setTag("history", history);
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setTag("Items", this.inventory.serializeNBT());
+        tag.setTag("history", this.history);
         return tag;
     }
 
     @Override
     public void writeToPacket(NBTTagCompound tag) {
         super.writeToPacket(tag);
-        writeProgWidgetsToNBT(tag);
-        tag.setBoolean("recentreStartPiece", recentreStartPiece);
-        recentreStartPiece = false;
+        this.writeProgWidgetsToNBT(tag);
+        tag.setBoolean("recentreStartPiece", this.recentreStartPiece);
+        this.recentreStartPiece = false;
     }
 
     public void readProgWidgetsFromNBT(NBTTagCompound tag) {
-        progWidgets.clear();
-        getWidgetsFromNBT(tag, progWidgets);
+        this.progWidgets.clear();
+        getWidgetsFromNBT(tag, this.progWidgets);
     }
 
     public void writeProgWidgetsToNBT(NBTTagCompound tag) {
-        setWidgetsToNBT(progWidgets, tag);
+        setWidgetsToNBT(this.progWidgets, tag);
     }
 
     @Nonnull
     public ItemStack getIteminProgrammingSlot() {
-        return inventory.getStackInSlot(PROGRAM_SLOT);
+        return this.inventory.getStackInSlot(PROGRAM_SLOT);
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     public static List<IProgWidget> getWidgetsFromNBT(NBTTagCompound tag) {
@@ -215,51 +215,51 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         switch (buttonID) {
             case 0:
-                if (++redstoneMode > 1) redstoneMode = 0;
+                if (++this.redstoneMode > 1) this.redstoneMode = 0;
                 break;
             case 1:
-                ItemStack stack = inventory.getStackInSlot(PROGRAM_SLOT);
+                ItemStack stack = this.inventory.getStackInSlot(PROGRAM_SLOT);
                 NBTTagCompound tag = stack.isEmpty() ? null : stack.getTagCompound();
                 if (tag != null) {
-                    readProgWidgetsFromNBT(tag);
-                    recentreStartPiece = true;
+                    this.readProgWidgetsFromNBT(tag);
+                    this.recentreStartPiece = true;
                 } else {
-                    progWidgets.clear();
+                    this.progWidgets.clear();
                 }
                 break;
             case 2:
-                tryProgramDrone(player);
+                this.tryProgramDrone(player);
                 break;
             case 9:
-                undo();
+                this.undo();
                 break;
             case 10:
-                redo();
+                this.redo();
                 break;
         }
-        sendDescriptionPacket();
+        this.sendDescriptionPacket();
     }
 
     @Override
     public void setText(int textFieldID, String text) {
-        ItemStack stack = inventory.getStackInSlot(PROGRAM_SLOT).copy();
+        ItemStack stack = this.inventory.getStackInSlot(PROGRAM_SLOT).copy();
         if (textFieldID == 0 && !stack.isEmpty()) {
             stack.setStackDisplayName(text);
-            inventory.setStackInSlot(PROGRAM_SLOT, stack);
+            this.inventory.setStackInSlot(PROGRAM_SLOT, stack);
         }
     }
 
     @Override
     public String getText(int textFieldID) {
-        return inventory.getStackInSlot(PROGRAM_SLOT).getDisplayName();
+        return this.inventory.getStackInSlot(PROGRAM_SLOT).getDisplayName();
     }
 
     private void tryProgramDrone(EntityPlayer player) {
-        if (!inventory.getStackInSlot(PROGRAM_SLOT).isEmpty()) {
+        if (!this.inventory.getStackInSlot(PROGRAM_SLOT).isEmpty()) {
             if (player == null || !player.capabilities.isCreativeMode) {
-                List<ItemStack> requiredStacks = getRequiredPuzzleStacks();
+                List<ItemStack> requiredStacks = this.getRequiredPuzzleStacks();
                 for (ItemStack stack : requiredStacks) {
-                    if (!hasEnoughPuzzleStacks(player, stack)) return;
+                    if (!this.hasEnoughPuzzleStacks(player, stack)) return;
                 }
                 for (ItemStack stack : requiredStacks) {
                     int left = stack.getCount();
@@ -273,7 +273,7 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
                     }
                     if (left > 0) {
                         for (EnumFacing d : EnumFacing.VALUES) {
-                            IItemHandler neighbor = IOHelper.getInventoryForTE(getWorld().getTileEntity(getPos().offset(d)), d.getOpposite());
+                            IItemHandler neighbor = IOHelper.getInventoryForTE(this.getWorld().getTileEntity(this.getPos().offset(d)), d.getOpposite());
                             if (neighbor != null) {
                                 for (int slot = 0; slot < neighbor.getSlots(); slot++) {
                                     ItemStack neighborStack = neighbor.extractItem(slot, left, true);
@@ -287,10 +287,10 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
                         }
                     }
                 }
-                List<ItemStack> returnedStacks = getReturnedPuzzleStacks();
+                List<ItemStack> returnedStacks = this.getReturnedPuzzleStacks();
                 for (ItemStack stack : returnedStacks) {
                     for (EnumFacing d : EnumFacing.VALUES) {
-                        TileEntity te = getWorld().getTileEntity(getPos().offset(d));
+                        TileEntity te = this.getWorld().getTileEntity(this.getPos().offset(d));
                         if (te != null) {
                             stack = IOHelper.insert(te, stack, d.getOpposite(), false);
                             if (stack.isEmpty()) break;
@@ -303,28 +303,28 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
                         }
                     }
                     if (!stack.isEmpty()) {
-                        getWorld().spawnEntity(new EntityItem(getWorld(), getPos().getX() + 0.5, getPos().getY() + 1.5, getPos().getZ() + 0.5, stack));
+                        this.getWorld().spawnEntity(new EntityItem(this.getWorld(), this.getPos().getX() + 0.5, this.getPos().getY() + 1.5, this.getPos().getZ() + 0.5, stack));
                     }
                 }
             }
-            ItemStack stack = inventory.getStackInSlot(PROGRAM_SLOT);
+            ItemStack stack = this.inventory.getStackInSlot(PROGRAM_SLOT);
             if (!stack.hasTagCompound()) {
                 stack.setTagCompound(new NBTTagCompound());
-                inventory.setStackInSlot(PROGRAM_SLOT, stack);
+                this.inventory.setStackInSlot(PROGRAM_SLOT, stack);
             }
-            writeProgWidgetsToNBT(stack.getTagCompound());
+            this.writeProgWidgetsToNBT(stack.getTagCompound());
             if (player != null) {
-                NetworkHandler.sendTo(new PacketPlaySound(Sounds.HUD_INIT_COMPLETE, SoundCategory.NEUTRAL, getPos(), 1.0f, 1.0f, false), (EntityPlayerMP) player);
+                NetworkHandler.sendTo(new PacketPlaySound(Sounds.HUD_INIT_COMPLETE, SoundCategory.NEUTRAL, this.getPos(), 1.0f, 1.0f, false), (EntityPlayerMP) player);
                 AdvancementTriggers.PROGRAM_DRONE.trigger((EntityPlayerMP) player);
             }
         }
     }
 
     public List<ItemStack> getRequiredPuzzleStacks() {
-        ItemStack stackInSlot = inventory.getStackInSlot(PROGRAM_SLOT);
+        ItemStack stackInSlot = this.inventory.getStackInSlot(PROGRAM_SLOT);
         List<ItemStack> stacks = new ArrayList<>();
         if (!stackInSlot.isEmpty() && ((IProgrammable) stackInSlot.getItem()).usesPieces(stackInSlot)) {
-            Map<Integer, Integer> tePieces = getPuzzleSummary(progWidgets);
+            Map<Integer, Integer> tePieces = getPuzzleSummary(this.progWidgets);
             Map<Integer, Integer> dronePieces = getPuzzleSummary(getProgWidgets(stackInSlot));
             for (Integer includedWidget : tePieces.keySet()) {
                 Integer existingWidgets = dronePieces.get(includedWidget);
@@ -346,10 +346,10 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
     }
 
     public List<ItemStack> getReturnedPuzzleStacks() {
-        ItemStack stackInSlot = inventory.getStackInSlot(PROGRAM_SLOT);
+        ItemStack stackInSlot = this.inventory.getStackInSlot(PROGRAM_SLOT);
         List<ItemStack> stacks = new ArrayList<>();
         if (!stackInSlot.isEmpty() && ((IProgrammable) stackInSlot.getItem()).usesPieces(stackInSlot)) {
-            Map<Integer, Integer> tePieces = getPuzzleSummary(progWidgets);
+            Map<Integer, Integer> tePieces = getPuzzleSummary(this.progWidgets);
             Map<Integer, Integer> dronePieces = getPuzzleSummary(getProgWidgets(stackInSlot));
 
             for (Integer availableWidget : dronePieces.keySet()) {
@@ -398,7 +398,7 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
         }
 
         for (EnumFacing d : EnumFacing.VALUES) {
-            TileEntity te = getWorld().getTileEntity(getPos().offset(d));
+            TileEntity te = this.getWorld().getTileEntity(this.getPos().offset(d));
             if (te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, d.getOpposite())) {
                 IItemHandler handler = te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, d.getOpposite());
                 for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -435,7 +435,7 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
      */
     public Set<String> getAllVariables() {
         Set<String> variables = new HashSet<>();
-        for (IProgWidget widget : progWidgets) {
+        for (IProgWidget widget : this.progWidgets) {
             if (widget instanceof IVariableWidget) ((IVariableWidget) widget).addVariables(variables);
         }
         variables.remove("");
@@ -459,7 +459,7 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
     }
 
     public boolean previewArea(int widgetX, int widgetY) {
-        for (IProgWidget w : progWidgets) {
+        for (IProgWidget w : this.progWidgets) {
             if (w.getX() == widgetX && w.getY() == widgetY && w instanceof IAreaProvider) {
                 Set<BlockPos> area = new HashSet<>();
                 ((IAreaProvider) w).getArea(area);
@@ -471,37 +471,37 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
 
     public void saveToHistory() {
         NBTTagCompound tag = new NBTTagCompound();
-        writeProgWidgetsToNBT(tag);
-        if (history.tagCount() == 0 || !history.getCompoundTagAt(historyIndex).equals(tag)) {
-            while (history.tagCount() > historyIndex + 1) {
-                history.removeTag(historyIndex + 1);
+        this.writeProgWidgetsToNBT(tag);
+        if (this.history.tagCount() == 0 || !this.history.getCompoundTagAt(this.historyIndex).equals(tag)) {
+            while (this.history.tagCount() > this.historyIndex + 1) {
+                this.history.removeTag(this.historyIndex + 1);
             }
-            history.appendTag(tag);
-            if (history.tagCount() > 20) history.removeTag(0);//Only save up to 20 steps back.
-            historyIndex = history.tagCount() - 1;
-            updateUndoRedoState();
+            this.history.appendTag(tag);
+            if (this.history.tagCount() > 20) this.history.removeTag(0);//Only save up to 20 steps back.
+            this.historyIndex = this.history.tagCount() - 1;
+            this.updateUndoRedoState();
         }
     }
 
     public void undo() {
-        if (canUndo) {
-            historyIndex--;
-            readProgWidgetsFromNBT(history.getCompoundTagAt(historyIndex));
-            updateUndoRedoState();
+        if (this.canUndo) {
+            this.historyIndex--;
+            this.readProgWidgetsFromNBT(this.history.getCompoundTagAt(this.historyIndex));
+            this.updateUndoRedoState();
         }
     }
 
     public void redo() {
-        if (canRedo) {
-            historyIndex++;
-            readProgWidgetsFromNBT(history.getCompoundTagAt(historyIndex));
-            updateUndoRedoState();
+        if (this.canRedo) {
+            this.historyIndex++;
+            this.readProgWidgetsFromNBT(this.history.getCompoundTagAt(this.historyIndex));
+            this.updateUndoRedoState();
         }
     }
 
     private void updateUndoRedoState() {
-        canUndo = historyIndex > 0;
-        canRedo = historyIndex < history.tagCount() - 1;
+        this.canUndo = this.historyIndex > 0;
+        this.canRedo = this.historyIndex < this.history.tagCount() - 1;
     }
 
     private class ProgrammerItemHandler extends BaseItemStackHandler {
@@ -512,8 +512,8 @@ public class TileEntityProgrammer extends TileEntityTickableBase implements IGUI
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            if (redstoneMode == 1 && slot == PROGRAM_SLOT && !getStackInSlot(slot).isEmpty()) {
-                tryProgramDrone(null);
+            if (TileEntityProgrammer.this.redstoneMode == 1 && slot == PROGRAM_SLOT && !this.getStackInSlot(slot).isEmpty()) {
+                TileEntityProgrammer.this.tryProgramDrone(null);
             }
         }
 

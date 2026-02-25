@@ -14,7 +14,7 @@ public class JEIUVLightBoxCategory extends JEISpecialCraftingCategory<UVLightBox
 
     JEIUVLightBoxCategory(IJeiHelpers jeiHelpers) {
         super(jeiHelpers);
-        setText("gui.nei.recipe.uvLightBox");
+        this.setText("gui.nei.recipe.uvLightBox");
     }
 
     @Override

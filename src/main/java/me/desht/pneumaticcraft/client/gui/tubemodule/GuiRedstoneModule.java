@@ -37,7 +37,7 @@ public class GuiRedstoneModule extends GuiTubeModule {
 
     public GuiRedstoneModule(EntityPlayer player, int x, int y, int z) {
         super(player, x, y, z);
-        ySize = 202;
+        this.ySize = 202;
     }
 
     @Override
@@ -49,134 +49,134 @@ public class GuiRedstoneModule extends GuiTubeModule {
     public void initGui() {
         super.initGui();
 
-        ModuleRedstone mr = (ModuleRedstone) module;
-        ourColor = mr.getColorChannel();
-        otherColor = mr.getOtherColor();
+        ModuleRedstone mr = (ModuleRedstone) this.module;
+        this.ourColor = mr.getColorChannel();
+        this.otherColor = mr.getOtherColor();
 
-        addWidget(new WidgetLabel(guiLeft + xSize / 2, guiTop + 5, "Redstone Module").setAlignment(WidgetLabel.Alignment.CENTRE));
+        this.addWidget(new WidgetLabel(this.guiLeft + this.xSize / 2, this.guiTop + 5, "Redstone Module").setAlignment(WidgetLabel.Alignment.CENTRE));
 
         WidgetLabel ourColorLabel;
-        addWidget(ourColorLabel = new WidgetLabel(guiLeft + 10, guiTop + 20, "Our Color"));
+        this.addWidget(ourColorLabel = new WidgetLabel(this.guiLeft + 10, this.guiTop + 20, "Our Color"));
 
         WidgetLabel opLabel;
-        addWidget(opLabel = new WidgetLabel(guiLeft + 10, guiTop + 40, "Operation"));
+        this.addWidget(opLabel = new WidgetLabel(this.guiLeft + 10, this.guiTop + 40, "Operation"));
 
-        otherColorLabel = new WidgetLabel(guiLeft + 10, guiTop + 60, "Other Color");
-        addWidget(otherColorLabel);
+        this.otherColorLabel = new WidgetLabel(this.guiLeft + 10, this.guiTop + 60, "Other Color");
+        this.addWidget(this.otherColorLabel);
 
-        constLabel = new WidgetLabel(guiLeft + 15, guiTop + 60, "Constant");
-        addWidget(constLabel);
+        this.constLabel = new WidgetLabel(this.guiLeft + 15, this.guiTop + 60, "Constant");
+        this.addWidget(this.constLabel);
 
         int w = 0;
-        for (WidgetLabel label : ImmutableList.of(ourColorLabel, otherColorLabel, opLabel, constLabel)) {
+        for (WidgetLabel label : ImmutableList.of(ourColorLabel, this.otherColorLabel, opLabel, this.constLabel)) {
             w = Math.max(label.getBounds().width, w);
         }
-        int xBase = guiLeft + w + 15;
+        int xBase = this.guiLeft + w + 15;
 
-        ourColorButton = new GuiButtonSpecial(0, xBase, guiTop + 15, 20, 20, "") {
+        this.ourColorButton = new GuiButtonSpecial(0, xBase, this.guiTop + 15, 20, 20, "") {
             @Override
             public void onMouseClicked(int mouseX, int mouseY, int button) {
                 if (button == 0) {
-                    if (--ourColor < 0) ourColor = 15;
+                    if (--GuiRedstoneModule.this.ourColor < 0) GuiRedstoneModule.this.ourColor = 15;
                 } else if (button == 1) {
-                    if (++ourColor > 15) ourColor = 0;
+                    if (++GuiRedstoneModule.this.ourColor > 15) GuiRedstoneModule.this.ourColor = 0;
                 }
             }
         };
-        addWidget(ourColorButton);
+        this.addWidget(this.ourColorButton);
 
         List<String> ops = new ArrayList<>();
         for (Operation op : Operation.values()) {
             ops.add(I18n.format(op.getTranslationKey()));
         }
-        comboBox = new WidgetComboBox(fontRenderer, xBase, guiTop + 39, xSize - xBase + guiLeft - 10, 12)
+        this.comboBox = new WidgetComboBox(this.fontRenderer, xBase, this.guiTop + 39, this.xSize - xBase + this.guiLeft - 10, 12)
                 .setFixedOptions().setShouldSort(false).setElements(ops);
-        comboBox.selectElement(mr.getOperation().ordinal());
-        addWidget(comboBox);
+        this.comboBox.selectElement(mr.getOperation().ordinal());
+        this.addWidget(this.comboBox);
 
-        otherColorButton = new GuiButtonSpecial(0, xBase, guiTop + 55, 20, 20, "") {
+        this.otherColorButton = new GuiButtonSpecial(0, xBase, this.guiTop + 55, 20, 20, "") {
             @Override
             public void onMouseClicked(int mouseX, int mouseY, int button) {
-                if (comboBox.isFocused()) return;  // it hangs over the button
+                if (GuiRedstoneModule.this.comboBox.isFocused()) return;  // it hangs over the button
                 if (button == 0) {
-                    if (--otherColor < 0) otherColor = 15;
+                    if (--GuiRedstoneModule.this.otherColor < 0) GuiRedstoneModule.this.otherColor = 15;
                 } else if (button == 1) {
-                    if (++otherColor > 15) otherColor = 0;
+                    if (++GuiRedstoneModule.this.otherColor > 15) GuiRedstoneModule.this.otherColor = 0;
                 }
             }
         };
-        addWidget(otherColorButton);
+        this.addWidget(this.otherColorButton);
 
-        textField = new WidgetTextFieldNumber(fontRenderer, xBase, guiTop + 58, 30, 12);
-        textField.minValue = 0;
-        textField.setDecimals(0);
-        textField.setValue(mr.getConstantVal());
-        addWidget(textField);
+        this.textField = new WidgetTextFieldNumber(this.fontRenderer, xBase, this.guiTop + 58, 30, 12);
+        this.textField.minValue = 0;
+        this.textField.setDecimals(0);
+        this.textField.setValue(mr.getConstantVal());
+        this.addWidget(this.textField);
 
-        invertCheckBox = new GuiCheckBox(1, guiLeft + 10, guiTop + 80, 0xFF404040, "Invert Output?") {
+        this.invertCheckBox = new GuiCheckBox(1, this.guiLeft + 10, this.guiTop + 80, 0xFF404040, "Invert Output?") {
             @Override
             public void onMouseClicked(int mouseX, int mouseY, int button) {
-                if (comboBox.isFocused()) return;  // it hangs over the button
+                if (GuiRedstoneModule.this.comboBox.isFocused()) return;  // it hangs over the button
                 super.onMouseClicked(mouseX, mouseY, button);
             }
         };
-        invertCheckBox.checked = mr.isInvert();
-        invertCheckBox.setTooltip(I18n.format("gui.redstoneModule.invert.tooltip"));
-        addWidget(invertCheckBox);
+        this.invertCheckBox.checked = mr.isInvert();
+        this.invertCheckBox.setTooltip(I18n.format("gui.redstoneModule.invert.tooltip"));
+        this.addWidget(this.invertCheckBox);
 
-        updateWidgetVisibility();
+        this.updateWidgetVisibility();
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
 
-        updateWidgetVisibility();
+        this.updateWidgetVisibility();
     }
 
     private void updateWidgetVisibility() {
-        Operation op = getSelectedOp();
-        constLabel.visible = op.useConst();
-        textField.setVisible(op.useConst());
-        otherColorLabel.visible = op.useOtherColor();
-        otherColorButton.visible = op.useOtherColor();
-        otherColorButton.setVisible(op.useOtherColor());
-        ourColorButton.setRenderStacks(new ItemStack(Blocks.CONCRETE, 1, EnumDyeColor.byDyeDamage(ourColor).getMetadata()));
-        otherColorButton.setRenderStacks(new ItemStack(Blocks.CONCRETE, 1, EnumDyeColor.byDyeDamage(otherColor).getMetadata()));
+        Operation op = this.getSelectedOp();
+        this.constLabel.visible = op.useConst();
+        this.textField.setVisible(op.useConst());
+        this.otherColorLabel.visible = op.useOtherColor();
+        this.otherColorButton.visible = op.useOtherColor();
+        this.otherColorButton.setVisible(op.useOtherColor());
+        this.ourColorButton.setRenderStacks(new ItemStack(Blocks.CONCRETE, 1, EnumDyeColor.byDyeDamage(this.ourColor).getMetadata()));
+        this.otherColorButton.setRenderStacks(new ItemStack(Blocks.CONCRETE, 1, EnumDyeColor.byDyeDamage(this.otherColor).getMetadata()));
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
 
-        Operation op = getSelectedOp();
+        Operation op = this.getSelectedOp();
         String key = op.getTranslationKey() + ".tooltip";
         String s;
         if (op.useConst()) {
-            s = I18n.format(key, dyeColorDesc(ourColor), textField.getValue());
+            s = I18n.format(key, dyeColorDesc(this.ourColor), this.textField.getValue());
         } else if (op.useOtherColor()) {
-            s = I18n.format(key, dyeColorDesc(ourColor), dyeColorDesc(otherColor));
+            s = I18n.format(key, dyeColorDesc(this.ourColor), dyeColorDesc(this.otherColor));
         } else {
-            s = I18n.format(key, dyeColorDesc(ourColor));
+            s = I18n.format(key, dyeColorDesc(this.ourColor));
         }
         List<String> l = PneumaticCraftUtils.convertStringIntoList(s, 30);
-        int yBase = guiTop + ySize - l.size() * fontRenderer.FONT_HEIGHT - 10;
+        int yBase = this.guiTop + this.ySize - l.size() * this.fontRenderer.FONT_HEIGHT - 10;
         for (int i = 0; i < l.size(); i++) {
-            fontRenderer.drawString(l.get(i), guiLeft + 10, yBase + i * fontRenderer.FONT_HEIGHT, 0xFF404040);
+            this.fontRenderer.drawString(l.get(i), this.guiLeft + 10, yBase + i * this.fontRenderer.FONT_HEIGHT, 0xFF404040);
         }
     }
 
     private Operation getSelectedOp() {
-        return Operation.values()[comboBox.getSelectedElementIndex()];
+        return Operation.values()[this.comboBox.getSelectedElementIndex()];
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
 
-        ((ModuleRedstone) module).setColorChannel(ourColor);
-        ((ModuleRedstone) module).setInvert(invertCheckBox.checked);
-        ((ModuleRedstone) module).setOperation(getSelectedOp(), otherColor, textField.getValue());
-        NetworkHandler.sendToServer(new PacketSyncRedstoneModuleToServer((ModuleRedstone) module));
+        ((ModuleRedstone) this.module).setColorChannel(this.ourColor);
+        ((ModuleRedstone) this.module).setInvert(this.invertCheckBox.checked);
+        ((ModuleRedstone) this.module).setOperation(this.getSelectedOp(), this.otherColor, this.textField.getValue());
+        NetworkHandler.sendToServer(new PacketSyncRedstoneModuleToServer((ModuleRedstone) this.module));
     }
 }

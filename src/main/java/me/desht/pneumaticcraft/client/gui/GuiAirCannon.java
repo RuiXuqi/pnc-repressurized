@@ -30,66 +30,66 @@ public class GuiAirCannon extends GuiPneumaticContainerBase<TileEntityAirCannon>
     public GuiAirCannon(InventoryPlayer player, TileEntityAirCannon te) {
         super(new ContainerAirCannon(player, te), te, Textures.GUI_AIR_CANNON_LOCATION);
 
-        gpsX = te.gpsX;
-        gpsY = te.gpsY;
-        gpsZ = te.gpsZ;
+        this.gpsX = te.gpsX;
+        this.gpsY = te.gpsY;
+        this.gpsZ = te.gpsZ;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        statusStat = this.addAnimatedStat("Cannon Status", new ItemStack(Blockss.AIR_CANNON), 0xFFFFAA00, false);
+        this.statusStat = this.addAnimatedStat("Cannon Status", new ItemStack(Blockss.AIR_CANNON), 0xFFFFAA00, false);
 
-        strengthTab = this.addAnimatedStat("Force", new ItemStack(Itemss.AIR_CANISTER), 0xFF2080FF, false);
-        strengthTab.addPadding(3, 22);
-        strengthTab.addWidget(new GuiButtonSpecial(1, 16, 16, 20, 20, "--"));
-        strengthTab.addWidget(new GuiButtonSpecial(2, 38, 16, 20, 20, "-"));
-        strengthTab.addWidget(new GuiButtonSpecial(3, 60, 16, 20, 20, "+"));
-        strengthTab.addWidget(new GuiButtonSpecial(4, 82, 16, 20, 20, "++"));
+        this.strengthTab = this.addAnimatedStat("Force", new ItemStack(Itemss.AIR_CANISTER), 0xFF2080FF, false);
+        this.strengthTab.addPadding(3, 22);
+        this.strengthTab.addWidget(new GuiButtonSpecial(1, 16, 16, 20, 20, "--"));
+        this.strengthTab.addWidget(new GuiButtonSpecial(2, 38, 16, 20, 20, "-"));
+        this.strengthTab.addWidget(new GuiButtonSpecial(3, 60, 16, 20, 20, "+"));
+        this.strengthTab.addWidget(new GuiButtonSpecial(4, 82, 16, 20, 20, "++"));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("GPS", 50, 20, 4210752);
-        fontRenderer.drawString("Upgr.", 13, 19, 4210752);
+        this.fontRenderer.drawString("GPS", 50, 20, 4210752);
+        this.fontRenderer.drawString("Upgr.", 13, 19, 4210752);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
-        strengthTab.setTitle("Force: "+ te.forceMult + "%%");
+        this.statusStat.setText(this.getStatusText());
+        this.strengthTab.setTitle("Force: " + this.te.forceMult + "%%");
 
-        if (gpsX != te.gpsX || gpsY != te.gpsY || gpsZ != te.gpsZ) {
-            gpsX = te.gpsX;
-            gpsY = te.gpsY;
-            gpsZ = te.gpsZ;
-            statusStat.openWindow();
+        if (this.gpsX != this.te.gpsX || this.gpsY != this.te.gpsY || this.gpsZ != this.te.gpsZ) {
+            this.gpsX = this.te.gpsX;
+            this.gpsY = this.te.gpsY;
+            this.gpsZ = this.te.gpsZ;
+            this.statusStat.openWindow();
         }
     }
 
     private List<String> getStatusText() {
         List<String> text = new ArrayList<>();
         text.add("\u00a77Current Aimed Coordinate:");
-        if (te.gpsX != 0 || te.gpsY != 0 || te.gpsZ != 0) {
-            text.add("\u00a70X: " + te.gpsX + ", Y: " + te.gpsY + ", Z: " + te.gpsZ);
+        if (this.te.gpsX != 0 || this.te.gpsY != 0 || this.te.gpsZ != 0) {
+            text.add("\u00a70X: " + this.te.gpsX + ", Y: " + this.te.gpsY + ", Z: " + this.te.gpsZ);
         } else {
             text.add("\u00a70- No coordinate selected -");
         }
         text.add("\u00a77Current Heading Angle:");
-        text.add("\u00a70" + Math.round(te.rotationAngle) + " degrees.");
+        text.add("\u00a70" + Math.round(this.te.rotationAngle) + " degrees.");
         text.add("\u00a77Current Height Angle:");
-        text.add("\u00a70" + (90 - Math.round(te.heightAngle)) + " degrees.");
+        text.add("\u00a70" + (90 - Math.round(this.te.heightAngle)) + " degrees.");
         text.add(TextFormatting.GRAY + "Range");
-        text.add(TextFormatting.BLACK + "About " + PneumaticCraftUtils.roundNumberTo(te.getForce() * 25F, 0) + "m");
+        text.add(TextFormatting.BLACK + "About " + PneumaticCraftUtils.roundNumberTo(this.te.getForce() * 25F, 0) + "m");
         return text;
     }
 
     @Override
     protected void addProblems(List<String> textList) {
-        List<Pair<EnumFacing, IAirHandler>> teSurrounding = te.getAirHandler(null).getConnectedPneumatics();
+        List<Pair<EnumFacing, IAirHandler>> teSurrounding = this.te.getAirHandler(null).getConnectedPneumatics();
         super.addProblems(textList);
 
         if (teSurrounding.isEmpty()) {
@@ -97,24 +97,24 @@ public class GuiAirCannon extends GuiPneumaticContainerBase<TileEntityAirCannon>
             textList.add("\u00a70Add pipes / machines");
             textList.add("\u00a70to the input.");
         }
-        if (te.getPrimaryInventory().getStackInSlot(0).isEmpty()) {
+        if (this.te.getPrimaryInventory().getStackInSlot(0).isEmpty()) {
             textList.add("\u00a77No items to fire");
             textList.add("\u00a70Add items in the");
             textList.add("\u00a70cannon slot.");
         }
-        if (!te.hasCoordinate()) {
+        if (!this.te.hasCoordinate()) {
             textList.add("\u00a77No destination coordinate set");
             textList.add("\u00a70Put a GPS Tool with a");
             textList.add("\u00a70coordinate set in the GPS slot.");
-        } else if (!te.coordWithinReach) {
+        } else if (!this.te.coordWithinReach) {
             textList.add("\u00a77Selected coordinate");
             textList.add("\u00a77can't be reached");
             textList.add("\u00a70Select a coordinate");
             textList.add("\u00a70closer to the cannon.");
-        } else if (te.getRedstoneMode() == 0 && !te.doneTurning) {
+        } else if (this.te.getRedstoneMode() == 0 && !this.te.doneTurning) {
             textList.add("\u00a77Cannon still turning");
             textList.add("\u00a70Wait for the cannon");
-        } else if (te.getRedstoneMode() == 2 && !te.insertingInventoryHasSpace) {
+        } else if (this.te.getRedstoneMode() == 2 && !this.te.insertingInventoryHasSpace) {
             textList.add("\u00a77The last shot inventory does not have space for the items in the Cannon.");
         }
     }

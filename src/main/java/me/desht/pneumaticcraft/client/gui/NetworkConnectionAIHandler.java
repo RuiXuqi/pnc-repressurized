@@ -20,7 +20,7 @@ public class NetworkConnectionAIHandler extends NetworkConnectionHandler {
         for (int i = 0; i < station.getPrimaryInventory().getSlots(); i++) {
             ItemStack stack = station.getPrimaryInventory().getStackInSlot(i);
             if (stack.getItemDamage() == ItemNetworkComponents.DIAGNOSTIC_SUBROUTINE) {
-                slotHacked[i] = true;
+                this.slotHacked[i] = true;
             }
         }
     }
@@ -38,33 +38,33 @@ public class NetworkConnectionAIHandler extends NetworkConnectionHandler {
     }
 
     public boolean isTracing() {
-        return tracing;
+        return this.tracing;
     }
 
     public void setSimulating() {
-        simulating = true;
+        this.simulating = true;
     }
 
     public int getRemainingTraceTime() {
-        return ticksTillTrace;
+        return this.ticksTillTrace;
     }
 
     public void applyStopWorm() {
-        stopWormTime += 100;
+        this.stopWormTime += 100;
     }
 
     @Override
     public void update() {
-        if (stopWormTime <= 0) super.update();
-        if (tracing) {
+        if (this.stopWormTime <= 0) super.update();
+        if (this.tracing) {
             for (int i = 0; i < 35; i++)
-                tryToHackSlot(i);
-            if (ticksTillTrace % 20 == 0 && !simulating) {
-                updateTimer();
-            } else if (stopWormTime <= 0) {
-                ticksTillTrace--;
+                this.tryToHackSlot(i);
+            if (this.ticksTillTrace % 20 == 0 && !this.simulating) {
+                this.updateTimer();
+            } else if (this.stopWormTime <= 0) {
+                this.ticksTillTrace--;
             }
-            if (stopWormTime > 0) stopWormTime--;
+            if (this.stopWormTime > 0) this.stopWormTime--;
         }
     }
 
@@ -72,28 +72,28 @@ public class NetworkConnectionAIHandler extends NetworkConnectionHandler {
         NetworkConnectionAIHandler dummy = new NetworkConnectionAIHandler(this);
         dummy.setSimulating();
         dummy.setTracing(true);
-        ticksTillTrace = 0;
+        this.ticksTillTrace = 0;
         int ioPortSlot = -1;
-        for (int i = 0; i < station.getPrimaryInventory().getSlots(); i++) {
-            if (station.getPrimaryInventory().getStackInSlot(i).getItemDamage() == ItemNetworkComponents.NETWORK_IO_PORT) {
+        for (int i = 0; i < this.station.getPrimaryInventory().getSlots(); i++) {
+            if (this.station.getPrimaryInventory().getStackInSlot(i).getItemDamage() == ItemNetworkComponents.NETWORK_IO_PORT) {
                 ioPortSlot = i;
                 break;
             }
         }
         while (!dummy.slotHacked[ioPortSlot]) {
             dummy.update();
-            ticksTillTrace++;
+            this.ticksTillTrace++;
         }
     }
 
     @Override
     public void onSlotHack(int slot, boolean nuked) {
-        ItemStack stack = station.getPrimaryInventory().getStackInSlot(slot);
-        if (!simulating && !stack.isEmpty() && stack.getItemDamage() == ItemNetworkComponents.NETWORK_IO_PORT) {
+        ItemStack stack = this.station.getPrimaryInventory().getStackInSlot(slot);
+        if (!this.simulating && !stack.isEmpty() && stack.getItemDamage() == ItemNetworkComponents.NETWORK_IO_PORT) {
             FMLClientHandler.instance().getClient().player.closeScreen();
             FMLClientHandler.instance().getClient().player.sendStatusMessage(new TextComponentString(TextFormatting.RED + "Hacking unsuccessful! The Diagnostic Subroutine traced to your location!"), false);
-            if (gui instanceof GuiSecurityStationHacking)
-                ((GuiSecurityStationHacking) gui).removeUpdatesOnConnectionHandlers();
+            if (this.gui instanceof GuiSecurityStationHacking)
+                ((GuiSecurityStationHacking) this.gui).removeUpdatesOnConnectionHandlers();
         }
     }
 

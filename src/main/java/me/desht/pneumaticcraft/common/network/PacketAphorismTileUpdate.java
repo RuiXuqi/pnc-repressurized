@@ -15,14 +15,14 @@ public class PacketAphorismTileUpdate extends LocationIntPacket<PacketAphorismTi
 
     public PacketAphorismTileUpdate(TileEntityAphorismTile tile) {
         super(tile.getPos());
-        text = tile.getTextLines();
+        this.text = tile.getTextLines();
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(text.length);
-        for (String line : text) {
+        buffer.writeInt(this.text.length);
+        for (String line : this.text) {
             ByteBufUtils.writeUTF8String(buffer, line);
         }
     }
@@ -31,9 +31,9 @@ public class PacketAphorismTileUpdate extends LocationIntPacket<PacketAphorismTi
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
         int lines = buffer.readInt();
-        text = new String[lines];
+        this.text = new String[lines];
         for (int i = 0; i < lines; i++) {
-            text[i] = ByteBufUtils.readUTF8String(buffer);
+            this.text[i] = ByteBufUtils.readUTF8String(buffer);
         }
     }
 

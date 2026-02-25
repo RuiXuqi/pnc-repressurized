@@ -43,24 +43,24 @@ public abstract class TubeModule implements ISidedPart {
     private ModelModuleBase model;
 
     public TubeModule() {
-        double width = getWidth() / 2;
-        double height = getHeight();
+        double width = this.getWidth() / 2;
+        double height = this.getHeight();
 
         // 0..6 = D,U,N,S,W,E
-        boundingBoxes[0] = new AxisAlignedBB(0.5 - width, PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, PRESSURE_PIPE_MIN_POS, 0.5 + width);
-        boundingBoxes[1] = new AxisAlignedBB(0.5 - width, PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
-        boundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, PRESSURE_PIPE_MIN_POS);
-        boundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, PRESSURE_PIPE_MAX_POS + height);
-        boundingBoxes[4] = new AxisAlignedBB(PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
-        boundingBoxes[5] = new AxisAlignedBB(PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
+        this.boundingBoxes[0] = new AxisAlignedBB(0.5 - width, PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 + width, PRESSURE_PIPE_MIN_POS, 0.5 + width);
+        this.boundingBoxes[1] = new AxisAlignedBB(0.5 - width, PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 + width, PRESSURE_PIPE_MAX_POS + height, 0.5 + width);
+        this.boundingBoxes[2] = new AxisAlignedBB(0.5 - width, 0.5 - width, PRESSURE_PIPE_MIN_POS - height, 0.5 + width, 0.5 + width, PRESSURE_PIPE_MIN_POS);
+        this.boundingBoxes[3] = new AxisAlignedBB(0.5 - width, 0.5 - width, PRESSURE_PIPE_MAX_POS, 0.5 + width, 0.5 + width, PRESSURE_PIPE_MAX_POS + height);
+        this.boundingBoxes[4] = new AxisAlignedBB(PRESSURE_PIPE_MIN_POS - height, 0.5 - width, 0.5 - width, PRESSURE_PIPE_MIN_POS, 0.5 + width, 0.5 + width);
+        this.boundingBoxes[5] = new AxisAlignedBB(PRESSURE_PIPE_MAX_POS, 0.5 - width, 0.5 - width, PRESSURE_PIPE_MAX_POS + height, 0.5 + width, 0.5 + width);
     }
 
     public void markFake() {
-        fake = true;
+        this.fake = true;
     }
 
     public boolean isFake() {
-        return fake;
+        return this.fake;
     }
 
     public void setTube(IPneumaticPosProvider pressureTube) {
@@ -68,7 +68,7 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     public IPneumaticPosProvider getTube() {
-        return pressureTube;
+        return this.pressureTube;
     }
 
     public double getWidth() {
@@ -80,8 +80,8 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     public float getThreshold(int redstone) {
-        double slope = (higherBound - lowerBound) / 15;
-        double threshold = lowerBound + slope * redstone;
+        double slope = (this.higherBound - this.lowerBound) / 15;
+        double threshold = this.lowerBound + slope * redstone;
         return (float) threshold;
     }
 
@@ -92,9 +92,9 @@ public abstract class TubeModule implements ISidedPart {
      */
     public NonNullList<ItemStack> getDrops() {
         NonNullList<ItemStack> drops = NonNullList.create();
-        if (shouldDrop) {
-            drops.add(new ItemStack(ModuleRegistrator.getModuleItem(getType())));
-            if (upgraded) drops.add(new ItemStack(Itemss.ADVANCED_PCB));
+        if (this.shouldDrop) {
+            drops.add(new ItemStack(ModuleRegistrator.getModuleItem(this.getType())));
+            if (this.upgraded) drops.add(new ItemStack(Itemss.ADVANCED_PCB));
         }
         return drops;
     }
@@ -105,23 +105,23 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     public EnumFacing getDirection() {
-        return dir;
+        return this.dir;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
-        dir = EnumFacing.byIndex(nbt.getInteger("dir"));
-        upgraded = nbt.getBoolean("upgraded");
-        lowerBound = nbt.getFloat("lowerBound");
-        higherBound = nbt.getFloat("higherBound");
-        advancedConfig = !nbt.hasKey("advancedConfig") || nbt.getBoolean("advancedConfig");
+        this.dir = EnumFacing.byIndex(nbt.getInteger("dir"));
+        this.upgraded = nbt.getBoolean("upgraded");
+        this.lowerBound = nbt.getFloat("lowerBound");
+        this.higherBound = nbt.getFloat("higherBound");
+        this.advancedConfig = !nbt.hasKey("advancedConfig") || nbt.getBoolean("advancedConfig");
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
-        nbt.setInteger("dir", dir.ordinal());
-        nbt.setBoolean("upgraded", upgraded);
-        nbt.setFloat("lowerBound", lowerBound);
-        nbt.setFloat("higherBound", higherBound);
-        nbt.setBoolean("advancedConfig", advancedConfig);
+        nbt.setInteger("dir", this.dir.ordinal());
+        nbt.setBoolean("upgraded", this.upgraded);
+        nbt.setFloat("lowerBound", this.lowerBound);
+        nbt.setFloat("higherBound", this.higherBound);
+        nbt.setBoolean("advancedConfig", this.advancedConfig);
     }
 
     public void update() {
@@ -145,7 +145,7 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     void updateNeighbors() {
-        pressureTube.world().notifyNeighborsOfStateChange(pressureTube.pos(), pressureTube.world().getBlockState(pressureTube.pos()).getBlock(), true);
+        this.pressureTube.world().notifyNeighborsOfStateChange(this.pressureTube.pos(), this.pressureTube.world().getBlockState(this.pressureTube.pos()).getBlock(), true);
     }
 
     public boolean isInline() {
@@ -153,11 +153,12 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     public void sendDescriptionPacket() {
-        if (pressureTube instanceof TileEntityPressureTube) ((TileEntityPressureTube) pressureTube).sendDescriptionPacket();
+        if (this.pressureTube instanceof TileEntityPressureTube)
+            ((TileEntityPressureTube) this.pressureTube).sendDescriptionPacket();
     }
 
     public void addInfo(List<String> curInfo) {
-        if (upgraded) {
+        if (this.upgraded) {
             ItemStack stack = new ItemStack(Itemss.ADVANCED_PCB);
             curInfo.add(TextFormatting.GREEN + stack.getDisplayName() + " installed");
         }
@@ -174,16 +175,16 @@ public abstract class TubeModule implements ISidedPart {
     }
 
     public void upgrade() {
-        upgraded = true;
+        this.upgraded = true;
     }
 
     public boolean isUpgraded() {
-        return upgraded;
+        return this.upgraded;
     }
 
     public boolean onActivated(EntityPlayer player, EnumHand hand) {
-        if (!player.world.isRemote && upgraded && getGuiId() != null && !player.isSneaking()) {
-            NetworkHandler.sendTo(new PacketOpenTubeModuleGui(getGuiId().ordinal(), pressureTube.pos()), (EntityPlayerMP) player);
+        if (!player.world.isRemote && this.upgraded && this.getGuiId() != null && !player.isSneaking()) {
+            NetworkHandler.sendTo(new PacketOpenTubeModuleGui(this.getGuiId().ordinal(), this.pressureTube.pos()), (EntityPlayerMP) player);
             return true;
         }
         return false;
@@ -196,16 +197,17 @@ public abstract class TubeModule implements ISidedPart {
 
     @SideOnly(Side.CLIENT)
     public final ModelModuleBase getModel() {
-        if (model == null) {
+        if (this.model == null) {
             try {
-                Constructor<? extends ModelModuleBase> ctor = getModelClass().getDeclaredConstructor(this.getClass());
-                model = ctor.newInstance(this);
-            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+                Constructor<? extends ModelModuleBase> ctor = this.getModelClass().getDeclaredConstructor(this.getClass());
+                this.model = ctor.newInstance(this);
+            } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                     InvocationTargetException e) {
                 e.printStackTrace();
-                model = new ModelModuleBase.MissingModel();
+                this.model = new ModelModuleBase.MissingModel();
             }
         }
-        return model;
+        return this.model;
     }
 
     @SideOnly(Side.CLIENT)
@@ -221,12 +223,12 @@ public abstract class TubeModule implements ISidedPart {
         if (this == o) return true;
         if (!(o instanceof TubeModule)) return false;
         TubeModule that = (TubeModule) o;
-        return Objects.equals(pressureTube.pos(), that.pressureTube.pos()) && dir == that.dir;
+        return Objects.equals(this.pressureTube.pos(), that.pressureTube.pos()) && this.dir == that.dir;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pressureTube.pos(), dir);
+        return Objects.hash(this.pressureTube.pos(), this.dir);
     }
 
 }

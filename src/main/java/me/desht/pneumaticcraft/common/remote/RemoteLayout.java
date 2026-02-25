@@ -44,7 +44,7 @@ public class RemoteLayout {
                 try {
                     ActionWidget widget = clazz.newInstance();
                     widget.readFromNBT(widgetTag, guiLeft, guiTop);
-                    actionWidgets.add(widget);
+                    this.actionWidgets.add(widget);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -56,7 +56,7 @@ public class RemoteLayout {
         NBTTagCompound tag = new NBTTagCompound();
 
         NBTTagList tagList = new NBTTagList();
-        for (ActionWidget actionWidget : actionWidgets) {
+        for (ActionWidget actionWidget : this.actionWidgets) {
             tagList.appendTag(actionWidget.toNBT(guiLeft, guiTop));
         }
         tag.setTag("actionWidgets", tagList);
@@ -64,16 +64,16 @@ public class RemoteLayout {
     }
 
     public void addWidget(ActionWidget widget) {
-        actionWidgets.add(widget);
+        this.actionWidgets.add(widget);
     }
 
     public List<ActionWidget> getActionWidgets() {
-        return actionWidgets;
+        return this.actionWidgets;
     }
 
     public List<IGuiWidget> getWidgets(boolean filterDisabledWidgets) {
         List<IGuiWidget> widgets = new ArrayList<>();
-        for (ActionWidget actionWidget : actionWidgets) {
+        for (ActionWidget actionWidget : this.actionWidgets) {
             if (!filterDisabledWidgets || actionWidget.isEnabled()) {
                 widgets.add(actionWidget.getWidget());
             }

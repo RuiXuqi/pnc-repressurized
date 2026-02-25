@@ -22,29 +22,29 @@ public class LogisticsManager {
     private final List<SemiBlockLogistics>[] logistics = new List[4];  // 4 priority levels
 
     public LogisticsManager() {
-        for (int i = 0; i < logistics.length; i++) {
-            logistics[i] = new ArrayList<>();
+        for (int i = 0; i < this.logistics.length; i++) {
+            this.logistics[i] = new ArrayList<>();
         }
     }
 
     void clearLogistics() {
-        for (List<SemiBlockLogistics> list : logistics) {
+        for (List<SemiBlockLogistics> list : this.logistics) {
             list.clear();
         }
     }
 
     public void addLogisticFrame(SemiBlockLogistics frame) {
-        logistics[frame.getPriority()].add(frame);
+        this.logistics[frame.getPriority()].add(frame);
     }
 
     public PriorityQueue<LogisticsTask> getTasks(Object holdingStack) {
         ItemStack item = holdingStack instanceof ItemStack ? (ItemStack) holdingStack : null;
         FluidStack fluid = holdingStack instanceof FluidStack ? (FluidStack) holdingStack : null;
         PriorityQueue<LogisticsTask> tasks = new PriorityQueue<>();
-        for (int priority = logistics.length - 1; priority >= 0; priority--) {
-            for (SemiBlockLogistics requester : logistics[priority]) {
+        for (int priority = this.logistics.length - 1; priority >= 0; priority--) {
+            for (SemiBlockLogistics requester : this.logistics[priority]) {
                 for (int i = 0; i < priority; i++) {
-                    for (SemiBlockLogistics provider : logistics[i]) {
+                    for (SemiBlockLogistics provider : this.logistics[i]) {
                         if (provider.shouldProvideTo(priority)) {
                             if (item != null) {
                                 int requestedAmount = getRequestedAmount(requester, item);
@@ -63,7 +63,7 @@ public class LogisticsManager {
                                     return tasks;
                                 }
                             } else {
-                                tryProvide(provider, requester, tasks);
+                                this.tryProvide(provider, requester, tasks);
                             }
                         }
                     }
@@ -176,7 +176,7 @@ public class LogisticsManager {
             this.provider = provider;
             this.requester = requester;
             this.transportingItem = transportingItem;
-            transportingFluid = null;
+            this.transportingFluid = null;
         }
 
         LogisticsTask(SemiBlockLogistics provider, SemiBlockLogistics requester,
@@ -184,23 +184,23 @@ public class LogisticsManager {
             this.provider = provider;
             this.requester = requester;
             this.transportingFluid = transportingFluid;
-            transportingItem = ItemStack.EMPTY;
+            this.transportingItem = ItemStack.EMPTY;
         }
 
         void informRequester() {
-            if (!transportingItem.isEmpty()) {
-                requester.informIncomingStack(transportingItem);
+            if (!this.transportingItem.isEmpty()) {
+                this.requester.informIncomingStack(this.transportingItem);
             } else {
-                requester.informIncomingStack(transportingFluid);
+                this.requester.informIncomingStack(this.transportingFluid);
             }
         }
 
         public boolean isStillValid(Object stack) {
-            if (!transportingItem.isEmpty() && stack instanceof ItemStack) {
-                int requestedAmount = getRequestedAmount(requester, (ItemStack) stack);
+            if (!this.transportingItem.isEmpty() && stack instanceof ItemStack) {
+                int requestedAmount = getRequestedAmount(this.requester, (ItemStack) stack);
                 return requestedAmount == ((ItemStack) stack).getCount();
-            } else if (transportingFluid != null && stack instanceof FluidStack) {
-                int requestedAmount = getRequestedAmount(requester, (FluidStack) stack);
+            } else if (this.transportingFluid != null && stack instanceof FluidStack) {
+                int requestedAmount = getRequestedAmount(this.requester, (FluidStack) stack);
                 return requestedAmount == ((FluidStack) stack).amount;
             } else {
                 return false;
@@ -209,7 +209,7 @@ public class LogisticsManager {
 
         @Override
         public int compareTo(LogisticsTask task) {
-            int value = !transportingItem.isEmpty() ? transportingItem.getCount() * 100 : transportingFluid.stack.amount;
+            int value = !this.transportingItem.isEmpty() ? this.transportingItem.getCount() * 100 : this.transportingFluid.stack.amount;
             int otherValue = !task.transportingItem.isEmpty() ? task.transportingItem.getCount() * 100 : task.transportingFluid.stack.amount;
             return otherValue - value;
         }

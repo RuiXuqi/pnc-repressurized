@@ -29,7 +29,7 @@ public class ClientTickHandler {
      * @param stat
      */
     public void registerUpdatedObject(INeedTickUpdate stat) {
-        updatedObjects.add(new WeakReference<>(stat));
+        this.updatedObjects.add(new WeakReference<>(stat));
     }
 
     /**
@@ -40,9 +40,9 @@ public class ClientTickHandler {
      * @param stat
      */
     public void removeUpdatedObject(INeedTickUpdate stat) {
-        for (int i = 0; i < updatedObjects.size(); i++) {
-            if (stat.equals(updatedObjects.get(i).get())) {
-                updatedObjects.remove(i);
+        for (int i = 0; i < this.updatedObjects.size(); i++) {
+            if (stat.equals(this.updatedObjects.get(i).get())) {
+                this.updatedObjects.remove(i);
                 break;
             }
         }
@@ -62,12 +62,12 @@ public class ClientTickHandler {
             ModuleRegulatorTube.hasTicked = false;
             ModuleRegulatorTube.inverted = false;
             ModuleRegulatorTube.inLine = true;
-            for (int i = 0; i < updatedObjects.size(); i++) {
-                INeedTickUpdate updatedObject = updatedObjects.get(i).get();
+            for (int i = 0; i < this.updatedObjects.size(); i++) {
+                INeedTickUpdate updatedObject = this.updatedObjects.get(i).get();
                 if (updatedObject != null) {
                     updatedObject.update();
                 } else {
-                    updatedObjects.remove(i);
+                    this.updatedObjects.remove(i);
                     i--;
                 }
             }

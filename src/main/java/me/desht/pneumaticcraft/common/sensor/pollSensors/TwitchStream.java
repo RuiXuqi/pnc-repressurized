@@ -21,16 +21,16 @@ class TwitchStream extends Thread {
     private boolean online = false;
 
     private TwitchStream(String name) {
-        channel = name;
-        start();
+        this.channel = name;
+        this.start();
     }
 
     @Override
     public void run() {
         try {
-            while (keptAlive) {
-                keptAlive = false;
-                refresh();
+            while (this.keptAlive) {
+                this.keptAlive = false;
+                this.refresh();
                 Thread.sleep(5000);
             }
             trackedTwitchers.remove(this);
@@ -42,8 +42,8 @@ class TwitchStream extends Thread {
 
     private void refresh() {
         try {
-            url = new URL("https://api.twitch.tv/kraken/streams/" + channel);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            this.url = new URL("https://api.twitch.tv/kraken/streams/" + this.channel);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.url.openStream()));
 
             // while((s = reader.readLine()) != null) {
             //   Log.info(s);
@@ -51,7 +51,7 @@ class TwitchStream extends Thread {
             JsonObject obj = json.getAsJsonObject();
             //   String title = obj.get("status").getAsString();
             JsonElement streaming = obj.get("stream");
-            online = !streaming.isJsonNull();
+            this.online = !streaming.isJsonNull();
             /* JsonArray array = json.getAsJsonArray();
              for(int i = 0; i < array.size(); i++) {
                  Log.info(array.get(i).getAsString());
@@ -65,7 +65,7 @@ class TwitchStream extends Thread {
     }
 
     public URL getUrl() {
-        return url;
+        return this.url;
     }
 
     static boolean isOnline(String name) {

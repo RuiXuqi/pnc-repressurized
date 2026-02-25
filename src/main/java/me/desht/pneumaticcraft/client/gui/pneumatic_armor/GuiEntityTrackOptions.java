@@ -43,26 +43,26 @@ public class GuiEntityTrackOptions implements IOptionPage {
     public void initGui(IGuiScreen gui) {
         gui.getButtonList().add(new GuiButton(10, 30, 128, 150, 20, "Move Stat Screen..."));
 
-        textField = new GuiTextField(-1, gui.getFontRenderer(), 35, 60, 140, 10);
-        textField.setFocused(true);
+        this.textField = new GuiTextField(-1, gui.getFontRenderer(), 35, 60, 140, 10);
+        this.textField.setFocused(true);
         if (PneumaticCraftRepressurized.proxy.getClientPlayer() != null) {
-            textField.setText(ItemPneumaticArmor.getEntityFilter(PneumaticCraftRepressurized.proxy.getClientPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD)));
+            this.textField.setText(ItemPneumaticArmor.getEntityFilter(PneumaticCraftRepressurized.proxy.getClientPlayer().getItemStackFromSlot(EntityEquipmentSlot.HEAD)));
         }
 
-        warningButton = new GuiButtonSpecial(1, 175, 57, 20, 20, "");
-        warningButton.setVisible(false);
-        warningButton.visible = false;
-        warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
-        gui.getButtonList().add(warningButton);
+        this.warningButton = new GuiButtonSpecial(1, 175, 57, 20, 20, "");
+        this.warningButton.setVisible(false);
+        this.warningButton.visible = false;
+        this.warningButton.setRenderedIcon(Textures.GUI_PROBLEMS_TEXTURE);
+        gui.getButtonList().add(this.warningButton);
 
-        validateEntityFilter(textField.getText());
+        this.validateEntityFilter(this.textField.getText());
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
             Minecraft.getMinecraft().player.closeScreen();
-            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(renderHandler, ArmorHUDLayout.LayoutTypes.ENTITY_TRACKER));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.renderHandler, ArmorHUDLayout.LayoutTypes.ENTITY_TRACKER));
         }
     }
 
@@ -72,7 +72,7 @@ public class GuiEntityTrackOptions implements IOptionPage {
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
-        textField.drawTextBox();
+        this.textField.drawTextBox();
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         fontRenderer.drawString(I18n.format("gui.entityFilter"), 35, 50, 0xFFFFFFFF);
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
@@ -83,32 +83,32 @@ public class GuiEntityTrackOptions implements IOptionPage {
 
     @Override
     public void keyTyped(char ch, int key) {
-        if (textField != null && textField.isFocused() && key != 1) {
-            textField.textboxKeyTyped(ch, key);
-            if (validateEntityFilter(textField.getText())) {
-                sendTimer = 5;
+        if (this.textField != null && this.textField.isFocused() && key != 1) {
+            this.textField.textboxKeyTyped(ch, key);
+            if (this.validateEntityFilter(this.textField.getText())) {
+                this.sendTimer = 5;
             }
         }
     }
 
     private boolean validateEntityFilter(String filter) {
         try {
-            warningButton.visible = false;
-            warningButton.setTooltipText("");
+            this.warningButton.visible = false;
+            this.warningButton.setTooltipText("");
             EntityFilter f = new EntityFilter(filter);  // syntax check
             return true;
         } catch (Exception e) {
-            warningButton.visible = true;
-            warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
+            this.warningButton.visible = true;
+            this.warningButton.setTooltipText(TextFormatting.GOLD + e.getMessage());
             return false;
         }
     }
 
     @Override
     public void updateScreen() {
-        if (sendTimer > 0 && --sendTimer == 0) {
+        if (this.sendTimer > 0 && --this.sendTimer == 0) {
             NBTTagCompound tag = new NBTTagCompound();
-            tag.setString(ItemPneumaticArmor.NBT_ENTITY_FILTER, textField.getText());
+            tag.setString(ItemPneumaticArmor.NBT_ENTITY_FILTER, this.textField.getText());
             NetworkHandler.sendToServer(new PacketUpdateArmorExtraData(EntityEquipmentSlot.HEAD, tag));
         }
     }

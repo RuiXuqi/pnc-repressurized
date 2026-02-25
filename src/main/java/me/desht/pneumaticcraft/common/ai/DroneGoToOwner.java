@@ -15,24 +15,24 @@ public class DroneGoToOwner extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        EntityPlayerMP owner = getOnlineOwner();
+        EntityPlayerMP owner = this.getOnlineOwner();
         if (owner == null) return false;
 
         Vec3d lookVec = owner.getLookVec().scale(2.0);
         double x = owner.posX + lookVec.x;
         double z = owner.posZ + lookVec.z;
-        return drone.getDistanceSq(owner) > 6 && drone.getNavigator().tryMoveToXYZ(x, owner.posY, z, drone.getSpeed());
+        return this.drone.getDistanceSq(owner) > 6 && this.drone.getNavigator().tryMoveToXYZ(x, owner.posY, z, this.drone.getSpeed());
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        EntityPlayerMP owner = getOnlineOwner();
-        return owner != null && !drone.getNavigator().noPath() && drone.getDistanceSq(owner) > 6;
+        EntityPlayerMP owner = this.getOnlineOwner();
+        return owner != null && !this.drone.getNavigator().noPath() && this.drone.getDistanceSq(owner) > 6;
     }
 
     private EntityPlayerMP getOnlineOwner() {
         for (EntityPlayerMP player : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
-            if (player.getGameProfile().equals(drone.getFakePlayer().getGameProfile())) return player;
+            if (player.getGameProfile().equals(this.drone.getFakePlayer().getGameProfile())) return player;
         }
         return null;
     }

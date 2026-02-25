@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeatFrameCoolingRecipe {
-	public static final List<HeatFrameCoolingRecipe> recipes = new ArrayList<>();
-	
-	public final ItemIngredient input;
-	public final ItemStack output;
+    public static final List<HeatFrameCoolingRecipe> recipes = new ArrayList<>();
+
+    public final ItemIngredient input;
+    public final ItemStack output;
 
     public HeatFrameCoolingRecipe(ItemIngredient input, ItemStack output) {
         this.input = input;

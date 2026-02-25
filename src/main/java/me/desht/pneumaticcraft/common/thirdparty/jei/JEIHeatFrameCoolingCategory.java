@@ -10,7 +10,7 @@ import java.util.List;
 public class JEIHeatFrameCoolingCategory extends JEISpecialCraftingCategory<JEIHeatFrameCoolingCategory.HeatFrameCoolingRecipeWrapper> {
     JEIHeatFrameCoolingCategory(IJeiHelpers jeiHelpers) {
         super(jeiHelpers);
-        setText("gui.nei.recipe.heatFrameCooling");
+        this.setText("gui.nei.recipe.heatFrameCooling");
     }
 
     @Override

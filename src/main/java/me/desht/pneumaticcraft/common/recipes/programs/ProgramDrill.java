@@ -20,7 +20,7 @@ public class ProgramDrill extends AssemblyProgram {
         boolean useAir = true;
 
         if (!system.getPlatform().getHeldStack().isEmpty()) {
-            if (canItemBeDrilled(system.getPlatform().getHeldStack())) {
+            if (this.canItemBeDrilled(system.getPlatform().getHeldStack())) {
                 system.getDrill().goDrilling();
             } else if (system.getDrill().isIdle()) {
                 useAir = system.getExportUnit().pickupItem(null);
@@ -28,14 +28,14 @@ public class ProgramDrill extends AssemblyProgram {
         } else if (!system.getExportUnit().isIdle()) {
             useAir = system.getExportUnit().pickupItem(null);
         } else {
-            useAir = system.getImportUnit().pickupItem(getRecipeList());
+            useAir = system.getImportUnit().pickupItem(this.getRecipeList());
         }
 
         return useAir;
     }
 
     private boolean canItemBeDrilled(ItemStack item) {
-        for (AssemblyRecipe recipe : getRecipeList()) {
+        for (AssemblyRecipe recipe : this.getRecipeList()) {
             if (isValidInput(recipe, item)) return true;
         }
         return false;

@@ -19,8 +19,8 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.pneumaticcraft.plasticmixer")
 @ZenRegister
 public class PlasticMixer {
-	
-	private static final String NAME = "PneumaticCraft Plastic Mixer";
+
+    private static final String NAME = "PneumaticCraft Plastic Mixer";
 
     @ZenMethod
     public static void addRecipe(ILiquidStack liquid, IItemStack stack, int temperature) {
@@ -47,21 +47,21 @@ public class PlasticMixer {
         CraftTweaker.REMOVALS.add(new LiquidPlasticAction(Helper.toFluid(liquidInput).getFluid(), 0));
     }
 
-	@ZenMethod
-	public static void removeAllRecipes() {
-		CraftTweaker.REMOVALS.add(new IAction(){
+    @ZenMethod
+    public static void removeAllRecipes() {
+        CraftTweaker.REMOVALS.add(new IAction() {
             @Override
-            public void apply(){
+            public void apply() {
                 PlasticMixerRegistry.INSTANCE.clear();
             }
 
             @Override
-            public String describe(){
+            public String describe() {
                 return "Removing all " + NAME + " recipes.";
             }
-		});
-	}
-	
+        });
+    }
+
     private static class LiquidPlasticAction implements IAction {
         private final FluidStack fluidStack;
         private final ItemStack stack;
@@ -94,16 +94,16 @@ public class PlasticMixer {
         }
 
         @Override
-        public void apply(){
-            PneumaticRecipeRegistry.getInstance().registerPlasticMixerRecipe(fluidStack, stack, temperature, allowMelting, allowSolidifying, useDye, meta);
+        public void apply() {
+            PneumaticRecipeRegistry.getInstance().registerPlasticMixerRecipe(this.fluidStack, this.stack, this.temperature, this.allowMelting, this.allowSolidifying, this.useDye, this.meta);
         }
-        
+
         @Override
         public String describe() {
-            if (fluidStack.amount == 0) {
-                return String.format("Removing recipe for fluid %s", fluidStack.getFluid().getName());
+            if (this.fluidStack.amount == 0) {
+                return String.format("Removing recipe for fluid %s", this.fluidStack.getFluid().getName());
             } else {
-                return String.format("Registering recipe for fluid %s as %d mB per item.", fluidStack.getFluid().getName(), fluidStack.amount);
+                return String.format("Registering recipe for fluid %s as %d mB per item.", this.fluidStack.getFluid().getName(), this.fluidStack.amount);
             }
         }
     }

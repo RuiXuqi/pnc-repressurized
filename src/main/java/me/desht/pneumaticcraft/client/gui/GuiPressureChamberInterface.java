@@ -47,29 +47,29 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     public void initGui() {
         super.initGui();
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        statusStat = addAnimatedStat("Interface Status", new ItemStack(Blockss.PRESSURE_CHAMBER_INTERFACE), 0xFFFFAA00, false);
-        filterStat = addAnimatedStat("Filter", new ItemStack(Blocks.HOPPER), 0xFF005500, false);
-        filterStat.setTextWithoutCuttingString(getFilterText());
+        this.statusStat = this.addAnimatedStat("Interface Status", new ItemStack(Blockss.PRESSURE_CHAMBER_INTERFACE), 0xFFFFAA00, false);
+        this.filterStat = this.addAnimatedStat("Filter", new ItemStack(Blocks.HOPPER), 0xFF005500, false);
+        this.filterStat.setTextWithoutCuttingString(this.getFilterText());
 
-        Rectangle buttonRect = filterStat.getButtonScaledRectangle(5, 30, 170, 20);
-        filterButton = new GuiButtonSpecial(1, buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, "-");
-        filterStat.addWidget(filterButton);
+        Rectangle buttonRect = this.filterStat.getButtonScaledRectangle(5, 30, 170, 20);
+        this.filterButton = new GuiButtonSpecial(1, buttonRect.x, buttonRect.y, buttonRect.width, buttonRect.height, "-");
+        this.filterStat.addWidget(this.filterButton);
 
-        creativeTabButton = new GuiButton(2, xStart + 91, yStart + 58, 78, 20, "-");
-        nameFilterField = new GuiTextField(-1, fontRenderer, xStart + 93, yStart + 58, 74, 10);
-        nameFilterField.setText(te.itemNameFilter);
+        this.creativeTabButton = new GuiButton(2, xStart + 91, yStart + 58, 78, 20, "-");
+        this.nameFilterField = new GuiTextField(-1, this.fontRenderer, xStart + 93, yStart + 58, 74, 10);
+        this.nameFilterField.setText(this.te.itemNameFilter);
 
-        buttonList.add(creativeTabButton);
-        if (te.filterMode != TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
-            if (inventorySlots.inventorySlots.get(FILTER_SLOT_START).xPos < 1000) {
-                adjustFilterSlotXPos(1000);
+        this.buttonList.add(this.creativeTabButton);
+        if (this.te.filterMode != TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
+            if (this.inventorySlots.inventorySlots.get(FILTER_SLOT_START).xPos < 1000) {
+                this.adjustFilterSlotXPos(1000);
             }
         } else {
-            if (inventorySlots.inventorySlots.get(FILTER_SLOT_START).xPos > 1000) {
-                adjustFilterSlotXPos(-1000);
+            if (this.inventorySlots.inventorySlots.get(FILTER_SLOT_START).xPos > 1000) {
+                this.adjustFilterSlotXPos(-1000);
             }
         }
     }
@@ -78,47 +78,47 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     protected void drawGuiContainerForegroundLayer(int x, int y) {
 
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Item Filter", 115, 15, 4210752);
-        fontRenderer.drawString("Upgr.", 24, 16, 4210752);
+        this.fontRenderer.drawString("Item Filter", 115, 15, 4210752);
+        this.fontRenderer.drawString("Upgr.", 24, 16, 4210752);
 
-        creativeTabButton.visible = false;
-        switch (te.filterMode) {
+        this.creativeTabButton.visible = false;
+        switch (this.te.filterMode) {
             case ITEM:
-                filterButton.displayString = "Items";
-                nameFilterField.setFocused(false);
-                nameFilterField.setVisible(false);
+                this.filterButton.displayString = "Items";
+                this.nameFilterField.setFocused(false);
+                this.nameFilterField.setVisible(false);
                 break;
             case CREATIVE_TAB:
-                filterButton.displayString = "Creative Tab";
-                fontRenderer.drawString("Tab Name:", 106, 45, 4210752);
-                String tabName = I18n.format(CreativeTabs.CREATIVE_TAB_ARRAY[te.creativeTabID].getTabLabel());
-                if (fontRenderer.getStringWidth(tabName) > 75) {
-                    while (fontRenderer.getStringWidth(tabName) > 75) {
+                this.filterButton.displayString = "Creative Tab";
+                this.fontRenderer.drawString("Tab Name:", 106, 45, 4210752);
+                String tabName = I18n.format(CreativeTabs.CREATIVE_TAB_ARRAY[this.te.creativeTabID].getTabLabel());
+                if (this.fontRenderer.getStringWidth(tabName) > 75) {
+                    while (this.fontRenderer.getStringWidth(tabName) > 75) {
                         tabName = tabName.substring(0, tabName.length() - 2);
                     }
                     tabName = tabName + ".";
                 }
-                creativeTabButton.displayString = tabName;
-                creativeTabButton.visible = true;
-                nameFilterField.setFocused(false);
-                nameFilterField.setVisible(false);
+                this.creativeTabButton.displayString = tabName;
+                this.creativeTabButton.visible = true;
+                this.nameFilterField.setFocused(false);
+                this.nameFilterField.setVisible(false);
                 break;
             case NAME_BEGINS:
-                filterButton.displayString = "Item Name (begins with)";
-                fontRenderer.drawString("Item Name", 106, 35, 4210752);
-                fontRenderer.drawString("begins with:", 103, 45, 4210752);
-                nameFilterField.setVisible(true);
+                this.filterButton.displayString = "Item Name (begins with)";
+                this.fontRenderer.drawString("Item Name", 106, 35, 4210752);
+                this.fontRenderer.drawString("begins with:", 103, 45, 4210752);
+                this.nameFilterField.setVisible(true);
                 break;
             case NAME_CONTAINS:
-                filterButton.displayString = "Item Name (contains)";
-                fontRenderer.drawString("Item Name", 106, 35, 4210752);
-                fontRenderer.drawString("contains:", 108, 45, 4210752);
-                nameFilterField.setVisible(true);
+                this.filterButton.displayString = "Item Name (contains)";
+                this.fontRenderer.drawString("Item Name", 106, 35, 4210752);
+                this.fontRenderer.drawString("contains:", 108, 45, 4210752);
+                this.nameFilterField.setVisible(true);
 
         }
 
-        int inputShift = (int) ((1F - (float) Math.cos((float) te.inputProgress / (float) TileEntityPressureChamberInterface.MAX_PROGRESS * Math.PI)) * 11);
-        int outputShift = (int) ((1F - (float) Math.cos((float) te.outputProgress / (float) TileEntityPressureChamberInterface.MAX_PROGRESS * Math.PI)) * 11);
+        int inputShift = (int) ((1F - (float) Math.cos((float) this.te.inputProgress / (float) TileEntityPressureChamberInterface.MAX_PROGRESS * Math.PI)) * 11);
+        int outputShift = (int) ((1F - (float) Math.cos((float) this.te.outputProgress / (float) TileEntityPressureChamberInterface.MAX_PROGRESS * Math.PI)) * 11);
         Gui.drawRect(63 + inputShift, 30, 87 + inputShift, 32, 0xFF5a62ff);
         Gui.drawRect(63 + outputShift, 54, 87 + outputShift, 56, 0xFFffa800);
 
@@ -131,36 +131,36 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
 
     @Override
     protected void bindGuiTexture() {
-        if (te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
+        if (this.te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
             super.bindGuiTexture();
         } else {
-            mc.getTextureManager().bindTexture(GUI_TEXTURE_CREATIVE_FILTER);
+            this.mc.getTextureManager().bindTexture(GUI_TEXTURE_CREATIVE_FILTER);
         }
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
-        nameFilterField.drawTextBox();
+        this.nameFilterField.drawTextBox();
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
-        filterButton.visible = filterStat.isDoneExpanding();
-        if (hasEnoughPressure && !te.hasEnoughPressure()) {
-            hasEnoughPressure = false;
-            problemTab.openWindow();
-        } else if (te.hasEnoughPressure()) {
-            hasEnoughPressure = true;
+        this.statusStat.setText(this.getStatusText());
+        this.filterButton.visible = this.filterStat.isDoneExpanding();
+        if (this.hasEnoughPressure && !this.te.hasEnoughPressure()) {
+            this.hasEnoughPressure = false;
+            this.problemTab.openWindow();
+        } else if (this.te.hasEnoughPressure()) {
+            this.hasEnoughPressure = true;
         }
     }
 
     private List<String> getStatusText() {
         List<String> text = new ArrayList<>();
         text.add("\u00a77Interface Mode:");
-        switch (te.interfaceMode.ordinal()) {
+        switch (this.te.interfaceMode.ordinal()) {
             case 0:
                 text.add("\u00a70None");
                 break;
@@ -185,7 +185,7 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     private void adjustFilterSlotXPos(int amount) {
         // we only want to display the filter slots when the filter type is ITEM
         for (int i = FILTER_SLOT_START; i < 50; i++) {
-            inventorySlots.inventorySlots.get(i).xPos += amount;
+            this.inventorySlots.inventorySlots.get(i).xPos += amount;
         }
     }
 
@@ -193,8 +193,8 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if (te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.NAME_BEGINS || te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.NAME_CONTAINS) {
-            nameFilterField.mouseClicked(mouseX, mouseY, mouseButton);
+        if (this.te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.NAME_BEGINS || this.te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.NAME_CONTAINS) {
+            this.nameFilterField.mouseClicked(mouseX, mouseY, mouseButton);
         }
     }
 
@@ -206,12 +206,12 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     @Override
     public void actionPerformed(IGuiWidget widget) {
         if (widget.getID() == 1) {
-            if (filterStat != null) {
-                filterStat.closeWindow();
-                if (te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
-                    adjustFilterSlotXPos(1000);
-                } else if (te.filterMode.ordinal() == TileEntityPressureChamberInterface.EnumFilterMode.values().length - 1) {
-                    adjustFilterSlotXPos(-1000);
+            if (this.filterStat != null) {
+                this.filterStat.closeWindow();
+                if (this.te.filterMode == TileEntityPressureChamberInterface.EnumFilterMode.ITEM) {
+                    this.adjustFilterSlotXPos(1000);
+                } else if (this.te.filterMode.ordinal() == TileEntityPressureChamberInterface.EnumFilterMode.values().length - 1) {
+                    this.adjustFilterSlotXPos(-1000);
                 }
             }
         }
@@ -221,15 +221,15 @@ public class GuiPressureChamberInterface extends GuiPneumaticContainerBase<TileE
     @Override
     protected void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
-        curInfo.addAll(te.getProblemStat());
+        curInfo.addAll(this.te.getProblemStat());
     }
 
     @Override
     protected void keyTyped(char par1, int par2) throws IOException {
-        if (nameFilterField.isFocused() && par2 != 1) {
-            nameFilterField.textboxKeyTyped(par1, par2);
-            te.itemNameFilter = nameFilterField.getText();
-            NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        if (this.nameFilterField.isFocused() && par2 != 1) {
+            this.nameFilterField.textboxKeyTyped(par1, par2);
+            this.te.itemNameFilter = this.nameFilterField.getText();
+            NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
         } else {
             super.keyTyped(par1, par2);
         }

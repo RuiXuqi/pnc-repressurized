@@ -6,16 +6,16 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Consumer;
 
-public class AreaTypeLine extends AreaType{
+public class AreaTypeLine extends AreaType {
 
     public static final String ID = "line";
-    
-    public AreaTypeLine(){
+
+    public AreaTypeLine() {
         super(ID);
     }
 
     @Override
-    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ){
+    public void addArea(Consumer<BlockPos> areaAdder, BlockPos p1, BlockPos p2, int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
         Vec3d lineVec = new Vec3d(p2.getX() - p1.getX(), p2.getY() - p1.getY(), p2.getZ() - p1.getZ()).normalize();
         lineVec = new Vec3d(lineVec.x / 10, lineVec.y / 10, lineVec.z / 10);
         double curX = p1.getX() + 0.5;

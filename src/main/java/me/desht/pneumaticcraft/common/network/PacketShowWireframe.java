@@ -19,26 +19,26 @@ public class PacketShowWireframe extends LocationIntPacket<PacketShowWireframe> 
 
     public PacketShowWireframe(EntityDrone entity, BlockPos pos) {
         super(pos);
-        entityId = entity.getEntityId();
+        this.entityId = entity.getEntityId();
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
-        buffer.writeInt(entityId);
+        buffer.writeInt(this.entityId);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
-        entityId = buffer.readInt();
+        this.entityId = buffer.readInt();
     }
 
     @Override
     public void handleClientSide(PacketShowWireframe message, EntityPlayer player) {
         Entity ent = player.world.getEntityByID(message.entityId);
         if (ent instanceof EntityDrone) {
-            addToHudHandler((EntityDrone) ent, message.pos);
+            this.addToHudHandler((EntityDrone) ent, message.pos);
         }
     }
 

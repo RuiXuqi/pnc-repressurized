@@ -25,7 +25,7 @@ public class GuiBlockTrackOptions extends IOptionPage.SimpleToggleableOptions im
     @Override
     public void initGui(IGuiScreen gui) {
         int nWidgets = BlockTrackEntryList.instance.trackList.size();
-        gui.getButtonList().add(new GuiButton(10, 30, settingsYposition() + 12, 150, 20, "Move Stat Screen..."));
+        gui.getButtonList().add(new GuiButton(10, 30, this.settingsYposition() + 12, 150, 20, "Move Stat Screen..."));
         for (int i = 0; i < nWidgets; i++) {
             GuiKeybindCheckBox checkBox = new GuiKeybindCheckBox(i, 5, 38 + i * 12, 0xFFFFFFFF, BlockTrackEntryList.instance.trackList.get(i).getEntryName());
             ((GuiHelmetMainScreen) gui).addWidget(checkBox);
@@ -37,7 +37,7 @@ public class GuiBlockTrackOptions extends IOptionPage.SimpleToggleableOptions im
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
             Minecraft.getMinecraft().player.closeScreen();
-            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(getRenderHandler(), ArmorHUDLayout.LayoutTypes.BLOCK_TRACKER));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.getRenderHandler(), ArmorHUDLayout.LayoutTypes.BLOCK_TRACKER));
         }
     }
 
@@ -56,7 +56,7 @@ public class GuiBlockTrackOptions extends IOptionPage.SimpleToggleableOptions im
         if (widget instanceof GuiKeybindCheckBox) {
             GuiKeybindCheckBox checkBox = (GuiKeybindCheckBox) widget;
             if (checkBox == GuiKeybindCheckBox.fromKeyBindingName(checkBox.text)) {
-                HUDHandler.instance().addFeatureToggleMessage(getRenderHandler(), checkBox.text, checkBox.checked);
+                HUDHandler.instance().addFeatureToggleMessage(this.getRenderHandler(), checkBox.text, checkBox.checked);
             }
         }
     }

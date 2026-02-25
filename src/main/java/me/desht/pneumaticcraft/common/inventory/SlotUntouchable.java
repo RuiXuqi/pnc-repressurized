@@ -38,6 +38,6 @@ public class SlotUntouchable extends SlotItemHandler implements IPhantomSlot {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return this.enabled;
     }
 }

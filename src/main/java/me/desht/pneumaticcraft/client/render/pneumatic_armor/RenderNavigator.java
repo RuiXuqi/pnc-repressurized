@@ -22,20 +22,20 @@ public class RenderNavigator {
 
     public RenderNavigator(World world, BlockPos targetPos) {
         this.targetPos = targetPos;
-        updatePath();
+        this.updatePath();
     }
 
     public void updatePath() {
         EntityPlayer player = FMLClientHandler.instance().getClient().player;
-        path = PneumaticCraftUtils.getPathFinder().findPath(player.world, PneumaticCraftUtils.createDummyEntity(player), targetPos, CoordTrackUpgradeHandler.SEARCH_RANGE);
+        this.path = PneumaticCraftUtils.getPathFinder().findPath(player.world, PneumaticCraftUtils.createDummyEntity(player), this.targetPos, CoordTrackUpgradeHandler.SEARCH_RANGE);
         // TODO: this just doesn't work anymore
-        if (!tracedToDestination()) {
-            path = CoordTrackUpgradeHandler.getDronePath(player, targetPos);
+        if (!this.tracedToDestination()) {
+            this.path = CoordTrackUpgradeHandler.getDronePath(player, this.targetPos);
         }
     }
 
     public void render(boolean wirePath, boolean xRayEnabled, float partialTicks) {
-        if (path == null) return;
+        if (this.path == null) return;
 
         GlStateManager.depthMask(false);
         if (xRayEnabled) GlStateManager.disableDepth();
@@ -46,7 +46,7 @@ public class RenderNavigator {
         GlStateManager.disableTexture2D();
         GlStateManager.glLineWidth(5.0F);
 
-        boolean hasDestinationPath = tracedToDestination();
+        boolean hasDestinationPath = this.tracedToDestination();
 
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
 
@@ -59,14 +59,14 @@ public class RenderNavigator {
                 GL11.glEnable(GL11.GL_LINE_STIPPLE);
                 GL11.glLineStipple(2, (short) 0x00FF);
             }
-            for (int i = 1; i < path.getCurrentPathLength(); i++) {
+            for (int i = 1; i < this.path.getCurrentPathLength(); i++) {
                 float red = 1;
-                if (path.getCurrentPathLength() - i < 200) {
-                    red = (path.getCurrentPathLength() - i) * 0.005F;
+                if (this.path.getCurrentPathLength() - i < 200) {
+                    red = (this.path.getCurrentPathLength() - i) * 0.005F;
                 }
                 GlStateManager.color(red, 1 - red, 0, 0.5F);
-                PathPoint lastPoint = path.getPathPointFromIndex(i - 1);
-                PathPoint pathPoint = path.getPathPointFromIndex(i);
+                PathPoint lastPoint = this.path.getPathPointFromIndex(i - 1);
+                PathPoint pathPoint = this.path.getPathPointFromIndex(i);
                 wr.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
                 wr.pos(lastPoint.x + 0.5D, lastPoint.y, lastPoint.z + 0.5D).endVertex();
                 wr.pos((lastPoint.x + pathPoint.x) / 2D + 0.5D, Math.max(lastPoint.y, pathPoint.y), (lastPoint.z + pathPoint.z) / 2D + 0.5D).endVertex();
@@ -75,23 +75,23 @@ public class RenderNavigator {
             }
         } else {
             if (hasDestinationPath) {
-                if (alphaValue > 0.2F) alphaValue -= 0.005F;
+                if (this.alphaValue > 0.2F) this.alphaValue -= 0.005F;
             } else {
-                if (increaseAlpha) {
-                    alphaValue += 0.005F;
-                    if (alphaValue > 0.3F) increaseAlpha = false;
+                if (this.increaseAlpha) {
+                    this.alphaValue += 0.005F;
+                    if (this.alphaValue > 0.3F) this.increaseAlpha = false;
                 } else {
-                    alphaValue -= 0.005F;
-                    if (alphaValue < 0.2F) increaseAlpha = true;
+                    this.alphaValue -= 0.005F;
+                    if (this.alphaValue < 0.2F) this.increaseAlpha = true;
                 }
             }
-            for (int i = 0; i < path.getCurrentPathLength(); i++) {
+            for (int i = 0; i < this.path.getCurrentPathLength(); i++) {
                 float red = 1;
-                if (path.getCurrentPathLength() - i < 200) {
-                    red = (path.getCurrentPathLength() - i) * 0.005F;
+                if (this.path.getCurrentPathLength() - i < 200) {
+                    red = (this.path.getCurrentPathLength() - i) * 0.005F;
                 }
-                GlStateManager.color(red, 1 - red, 0, alphaValue);
-                PathPoint pathPoint = path.getPathPointFromIndex(i);
+                GlStateManager.color(red, 1 - red, 0, this.alphaValue);
+                PathPoint pathPoint = this.path.getPathPointFromIndex(i);
                 wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
                 wr.pos(pathPoint.x, pathPoint.y, pathPoint.z).endVertex();
                 wr.pos(pathPoint.x, pathPoint.y, pathPoint.z + 1).endVertex();
@@ -111,8 +111,8 @@ public class RenderNavigator {
     }
 
     public boolean tracedToDestination() {
-        if (path == null) return false;
-        PathPoint finalPoint = path.getFinalPathPoint();
-        return finalPoint != null && targetPos.equals(new BlockPos(finalPoint.x, finalPoint.y, finalPoint.z));
+        if (this.path == null) return false;
+        PathPoint finalPoint = this.path.getFinalPathPoint();
+        return finalPoint != null && this.targetPos.equals(new BlockPos(finalPoint.x, finalPoint.y, finalPoint.z));
     }
 }

@@ -30,6 +30,7 @@ public class OneProbeRecipeFactory implements IRecipeFactory {
         OneProbeRecipe(ResourceLocation group, ItemStack result, Object... recipe) {
             super(group, result, recipe);
         }
+
         @Override
         public boolean matches(InventoryCrafting inv, World worldIn) {
             boolean probeFound = false, helmetFound = false;
@@ -50,8 +51,8 @@ public class OneProbeRecipeFactory implements IRecipeFactory {
 
         @Override
         public ItemStack getCraftingResult(InventoryCrafting inv) {
-            ItemStack output = getRecipeOutput();
-            ItemStack helmet = findHelmet(inv);
+            ItemStack output = this.getRecipeOutput();
+            ItemStack helmet = this.findHelmet(inv);
             NBTTagCompound tag = helmet.isEmpty() ? new NBTTagCompound() : helmet.hasTagCompound() ? helmet.getTagCompound().copy() : new NBTTagCompound();
             tag.setInteger(ONE_PROBE_TAG, 1);
             output.setTagCompound(tag);

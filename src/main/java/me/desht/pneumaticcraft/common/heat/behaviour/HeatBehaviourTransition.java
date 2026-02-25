@@ -21,46 +21,50 @@ public abstract class HeatBehaviourTransition extends HeatBehaviourLiquid {
 
     @Override
     public boolean isApplicable() {
-        logic = HeatExchangerManager.getInstance().getLogic(getWorld(), getPos(), null);
-        return logic != null;
+        this.logic = HeatExchangerManager.getInstance().getLogic(this.getWorld(), this.getPos(), null);
+        return this.logic != null;
     }
 
     @Override
     public void initialize(String id, IHeatExchangerLogic connectedHeatLogic, World world, BlockPos pos, EnumFacing direction) {
         super.initialize(id, connectedHeatLogic, world, pos, direction);
 
-        tracker = HeatExtractionTracker.getInstance(getWorld());
+        this.tracker = HeatExtractionTracker.getInstance(this.getWorld());
     }
 
     protected abstract int getMaxExchangedHeat();
 
-    protected boolean transformBlockHot() { return false; }
+    protected boolean transformBlockHot() {
+        return false;
+    }
 
-    protected boolean transformBlockCold() { return false; }
+    protected boolean transformBlockCold() {
+        return false;
+    }
 
     @Override
     public void update() {
-        if (blockTemp == -1) {
-            blockTemp = logic.getTemperature();
-            maxExchangedHeat = getMaxExchangedHeat() * (logic.getThermalResistance() + getHeatExchanger().getThermalResistance());
+        if (this.blockTemp == -1) {
+            this.blockTemp = this.logic.getTemperature();
+            this.maxExchangedHeat = this.getMaxExchangedHeat() * (this.logic.getThermalResistance() + this.getHeatExchanger().getThermalResistance());
         }
-        double extractedHeat = tracker.getHeatExtracted(getPos());
-        if (extractedHeat < Math.abs(maxExchangedHeat)) {
-            double toExtract = blockTemp - getHeatExchanger().getTemperature();
-            tracker.extractHeat(getPos(), toExtract);
+        double extractedHeat = this.tracker.getHeatExtracted(this.getPos());
+        if (extractedHeat < Math.abs(this.maxExchangedHeat)) {
+            double toExtract = this.blockTemp - this.getHeatExchanger().getTemperature();
+            this.tracker.extractHeat(this.getPos(), toExtract);
             extractedHeat += toExtract;
         }
-        if (extractedHeat >= maxExchangedHeat) {
-            if (transformBlockCold()) tracker.extractHeat(getPos(), -maxExchangedHeat);
-        } else if (extractedHeat <= -maxExchangedHeat) {
-            if (transformBlockHot()) tracker.extractHeat(getPos(), maxExchangedHeat);
+        if (extractedHeat >= this.maxExchangedHeat) {
+            if (this.transformBlockCold()) this.tracker.extractHeat(this.getPos(), -this.maxExchangedHeat);
+        } else if (extractedHeat <= -this.maxExchangedHeat) {
+            if (this.transformBlockHot()) this.tracker.extractHeat(this.getPos(), this.maxExchangedHeat);
         }
     }
 
     void onTransition(BlockPos pos) {
-        NetworkHandler.sendToAllAround(new PacketPlaySound(SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.AMBIENT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.5F, 2.6F + (getWorld().rand.nextFloat() - getWorld().rand.nextFloat()) * 0.8F, true), getWorld());
+        NetworkHandler.sendToAllAround(new PacketPlaySound(SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.AMBIENT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 0.5F, 2.6F + (this.getWorld().rand.nextFloat() - this.getWorld().rand.nextFloat()) * 0.8F, true), this.getWorld());
         NetworkHandler.sendToAllAround(new PacketSpawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX(), pos.getY() + 1, pos.getZ(),
                         0, 0, 0, 8, 1, 0, 1),
-                getWorld());
+                this.getWorld());
     }
 }

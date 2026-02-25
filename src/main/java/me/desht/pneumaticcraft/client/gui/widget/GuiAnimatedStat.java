@@ -81,21 +81,21 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
     public GuiAnimatedStat(GuiScreen gui, String title, int xPos, int yPos, int backGroundColor,
                            IGuiAnimatedStat affectingStat, boolean leftSided) {
         this.gui = gui;
-        baseX = xPos;
-        baseY = yPos;
+        this.baseX = xPos;
+        this.baseY = yPos;
         this.affectingStat = affectingStat;
-        width = minWidth;
-        height = minHeight;
+        this.width = this.minWidth;
+        this.height = this.minHeight;
         this.backGroundColor = backGroundColor;
-        calculateColorHighlights(this.backGroundColor);
-        setTitle(title);
-        statIcon = StatIcon.NONE;
+        this.calculateColorHighlights(this.backGroundColor);
+        this.setTitle(title);
+        this.statIcon = StatIcon.NONE;
         this.leftSided = leftSided;
-        textSize = 1;
+        this.textSize = 1;
 
-        affectedY = baseY;
+        this.affectedY = this.baseY;
         if (affectingStat != null) {
-            affectedY += affectingStat.getAffectedY() + affectingStat.getHeight();
+            this.affectedY += affectingStat.getAffectedY() + affectingStat.getHeight();
         }
     }
 
@@ -105,18 +105,18 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     public GuiAnimatedStat(GuiScreen gui, int backgroundColor, ItemStack icon) {
         this(gui, backgroundColor);
-        statIcon = StatIcon.of(icon);
+        this.statIcon = StatIcon.of(icon);
     }
 
     public GuiAnimatedStat(GuiScreen gui, int backgroundColor, String texture) {
         this(gui, backgroundColor);
-        statIcon = StatIcon.of(RL(texture));
+        this.statIcon = StatIcon.of(RL(texture));
     }
 
     public GuiAnimatedStat(GuiScreen gui, String title, StatIcon icon, int xPos, int yPos, int backGroundColor,
                            IGuiAnimatedStat affectingStat, boolean leftSided) {
         this(gui, title, xPos, yPos, backGroundColor, affectingStat, leftSided);
-        statIcon = icon;
+        this.statIcon = icon;
     }
 
     public GuiAnimatedStat(GuiScreen gui, String title, StatIcon icon, int backGroundColor,
@@ -124,54 +124,54 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         this(gui, title, 0, 0, backGroundColor, affectingStat, layout.isLeftSided());
         ScaledResolution sr = new ScaledResolution(Minecraft.getMinecraft());
         int x = layout.getX() == -1 ? sr.getScaledWidth() - 2 : (int) (sr.getScaledWidth() * layout.getX());
-        setBaseX(x);
-        setBaseY((int) (sr.getScaledHeight() * layout.getY()));
-        statIcon = icon;
+        this.setBaseX(x);
+        this.setBaseY((int) (sr.getScaledHeight() * layout.getY()));
+        this.statIcon = icon;
     }
 
     @Override
     public void setParentStat(IGuiAnimatedStat stat) {
-        affectingStat = stat;
+        this.affectingStat = stat;
     }
 
     public void addWidget(IGuiWidget widget) {
-        widgets.add(widget);
+        this.widgets.add(widget);
         widget.setListener(this);
     }
 
     public void removeWidget(IGuiWidget widget) {
-        widgets.remove(widget);
+        this.widgets.remove(widget);
     }
 
     public void setWidgetOffsets(int left, int right) {
-        widgetOffsetLeft = left;
-        widgetOffsetRight = right;
+        this.widgetOffsetLeft = left;
+        this.widgetOffsetRight = right;
     }
 
     @Override
     public Rectangle getButtonScaledRectangle(int origX, int origY, int width, int height) {
-        int scaledX = (int) (origX * textSize);
-        int scaledY = (int) (origY * textSize);
-        return new Rectangle(scaledX, scaledY, (int) (width * textSize), (int) (height * textSize));
+        int scaledX = (int) (origX * this.textSize);
+        int scaledY = (int) (origY * this.textSize);
+        return new Rectangle(scaledX, scaledY, (int) (width * this.textSize), (int) (height * this.textSize));
     }
 
     @Override
     public void scaleTextSize(float scale) {
-        textSize *= scale;
-        textScale = scale;
+        this.textSize *= scale;
+        this.textScale = scale;
 
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getID() == WIDGET_SCROLLBAR_ID) {
-                widgets.remove(widget);
+                this.widgets.remove(widget);
                 break;
             }
         }
-        onTextChange();
+        this.onTextChange();
     }
 
     @Override
     public boolean isLeftSided() {
-        return leftSided;
+        return this.leftSided;
     }
 
     @Override
@@ -181,41 +181,41 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public IGuiAnimatedStat setText(List<String> text) {
-        textList.clear();
+        this.textList.clear();
         for (String line : text) {
-            textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(line), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / textScale)));
+            this.textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(line), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / this.textScale)));
         }
-        onTextChange();
+        this.onTextChange();
         return this;
     }
 
     @Override
     public IGuiAnimatedStat setText(String text) {
-        textList.clear();
-        textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(text), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / textScale)));
-        onTextChange();
+        this.textList.clear();
+        this.textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(text), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / this.textScale)));
+        this.onTextChange();
         return this;
     }
 
     @Override
     public void setTextWithoutCuttingString(List<String> text) {
-        textList.clear();
-        textList.addAll(text);
-        onTextChange();
+        this.textList.clear();
+        this.textList.addAll(text);
+        this.onTextChange();
     }
 
     @Override
     public void appendText(List<String> text) {
         for (String line : text) {
-            textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(line), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / textScale)));
+            this.textList.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(line), (int) (GuiConstants.MAX_CHAR_PER_LINE_LEFT / this.textScale)));
         }
-        onTextChange();
+        this.onTextChange();
     }
 
     @Override
     public void addPadding(int nRows, int nCols) {
         String s = Strings.repeat(" ", nCols);
-        setTextWithoutCuttingString(IntStream.range(0, nRows).mapToObj(i -> s).collect(Collectors.toList()));
+        this.setTextWithoutCuttingString(IntStream.range(0, nRows).mapToObj(i -> s).collect(Collectors.toList()));
     }
 
     @Override
@@ -225,20 +225,20 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         for (int i = 0; i < text.size() && i < nRows; i++) {
             l.set(i, text.get(i));
         }
-        setTextWithoutCuttingString(l);
+        this.setTextWithoutCuttingString(l);
     }
 
     @Override
     public void setBackGroundColor(int backGroundColor) {
         if (backGroundColor != this.backGroundColor) {
             this.backGroundColor = backGroundColor;
-            calculateColorHighlights(backGroundColor);
+            this.calculateColorHighlights(backGroundColor);
         }
     }
 
     @Override
     public int getBackgroundColor() {
-        return backGroundColor;
+        return this.backGroundColor;
     }
 
     private void calculateColorHighlights(int color) {
@@ -248,39 +248,39 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
             float fgB = (float) (color & 255) / 255.0F;
             float fgA = (float) (color >> 24 & 255) / 255.0F;
             Color c = new Color(fgR, fgG, fgB, fgA);
-            if (bevel) {
-                bgColorHi = c.brighter();
-                bgColorLo = c.darker();
+            if (this.bevel) {
+                this.bgColorHi = c.brighter();
+                this.bgColorLo = c.darker();
             } else {
-                bgColorHi = c.darker().darker();
-                bgColorLo = bgColorHi;
+                this.bgColorHi = c.darker().darker();
+                this.bgColorLo = this.bgColorHi;
             }
         } else {
-            bgColorLo = bgColorHi = Color.BLACK;
+            this.bgColorLo = this.bgColorHi = Color.BLACK;
         }
     }
 
     @Override
     public void setBeveled(boolean bevel) {
         this.bevel = bevel;
-        calculateColorHighlights(backGroundColor);
+        this.calculateColorHighlights(this.backGroundColor);
     }
 
     private void onTextChange() {
         // add/remove a scrollbar, as necessary
-        if (textList.size() > MAX_LINES) {
-            for (IGuiWidget widget : widgets) {
+        if (this.textList.size() > MAX_LINES) {
+            for (IGuiWidget widget : this.widgets) {
                 if (widget.getID() == WIDGET_SCROLLBAR_ID) return;
             }
-            curScroll = 0;
-            addWidget(new WidgetVerticalScrollbar(WIDGET_SCROLLBAR_ID, leftSided ? -16 : 2, 20, (int) ((MAX_LINES * lineSpacing - 20) * textSize)).setStates(textList.size() - MAX_LINES));
+            this.curScroll = 0;
+            this.addWidget(new WidgetVerticalScrollbar(WIDGET_SCROLLBAR_ID, this.leftSided ? -16 : 2, 20, (int) ((MAX_LINES * this.lineSpacing - 20) * this.textSize)).setStates(this.textList.size() - MAX_LINES));
         } else {
-            Iterator<IGuiWidget> iterator = widgets.iterator();
+            Iterator<IGuiWidget> iterator = this.widgets.iterator();
             while (iterator.hasNext()) {
                 IGuiWidget widget = iterator.next();
                 if (widget.getID() == WIDGET_SCROLLBAR_ID) {
                     iterator.remove();
-                    curScroll = 0;
+                    this.curScroll = 0;
                 }
             }
         }
@@ -290,104 +290,104 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
     public void setMinDimensionsAndReset(int minWidth, int minHeight) {
         this.minWidth = minWidth;
         this.minHeight = minHeight;
-        width = minWidth;
-        height = minHeight;
+        this.width = minWidth;
+        this.height = minHeight;
     }
 
     @Override
     public void setForcedDimensions(int width, int height) {
         //noinspection SuspiciousNameCombination
-        forcedDimensions = width > 0 && height > 0 ? Pair.of(width, height) : null;
+        this.forcedDimensions = width > 0 && height > 0 ? Pair.of(width, height) : null;
     }
 
     @Override
     public void update() {
-        oldBaseX = baseX;
-        oldAffectedY = affectedY;
-        oldWidth = width;
-        oldHeight = height;
+        this.oldBaseX = this.baseX;
+        this.oldAffectedY = this.affectedY;
+        this.oldWidth = this.width;
+        this.oldHeight = this.height;
 
-        doneExpanding = true;
-        if (isClicked) {
-            Pair<Integer, Integer> maxSize = calculateMaxSize();
+        this.doneExpanding = true;
+        if (this.isClicked) {
+            Pair<Integer, Integer> maxSize = this.calculateMaxSize();
             int maxWidth = maxSize.getLeft(), maxHeight = maxSize.getRight();
 
             // expand the box
-            width = Math.min(maxWidth, width + ANIMATED_STAT_SPEED);
-            height = Math.min(maxHeight, height + ANIMATED_STAT_SPEED);
-            doneExpanding = width == maxWidth && height == maxHeight;
+            this.width = Math.min(maxWidth, this.width + ANIMATED_STAT_SPEED);
+            this.height = Math.min(maxHeight, this.height + ANIMATED_STAT_SPEED);
+            this.doneExpanding = this.width == maxWidth && this.height == maxHeight;
 
-            Pair<Integer,Integer> size = PneumaticCraftRepressurized.proxy.getScaledScreenSize();
-            if (isLeftSided()) {
-                if (baseX >= size.getLeft()) baseX = size.getLeft();
+            Pair<Integer, Integer> size = PneumaticCraftRepressurized.proxy.getScaledScreenSize();
+            if (this.isLeftSided()) {
+                if (this.baseX >= size.getLeft()) this.baseX = size.getLeft();
             } else {
-                if (baseX < 0) baseX = 1;
+                if (this.baseX < 0) this.baseX = 1;
             }
-            if (baseY + height >= size.getRight()) {
-                baseY = size.getRight() - height - 1;
+            if (this.baseY + this.height >= size.getRight()) {
+                this.baseY = size.getRight() - this.height - 1;
             }
 
-            if (doneExpanding) {
-                for (IGuiWidget widget : widgets) {
+            if (this.doneExpanding) {
+                for (IGuiWidget widget : this.widgets) {
                     if (widget.getID() == WIDGET_SCROLLBAR_ID) {
-                        curScroll = ((WidgetVerticalScrollbar) widget).getState();
+                        this.curScroll = ((WidgetVerticalScrollbar) widget).getState();
                         break;
                     }
                 }
             }
         } else {
             // contract the box
-            width = Math.max(minWidth, width - ANIMATED_STAT_SPEED);
-            height = Math.max(minHeight, height - ANIMATED_STAT_SPEED);
-            doneExpanding = false;
+            this.width = Math.max(this.minWidth, this.width - ANIMATED_STAT_SPEED);
+            this.height = Math.max(this.minHeight, this.height - ANIMATED_STAT_SPEED);
+            this.doneExpanding = false;
         }
 
-        affectedY = baseY;
-        if (affectingStat != null) {
-            affectedY += affectingStat.getAffectedY() + affectingStat.getHeight();
+        this.affectedY = this.baseY;
+        if (this.affectingStat != null) {
+            this.affectedY += this.affectingStat.getAffectedY() + this.affectingStat.getHeight();
         }
     }
 
-    private Pair<Integer,Integer> calculateMaxSize() {
-        if (forcedDimensions != null) return forcedDimensions;
+    private Pair<Integer, Integer> calculateMaxSize() {
+        if (this.forcedDimensions != null) return this.forcedDimensions;
 
         FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRenderer;
 
         // scale the box down if necessary to avoid extending beyond screen edge
         // (should only be an issue for very low scaled X resolution)
         int availableWidth;
-        if (gui instanceof GuiContainer) {
-            GuiContainer gc = (GuiContainer) gui;
-            availableWidth = leftSided ? gc.getGuiLeft() : gc.width - (gc.getGuiLeft() + gc.getXSize());
+        if (this.gui instanceof GuiContainer) {
+            GuiContainer gc = (GuiContainer) this.gui;
+            availableWidth = this.leftSided ? gc.getGuiLeft() : gc.width - (gc.getGuiLeft() + gc.getXSize());
         } else {
             availableWidth = new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth();
         }
 
         // calculate the width and height needed for the box to fit the strings.
-        int maxWidth = fontRenderer.getStringWidth(title);
-        for (String line : textList) {
+        int maxWidth = fontRenderer.getStringWidth(this.title);
+        for (String line : this.textList) {
             maxWidth = Math.max(maxWidth, fontRenderer.getStringWidth(line));
         }
         maxWidth += 20;  // to allow space for the scrollbar, where necessary
 
-        int maxHeight = title.isEmpty() ? 6 : 16;
-        if (!textList.isEmpty()) {
-            maxHeight += Math.min(MAX_LINES, textList.size()) * lineSpacing;
+        int maxHeight = this.title.isEmpty() ? 6 : 16;
+        if (!this.textList.isEmpty()) {
+            maxHeight += Math.min(MAX_LINES, this.textList.size()) * this.lineSpacing;
         }
-        maxHeight -= (lineSpacing - fontRenderer.FONT_HEIGHT);
+        maxHeight -= (this.lineSpacing - fontRenderer.FONT_HEIGHT);
 
-        float lastTextSize = textSize;
+        float lastTextSize = this.textSize;
         if (maxWidth > availableWidth - 3) {
-            textSize = (availableWidth - 3f) / maxWidth;
-            maxWidth = (int) (maxWidth * textSize);
-            maxHeight = (int) (maxHeight * textSize);
+            this.textSize = (availableWidth - 3f) / maxWidth;
+            maxWidth = (int) (maxWidth * this.textSize);
+            maxHeight = (int) (maxHeight * this.textSize);
         } else {
-            textSize = 1.0f;
+            this.textSize = 1.0f;
         }
-        if (lastTextSize != textSize) {
-            float newTextSize = textSize;
-            textSize = 1.0f;
-            scaleTextSize(newTextSize);
+        if (lastTextSize != this.textSize) {
+            float newTextSize = this.textSize;
+            this.textSize = 1.0f;
+            this.scaleTextSize(newTextSize);
         }
 
         //noinspection SuspiciousNameCombination
@@ -396,62 +396,62 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
+        this.lastMouseX = mouseX;
+        this.lastMouseY = mouseY;
         float zLevel = 0;
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        int renderBaseX = (int) (oldBaseX + (baseX - oldBaseX) * partialTicks);
-        int renderAffectedY = (int) (oldAffectedY + (affectedY - oldAffectedY) * partialTicks);
-        int renderWidth = (int) (oldWidth + (width - oldWidth) * partialTicks);
-        int renderHeight = (int) (oldHeight + (height - oldHeight) * partialTicks);
+        int renderBaseX = (int) (this.oldBaseX + (this.baseX - this.oldBaseX) * partialTicks);
+        int renderAffectedY = (int) (this.oldAffectedY + (this.affectedY - this.oldAffectedY) * partialTicks);
+        int renderWidth = (int) (this.oldWidth + (this.width - this.oldWidth) * partialTicks);
+        int renderHeight = (int) (this.oldHeight + (this.height - this.oldHeight) * partialTicks);
 
-        if (leftSided) renderWidth *= -1;
-        Gui.drawRect(renderBaseX, renderAffectedY, renderBaseX + renderWidth, renderAffectedY + renderHeight, backGroundColor);
+        if (this.leftSided) renderWidth *= -1;
+        Gui.drawRect(renderBaseX, renderAffectedY, renderBaseX + renderWidth, renderAffectedY + renderHeight, this.backGroundColor);
         GlStateManager.disableTexture2D();
         GlStateManager.glLineWidth(3.0F);
         GlStateManager.color(0, 0, 0, 1);
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_LINE_LOOP, DefaultVertexFormats.POSITION_COLOR);
-        float[] c1 = leftSided ? bgColorLo.getComponents(null) : bgColorHi.getComponents(null);
-        float[] c2 = bgColorHi.getComponents(null);
-        float[] c3 = leftSided ? bgColorHi.getComponents(null) : bgColorLo.getComponents(null);
-        float[] c4 = bgColorLo.getComponents(null);
+        float[] c1 = this.leftSided ? this.bgColorLo.getComponents(null) : this.bgColorHi.getComponents(null);
+        float[] c2 = this.bgColorHi.getComponents(null);
+        float[] c3 = this.leftSided ? this.bgColorHi.getComponents(null) : this.bgColorLo.getComponents(null);
+        float[] c4 = this.bgColorLo.getComponents(null);
         wr.pos(renderBaseX, renderAffectedY, zLevel).color(c1[0], c1[1], c1[2], c1[3]).endVertex();
         wr.pos(renderBaseX + renderWidth, renderAffectedY, zLevel).color(c2[0], c2[1], c2[2], c2[3]).endVertex();
-        wr.pos(renderBaseX + renderWidth, renderAffectedY + renderHeight, zLevel).color(c3[0], c3[1], c3[2],c3[3]).endVertex();
+        wr.pos(renderBaseX + renderWidth, renderAffectedY + renderHeight, zLevel).color(c3[0], c3[1], c3[2], c3[3]).endVertex();
         wr.pos(renderBaseX, renderAffectedY + renderHeight, zLevel).color(c4[0], c4[1], c4[2], c4[3]).endVertex();
         Tessellator.getInstance().draw();
         GlStateManager.enableTexture2D();
-        if (leftSided) renderWidth *= -1;
+        if (this.leftSided) renderWidth *= -1;
 
         // if done expanding, draw the information
-        int titleYoffset = title.isEmpty() ? 3 : 12;
-        if (doneExpanding) {
+        int titleYoffset = this.title.isEmpty() ? 3 : 12;
+        if (this.doneExpanding) {
             GlStateManager.pushMatrix();
-            GlStateManager.translate(renderBaseX + (leftSided ? -renderWidth : 16), renderAffectedY, 0);
-            GlStateManager.scale(textSize, textSize, textSize);
-            GlStateManager.translate(-renderBaseX - (leftSided ? -renderWidth : 16), -renderAffectedY, 0);
-            if (!title.isEmpty()) {
-                fontRenderer.drawStringWithShadow(title, renderBaseX + (leftSided ? -renderWidth + 2 : 18), renderAffectedY + 2, 0xFFFF00);
+            GlStateManager.translate(renderBaseX + (this.leftSided ? -renderWidth : 16), renderAffectedY, 0);
+            GlStateManager.scale(this.textSize, this.textSize, this.textSize);
+            GlStateManager.translate(-renderBaseX - (this.leftSided ? -renderWidth : 16), -renderAffectedY, 0);
+            if (!this.title.isEmpty()) {
+                fontRenderer.drawStringWithShadow(this.title, renderBaseX + (this.leftSided ? -renderWidth + 2 : 18), renderAffectedY + 2, 0xFFFF00);
             }
-            for (int i = curScroll; i < textList.size() && i < curScroll + MAX_LINES; i++) {
-                if (textList.get(i).contains("\u00a70") || textList.get(i).contains(TextFormatting.DARK_RED.toString())) {
-                    fontRenderer.drawString(textList.get(i), renderBaseX + (leftSided ? -renderWidth + 2 : 18), renderAffectedY + (i - curScroll) * lineSpacing + titleYoffset, 0xFFFFFF);
+            for (int i = this.curScroll; i < this.textList.size() && i < this.curScroll + MAX_LINES; i++) {
+                if (this.textList.get(i).contains("\u00a70") || this.textList.get(i).contains(TextFormatting.DARK_RED.toString())) {
+                    fontRenderer.drawString(this.textList.get(i), renderBaseX + (this.leftSided ? -renderWidth + 2 : 18), renderAffectedY + (i - this.curScroll) * this.lineSpacing + titleYoffset, 0xFFFFFF);
                 } else {
-                    fontRenderer.drawStringWithShadow(textList.get(i), renderBaseX + (leftSided ? -renderWidth + 2 : 18), renderAffectedY + (i - curScroll) * lineSpacing + titleYoffset, 0xFFFFFF);
+                    fontRenderer.drawStringWithShadow(this.textList.get(i), renderBaseX + (this.leftSided ? -renderWidth + 2 : 18), renderAffectedY + (i - this.curScroll) * this.lineSpacing + titleYoffset, 0xFFFFFF);
                 }
             }
             GlStateManager.popMatrix();
 
             GlStateManager.pushMatrix();
-            GlStateManager.translate(renderBaseX + (leftSided ? widgetOffsetLeft : widgetOffsetRight), renderAffectedY + (titleYoffset - 10), 0);
+            GlStateManager.translate(renderBaseX + (this.leftSided ? this.widgetOffsetLeft : this.widgetOffsetRight), renderAffectedY + (titleYoffset - 10), 0);
             GlStateManager.enableTexture2D();
-            for (IGuiWidget widget : widgets)
+            for (IGuiWidget widget : this.widgets)
                 widget.render(mouseX - renderBaseX, mouseY - renderAffectedY, partialTicks);
             GlStateManager.popMatrix();
         }
-        if (renderHeight > 16 && renderWidth > 16 && statIcon != null) {
-            statIcon.render(gui, renderBaseX, renderAffectedY, leftSided);
+        if (renderHeight > 16 && renderWidth > 16 && this.statIcon != null) {
+            this.statIcon.render(this.gui, renderBaseX, renderAffectedY, this.leftSided);
         }
     }
 
@@ -461,15 +461,15 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
         if (button == 0) {
-            isClicked = !isClicked;
-            listener.actionPerformed(this);
+            this.isClicked = !this.isClicked;
+            this.listener.actionPerformed(this);
         }
-        mouseX -= baseX;
-        mouseY -= affectedY;
-        for (IGuiWidget widget : widgets) {
+        mouseX -= this.baseX;
+        mouseY -= this.affectedY;
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getBounds().contains(mouseX, mouseY)) {
                 widget.onMouseClicked(mouseX, mouseY, button);
-                isClicked = true;
+                this.isClicked = true;
             } else {
                 widget.onMouseClickedOutsideBounds(mouseX, mouseY, button);
             }
@@ -483,47 +483,47 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public void closeWindow() {
-        isClicked = false;
+        this.isClicked = false;
     }
 
     @Override
     public void openWindow() {
-        isClicked = true;
+        this.isClicked = true;
     }
 
     @Override
     public boolean isClicked() {
-        return isClicked;
+        return this.isClicked;
     }
 
     @Override
     public int getAffectedY() {
-        return affectedY;
+        return this.affectedY;
     }
 
     @Override
     public int getBaseX() {
-        return baseX;
+        return this.baseX;
     }
 
     @Override
     public int getBaseY() {
-        return baseY;
+        return this.baseY;
     }
 
     @Override
     public int getHeight() {
-        return height;
+        return this.height;
     }
 
     @Override
     public int getWidth() {
-        return width;
+        return this.width;
     }
 
     @Override
     public void setBaseY(int y) {
-        baseY = y;
+        this.baseY = y;
     }
 
     @Override
@@ -533,27 +533,27 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public boolean isDoneExpanding() {
-        return doneExpanding;
+        return this.doneExpanding;
     }
 
     @Override
     public void setBaseX(int x) {
-        baseX = x;
+        this.baseX = x;
     }
 
     @Override
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(baseX - (leftSided ? width : 0), affectedY, width, height);
+        return new Rectangle(this.baseX - (this.leftSided ? this.width : 0), this.affectedY, this.width, this.height);
     }
 
     @Override
     public void setListener(IWidgetListener gui) {
-        listener = gui;
+        this.listener = gui;
     }
 
     @Override
@@ -563,43 +563,43 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public void actionPerformed(IGuiWidget widget) {
-        isClicked = !isClicked;
-        listener.actionPerformed(widget);
+        this.isClicked = !this.isClicked;
+        this.listener.actionPerformed(widget);
     }
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        listener.onKeyTyped(widget);
+        this.listener.onKeyTyped(widget);
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTooltip, boolean shiftPressed) {
 
-        if (mouseIsHoveringOverIcon(mouseX, mouseY)) {
-            curTooltip.add(title);
+        if (this.mouseIsHoveringOverIcon(mouseX, mouseY)) {
+            curTooltip.add(this.title);
         }
 
-        for (IGuiWidget widget : widgets)
-            if (isMouseOverWidget(widget, mouseX, mouseY)) widget.addTooltip(mouseX, mouseY, curTooltip, shiftPressed);
+        for (IGuiWidget widget : this.widgets)
+            if (this.isMouseOverWidget(widget, mouseX, mouseY)) widget.addTooltip(mouseX, mouseY, curTooltip, shiftPressed);
     }
 
     private boolean mouseIsHoveringOverIcon(int x, int y) {
-        if (leftSided) {
-            return x <= baseX && x >= baseX - 16 && y >= affectedY && y <= affectedY + 16;
+        if (this.leftSided) {
+            return x <= this.baseX && x >= this.baseX - 16 && y >= this.affectedY && y <= this.affectedY + 16;
         } else {
-            return x >= baseX && x <= baseX + 16 && y >= affectedY && y <= affectedY + 16;
+            return x >= this.baseX && x <= this.baseX + 16 && y >= this.affectedY && y <= this.affectedY + 16;
         }
     }
 
     @Override
     public boolean onKey(char key, int keyCode) {
-        for (IGuiWidget widget : widgets)
+        for (IGuiWidget widget : this.widgets)
             if (widget.onKey(key, keyCode)) return true;
         return false;
     }
 
     private boolean isMouseOverWidget(IGuiWidget widget, int mouseX, int mouseY) {
-        Rectangle rect = getBounds();
+        Rectangle rect = this.getBounds();
         mouseX -= rect.x;
         mouseY -= rect.y;
         return widget.getBounds().contains(mouseX, mouseY);
@@ -607,18 +607,18 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
 
     @Override
     public void handleMouseInput() {
-        if (getBounds().contains(lastMouseX, lastMouseY)) {
-            handleMouseWheel(Mouse.getDWheel());
+        if (this.getBounds().contains(this.lastMouseX, this.lastMouseY)) {
+            this.handleMouseWheel(Mouse.getDWheel());
         }
     }
 
     public boolean handleMouseWheel(int mouseWheel) {
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.handleMouseInput();
             if (widget.getID() == WIDGET_SCROLLBAR_ID) {
                 int wheel = -mouseWheel;
                 wheel = MathHelper.clamp(wheel, -1, 1);
-                ((WidgetVerticalScrollbar) widget).currentScroll += (float) wheel / (textList.size() - MAX_LINES);
+                ((WidgetVerticalScrollbar) widget).currentScroll += (float) wheel / (this.textList.size() - MAX_LINES);
                 return true;
             }
         }
@@ -669,16 +669,16 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
             GlStateManager.color(1, 1, 1, 1);
             GlStateManager.enableBlend();
             GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            if (texture != null) {
-                GuiPneumaticContainerBase.drawTexture(texture, x - (leftSided ? 16 : 0), y);
-            } else if (!stack.isEmpty() && gui != null || !(stack.getItem() instanceof ItemBlock)) {
+            if (this.texture != null) {
+                GuiPneumaticContainerBase.drawTexture(this.texture, x - (leftSided ? 16 : 0), y);
+            } else if (!this.stack.isEmpty() && gui != null || !(this.stack.getItem() instanceof ItemBlock)) {
                 RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
                 renderItem.zLevel = 1;
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(0, 0, -50);
                 GlStateManager.enableRescaleNormal();
                 RenderHelper.enableGUIStandardItemLighting();
-                renderItem.renderItemAndEffectIntoGUI(stack, x - (leftSided ? 16 : 0), y);
+                renderItem.renderItemAndEffectIntoGUI(this.stack, x - (leftSided ? 16 : 0), y);
                 RenderHelper.disableStandardItemLighting();
                 GlStateManager.disableRescaleNormal();
                 GlStateManager.popMatrix();

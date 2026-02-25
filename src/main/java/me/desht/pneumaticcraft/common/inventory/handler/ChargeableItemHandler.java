@@ -12,35 +12,35 @@ public class ChargeableItemHandler extends BaseItemStackHandler {
     public ChargeableItemHandler(TileEntityChargingStation te) {
         super(te, INVENTORY_SIZE);
 
-        if (!NBTUtil.hasTag(getChargingStack(), NBT_UPGRADE_TAG)) {
-            writeToNBT();
+        if (!NBTUtil.hasTag(this.getChargingStack(), NBT_UPGRADE_TAG)) {
+            this.writeToNBT();
         }
-        readFromNBT();
+        this.readFromNBT();
     }
 
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
-        writeToNBT();
+        this.writeToNBT();
     }
 
     private ItemStack getChargingStack() {
-        return ((TileEntityChargingStation) te).getChargingStack();
+        return ((TileEntityChargingStation) this.te).getChargingStack();
     }
 
     public void writeToNBT() {
-        NBTUtil.setCompoundTag(getChargingStack(), NBT_UPGRADE_TAG, serializeNBT());
+        NBTUtil.setCompoundTag(this.getChargingStack(), NBT_UPGRADE_TAG, this.serializeNBT());
     }
 
     private void readFromNBT() {
-        deserializeNBT(NBTUtil.getCompoundTag(getChargingStack(), NBT_UPGRADE_TAG));
+        this.deserializeNBT(NBTUtil.getCompoundTag(this.getChargingStack(), NBT_UPGRADE_TAG));
     }
 
     @Override
     public boolean isItemValid(int slot, ItemStack itemStack) {
         if (itemStack.isEmpty()) return true;
 
-        return getChargingStack().getItem() instanceof IUpgradeAcceptor
-                && ((IUpgradeAcceptor) getChargingStack().getItem()).getApplicableUpgrades().contains(itemStack.getItem());
+        return this.getChargingStack().getItem() instanceof IUpgradeAcceptor
+                && ((IUpgradeAcceptor) this.getChargingStack().getItem()).getApplicableUpgrades().contains(itemStack.getItem());
     }
 }

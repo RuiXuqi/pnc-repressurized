@@ -17,19 +17,19 @@ public class GuiRemoteVariable<Widget extends ActionWidgetVariable> extends GuiR
     @Override
     public void initGui() {
         super.initGui();
-        addLabel(I18n.format("gui.progWidget.coordinate.variableName"), guiLeft + 10, guiTop + 70);
-        addLabel("#", guiLeft + 10, guiTop + 81);
+        this.addLabel(I18n.format("gui.progWidget.coordinate.variableName"), this.guiLeft + 10, this.guiTop + 70);
+        this.addLabel("#", this.guiLeft + 10, this.guiTop + 81);
 
-        variableField = new WidgetComboBox(fontRenderer, guiLeft + 18, guiTop + 80, 152, 10);
-        variableField.setElements(((ContainerRemote) guiRemote.inventorySlots).variables);
-        variableField.setText(widget.getVariableName());
-        variableField.setTooltip(I18n.format("gui.remote.variable.tooltip"));
-        addWidget(variableField);
+        this.variableField = new WidgetComboBox(this.fontRenderer, this.guiLeft + 18, this.guiTop + 80, 152, 10);
+        this.variableField.setElements(((ContainerRemote) this.guiRemote.inventorySlots).variables);
+        this.variableField.setText(this.widget.getVariableName());
+        this.variableField.setTooltip(I18n.format("gui.remote.variable.tooltip"));
+        this.addWidget(this.variableField);
     }
 
     @Override
     public void onGuiClosed() {
         super.onGuiClosed();
-        widget.setVariableName(variableField.getText());
+        this.widget.setVariableName(this.variableField.getText());
     }
 }

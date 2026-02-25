@@ -17,18 +17,18 @@ public class TileEntityHeatSink extends TileEntityCompressedIronBlock implements
     private double ambientTemp = -1;
 
     public TileEntityHeatSink() {
-        airExchanger.addConnectedExchanger(heatExchanger);
-        airExchanger.setThermalResistance(TileEntityConstants.HEAT_SINK_THERMAL_RESISTANCE);
+        this.airExchanger.addConnectedExchanger(this.heatExchanger);
+        this.airExchanger.setThermalResistance(TileEntityConstants.HEAT_SINK_THERMAL_RESISTANCE);
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return side == null || side == getRotation() ? super.getHeatExchangerLogic(side) : null;
+        return side == null || side == this.getRotation() ? super.getHeatExchangerLogic(side) : null;
     }
 
     @Override
     protected EnumFacing[] getConnectedHeatExchangerSides() {
-        return new EnumFacing[]{getRotation()};
+        return new EnumFacing[]{this.getRotation()};
     }
 
     @Override
@@ -38,28 +38,28 @@ public class TileEntityHeatSink extends TileEntityCompressedIronBlock implements
 
     @Override
     public void update() {
-        if (ambientTemp < 0) {
-            ambientTemp = HeatExchangerLogicAmbient.atPosition(getWorld(), getPos()).getTemperature();
-            airExchanger.setTemperature(ambientTemp);
+        if (this.ambientTemp < 0) {
+            this.ambientTemp = HeatExchangerLogicAmbient.atPosition(this.getWorld(), this.getPos()).getTemperature();
+            this.airExchanger.setTemperature(this.ambientTemp);
         }
 
         super.update();
 
-        airExchanger.update();
-        airExchanger.setTemperature(ambientTemp);
+        this.airExchanger.update();
+        this.airExchanger.setTemperature(this.ambientTemp);
     }
 
     public void onFannedByAirGrate() {
-        heatExchanger.update();
-        airExchanger.setTemperature(ambientTemp);
+        this.heatExchanger.update();
+        this.airExchanger.setTemperature(this.ambientTemp);
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(
-                getPos().getX(), getPos().getY(), getPos().getZ(),
-                getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1
+                this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(),
+                this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1
         );
     }
 

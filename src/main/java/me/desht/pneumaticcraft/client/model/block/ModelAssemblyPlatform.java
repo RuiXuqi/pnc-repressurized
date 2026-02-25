@@ -15,35 +15,35 @@ public class ModelAssemblyPlatform extends AbstractModelRenderer.BaseModel {
     private RenderEntityItem customRenderItem = null;
 
     public ModelAssemblyPlatform() {
-        textureWidth = 64;
-        textureHeight = 64;
+        this.textureWidth = 64;
+        this.textureHeight = 64;
 
-        claw1 = new ModelRenderer(this, 0, 32);
-        claw1.addBox(0F, 0F, 0F, 2, 1, 1);
-        claw1.setRotationPoint(-1F, 17F, 0F);
-        claw1.setTextureSize(64, 32);
-        claw1.mirror = true;
-        setRotation(claw1, 0F, 0F, 0F);
-        claw2 = new ModelRenderer(this, 0, 32);
-        claw2.addBox(0F, 0F, 0F, 2, 1, 1);
-        claw2.setRotationPoint(-1F, 17F, -1F);
-        claw2.setTextureSize(64, 32);
-        claw2.mirror = true;
-        setRotation(claw2, 0F, 0F, 0F);
+        this.claw1 = new ModelRenderer(this, 0, 32);
+        this.claw1.addBox(0F, 0F, 0F, 2, 1, 1);
+        this.claw1.setRotationPoint(-1F, 17F, 0F);
+        this.claw1.setTextureSize(64, 32);
+        this.claw1.mirror = true;
+        this.setRotation(this.claw1, 0F, 0F, 0F);
+        this.claw2 = new ModelRenderer(this, 0, 32);
+        this.claw2.addBox(0F, 0F, 0F, 2, 1, 1);
+        this.claw2.setRotationPoint(-1F, 17F, -1F);
+        this.claw2.setTextureSize(64, 32);
+        this.claw2.mirror = true;
+        this.setRotation(this.claw2, 0F, 0F, 0F);
     }
 
     public void renderModel(float size, float progress, EntityItem carriedItem) {
         float clawTrans;
         float scaleFactor = 0.7F;
 
-        if (customRenderItem == null) {
-            customRenderItem = new AbstractModelRenderer.NoBobItemRenderer();
+        if (this.customRenderItem == null) {
+            this.customRenderItem = new AbstractModelRenderer.NoBobItemRenderer();
         }
 
         IAssemblyRenderOverriding renderOverride = null;
         if (carriedItem != null) {
             renderOverride = GuiRegistry.renderOverrides.get(carriedItem.getItem().getItem().getRegistryName());
-            if(renderOverride != null) {
+            if (renderOverride != null) {
                 clawTrans = renderOverride.getPlatformClawShift(carriedItem.getItem());
             } else {
                 if (carriedItem.getItem().getItem() instanceof ItemBlock) {
@@ -58,9 +58,9 @@ public class ModelAssemblyPlatform extends AbstractModelRenderer.BaseModel {
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0, clawTrans);
-        claw1.render(size);
+        this.claw1.render(size);
         GlStateManager.translate(0, 0, -2 * clawTrans);
-        claw2.render(size);
+        this.claw2.render(size);
         GlStateManager.popMatrix();
 
         if (carriedItem != null) {
@@ -69,7 +69,7 @@ public class ModelAssemblyPlatform extends AbstractModelRenderer.BaseModel {
                 double yOffset = carriedItem.getItem().getItem() instanceof ItemBlock ? -16.5 / 16F : -17.5 / 16F;
                 GlStateManager.translate(0, yOffset - 0.2, 0);
                 GlStateManager.scale(scaleFactor, scaleFactor, scaleFactor);
-                customRenderItem.doRender(carriedItem, 0, 0, 0, 0, 0);
+                this.customRenderItem.doRender(carriedItem, 0, 0, 0, 0, 0);
             }
         }
     }

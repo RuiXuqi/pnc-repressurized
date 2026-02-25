@@ -67,10 +67,10 @@ public class ProgWidgetDroneConditionEntity extends ProgWidgetDroneEvaluation im
 
     @Override
     public boolean isEntityValid(Entity entity) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.isEntityValid(entity);
+        return this.entityFilters.isEntityValid(entity);
     }
 
 }

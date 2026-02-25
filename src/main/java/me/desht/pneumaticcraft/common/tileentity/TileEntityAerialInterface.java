@@ -89,64 +89,64 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
     public TileEntityAerialInterface() {
         super(PneumaticValues.DANGER_PRESSURE_AERIAL_INTERFACE, PneumaticValues.MAX_PRESSURE_AERIAL_INTERFACE, PneumaticValues.VOLUME_AERIAL_INTERFACE, 4);
-        addApplicableUpgrade(EnumUpgrade.DISPENSER);
+        this.addApplicableUpgrade(EnumUpgrade.DISPENSER);
 
         PlayerMainInvHandler playerMainInvHandler = new PlayerMainInvHandler();
         PlayerArmorInvHandler playerArmorInvHandler = new PlayerArmorInvHandler();
         PlayerOffhandInvHandler playerOffhandInvHandler = new PlayerOffhandInvHandler();
         PlayerEnderInvHandler playerEnderInvHandler = new PlayerEnderInvHandler();
-        playerExperienceHandler = new PlayerExperienceHandler();
-        playerFoodHandler = new PlayerFoodHandler();
+        this.playerExperienceHandler = new PlayerExperienceHandler();
+        this.playerFoodHandler = new PlayerFoodHandler();
 
-        itemHandlerSideConfigurator = new SideConfigurator<>("items", this, 5);
-        itemHandlerSideConfigurator.registerHandler("mainInv", new ItemStack(Blocks.CHEST),
+        this.itemHandlerSideConfigurator = new SideConfigurator<>("items", this, 5);
+        this.itemHandlerSideConfigurator.registerHandler("mainInv", new ItemStack(Blocks.CHEST),
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, playerMainInvHandler,
                 RelativeFace.FRONT, RelativeFace.BACK, RelativeFace.LEFT, RelativeFace.RIGHT);
-        itemHandlerSideConfigurator.registerHandler("armorInv", new ItemStack(Itemss.PNEUMATIC_CHESTPLATE),
+        this.itemHandlerSideConfigurator.registerHandler("armorInv", new ItemStack(Itemss.PNEUMATIC_CHESTPLATE),
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, playerArmorInvHandler,
                 RelativeFace.TOP, RelativeFace.BOTTOM);
-        itemHandlerSideConfigurator.registerHandler("offhandInv", new ItemStack(Items.SHIELD),
+        this.itemHandlerSideConfigurator.registerHandler("offhandInv", new ItemStack(Items.SHIELD),
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, playerOffhandInvHandler);
-        itemHandlerSideConfigurator.registerHandler("enderInv", new ItemStack(Blocks.ENDER_CHEST),
+        this.itemHandlerSideConfigurator.registerHandler("enderInv", new ItemStack(Blocks.ENDER_CHEST),
                 CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, playerEnderInvHandler);
         if (Baubles.available) {
-            itemHandlerSideConfigurator.registerHandler("baublesInv", new ItemStack(BAUBLES_RING),
+            this.itemHandlerSideConfigurator.registerHandler("baublesInv", new ItemStack(BAUBLES_RING),
                     CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, new PlayerBaublesHandler());
         }
 
-        energyStorage = new PneumaticEnergyStorage(ENERGY_CAPACITY);
+        this.energyStorage = new PneumaticEnergyStorage(ENERGY_CAPACITY);
     }
 
     public void setPlayer(EntityPlayer player) {
-        playerRef = new WeakReference<>(player);
-        boolean old = isConnectedToPlayer;
+        this.playerRef = new WeakReference<>(player);
+        boolean old = this.isConnectedToPlayer;
         if (player == null) {
-            isConnectedToPlayer = false;
+            this.isConnectedToPlayer = false;
         } else {
-            setPlayer(player.getGameProfile().getName(), player.getGameProfile().getId().toString());
-            isConnectedToPlayer = true;
+            this.setPlayer(player.getGameProfile().getName(), player.getGameProfile().getId().toString());
+            this.isConnectedToPlayer = true;
         }
-        if (old != isConnectedToPlayer) {
-            updateNeighbours = true;
-            scanForChargeableItems();
+        if (old != this.isConnectedToPlayer) {
+            this.updateNeighbours = true;
+            this.scanForChargeableItems();
         }
     }
 
     private void setPlayer(String username, String uuid) {
-        if (!playerUUID.equals(uuid)) {
-            updateNeighbours = true;
+        if (!this.playerUUID.equals(uuid)) {
+            this.updateNeighbours = true;
         }
-        playerName = username;
-        playerUUID = uuid;
+        this.playerName = username;
+        this.playerUUID = uuid;
     }
 
     @Override
     protected void onUpgradesChanged() {
         super.onUpgradesChanged();
-        boolean old = dispenserUpgradeInserted;
-        dispenserUpgradeInserted = getUpgrades(EnumUpgrade.DISPENSER) > 0;
-        if (old != dispenserUpgradeInserted) {
-            updateNeighbours = true;
+        boolean old = this.dispenserUpgradeInserted;
+        this.dispenserUpgradeInserted = this.getUpgrades(EnumUpgrade.DISPENSER) > 0;
+        if (old != this.dispenserUpgradeInserted) {
+            this.updateNeighbours = true;
         }
     }
 
@@ -158,36 +158,36 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
     @Override
     public void update() {
-        if (!getWorld().isRemote && updateNeighbours) {
-            updateNeighbours = false;
-            updateNeighbours();
+        if (!this.getWorld().isRemote && this.updateNeighbours) {
+            this.updateNeighbours = false;
+            this.updateNeighbours();
         }
-        if (!getWorld().isRemote) {
-            if (getPressure() >= getMinWorkingPressure() && isConnectedToPlayer) {
-                addAir(-PneumaticValues.USAGE_AERIAL_INTERFACE);
+        if (!this.getWorld().isRemote) {
+            if (this.getPressure() >= this.getMinWorkingPressure() && this.isConnectedToPlayer) {
+                this.addAir(-PneumaticValues.USAGE_AERIAL_INTERFACE);
 
-                if ((getWorld().getTotalWorldTime() & 0x3f) == 0) {
-                    scanForChargeableItems();
+                if ((this.getWorld().getTotalWorldTime() & 0x3f) == 0) {
+                    this.scanForChargeableItems();
                 }
-                supplyEnergyToPlayer();
+                this.supplyEnergyToPlayer();
 
                 // check every 16 ticks
-                if ((getWorld().getTotalWorldTime() & 0xf) == 0) {
-                    EntityPlayer player = getPlayer();
+                if ((this.getWorld().getTotalWorldTime() & 0xf) == 0) {
+                    EntityPlayer player = this.getPlayer();
                     if (player != null && player.getAir() <= 280) {
                         player.setAir(player.getAir() + 16);
-                        addAir(-80);  // 5 pneumatic air per player air
+                        this.addAir(-80);  // 5 pneumatic air per player air
                     }
                 }
             }
-            if ((getWorld().getTotalWorldTime() & 0xf) == 0 && !playerUUID.isEmpty()) {
-                setPlayer(PneumaticCraftUtils.getPlayerFromId(playerUUID));
+            if ((this.getWorld().getTotalWorldTime() & 0xf) == 0 && !this.playerUUID.isEmpty()) {
+                this.setPlayer(PneumaticCraftUtils.getPlayerFromId(this.playerUUID));
             }
         }
 
-        if (oldRedstoneStatus != shouldEmitRedstone()) {
-            oldRedstoneStatus = shouldEmitRedstone();
-            updateNeighbours = true;
+        if (this.oldRedstoneStatus != this.shouldEmitRedstone()) {
+            this.oldRedstoneStatus = this.shouldEmitRedstone();
+            this.updateNeighbours = true;
         }
 
         super.update();
@@ -196,45 +196,45 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 1) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 1) this.redstoneMode = 0;
         } else if (buttonID >= 1 && buttonID < 4) {
-            feedMode = buttonID - 1;
+            this.feedMode = buttonID - 1;
         } else if (buttonID == 4) {
-            curXPFluidIndex++;
+            this.curXPFluidIndex++;
             List<Fluid> available = PneumaticCraftAPIHandler.getInstance().availableLiquidXPs;
-            if (curXPFluidIndex >= available.size()) {
-                curXPFluidIndex = -1;
+            if (this.curXPFluidIndex >= available.size()) {
+                this.curXPFluidIndex = -1;
             }
-            if (curXPFluidIndex >= 0 && curXPFluidIndex < available.size()) {
-                curXpFluid = available.get(curXPFluidIndex);
+            if (this.curXPFluidIndex >= 0 && this.curXPFluidIndex < available.size()) {
+                this.curXpFluid = available.get(this.curXPFluidIndex);
             } else {
-                curXpFluid = null;
+                this.curXpFluid = null;
             }
-        } else if (itemHandlerSideConfigurator.handleButtonPress(buttonID)) {
-            updateNeighbours = true;
+        } else if (this.itemHandlerSideConfigurator.handleButtonPress(buttonID)) {
+            this.updateNeighbours = true;
         }
     }
 
     public boolean shouldEmitRedstone() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return false;
             case 1:
-                return isConnectedToPlayer;
+                return this.isConnectedToPlayer;
         }
         return false;
     }
 
     private EntityPlayer getPlayer() {
-        return playerRef.get();
+        return this.playerRef.get();
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((isConnectedToPlayer &&
-                (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && dispenserUpgradeInserted && curXpFluid != null)
-                || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) && itemHandlerSideConfigurator.getHandler(facing) != null)
+        return ((this.isConnectedToPlayer &&
+                (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.dispenserUpgradeInserted && this.curXpFluid != null)
+                || capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) && this.itemHandlerSideConfigurator.getHandler(facing) != null)
                 || capability == CapabilityEnergy.ENERGY
                 || super.hasCapability(capability, facing);
 
@@ -244,22 +244,22 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (dispenserUpgradeInserted) {
+            if (this.dispenserUpgradeInserted) {
                 if (facing == EnumFacing.UP && ConfigHandler.machineProperties.aerialInterfaceArmorCompat) {
                     // https://github.com/TeamPneumatic/pnc-repressurized/issues/278
-                    IItemHandler handler = itemHandlerSideConfigurator.getHandler(EnumFacing.UP);
+                    IItemHandler handler = this.itemHandlerSideConfigurator.getHandler(EnumFacing.UP);
                     if (handler instanceof PlayerArmorInvHandler) {
                         return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(handler);
                     }
                 }
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(playerFoodHandler);
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.playerFoodHandler);
             } else {
-                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(itemHandlerSideConfigurator.getHandler(facing));
+                return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.itemHandlerSideConfigurator.getHandler(facing));
             }
-        } else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && dispenserUpgradeInserted && curXpFluid != null) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(playerExperienceHandler);
+        } else if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY && this.dispenserUpgradeInserted && this.curXpFluid != null) {
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.playerExperienceHandler);
         } else if (capability == CapabilityEnergy.ENERGY) {
-            return CapabilityEnergy.ENERGY.cast(energyStorage);
+            return CapabilityEnergy.ENERGY.cast(this.energyStorage);
         } else {
             return super.getCapability(capability, facing);
         }
@@ -273,26 +273,26 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstoneMode = tag.getInteger("redstoneMode");
-        feedMode = tag.getInteger("feedMode");
-        setPlayer(tag.getString("playerName"), tag.getString("playerUUID"));
-        curXpFluid = tag.hasKey("curXpFluid") ? FluidRegistry.getFluid(tag.getString("curXpFluid")) : null;
-        energyStorage.readFromNBT(tag);
+        this.redstoneMode = tag.getInteger("redstoneMode");
+        this.feedMode = tag.getInteger("feedMode");
+        this.setPlayer(tag.getString("playerName"), tag.getString("playerUUID"));
+        this.curXpFluid = tag.hasKey("curXpFluid") ? FluidRegistry.getFluid(tag.getString("curXpFluid")) : null;
+        this.energyStorage.readFromNBT(tag);
 
-        curXPFluidIndex = curXpFluid == null ? -1 : PneumaticCraftAPIHandler.getInstance().availableLiquidXPs.indexOf(curXpFluid);
-        dispenserUpgradeInserted = getUpgrades(EnumUpgrade.DISPENSER) > 0;
+        this.curXPFluidIndex = this.curXpFluid == null ? -1 : PneumaticCraftAPIHandler.getInstance().availableLiquidXPs.indexOf(this.curXpFluid);
+        this.dispenserUpgradeInserted = this.getUpgrades(EnumUpgrade.DISPENSER) > 0;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         // Write the ItemStacks in the inventory to NBT
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setInteger("feedMode", feedMode);
-        tag.setString("playerName", playerName);
-        tag.setString("playerUUID", playerUUID);
-        if (curXpFluid != null) tag.setString("curXpFluid", curXpFluid.getName());
-        energyStorage.writeToNBT(tag);
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setInteger("feedMode", this.feedMode);
+        tag.setString("playerName", this.playerName);
+        tag.setString("playerUUID", this.playerUUID);
+        if (this.curXpFluid != null) tag.setString("curXpFluid", this.curXpFluid.getName());
+        this.energyStorage.writeToNBT(tag);
         return tag;
     }
 
@@ -303,46 +303,46 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public int getComparatorValue() {
-        return shouldEmitRedstone() ? 15 : 0;
+        return this.shouldEmitRedstone() ? 15 : 0;
     }
 
     private void scanForChargeableItems() {
-        chargeableSlots.clear();
-        if (isConnectedToPlayer) {
-            InventoryPlayer inv = playerRef.get().inventory;
+        this.chargeableSlots.clear();
+        if (this.isConnectedToPlayer) {
+            InventoryPlayer inv = this.playerRef.get().inventory;
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 if (inv.getStackInSlot(i).hasCapability(CapabilityEnergy.ENERGY, null)) {
-                    chargeableSlots.add(i);
+                    this.chargeableSlots.add(i);
                 }
             }
         }
     }
 
     private void supplyEnergyToPlayer() {
-        if (!isConnectedToPlayer) return;
+        if (!this.isConnectedToPlayer) return;
 
-        InventoryPlayer inv = playerRef.get().inventory;
-        for (int slot : chargeableSlots) {
+        InventoryPlayer inv = this.playerRef.get().inventory;
+        for (int slot : this.chargeableSlots) {
             ItemStack stack = inv.getStackInSlot(slot);
             if (stack.hasCapability(CapabilityEnergy.ENERGY, null)) {
                 IEnergyStorage receivingStorage = stack.getCapability(CapabilityEnergy.ENERGY, null);
-                int energyLeft = energyStorage.getEnergyStored();
+                int energyLeft = this.energyStorage.getEnergyStored();
                 if (energyLeft > 0) {
-                    energyStorage.extractEnergy(receivingStorage.receiveEnergy(Math.min(energyLeft, RF_PER_TICK), false), false);
+                    this.energyStorage.extractEnergy(receivingStorage.receiveEnergy(Math.min(energyLeft, RF_PER_TICK), false), false);
                 }
-                if (energyStorage.getEnergyStored() == 0) {
+                if (this.energyStorage.getEnergyStored() == 0) {
                     break;
                 }
             }
         }
 
-        if (Baubles.available && energyStorage.getEnergyStored() > 0) {
-            Baubles.chargeBaubles(getPlayer(), energyStorage, RF_PER_TICK);
+        if (Baubles.available && this.energyStorage.getEnergyStored() > 0) {
+            Baubles.chargeBaubles(this.getPlayer(), this.energyStorage, RF_PER_TICK);
         }
     }
 
@@ -358,86 +358,87 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
     @Override
     public List<SideConfigurator> getSideConfigurators() {
-        return Collections.singletonList(itemHandlerSideConfigurator);
+        return Collections.singletonList(this.itemHandlerSideConfigurator);
     }
 
     @Override
     public EnumFacing byIndex() {
-        return getRotation();
+        return this.getRotation();
     }
 
     private abstract class PlayerInvHandler implements IItemHandler {
         /**
          * Get an item handler for the current player, which must be non-null.
+         *
          * @return an item handler for the appropriate part of the player's inventory
          */
         protected abstract IItemHandler getInvWrapper();
 
         @Override
         public int getSlots() {
-            return playerRef.get() == null ? 0 : getInvWrapper().getSlots();
+            return TileEntityAerialInterface.this.playerRef.get() == null ? 0 : this.getInvWrapper().getSlots();
         }
 
         @Nonnull
         @Override
         public ItemStack getStackInSlot(int slot) {
-            return playerRef.get() == null ? ItemStack.EMPTY : getInvWrapper().getStackInSlot(slot);
+            return TileEntityAerialInterface.this.playerRef.get() == null ? ItemStack.EMPTY : this.getInvWrapper().getStackInSlot(slot);
         }
 
         @Nonnull
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (playerRef.get() == null || getPressure() < getMinWorkingPressure()) return stack;
+            if (TileEntityAerialInterface.this.playerRef.get() == null || TileEntityAerialInterface.this.getPressure() < TileEntityAerialInterface.this.getMinWorkingPressure()) return stack;
 
-            return getInvWrapper().insertItem(slot, stack, simulate);
+            return this.getInvWrapper().insertItem(slot, stack, simulate);
         }
 
         @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (playerRef.get() == null || getPressure() < getMinWorkingPressure()) return ItemStack.EMPTY;
+            if (TileEntityAerialInterface.this.playerRef.get() == null || TileEntityAerialInterface.this.getPressure() < TileEntityAerialInterface.this.getMinWorkingPressure()) return ItemStack.EMPTY;
 
-            return getInvWrapper().extractItem(slot, amount, simulate);
+            return this.getInvWrapper().extractItem(slot, amount, simulate);
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return playerRef.get() == null ? 1 : getInvWrapper().getSlotLimit(slot);
+            return TileEntityAerialInterface.this.playerRef.get() == null ? 1 : this.getInvWrapper().getSlotLimit(slot);
         }
     }
 
     private class PlayerMainInvHandler extends PlayerInvHandler {
         @Override
         protected IItemHandler getInvWrapper() {
-            return new PlayerMainInvWrapper(getPlayer().inventory);
+            return new PlayerMainInvWrapper(TileEntityAerialInterface.this.getPlayer().inventory);
         }
     }
 
     private class PlayerArmorInvHandler extends PlayerInvHandler {
         @Override
         protected IItemHandler getInvWrapper() {
-            return new PlayerArmorInvWrapper(getPlayer().inventory);
+            return new PlayerArmorInvWrapper(TileEntityAerialInterface.this.getPlayer().inventory);
         }
     }
 
     private class PlayerOffhandInvHandler extends PlayerInvHandler {
         @Override
         protected IItemHandler getInvWrapper() {
-            return new PlayerOffhandInvWrapper(getPlayer().inventory);
+            return new PlayerOffhandInvWrapper(TileEntityAerialInterface.this.getPlayer().inventory);
         }
     }
 
     private class PlayerEnderInvHandler extends PlayerInvHandler {
         @Override
         protected IItemHandler getInvWrapper() {
-            return new InvWrapper(getPlayer().getInventoryEnderChest());
+            return new InvWrapper(TileEntityAerialInterface.this.getPlayer().getInventoryEnderChest());
         }
     }
 
     private class PlayerBaublesHandler extends PlayerInvHandler {
         @Override
         protected IItemHandler getInvWrapper() {
-            return getPlayer().getCapability(Baubles.CAPABILITY_BAUBLES, null);
+            return TileEntityAerialInterface.this.getPlayer().getCapability(Baubles.CAPABILITY_BAUBLES, null);
         }
     }
 
@@ -456,10 +457,10 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
         @Nonnull
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            if (getPressure() < getMinWorkingPressure()) return stack;
+            if (TileEntityAerialInterface.this.getPressure() < TileEntityAerialInterface.this.getMinWorkingPressure()) return stack;
 
-            EntityPlayer player = getPlayer();
-            if (player == null || getFoodValue(stack) <= 0 || !okToFeed(stack, player)) {
+            EntityPlayer player = TileEntityAerialInterface.this.getPlayer();
+            if (player == null || this.getFoodValue(stack) <= 0 || !this.okToFeed(stack, player)) {
                 return stack;
             }
 
@@ -481,9 +482,9 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
         }
 
         private boolean okToFeed(@Nonnull ItemStack stack, EntityPlayer player) {
-            int foodValue = getFoodValue(stack);
+            int foodValue = this.getFoodValue(stack);
             int curFoodLevel = player.getFoodStats().getFoodLevel();
-            int tmpFeedMode = feedMode;
+            int tmpFeedMode = TileEntityAerialInterface.this.feedMode;
             if (tmpFeedMode == 2) {
                 tmpFeedMode = player.getMaxHealth() - player.getHealth() > 0 ? 1 : 0;
             }
@@ -516,13 +517,13 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
         @Override
         public IFluidTankProperties[] getTankProperties() {
-            if (curXpFluid != null) {
-                EntityPlayer player = getPlayer();
+            if (TileEntityAerialInterface.this.curXpFluid != null) {
+                EntityPlayer player = TileEntityAerialInterface.this.getPlayer();
                 if (player != null) {
-                    return new FluidTankProperties[] {
-                        new FluidTankProperties(
-                                new FluidStack(curXpFluid, EnchantmentUtils.getPlayerXP(player) * PneumaticCraftAPIHandler.getInstance().liquidXPs.get(curXpFluid)),
-                                Integer.MAX_VALUE)
+                    return new FluidTankProperties[]{
+                            new FluidTankProperties(
+                                    new FluidStack(TileEntityAerialInterface.this.curXpFluid, EnchantmentUtils.getPlayerXP(player) * PneumaticCraftAPIHandler.getInstance().liquidXPs.get(TileEntityAerialInterface.this.curXpFluid)),
+                                    Integer.MAX_VALUE)
                     };
                 }
             }
@@ -531,8 +532,8 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
 
         @Override
         public int fill(FluidStack resource, boolean doFill) {
-            if (resource != null && canFill(resource.getFluid())) {
-                EntityPlayer player = getPlayer();
+            if (resource != null && this.canFill(resource.getFluid())) {
+                EntityPlayer player = TileEntityAerialInterface.this.getPlayer();
                 if (player != null) {
                     int liquidToXP = PneumaticCraftAPIHandler.getInstance().liquidXPs.get(resource.getFluid());
                     int pointsAdded = resource.amount / liquidToXP;
@@ -546,17 +547,17 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
         }
 
         private boolean canFill(Fluid fluid) {
-            return dispenserUpgradeInserted && fluid != null && fluid == curXpFluid
+            return TileEntityAerialInterface.this.dispenserUpgradeInserted && fluid != null && fluid == TileEntityAerialInterface.this.curXpFluid
                     && PneumaticCraftAPIHandler.getInstance().liquidXPs.containsKey(fluid)
-                    && getPlayer() != null
-                    && getPressure() >= getMinWorkingPressure();
+                    && TileEntityAerialInterface.this.getPlayer() != null
+                    && TileEntityAerialInterface.this.getPressure() >= TileEntityAerialInterface.this.getMinWorkingPressure();
         }
 
         @Nullable
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
-            if (resource != null && canDrain(resource.getFluid())) {
-                EntityPlayer player = getPlayer();
+            if (resource != null && this.canDrain(resource.getFluid())) {
+                EntityPlayer player = TileEntityAerialInterface.this.getPlayer();
                 if (player != null) {
                     int liquidToXP = PneumaticCraftAPIHandler.getInstance().liquidXPs.get(resource.getFluid());
                     int pointsDrained = Math.min(EnchantmentUtils.getPlayerXP(player), resource.amount / liquidToXP);
@@ -568,17 +569,17 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
         }
 
         private boolean canDrain(Fluid fluid) {
-            return dispenserUpgradeInserted
+            return TileEntityAerialInterface.this.dispenserUpgradeInserted
                     && (fluid == null || PneumaticCraftAPIHandler.getInstance().liquidXPs.containsKey(fluid))
-                    && getPlayer() != null
-                    && getPressure() >= getMinWorkingPressure();
+                    && TileEntityAerialInterface.this.getPlayer() != null
+                    && TileEntityAerialInterface.this.getPressure() >= TileEntityAerialInterface.this.getMinWorkingPressure();
         }
 
         @Nullable
         @Override
         public FluidStack drain(int maxDrain, boolean doDrain) {
-            if (curXpFluid == null) return null;
-            return drain(new FluidStack(curXpFluid, maxDrain), doDrain);
+            if (TileEntityAerialInterface.this.curXpFluid == null) return null;
+            return this.drain(new FluidStack(TileEntityAerialInterface.this.curXpFluid, maxDrain), doDrain);
         }
     }
 }

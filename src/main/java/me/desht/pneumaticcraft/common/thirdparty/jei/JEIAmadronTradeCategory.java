@@ -37,16 +37,16 @@ public class JEIAmadronTradeCategory extends PneumaticCraftCategory<JEIAmadronTr
     static class AmadronOfferWrapper extends PneumaticCraftCategory.MultipleInputOutputRecipeWrapper {
         private AmadronOfferWrapper(AmadronOffer offer) {
             if (offer.getInput() instanceof ItemStack)
-                addIngredient(new PositionedStack((ItemStack) offer.getInput(), 6, 15));
+                this.addIngredient(new PositionedStack((ItemStack) offer.getInput(), 6, 15));
             if (offer.getOutput() instanceof ItemStack)
-                addOutput(new PositionedStack((ItemStack) offer.getOutput(), 51, 15));
+                this.addOutput(new PositionedStack((ItemStack) offer.getOutput(), 51, 15));
             if (offer.getInput() instanceof FluidStack)
-                addInputLiquid(new WidgetCustomTank(6, 15, (FluidStack) offer.getInput()));
+                this.addInputLiquid(new WidgetCustomTank(6, 15, (FluidStack) offer.getInput()));
             if (offer.getOutput() instanceof FluidStack)
-                addOutputLiquid(new WidgetCustomTank(51, 15, (FluidStack) offer.getOutput()));
+                this.addOutputLiquid(new WidgetCustomTank(51, 15, (FluidStack) offer.getOutput()));
             WidgetAmadronOffer widget = new WidgetAmadronOffer(0, 0, 0, offer).setDrawBackground(false);
             widget.setCanBuy(true);
-            addWidget(widget);
+            this.addWidget(widget);
         }
     }
 

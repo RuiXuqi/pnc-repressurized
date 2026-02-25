@@ -22,28 +22,28 @@ public class GuiElectricCompressor extends GuiPneumaticContainerBase<TileEntityE
     public void initGui() {
         super.initGui();
 
-        inputStat = addAnimatedStat("Input", IC2.glassFibreCable, 0xFF555555, false);
+        this.inputStat = this.addAnimatedStat("Input", IC2.glassFibreCable, 0xFF555555, false);
 
-        addWidget(new WidgetTemperature(0, guiLeft + 87, guiTop + 20, 273, 675,
-                te.getHeatExchangerLogic(null), 325, 625));
+        this.addWidget(new WidgetTemperature(0, this.guiLeft + 87, this.guiTop + 20, 273, 675,
+                this.te.getHeatExchangerLogic(null), 325, 625));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 0x404040);
+        this.fontRenderer.drawString("Upgr.", 53, 19, 0x404040);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        inputStat.setText(getOutputStat());
+        this.inputStat.setText(this.getOutputStat());
     }
 
     private List<String> getOutputStat() {
         List<String> textList = new ArrayList<>();
         textList.add(TextFormatting.GRAY + "Max power input:");
-        textList.add(TextFormatting.BLACK.toString() + te.getMaxSafeInput() + " EU/tick");
+        textList.add(TextFormatting.BLACK.toString() + this.te.getMaxSafeInput() + " EU/tick");
         return textList;
     }
 
@@ -51,18 +51,18 @@ public class GuiElectricCompressor extends GuiPneumaticContainerBase<TileEntityE
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
         pressureStatText.add("\u00a77Currently producing:");
-        pressureStatText.add("\u00a70" + te.lastEnergyProduction + " mL/tick.");
+        pressureStatText.add("\u00a70" + this.te.lastEnergyProduction + " mL/tick.");
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (te.lastEnergyProduction == 0) {
+        if (this.te.lastEnergyProduction == 0) {
             textList.add(TextFormatting.GRAY + "There is no EU input!");
             textList.add(TextFormatting.BLACK + "Add a (bigger) EU supply to the network.");
         }
-        if (te.getEfficiency() < 100) {
-            textList.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", te.getEfficiency() + "%%"));
+        if (this.te.getEfficiency() < 100) {
+            textList.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", this.te.getEfficiency() + "%%"));
         }
     }
 }

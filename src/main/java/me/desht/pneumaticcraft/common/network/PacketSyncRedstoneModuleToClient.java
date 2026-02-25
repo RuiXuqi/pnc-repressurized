@@ -51,21 +51,21 @@ public class PacketSyncRedstoneModuleToClient extends LocationIntPacket<PacketSy
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
 
-        buf.writeByte(dir.ordinal());
-        buf.writeByte(side);
-        buf.writeByte(outputLevel);
-        buf.writeByte(inputLevel);
-        buf.writeByte(channel);
+        buf.writeByte(this.dir.ordinal());
+        buf.writeByte(this.side);
+        buf.writeByte(this.outputLevel);
+        buf.writeByte(this.inputLevel);
+        buf.writeByte(this.channel);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
 
-        dir = ModuleRedstone.EnumRedstoneDirection.values()[buf.readByte()];
-        side = buf.readByte();
-        outputLevel = buf.readByte();
-        inputLevel = buf.readByte();
-        channel = buf.readByte();
+        this.dir = ModuleRedstone.EnumRedstoneDirection.values()[buf.readByte()];
+        this.side = buf.readByte();
+        this.outputLevel = buf.readByte();
+        this.inputLevel = buf.readByte();
+        this.channel = buf.readByte();
     }
 }

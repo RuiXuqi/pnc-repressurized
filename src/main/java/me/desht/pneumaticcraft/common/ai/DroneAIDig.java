@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 public class DroneAIDig extends DroneAIBlockInteraction<ProgWidgetAreaItemBase> {
 
     /**
-     * @param drone the drone
+     * @param drone  the drone
      * @param widget needs to implement IBlockOrdered, IToolUser
      */
     public DroneAIDig(IDroneBase drone, ProgWidgetAreaItemBase widget) {
@@ -28,23 +28,23 @@ public class DroneAIDig extends DroneAIBlockInteraction<ProgWidgetAreaItemBase> 
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        IBlockState blockState = worldCache.getBlockState(pos);
+        IBlockState blockState = this.worldCache.getBlockState(pos);
         Block block = blockState.getBlock();
-        if (!worldCache.isAirBlock(pos) && !ignoreBlock(block)) {
+        if (!this.worldCache.isAirBlock(pos) && !ignoreBlock(block)) {
             NonNullList<ItemStack> droppedStacks = NonNullList.create();
-            if (block.canSilkHarvest(drone.world(), pos, blockState, drone.getFakePlayer())) {
+            if (block.canSilkHarvest(this.drone.world(), pos, blockState, this.drone.getFakePlayer())) {
                 droppedStacks.add(getSilkTouchBlock(block, blockState));
             } else {
-                block.getDrops(droppedStacks, drone.world(), pos, blockState, 0);
+                block.getDrops(droppedStacks, this.drone.world(), pos, blockState, 0);
             }
             for (ItemStack droppedStack : droppedStacks) {
-                if (widget.isItemValidForFilters(droppedStack, blockState)) {
-                    return swapBestItemToFirstSlot(pos) || !((IToolUser)widget).requiresTool();
+                if (this.widget.isItemValidForFilters(droppedStack, blockState)) {
+                    return this.swapBestItemToFirstSlot(pos) || !((IToolUser) this.widget).requiresTool();
                 }
             }
-            if (widget.isItemValidForFilters(ItemStack.EMPTY, blockState)) {
+            if (this.widget.isItemValidForFilters(ItemStack.EMPTY, blockState)) {
                 // try a by-block check
-                return swapBestItemToFirstSlot(pos) || !((IToolUser)widget).requiresTool();
+                return this.swapBestItemToFirstSlot(pos) || !((IToolUser) this.widget).requiresTool();
             }
         }
         return false;
@@ -57,47 +57,47 @@ public class DroneAIDig extends DroneAIBlockInteraction<ProgWidgetAreaItemBase> 
 
     //gui.progWidget.dig.debug.missingDiggingTool
     private boolean swapBestItemToFirstSlot(BlockPos pos) {
-        
-        ItemStack oldCurrentStack = drone.getInv().getStackInSlot(0).copy();
-        drone.getInv().setStackInSlot(0, ItemStack.EMPTY);
-        float baseSoftness = worldCache.getBlockState(pos).getPlayerRelativeBlockHardness(drone.getFakePlayer(), drone.world(), pos);
-        drone.getInv().setStackInSlot(0, oldCurrentStack);
+
+        ItemStack oldCurrentStack = this.drone.getInv().getStackInSlot(0).copy();
+        this.drone.getInv().setStackInSlot(0, ItemStack.EMPTY);
+        float baseSoftness = this.worldCache.getBlockState(pos).getPlayerRelativeBlockHardness(this.drone.getFakePlayer(), this.drone.world(), pos);
+        this.drone.getInv().setStackInSlot(0, oldCurrentStack);
         boolean hasDiggingTool = false;
-        
+
         int bestSlot = 0;
         float bestSoftness = Float.MIN_VALUE;
-        for (int i = 0; i < drone.getInv().getSlots(); i++) {
-            drone.getInv().setStackInSlot(0, drone.getInv().getStackInSlot(i));
-            float softness = worldCache.getBlockState(pos).getPlayerRelativeBlockHardness(drone.getFakePlayer(), drone.world(), pos);
+        for (int i = 0; i < this.drone.getInv().getSlots(); i++) {
+            this.drone.getInv().setStackInSlot(0, this.drone.getInv().getStackInSlot(i));
+            float softness = this.worldCache.getBlockState(pos).getPlayerRelativeBlockHardness(this.drone.getFakePlayer(), this.drone.world(), pos);
             if (softness > bestSoftness) {
                 bestSlot = i;
                 bestSoftness = softness;
-                
-                if(softness > baseSoftness){
+
+                if (softness > baseSoftness) {
                     hasDiggingTool = true;
                 }
             }
         }
-        drone.getInv().setStackInSlot(0, oldCurrentStack);
+        this.drone.getInv().setStackInSlot(0, oldCurrentStack);
         if (bestSlot != 0) {
-            ItemStack bestItem = drone.getInv().getStackInSlot(bestSlot).copy();
-            drone.getInv().setStackInSlot(bestSlot, drone.getInv().getStackInSlot(0));
-            drone.getInv().setStackInSlot(0, bestItem);
+            ItemStack bestItem = this.drone.getInv().getStackInSlot(bestSlot).copy();
+            this.drone.getInv().setStackInSlot(bestSlot, this.drone.getInv().getStackInSlot(0));
+            this.drone.getInv().setStackInSlot(0, bestItem);
         }
         return hasDiggingTool;
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        PlayerInteractionManager manager = drone.getFakePlayer().interactionManager;
+        PlayerInteractionManager manager = this.drone.getFakePlayer().interactionManager;
         if (!manager.isDestroyingBlock || !manager.receivedFinishDiggingPacket) { //is not destroying and is not acknowledged.
-            IBlockState blockState = worldCache.getBlockState(pos);
+            IBlockState blockState = this.worldCache.getBlockState(pos);
             Block block = blockState.getBlock();
-            if (!ignoreBlock(block) && isBlockValidForFilter(worldCache, drone, pos, widget)) {
-                if (blockState.getBlockHardness(drone.world(), pos) < 0) {
-                    addToBlacklist(pos);
-                    drone.addDebugEntry("gui.progWidget.dig.debug.cantDigBlock", pos);
-                    drone.setDugBlock(null);
+            if (!ignoreBlock(block) && isBlockValidForFilter(this.worldCache, this.drone, pos, this.widget)) {
+                if (blockState.getBlockHardness(this.drone.world(), pos) < 0) {
+                    this.addToBlacklist(pos);
+                    this.drone.addDebugEntry("gui.progWidget.dig.debug.cantDigBlock", pos);
+                    this.drone.setDugBlock(null);
                     return false;
                 }
                 manager.onBlockClicked(pos, EnumFacing.DOWN);
@@ -108,10 +108,10 @@ public class DroneAIDig extends DroneAIBlockInteraction<ProgWidgetAreaItemBase> 
                     drone.setDugBlock(null);
                     return false;
                 }*/
-                drone.setDugBlock(pos);
+                this.drone.setDugBlock(pos);
                 return true;
             }
-            drone.setDugBlock(null);
+            this.drone.setDugBlock(null);
             return false;
         } else {
             return true;

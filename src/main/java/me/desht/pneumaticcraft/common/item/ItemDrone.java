@@ -37,7 +37,7 @@ public class ItemDrone extends ItemPneumatic implements IPressurizable, IChargin
 
     ItemDrone(String registryName) {
         super(registryName);
-        setMaxDamage(1);
+        this.setMaxDamage(1);
     }
 
     ItemDrone() {
@@ -54,13 +54,13 @@ public class ItemDrone extends ItemPneumatic implements IPressurizable, IChargin
                 AdvancementTriggers.LOGISTICS_DRONE_DEPLOYED.trigger((EntityPlayerMP) player);
             }
             BlockPos placePos = pos.offset(facing);
-            spawnDrone(player, world, pos, facing, placePos, iStack);
+            this.spawnDrone(player, world, pos, facing, placePos, iStack);
             iStack.shrink(1);
         }
         return EnumActionResult.SUCCESS;
     }
 
-    public void spawnDrone(EntityPlayer player, World world, BlockPos clickPos, EnumFacing facing, BlockPos placePos, ItemStack iStack){
+    public void spawnDrone(EntityPlayer player, World world, BlockPos clickPos, EnumFacing facing, BlockPos placePos, ItemStack iStack) {
         EntityDrone drone = new EntityDrone(world, player);
 
         drone.setPosition(placePos.getX() + 0.5, placePos.getY() + 0.5, placePos.getZ() + 0.5);
@@ -90,10 +90,10 @@ public class ItemDrone extends ItemPneumatic implements IPressurizable, IChargin
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             subItems.add(new ItemStack(this));
             ItemStack chargedStack = new ItemStack(this);
-            addAir(chargedStack, (int) (PneumaticValues.DRONE_VOLUME * PneumaticValues.DRONE_MAX_PRESSURE));
+            this.addAir(chargedStack, (int) (PneumaticValues.DRONE_VOLUME * PneumaticValues.DRONE_MAX_PRESSURE));
             subItems.add(chargedStack);
         }
     }
@@ -150,7 +150,7 @@ public class ItemDrone extends ItemPneumatic implements IPressurizable, IChargin
     public Set<Item> getApplicableUpgrades() {
         Set<Item> set = new HashSet<>();
         for (EnumUpgrade upgrade : EnumUpgrade.values()) {
-            if (upgradeApplies(upgrade)) {
+            if (this.upgradeApplies(upgrade)) {
                 set.add(Itemss.upgrades.get(upgrade));
             }
         }
@@ -174,7 +174,7 @@ public class ItemDrone extends ItemPneumatic implements IPressurizable, IChargin
 
     @Override
     public String getName() {
-        return getTranslationKey() + ".name";
+        return this.getTranslationKey() + ".name";
     }
 
 }

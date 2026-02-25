@@ -23,7 +23,7 @@ public class HeatUtil {
                 float redAndGreen = i / 10F;
                 HEAT_TINT_MAP[i] = new float[]{redAndGreen * 0.9F, redAndGreen, 1F};
             } else {
-                HEAT_TINT_MAP[i] = new float[] { 1F, 1F, 1F };
+                HEAT_TINT_MAP[i] = new float[]{1F, 1F, 1F};
             }
         }
     }
@@ -55,6 +55,7 @@ public class HeatUtil {
 
     /**
      * Get the efficiency of an advanced compressor based on its temperature.
+     *
      * @param temperature the temperature
      * @return efficiency percentage
      */

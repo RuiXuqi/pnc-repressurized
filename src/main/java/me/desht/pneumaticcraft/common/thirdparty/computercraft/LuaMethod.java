@@ -17,12 +17,12 @@ public abstract class LuaMethod implements ILuaMethod {
 
     @Override
     public String getMethodName() {
-        return methodName;
+        return this.methodName;
     }
 
     protected EnumFacing getDirForString(String luaParm) {
         for (EnumFacing dir : EnumFacing.VALUES) {
-            if (dir.toString().toLowerCase().equals(luaParm.toLowerCase())) {
+            if (dir.toString().equalsIgnoreCase(luaParm)) {
                 return dir;
             }
         }
@@ -39,12 +39,12 @@ public abstract class LuaMethod implements ILuaMethod {
 
     protected void requireArgs(Object[] args, int min, int max, String desc) {
         Validate.isTrue(args.length >= min && args.length <= max,
-                String.format("Method '%s' takes between %d and %d arguments! (%s)", getMethodName(), min, max, desc));
+                String.format("Method '%s' takes between %d and %d arguments! (%s)", this.getMethodName(), min, max, desc));
     }
 
     protected void requireArgs(Object[] args, int len, String desc) {
         Validate.isTrue(args.length == len,
-                String.format("Method '%s' takes exactly %d arguments! (%s)", getMethodName(), len, desc));
+                String.format("Method '%s' takes exactly %d arguments! (%s)", this.getMethodName(), len, desc));
     }
 
     protected void requireArgs(Object[] args, int[] argcount, String desc) {
@@ -53,10 +53,10 @@ public abstract class LuaMethod implements ILuaMethod {
         }
 
         throw new IllegalArgumentException(String.format("Method '%s' takes either %s arguments! (%s)",
-                getMethodName(), StringUtils.join(ArrayUtils.toObject(argcount), " or "), desc));
+                this.getMethodName(), StringUtils.join(ArrayUtils.toObject(argcount), " or "), desc));
     }
 
     protected void requireNoArgs(Object[] args) {
-        Validate.isTrue(args.length == 0, String.format("Method '%s' takes no arguments!", getMethodName()));
+        Validate.isTrue(args.length == 0, String.format("Method '%s' takes no arguments!", this.getMethodName()));
     }
 }

@@ -15,12 +15,12 @@ public class ContainerChargingStationItemInventory extends ContainerPneumaticBas
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                addSlotToContainer(new UpgradeSlot(te, i * 3 + j, 31 + j * 18, 24 + i * 18));
+                this.addSlotToContainer(new UpgradeSlot(te, i * 3 + j, 31 + j * 18, 24 + i * 18));
             }
         }
 
-        addPlayerSlots(inventoryPlayer, 84);
-        addArmorSlots(inventoryPlayer, 9, 8);
+        this.addPlayerSlots(inventoryPlayer, 84);
+        this.addArmorSlots(inventoryPlayer, 9, 8);
     }
 
     private static class UpgradeSlot extends SlotItemHandler {
@@ -31,7 +31,7 @@ public class ContainerChargingStationItemInventory extends ContainerPneumaticBas
         @Override
         public void onSlotChanged() {
             super.onSlotChanged();
-            ((ChargeableItemHandler) getItemHandler()).writeToNBT();
+            ((ChargeableItemHandler) this.getItemHandler()).writeToNBT();
         }
     }
 }

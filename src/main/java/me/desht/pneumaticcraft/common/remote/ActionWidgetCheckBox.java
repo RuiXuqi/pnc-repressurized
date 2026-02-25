@@ -18,17 +18,17 @@ public class ActionWidgetCheckBox extends ActionWidgetVariable<GuiCheckBox> impl
     @Override
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
         super.readFromNBT(tag, guiLeft, guiTop);
-        widget = new GuiCheckBox(-1, tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, 0xFF404040, tag.getString("text"));
-        setTooltip(tag.getString("tooltip"));
+        this.widget = new GuiCheckBox(-1, tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, 0xFF404040, tag.getString("text"));
+        this.setTooltip(tag.getString("tooltip"));
     }
 
     @Override
     public NBTTagCompound toNBT(int guiLeft, int guiTop) {
         NBTTagCompound tag = super.toNBT(guiLeft, guiTop);
-        tag.setInteger("x", widget.x - guiLeft);
-        tag.setInteger("y", widget.y - guiTop);
-        tag.setString("text", widget.text);
-        tag.setString("tooltip", widget.getTooltip());
+        tag.setInteger("x", this.widget.x - guiLeft);
+        tag.setInteger("y", this.widget.y - guiTop);
+        tag.setString("text", this.widget.text);
+        tag.setString("tooltip", this.widget.getTooltip());
         return tag;
     }
 
@@ -39,37 +39,37 @@ public class ActionWidgetCheckBox extends ActionWidgetVariable<GuiCheckBox> impl
 
     @Override
     public void setText(String text) {
-        widget.text = text;
+        this.widget.text = text;
     }
 
     @Override
     public String getText() {
-        return widget.text;
+        return this.widget.text;
     }
 
     @Override
     public void onActionPerformed() {
-        NetworkHandler.sendToServer(new PacketSetGlobalVariable(getVariableName(), widget.checked));
+        NetworkHandler.sendToServer(new PacketSetGlobalVariable(this.getVariableName(), this.widget.checked));
     }
 
     @Override
     public void onVariableChange() {
-        widget.checked = GlobalVariableManager.getInstance().getBoolean(getVariableName());
+        this.widget.checked = GlobalVariableManager.getInstance().getBoolean(this.getVariableName());
     }
 
     @Override
     public void setWidgetPos(int x, int y) {
-        widget.x = x;
-        widget.y = y;
+        this.widget.x = x;
+        this.widget.y = y;
     }
 
     @Override
     public void setTooltip(String text) {
-        widget.setTooltip(text);
+        this.widget.setTooltip(text);
     }
 
     @Override
     public String getTooltip() {
-        return widget.getTooltip();
+        return this.widget.getTooltip();
     }
 }

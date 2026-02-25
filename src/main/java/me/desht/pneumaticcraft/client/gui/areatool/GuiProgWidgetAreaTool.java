@@ -7,10 +7,10 @@ import me.desht.pneumaticcraft.common.progwidgets.ProgWidgetArea;
 
 import java.io.IOException;
 
-public class GuiProgWidgetAreaTool extends GuiProgWidgetArea{
+public class GuiProgWidgetAreaTool extends GuiProgWidgetArea {
     private final Runnable returnAction;
-    
-    public GuiProgWidgetAreaTool(ProgWidgetArea widget, Runnable returnAction){
+
+    public GuiProgWidgetAreaTool(ProgWidgetArea widget, Runnable returnAction) {
         super(widget, null);
         this.returnAction = returnAction;
     }
@@ -19,14 +19,14 @@ public class GuiProgWidgetAreaTool extends GuiProgWidgetArea{
     public void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == 1) {
-            onGuiClosed();
-            NetworkHandler.sendToServer(new PacketUpdateGPSAreaTool(widget));
-            returnAction.run();
+            this.onGuiClosed();
+            NetworkHandler.sendToServer(new PacketUpdateGPSAreaTool(this.widget));
+            this.returnAction.run();
         }
     }
-    
+
     @Override
-    public boolean showShowAreaButtons(){
+    public boolean showShowAreaButtons() {
         return false;
     }
 }

@@ -30,64 +30,64 @@ public class GuiProgWidgetItemFilter extends GuiProgWidgetOptionBase {
 
     public GuiProgWidgetItemFilter(IProgWidget widget, GuiProgrammer guiProgrammer) {
         super(widget, guiProgrammer);
-        filterWidget = (ProgWidgetItemFilter) widget;
+        this.filterWidget = (ProgWidgetItemFilter) widget;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        buttonList.add(new GuiButton(0, guiLeft + 4, guiTop + 20, 70, 20, "Search item..."));
-        buttonList.add(new GuiButton(1, guiLeft + 78, guiTop + 20, 100, 20, "Search inventory..."));
-        decButton = new GuiButton(2, guiLeft + 140, guiTop + 87, 10, 12, "-");
-        incButton = new GuiButton(3, guiLeft + 167, guiTop + 87, 10, 12, "+");
-        buttonList.add(decButton);
-        buttonList.add(incButton);
-        checkBoxUseDamage = new GuiCheckBox(0, guiLeft + 4, guiTop + 72, 0xFF404040, "Use metadata / damage values");
-        checkBoxUseDamage.setTooltip(Arrays.asList("Check to handle differently damaged tools", "or different colors of Wool as different."));
-        checkBoxUseDamage.checked = filterWidget.useMetadata;
-        addWidget(checkBoxUseDamage);
-        checkBoxUseNBT = new GuiCheckBox(2, guiLeft + 4, guiTop + 108, 0xFF404040, "Use NBT");
-        checkBoxUseNBT.setTooltip(Arrays.asList("Check to handle items like Enchanted Books", "or Firework as different."));
-        checkBoxUseNBT.checked = filterWidget.useNBT;
-        addWidget(checkBoxUseNBT);
-        checkBoxUseOreDict = new GuiCheckBox(3, guiLeft + 4, guiTop + 120, 0xFF404040, "Use Ore Dictionary");
-        checkBoxUseOreDict.setTooltip(Arrays.asList("Check to handle items registered in the", "Ore Dictionary as the same."));
-        checkBoxUseOreDict.checked = filterWidget.useOreDict;
-        addWidget(checkBoxUseOreDict);
-        checkBoxUseModSimilarity = new GuiCheckBox(4, guiLeft + 4, guiTop + 132, 0xFF404040, "Use Mod similarity");
-        checkBoxUseModSimilarity.setTooltip(Arrays.asList("Check to handle items from the", "same mod as the same."));
-        checkBoxUseModSimilarity.checked = filterWidget.useModSimilarity;
-        addWidget(checkBoxUseModSimilarity);
-        checkBoxMatchBlock = new GuiCheckBox(5, guiLeft + 4, guiTop + 144, 0xFF404040, "Match by Block");
-        checkBoxMatchBlock.setTooltip(Arrays.asList("Check to match by block instead of", "dropped item. Useful for blocks", "which don't drop an item.", TextFormatting.GRAY.toString() + TextFormatting.ITALIC + "Only used by the 'Dig' programming piece."));
-        checkBoxMatchBlock.checked = filterWidget.matchBlock;
-        addWidget(checkBoxMatchBlock);
+        this.buttonList.add(new GuiButton(0, this.guiLeft + 4, this.guiTop + 20, 70, 20, "Search item..."));
+        this.buttonList.add(new GuiButton(1, this.guiLeft + 78, this.guiTop + 20, 100, 20, "Search inventory..."));
+        this.decButton = new GuiButton(2, this.guiLeft + 140, this.guiTop + 87, 10, 12, "-");
+        this.incButton = new GuiButton(3, this.guiLeft + 167, this.guiTop + 87, 10, 12, "+");
+        this.buttonList.add(this.decButton);
+        this.buttonList.add(this.incButton);
+        this.checkBoxUseDamage = new GuiCheckBox(0, this.guiLeft + 4, this.guiTop + 72, 0xFF404040, "Use metadata / damage values");
+        this.checkBoxUseDamage.setTooltip(Arrays.asList("Check to handle differently damaged tools", "or different colors of Wool as different."));
+        this.checkBoxUseDamage.checked = this.filterWidget.useMetadata;
+        this.addWidget(this.checkBoxUseDamage);
+        this.checkBoxUseNBT = new GuiCheckBox(2, this.guiLeft + 4, this.guiTop + 108, 0xFF404040, "Use NBT");
+        this.checkBoxUseNBT.setTooltip(Arrays.asList("Check to handle items like Enchanted Books", "or Firework as different."));
+        this.checkBoxUseNBT.checked = this.filterWidget.useNBT;
+        this.addWidget(this.checkBoxUseNBT);
+        this.checkBoxUseOreDict = new GuiCheckBox(3, this.guiLeft + 4, this.guiTop + 120, 0xFF404040, "Use Ore Dictionary");
+        this.checkBoxUseOreDict.setTooltip(Arrays.asList("Check to handle items registered in the", "Ore Dictionary as the same."));
+        this.checkBoxUseOreDict.checked = this.filterWidget.useOreDict;
+        this.addWidget(this.checkBoxUseOreDict);
+        this.checkBoxUseModSimilarity = new GuiCheckBox(4, this.guiLeft + 4, this.guiTop + 132, 0xFF404040, "Use Mod similarity");
+        this.checkBoxUseModSimilarity.setTooltip(Arrays.asList("Check to handle items from the", "same mod as the same."));
+        this.checkBoxUseModSimilarity.checked = this.filterWidget.useModSimilarity;
+        this.addWidget(this.checkBoxUseModSimilarity);
+        this.checkBoxMatchBlock = new GuiCheckBox(5, this.guiLeft + 4, this.guiTop + 144, 0xFF404040, "Match by Block");
+        this.checkBoxMatchBlock.setTooltip(Arrays.asList("Check to match by block instead of", "dropped item. Useful for blocks", "which don't drop an item.", TextFormatting.GRAY.toString() + TextFormatting.ITALIC + "Only used by the 'Dig' programming piece."));
+        this.checkBoxMatchBlock.checked = this.filterWidget.matchBlock;
+        this.addWidget(this.checkBoxMatchBlock);
 
-        variableField = new WidgetComboBox(fontRenderer, guiLeft + 90, guiTop + 56, 80, fontRenderer.FONT_HEIGHT + 1);
-        variableField.setElements(guiProgrammer.te.getAllVariables());
-        variableField.setText(filterWidget.getVariable());
+        this.variableField = new WidgetComboBox(this.fontRenderer, this.guiLeft + 90, this.guiTop + 56, 80, this.fontRenderer.FONT_HEIGHT + 1);
+        this.variableField.setElements(this.guiProgrammer.te.getAllVariables());
+        this.variableField.setText(this.filterWidget.getVariable());
 
         if (ConfigHandler.getProgrammerDifficulty() == 2) {
-            addWidget(variableField);
+            this.addWidget(this.variableField);
         }
 
-        checkBoxUseDamage.enabled = !checkBoxUseOreDict.checked && !checkBoxUseModSimilarity.checked;
-        incButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
-        decButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
-        checkBoxUseNBT.enabled = !checkBoxUseOreDict.checked && !checkBoxUseModSimilarity.checked && !checkBoxMatchBlock.checked;
-        checkBoxUseOreDict.enabled = !checkBoxUseModSimilarity.checked && !checkBoxMatchBlock.checked;
-        checkBoxUseModSimilarity.enabled = !checkBoxUseOreDict.checked && !checkBoxMatchBlock.checked;
-        checkBoxMatchBlock.enabled = !checkBoxUseNBT.checked && !checkBoxUseModSimilarity.checked && !checkBoxUseOreDict.checked;
+        this.checkBoxUseDamage.enabled = !this.checkBoxUseOreDict.checked && !this.checkBoxUseModSimilarity.checked;
+        this.incButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
+        this.decButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
+        this.checkBoxUseNBT.enabled = !this.checkBoxUseOreDict.checked && !this.checkBoxUseModSimilarity.checked && !this.checkBoxMatchBlock.checked;
+        this.checkBoxUseOreDict.enabled = !this.checkBoxUseModSimilarity.checked && !this.checkBoxMatchBlock.checked;
+        this.checkBoxUseModSimilarity.enabled = !this.checkBoxUseOreDict.checked && !this.checkBoxMatchBlock.checked;
+        this.checkBoxMatchBlock.enabled = !this.checkBoxUseNBT.checked && !this.checkBoxUseModSimilarity.checked && !this.checkBoxUseOreDict.checked;
 
-        if (searchGui != null) filterWidget.setFilter(searchGui.getSearchStack());
-        if (invSearchGui != null) filterWidget.setFilter(invSearchGui.getSearchStack());
+        if (this.searchGui != null) this.filterWidget.setFilter(this.searchGui.getSearchStack());
+        if (this.invSearchGui != null) this.filterWidget.setFilter(this.invSearchGui.getSearchStack());
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == 1) {
-            filterWidget.setVariable(variableField.getText());
+            this.filterWidget.setVariable(this.variableField.getText());
         }
         super.keyTyped(key, keyCode);
     }
@@ -95,17 +95,17 @@ public class GuiProgWidgetItemFilter extends GuiProgWidgetOptionBase {
     @Override
     public void actionPerformed(GuiButton button) throws IOException {
         if (button.id == 0) {
-            searchGui = new GuiSearcher(FMLClientHandler.instance().getClient().player);
-            searchGui.setSearchStack(filterWidget.getFilter());
-            FMLClientHandler.instance().showGuiScreen(searchGui);
+            this.searchGui = new GuiSearcher(FMLClientHandler.instance().getClient().player);
+            this.searchGui.setSearchStack(this.filterWidget.getFilter());
+            FMLClientHandler.instance().showGuiScreen(this.searchGui);
         } else if (button.id == 1) {
-            invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
-            invSearchGui.setSearchStack(filterWidget.getFilter());
-            FMLClientHandler.instance().showGuiScreen(invSearchGui);
+            this.invSearchGui = new GuiInventorySearcher(FMLClientHandler.instance().getClient().player);
+            this.invSearchGui.setSearchStack(this.filterWidget.getFilter());
+            FMLClientHandler.instance().showGuiScreen(this.invSearchGui);
         } else if (button.id == 2) {
-            if (--filterWidget.specificMeta < 0) filterWidget.specificMeta = 15;
+            if (--this.filterWidget.specificMeta < 0) this.filterWidget.specificMeta = 15;
         } else if (button.id == 3) {
-            if (++filterWidget.specificMeta > 15) filterWidget.specificMeta = 0;
+            if (++this.filterWidget.specificMeta > 15) this.filterWidget.specificMeta = 0;
         }
         super.actionPerformed(button);
     }
@@ -116,37 +116,37 @@ public class GuiProgWidgetItemFilter extends GuiProgWidgetOptionBase {
             GuiCheckBox checkBox = (GuiCheckBox) guiWidget;
             switch (checkBox.getID()) {
                 case 0:
-                    filterWidget.useMetadata = checkBox.checked;
-                    incButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
-                    decButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
+                    this.filterWidget.useMetadata = checkBox.checked;
+                    this.incButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
+                    this.decButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
                     break;
                 case 2:
-                    filterWidget.useNBT = checkBox.checked;
-                    checkBoxMatchBlock.enabled = !checkBox.checked;
+                    this.filterWidget.useNBT = checkBox.checked;
+                    this.checkBoxMatchBlock.enabled = !checkBox.checked;
                     break;
                 case 3:
-                    filterWidget.useOreDict = checkBox.checked;
-                    checkBoxUseDamage.enabled = !checkBox.checked;
-                    checkBoxUseNBT.enabled = !checkBox.checked;
-                    checkBoxUseModSimilarity.enabled = !checkBox.checked;
-                    checkBoxMatchBlock.enabled = !checkBox.checked;
-                    incButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
-                    decButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
+                    this.filterWidget.useOreDict = checkBox.checked;
+                    this.checkBoxUseDamage.enabled = !checkBox.checked;
+                    this.checkBoxUseNBT.enabled = !checkBox.checked;
+                    this.checkBoxUseModSimilarity.enabled = !checkBox.checked;
+                    this.checkBoxMatchBlock.enabled = !checkBox.checked;
+                    this.incButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
+                    this.decButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
                     break;
                 case 4:
-                    filterWidget.useModSimilarity = checkBox.checked;
-                    checkBoxUseDamage.enabled = !checkBox.checked;
-                    checkBoxUseNBT.enabled = !checkBox.checked;
-                    checkBoxUseOreDict.enabled = !checkBox.checked;
-                    checkBoxMatchBlock.enabled = !checkBox.checked;
-                    incButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
-                    decButton.enabled = checkBoxUseDamage.enabled && checkBoxUseDamage.checked;
+                    this.filterWidget.useModSimilarity = checkBox.checked;
+                    this.checkBoxUseDamage.enabled = !checkBox.checked;
+                    this.checkBoxUseNBT.enabled = !checkBox.checked;
+                    this.checkBoxUseOreDict.enabled = !checkBox.checked;
+                    this.checkBoxMatchBlock.enabled = !checkBox.checked;
+                    this.incButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
+                    this.decButton.enabled = this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked;
                     break;
                 case 5:
-                    filterWidget.matchBlock = checkBox.checked;
-                    checkBoxUseModSimilarity.enabled = !checkBox.checked;
-                    checkBoxUseNBT.enabled = !checkBox.checked;
-                    checkBoxUseOreDict.enabled = !checkBox.checked;
+                    this.filterWidget.matchBlock = checkBox.checked;
+                    this.checkBoxUseModSimilarity.enabled = !checkBox.checked;
+                    this.checkBoxUseNBT.enabled = !checkBox.checked;
+                    this.checkBoxUseOreDict.enabled = !checkBox.checked;
                     break;
             }
         }
@@ -156,17 +156,17 @@ public class GuiProgWidgetItemFilter extends GuiProgWidgetOptionBase {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        String value = String.valueOf(filterWidget.specificMeta);
-        fontRenderer.drawString(value, guiLeft + 158 - fontRenderer.getStringWidth(value) / 2, guiTop + 90, checkBoxUseDamage.enabled && checkBoxUseDamage.checked ? 0xFF404040 : 0xFF888888);
-        fontRenderer.drawString("Specific block metadata:", guiLeft + 14, guiTop + 90, checkBoxUseDamage.enabled && checkBoxUseDamage.checked ? 0xFF404040 : 0xFF888888);
+        String value = String.valueOf(this.filterWidget.specificMeta);
+        this.fontRenderer.drawString(value, this.guiLeft + 158 - this.fontRenderer.getStringWidth(value) / 2, this.guiTop + 90, this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked ? 0xFF404040 : 0xFF888888);
+        this.fontRenderer.drawString("Specific block metadata:", this.guiLeft + 14, this.guiTop + 90, this.checkBoxUseDamage.enabled && this.checkBoxUseDamage.checked ? 0xFF404040 : 0xFF888888);
         if (ConfigHandler.getProgrammerDifficulty() == 2)
-            fontRenderer.drawString("Variable:", guiLeft + 90, guiTop + 45, 0xFF404040);
-        fontRenderer.drawString("Filter:", guiLeft + 10, guiTop + 53, 0xFF404040);
+            this.fontRenderer.drawString("Variable:", this.guiLeft + 90, this.guiTop + 45, 0xFF404040);
+        this.fontRenderer.drawString("Filter:", this.guiLeft + 10, this.guiTop + 53, 0xFF404040);
 
-        String oldVarName = filterWidget.getVariable();
-        filterWidget.setVariable("");
-        if (!filterWidget.getFilter().isEmpty())
-            ProgWidgetItemFilter.drawItemStack(filterWidget.getFilter(), guiLeft + 50, guiTop + 48, "");
-        filterWidget.setVariable(oldVarName);
+        String oldVarName = this.filterWidget.getVariable();
+        this.filterWidget.setVariable("");
+        if (!this.filterWidget.getFilter().isEmpty())
+            ProgWidgetItemFilter.drawItemStack(this.filterWidget.getFilter(), this.guiLeft + 50, this.guiTop + 48, "");
+        this.filterWidget.setVariable(oldVarName);
     }
 }

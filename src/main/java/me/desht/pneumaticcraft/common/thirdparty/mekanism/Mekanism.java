@@ -55,7 +55,7 @@ public class Mekanism implements IThirdParty, IHeatDisperser {
      * Get a Mekanism->PneumaticCraft heat adapter, to allow Mekanism TE's to disperse heat to us.  This adapter is
      * provided via a capability.  Don't cache this adapter! It's only valid in the method from which it's obtained.
      *
-     * @param te the PneumaticCraft tile entity
+     * @param te   the PneumaticCraft tile entity
      * @param side side on which the capability is requested
      * @return a Mekanism IHeatTransfer object
      */

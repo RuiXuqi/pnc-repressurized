@@ -30,7 +30,7 @@ public class FluidIngredientFactory implements IIngredientFactory {
 
         FluidIngredient(String fluidName) {
             super(FluidUtil.getFilledBucket(new FluidStack(FluidRegistry.getFluid(fluidName), Fluid.BUCKET_VOLUME)));
-            fluid = FluidRegistry.getFluidStack(fluidName, Fluid.BUCKET_VOLUME);
+            this.fluid = FluidRegistry.getFluidStack(fluidName, Fluid.BUCKET_VOLUME);
         }
 
         @Override
@@ -45,7 +45,7 @@ public class FluidIngredientFactory implements IIngredientFactory {
             if (handler == null) {
                 return false;
             }
-            return fluid.isFluidStackIdentical(handler.drain(Fluid.BUCKET_VOLUME, false));
+            return this.fluid.isFluidStackIdentical(handler.drain(Fluid.BUCKET_VOLUME, false));
         }
 
         @Override

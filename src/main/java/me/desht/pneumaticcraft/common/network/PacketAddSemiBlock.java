@@ -1,13 +1,12 @@
 package me.desht.pneumaticcraft.common.network;
 
-import org.apache.commons.lang3.Validate;
-
 import io.netty.buffer.ByteBuf;
 import me.desht.pneumaticcraft.common.semiblock.ISemiBlock;
 import me.desht.pneumaticcraft.common.semiblock.SemiBlockManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
+import org.apache.commons.lang3.Validate;
 
 public class PacketAddSemiBlock extends LocationIntPacket<PacketAddSemiBlock> {
 
@@ -23,19 +22,19 @@ public class PacketAddSemiBlock extends LocationIntPacket<PacketAddSemiBlock> {
     public PacketAddSemiBlock(BlockPos pos, ISemiBlock semiBlock) {
         super(pos);
         Validate.notNull(semiBlock);
-        id = SemiBlockManager.getKeyForSemiBlock(semiBlock);
+        this.id = SemiBlockManager.getKeyForSemiBlock(semiBlock);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        ByteBufUtils.writeUTF8String(buf, id);
+        ByteBufUtils.writeUTF8String(buf, this.id);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        id = ByteBufUtils.readUTF8String(buf);
+        this.id = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override

@@ -28,7 +28,7 @@ public class SemiBlockHeatFrame extends SemiBlockBasic<TileEntity> implements IH
     @DescSynced
     private int heatLevel = 10;
 
-    public SemiBlockHeatFrame(Class<TileEntity> tileClass){
+    public SemiBlockHeatFrame(Class<TileEntity> tileClass) {
         super(tileClass);
     }
 
@@ -38,59 +38,59 @@ public class SemiBlockHeatFrame extends SemiBlockBasic<TileEntity> implements IH
 
     @Override
     public boolean canPlace(EnumFacing facing) {
-        return getTileEntity() != null && getTileEntity().hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        return this.getTileEntity() != null && this.getTileEntity().hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
     }
 
     public int getHeatLevel() {
-        return heatLevel;
+        return this.heatLevel;
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            heatLevel = HeatUtil.getHeatLevelForTemperature(logic.getTemperature());
-            if (logic.getTemperature() > 374) {
-                if (cookingProgress < 100) {
-                    int progress = Math.max(0, ((int) logic.getTemperature() - 343) / 30);
+        if (!this.getWorld().isRemote) {
+            this.heatLevel = HeatUtil.getHeatLevelForTemperature(this.logic.getTemperature());
+            if (this.logic.getTemperature() > 374) {
+                if (this.cookingProgress < 100) {
+                    int progress = Math.max(0, ((int) this.logic.getTemperature() - 343) / 30);
                     progress = Math.min(5, progress);
-                    logic.addHeat(-progress);
-                    cookingProgress += progress;
+                    this.logic.addHeat(-progress);
+                    this.cookingProgress += progress;
                 }
-                if (cookingProgress >= 100) {
-                    IItemHandler handler = IOHelper.getInventoryForTE(getTileEntity());
+                if (this.cookingProgress >= 100) {
+                    IItemHandler handler = IOHelper.getInventoryForTE(this.getTileEntity());
                     if (handler != null) {
-                        if (!tryCookSlot(handler, lastValidSlot)) {
+                        if (!this.tryCookSlot(handler, this.lastValidSlot)) {
                             for (int i = 0; i < handler.getSlots(); i++) {
-                                if (tryCookSlot(handler, i)) {
-                                    cookingProgress -= 100;
+                                if (this.tryCookSlot(handler, i)) {
+                                    this.cookingProgress -= 100;
                                     break;
                                 }
                             }
                         } else {
-                            cookingProgress -= 100;
+                            this.cookingProgress -= 100;
                         }
                     }
                 }
-            } else if (logic.getTemperature() < 273) {
-                if (coolingProgress < 100) {
-                    int progress = Math.max(0, ((int) logic.getTemperature() - 243) / 30);
+            } else if (this.logic.getTemperature() < 273) {
+                if (this.coolingProgress < 100) {
+                    int progress = Math.max(0, ((int) this.logic.getTemperature() - 243) / 30);
                     progress = 6 - Math.min(5, progress);
-                    logic.addHeat(progress);
-                    coolingProgress += progress;
+                    this.logic.addHeat(progress);
+                    this.coolingProgress += progress;
                 }
-                if (coolingProgress >= 100) {
-                    IItemHandler handler = IOHelper.getInventoryForTE(getTileEntity());
+                if (this.coolingProgress >= 100) {
+                    IItemHandler handler = IOHelper.getInventoryForTE(this.getTileEntity());
                     if (handler != null) {
-                        if (!tryCoolSlot(handler, lastValidSlot)) {
+                        if (!this.tryCoolSlot(handler, this.lastValidSlot)) {
                             for (int i = 0; i < handler.getSlots(); i++) {
-                                if (tryCoolSlot(handler, i)) {
-                                    coolingProgress -= 100;
+                                if (this.tryCoolSlot(handler, i)) {
+                                    this.coolingProgress -= 100;
                                     break;
                                 }
                             }
                         } else {
-                            coolingProgress -= 100;
+                            this.coolingProgress -= 100;
                         }
                     }
                 }
@@ -103,11 +103,11 @@ public class SemiBlockHeatFrame extends SemiBlockBasic<TileEntity> implements IH
         if (!stack.isEmpty()) {
             ItemStack result = FurnaceRecipes.instance().getSmeltingResult(stack);
             if (!result.isEmpty()) {
-                ItemStack remainder = IOHelper.insert(getTileEntity(), result, true);
+                ItemStack remainder = IOHelper.insert(this.getTileEntity(), result, true);
                 if (remainder.isEmpty()) {
-                    IOHelper.insert(getTileEntity(), result, false);
+                    IOHelper.insert(this.getTileEntity(), result, false);
                     handler.extractItem(slot, 1, false);
-                    lastValidSlot = slot;
+                    this.lastValidSlot = slot;
                     return true;
                 }
             }
@@ -143,9 +143,9 @@ public class SemiBlockHeatFrame extends SemiBlockBasic<TileEntity> implements IH
                         }
                         if (canStoreOutput && (containerItem.isEmpty() || canStoreContainerItem)) {
                             handler.extractItem(slot, 1, false);
-                            IOHelper.insert(getTileEntity(), recipe.output.copy(), false);
+                            IOHelper.insert(this.getTileEntity(), recipe.output.copy(), false);
                             if (!containerItem.isEmpty()) {
-                                IOHelper.insert(getTileEntity(), containerItem.copy(), false);
+                                IOHelper.insert(this.getTileEntity(), containerItem.copy(), false);
                             }
                             return true;
                         }
@@ -159,47 +159,47 @@ public class SemiBlockHeatFrame extends SemiBlockBasic<TileEntity> implements IH
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        logic.writeToNBT(tag);
-        tag.setInteger("cookingProgress", cookingProgress);
-        tag.setInteger("coolingProgress", coolingProgress);
+        this.logic.writeToNBT(tag);
+        tag.setInteger("cookingProgress", this.cookingProgress);
+        tag.setInteger("coolingProgress", this.coolingProgress);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        logic.readFromNBT(tag);
-        cookingProgress = tag.getInteger("cookingProgress");
-        coolingProgress = tag.getInteger("coolingProgress");
+        this.logic.readFromNBT(tag);
+        this.cookingProgress = tag.getInteger("cookingProgress");
+        this.coolingProgress = tag.getInteger("coolingProgress");
     }
 
     @Override
     public void onPlaced(EntityPlayer player, ItemStack stack, EnumFacing facing) {
         super.onPlaced(player, stack, facing);
-        getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock(), true);
+        this.getWorld().notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock(), true);
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return logic;
+        return this.logic;
     }
 
     @Override
     public void invalidate() {
         super.invalidate();
-        getWorld().notifyNeighborsOfStateChange(getPos(), getBlockState().getBlock(), true);
+        this.getWorld().notifyNeighborsOfStateChange(this.getPos(), this.getBlockState().getBlock(), true);
     }
 
     @Override
     public void addWailaInfoToTag(NBTTagCompound tag) {
         super.addWailaInfoToTag(tag);
-        tag.setInteger("temp", (int) logic.getTemperature());
+        tag.setInteger("temp", (int) this.logic.getTemperature());
     }
 
     @Override
     public void addTooltip(List<String> curInfo, NBTTagCompound tag, boolean extended) {
         super.addTooltip(curInfo, tag, extended);
         // WAILA sync's the temperature via NBT, TOP runs serverside and gets it here
-        int temp = tag != null && tag.hasKey("temp") ? tag.getInteger("temp") : (int) logic.getTemperature();
+        int temp = tag != null && tag.hasKey("temp") ? tag.getInteger("temp") : (int) this.logic.getTemperature();
         curInfo.add(HeatUtil.formatHeatString(temp));
     }
 }

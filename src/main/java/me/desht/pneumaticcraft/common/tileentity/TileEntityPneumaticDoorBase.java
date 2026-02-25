@@ -50,80 +50,80 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
 
     public TileEntityPneumaticDoorBase() {
         super(PneumaticValues.DANGER_PRESSURE_PNEUMATIC_DOOR, PneumaticValues.MAX_PRESSURE_PNEUMATIC_DOOR, PneumaticValues.VOLUME_PNEUMATIC_DOOR, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.RANGE);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.RANGE);
     }
 
     @Override
     public void update() {
         super.update();
-        oldProgress = progress;
-        if (!getWorld().isRemote) {
-            if (getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR) {
-                if ((getWorld().getTotalWorldTime() & 0x3f) == 0) {
-                    TileEntity te = getWorld().getTileEntity(getPos().offset(getRotation(), 3));
+        this.oldProgress = this.progress;
+        if (!this.getWorld().isRemote) {
+            if (this.getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR) {
+                if ((this.getWorld().getTotalWorldTime() & 0x3f) == 0) {
+                    TileEntity te = this.getWorld().getTileEntity(this.getPos().offset(this.getRotation(), 3));
                     if (te instanceof TileEntityPneumaticDoorBase) {
-                        doubleDoor = (TileEntityPneumaticDoorBase) te;
+                        this.doubleDoor = (TileEntityPneumaticDoorBase) te;
                     } else {
-                        doubleDoor = null;
+                        this.doubleDoor = null;
                     }
                 }
-                setOpening(shouldOpen() || isNeighborOpening());
-                setNeighborOpening(isOpening());
+                this.setOpening(this.shouldOpen() || this.isNeighborOpening());
+                this.setNeighborOpening(this.isOpening());
             } else {
-                setOpening(true);
+                this.setOpening(true);
             }
         }
-        float targetProgress = opening ? 1F : 0F;
-        float speedMultiplier = getSpeedMultiplierFromUpgrades();
-        if (progress < targetProgress) {
-            if (progress < targetProgress - TileEntityConstants.PNEUMATIC_DOOR_EXTENSION) {
-                progress += TileEntityConstants.PNEUMATIC_DOOR_SPEED_FAST * speedMultiplier;
+        float targetProgress = this.opening ? 1F : 0F;
+        float speedMultiplier = this.getSpeedMultiplierFromUpgrades();
+        if (this.progress < targetProgress) {
+            if (this.progress < targetProgress - TileEntityConstants.PNEUMATIC_DOOR_EXTENSION) {
+                this.progress += TileEntityConstants.PNEUMATIC_DOOR_SPEED_FAST * speedMultiplier;
             } else {
-                progress += TileEntityConstants.PNEUMATIC_DOOR_SPEED_SLOW * speedMultiplier;
+                this.progress += TileEntityConstants.PNEUMATIC_DOOR_SPEED_SLOW * speedMultiplier;
             }
-            if (progress > targetProgress) progress = targetProgress;
+            if (this.progress > targetProgress) this.progress = targetProgress;
         }
-        if (progress > targetProgress) {
-            if (progress > targetProgress + TileEntityConstants.PNEUMATIC_DOOR_EXTENSION) {
-                progress -= TileEntityConstants.PNEUMATIC_DOOR_SPEED_FAST * speedMultiplier;
+        if (this.progress > targetProgress) {
+            if (this.progress > targetProgress + TileEntityConstants.PNEUMATIC_DOOR_EXTENSION) {
+                this.progress -= TileEntityConstants.PNEUMATIC_DOOR_SPEED_FAST * speedMultiplier;
             } else {
-                progress -= TileEntityConstants.PNEUMATIC_DOOR_SPEED_SLOW * speedMultiplier;
+                this.progress -= TileEntityConstants.PNEUMATIC_DOOR_SPEED_SLOW * speedMultiplier;
             }
-            if (progress < targetProgress) progress = targetProgress;
+            if (this.progress < targetProgress) this.progress = targetProgress;
         }
-        if (!getWorld().isRemote) {
-            addAir((int) (-Math.abs(oldProgress - progress) * PneumaticValues.USAGE_PNEUMATIC_DOOR * (getSpeedUsageMultiplierFromUpgrades() / speedMultiplier)));
+        if (!this.getWorld().isRemote) {
+            this.addAir((int) (-Math.abs(this.oldProgress - this.progress) * PneumaticValues.USAGE_PNEUMATIC_DOOR * (this.getSpeedUsageMultiplierFromUpgrades() / speedMultiplier)));
         }
-        door = getDoor();
-        if (door != null) {
-            door.setRotationAngle(progress * 90);
-            if (!getWorld().isRemote) rightGoing = door.rightGoing;
+        this.door = this.getDoor();
+        if (this.door != null) {
+            this.door.setRotationAngle(this.progress * 90);
+            if (!this.getWorld().isRemote) this.rightGoing = this.door.rightGoing;
         }
     }
 
     private boolean shouldOpen() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
             case 1:
                 int range = TileEntityConstants.RANGE_PNEUMATIC_DOOR_BASE + this.getUpgrades(EnumUpgrade.RANGE);
-                AxisAlignedBB aabb = new AxisAlignedBB(getPos().getX() - range, getPos().getY() - range, getPos().getZ() - range, getPos().getX() + range + 1, getPos().getY() + range + 1, getPos().getZ() + range + 1);
-                List<EntityPlayer> players = getWorld().getEntitiesWithinAABB(EntityPlayer.class, aabb);
+                AxisAlignedBB aabb = new AxisAlignedBB(this.getPos().getX() - range, this.getPos().getY() - range, this.getPos().getZ() - range, this.getPos().getX() + range + 1, this.getPos().getY() + range + 1, this.getPos().getZ() + range + 1);
+                List<EntityPlayer> players = this.getWorld().getEntitiesWithinAABB(EntityPlayer.class, aabb);
                 for (EntityPlayer player : players) {
-                    if (TileEntitySecurityStation.getProtectingSecurityStations(getWorld(), getPos(), player, false, false) == 0) {
-                        if (redstoneMode == 0) {
+                    if (TileEntitySecurityStation.getProtectingSecurityStations(this.getWorld(), this.getPos(), player, false, false) == 0) {
+                        if (this.redstoneMode == 0) {
                             return true;
                         } else {
                             ((BlockPneumaticDoor) Blockss.PNEUMATIC_DOOR).isTrackingPlayerEye = true;
                             BlockPos lookedPosition = PneumaticCraftUtils.getEntityLookedBlock(player, range * 1.41F); //max range = range * sqrt(2).
                             ((BlockPneumaticDoor) Blockss.PNEUMATIC_DOOR).isTrackingPlayerEye = false;
                             if (lookedPosition != null) {
-                                if (lookedPosition.equals(new BlockPos(getPos().getX(), getPos().getY(), getPos().getZ()))) {
+                                if (lookedPosition.equals(new BlockPos(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()))) {
                                     return true;
                                 } else {
-                                    if (door != null) {
-                                        if (lookedPosition.equals(new BlockPos(door.getPos().getX(), door.getPos().getY(), door.getPos().getZ())))
+                                    if (this.door != null) {
+                                        if (lookedPosition.equals(new BlockPos(this.door.getPos().getX(), this.door.getPos().getY(), this.door.getPos().getZ())))
                                             return true;
-                                        if (lookedPosition.equals(new BlockPos(door.getPos().getX(), door.getPos().getY() + (door.isTopDoor() ? -1 : 1), door.getPos().getZ())))
+                                        if (lookedPosition.equals(new BlockPos(this.door.getPos().getX(), this.door.getPos().getY() + (this.door.isTopDoor() ? -1 : 1), this.door.getPos().getZ())))
                                             return true;
                                     }
                                 }
@@ -133,7 +133,7 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
                 }
                 return false;
             case 2:
-                return opening;
+                return this.opening;
         }
         return false;
     }
@@ -142,22 +142,22 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
         boolean wasOpening = this.opening;
         this.opening = opening;
         if (this.opening != wasOpening) {
-            NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.PNEUMATIC_DOOR, SoundCategory.BLOCKS, getPos(), 1.0F, 1.0F, false), getWorld());
-            sendDescriptionPacket();
+            NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.PNEUMATIC_DOOR, SoundCategory.BLOCKS, this.getPos(), 1.0F, 1.0F, false), this.getWorld());
+            this.sendDescriptionPacket();
         }
     }
 
     public boolean isOpening() {
-        return opening;
+        return this.opening;
     }
 
     private boolean isNeighborOpening() {
-        return doubleDoor != null && doubleDoor.shouldOpen();
+        return this.doubleDoor != null && this.doubleDoor.shouldOpen();
     }
 
     public void setNeighborOpening(boolean opening) {
-        if (doubleDoor != null && doubleDoor.getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR) {
-            doubleDoor.setOpening(opening);
+        if (this.doubleDoor != null && this.doubleDoor.getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR) {
+            this.doubleDoor.setOpening(opening);
         }
     }
 
@@ -167,12 +167,12 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
     }
 
     private TileEntityPneumaticDoor getDoor() {
-        TileEntity te = getWorld().getTileEntity(getPos().offset(getRotation()).add(0, -1, 0));
+        TileEntity te = this.getWorld().getTileEntity(this.getPos().offset(this.getRotation()).add(0, -1, 0));
         if (te instanceof TileEntityPneumaticDoor) {
             TileEntityPneumaticDoor teDoor = (TileEntityPneumaticDoor) te;
-            if (getRotation().rotateY() == teDoor.getRotation() && !teDoor.rightGoing) {
+            if (this.getRotation().rotateY() == teDoor.getRotation() && !teDoor.rightGoing) {
                 return (TileEntityPneumaticDoor) te;
-            } else if (getRotation().rotateYCCW() == teDoor.getRotation() && teDoor.rightGoing) {
+            } else if (this.getRotation().rotateYCCW() == teDoor.getRotation() && teDoor.rightGoing) {
                 return (TileEntityPneumaticDoor) te;
             }
         }
@@ -182,30 +182,30 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        progress = tag.getFloat("extension");
-        opening = tag.getBoolean("opening");
-        redstoneMode = tag.getInteger("redstoneMode");
-        rightGoing = tag.getBoolean("rightGoing");
-        camoStack  = ICamouflageableTE.readCamoStackFromNBT(tag);
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.progress = tag.getFloat("extension");
+        this.opening = tag.getBoolean("opening");
+        this.redstoneMode = tag.getInteger("redstoneMode");
+        this.rightGoing = tag.getBoolean("rightGoing");
+        this.camoStack = ICamouflageableTE.readCamoStackFromNBT(tag);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setFloat("extension", progress);
-        tag.setBoolean("opening", opening);
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setBoolean("rightGoing", rightGoing);
-        ICamouflageableTE.writeCamoStackToNBT(camoStack, tag);
+        tag.setFloat("extension", this.progress);
+        tag.setBoolean("opening", this.opening);
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setBoolean("rightGoing", this.rightGoing);
+        ICamouflageableTE.writeCamoStackToNBT(this.camoStack, tag);
         return tag;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
@@ -221,25 +221,25 @@ public class TileEntityPneumaticDoorBase extends TileEntityPneumaticBase
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public IBlockState getCamouflage() {
-        return camoState;
+        return this.camoState;
     }
 
     @Override
     public void setCamouflage(IBlockState state) {
-        camoState = state;
-        camoStack = ICamouflageableTE.getStackForState(state);
-        sendDescriptionPacket();
-        markDirty();
+        this.camoState = state;
+        this.camoStack = ICamouflageableTE.getStackForState(state);
+        this.sendDescriptionPacket();
+        this.markDirty();
     }
 
     @Override
     public void onDescUpdate() {
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
 
         super.onDescUpdate();
     }

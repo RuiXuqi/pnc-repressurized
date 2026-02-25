@@ -56,7 +56,7 @@ public class ProgWidgetComment extends ProgWidgetString {
 
     @Override
     public String getExtraStringInfo() {
-        return string;
+        return this.string;
     }
 
 }

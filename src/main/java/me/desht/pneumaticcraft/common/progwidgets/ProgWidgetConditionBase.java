@@ -26,8 +26,8 @@ public abstract class ProgWidgetConditionBase extends ProgWidget implements IJum
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        IProgWidget widget = getConnectedParameters()[getParameters().length - 1];
-        IProgWidget widget2 = getConnectedParameters()[getParameters().length * 2 - 1];
+        IProgWidget widget = this.getConnectedParameters()[this.getParameters().length - 1];
+        IProgWidget widget2 = this.getConnectedParameters()[this.getParameters().length * 2 - 1];
         if (widget == null && widget2 == null) {
             curInfo.add("gui.progWidget.condition.error.noFlowControl");
         } else if (widget != null && !(widget instanceof ProgWidgetString) || widget2 != null && !(widget2 instanceof ProgWidgetString)) {
@@ -37,8 +37,8 @@ public abstract class ProgWidgetConditionBase extends ProgWidget implements IJum
 
     @Override
     public List<String> getPossibleJumpLocations() {
-        IProgWidget widget = getConnectedParameters()[getParameters().length - 1];
-        IProgWidget widget2 = getConnectedParameters()[getParameters().length * 2 - 1];
+        IProgWidget widget = this.getConnectedParameters()[this.getParameters().length - 1];
+        IProgWidget widget2 = this.getConnectedParameters()[this.getParameters().length * 2 - 1];
         ProgWidgetString textWidget = widget != null ? (ProgWidgetString) widget : null;
         ProgWidgetString textWidget2 = widget2 != null ? (ProgWidgetString) widget2 : null;
         List<String> locations = new ArrayList<>();
@@ -49,7 +49,7 @@ public abstract class ProgWidgetConditionBase extends ProgWidget implements IJum
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        boolean evaluation = evaluate(drone, this);
+        boolean evaluation = this.evaluate(drone, this);
         if (evaluation) {
             drone.addDebugEntry("gui.progWidget.condition.evaluatedTrue");
         } else {

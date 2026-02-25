@@ -14,7 +14,8 @@ public class PacketJetBootsStateSync extends AbstractPacket<PacketJetBootsStateS
     private UUID playerId;
     private JetBootsStateTracker.JetBootsState state;
 
-    public PacketJetBootsStateSync() {}
+    public PacketJetBootsStateSync() {
+    }
 
     public PacketJetBootsStateSync(EntityPlayer player, JetBootsStateTracker.JetBootsState state) {
         this.playerId = player.getUniqueID();
@@ -32,16 +33,16 @@ public class PacketJetBootsStateSync extends AbstractPacket<PacketJetBootsStateS
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        playerId = new UUID(buf.readLong(), buf.readLong());
-        state = new JetBootsStateTracker.JetBootsState(buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
+        this.playerId = new UUID(buf.readLong(), buf.readLong());
+        this.state = new JetBootsStateTracker.JetBootsState(buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeLong(playerId.getMostSignificantBits());
-        buf.writeLong(playerId.getLeastSignificantBits());
-        buf.writeBoolean(state.isEnabled());
-        buf.writeBoolean(state.isActive());
-        buf.writeBoolean(state.isBuilderMode());
+        buf.writeLong(this.playerId.getMostSignificantBits());
+        buf.writeLong(this.playerId.getLeastSignificantBits());
+        buf.writeBoolean(this.state.isEnabled());
+        buf.writeBoolean(this.state.isActive());
+        buf.writeBoolean(this.state.isBuilderMode());
     }
 }

@@ -12,14 +12,14 @@ public class StringFilterEntitySelector implements Predicate<Entity> {
 
     @Override
     public boolean apply(Entity entity) {
-        for (EntityFilter f : getFilter()) {
+        for (EntityFilter f : this.getFilter()) {
             if (f.apply(entity)) return true;
         }
         return false;
     }
 
     protected List<EntityFilter> getFilter() {
-        return filters;
+        return this.filters;
     }
 
     public StringFilterEntitySelector setFilter(String filterStr) {
@@ -41,7 +41,7 @@ public class StringFilterEntitySelector implements Predicate<Entity> {
     public StringFilterEntitySelector addEntry(String filterStr) {
         EntityFilter filter = EntityFilter.fromString(filterStr);
         if (filter != null) {
-            filters.add(filter);
+            this.filters.add(filter);
         }
         return this;
     }

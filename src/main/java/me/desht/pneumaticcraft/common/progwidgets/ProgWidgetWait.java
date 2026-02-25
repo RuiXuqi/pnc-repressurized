@@ -59,18 +59,18 @@ public class ProgWidgetWait extends ProgWidget {
                 multiplier = 1200;
                 time = time.substring(0, time.length() - 1);
             }
-            maxTicks = NumberUtils.toInt(time) * multiplier;
+            this.maxTicks = NumberUtils.toInt(time) * multiplier;
         }
 
         @Override
         public boolean shouldExecute() {
-            return ticks < maxTicks;
+            return this.ticks < this.maxTicks;
         }
 
         @Override
         public boolean shouldContinueExecuting() {
-            ticks++;
-            return shouldExecute();
+            this.ticks++;
+            return this.shouldExecute();
         }
 
     }

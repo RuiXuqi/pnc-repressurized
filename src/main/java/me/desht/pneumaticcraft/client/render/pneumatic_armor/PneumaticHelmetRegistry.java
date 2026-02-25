@@ -27,7 +27,7 @@ public class PneumaticHelmetRegistry implements IPneumaticHelmetRegistry {
     @Override
     public void registerEntityTrackEntry(Class<? extends IEntityTrackEntry> entry) {
         if (entry == null) throw new NullPointerException("Can't register null!");
-        entityTrackEntries.add(entry);
+        this.entityTrackEntries.add(entry);
     }
 
     @Override
@@ -39,8 +39,8 @@ public class PneumaticHelmetRegistry implements IPneumaticHelmetRegistry {
         } else {
             try {
                 IHackableEntity hackableEntity = iHackable.newInstance();
-                if (hackableEntity.getId() != null) stringToEntityHackables.put(hackableEntity.getId(), iHackable);
-                hackableEntities.put(entityClazz, iHackable);
+                if (hackableEntity.getId() != null) this.stringToEntityHackables.put(hackableEntity.getId(), iHackable);
+                this.hackableEntities.put(entityClazz, iHackable);
             } catch (InstantiationException e) {
                 Log.error("Not able to register hackable entity: " + iHackable.getName() + ". Does the class have a parameterless constructor?");
                 e.printStackTrace();
@@ -54,15 +54,16 @@ public class PneumaticHelmetRegistry implements IPneumaticHelmetRegistry {
     @Override
     public void addHackable(Block block, Class<? extends IHackableBlock> iHackable) {
         if (block == null) throw new NullPointerException("Block is null! class = " + iHackable);
-        if (iHackable == null) throw new NullPointerException("IHackableBlock is null! block = " + block.getRegistryName());
+        if (iHackable == null)
+            throw new NullPointerException("IHackableBlock is null! block = " + block.getRegistryName());
 
         if (Block.class.isAssignableFrom(iHackable)) {
             Log.warning("Blocks that implement IHackableBlock shouldn't be registered as hackable! Registering block: " + block.getLocalizedName());
         } else {
             try {
                 IHackableBlock hackableBlock = iHackable.newInstance();
-                if (hackableBlock.getId() != null) stringToBlockHackables.put(hackableBlock.getId(), iHackable);
-                hackableBlocks.put(block, iHackable);
+                if (hackableBlock.getId() != null) this.stringToBlockHackables.put(hackableBlock.getId(), iHackable);
+                this.hackableBlocks.put(block, iHackable);
             } catch (InstantiationException e) {
                 Log.error("Not able to register hackable block: " + iHackable.getName() + ". Does the class have a parameterless constructor?");
                 e.printStackTrace();

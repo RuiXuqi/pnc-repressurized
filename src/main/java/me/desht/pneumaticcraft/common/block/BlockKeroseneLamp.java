@@ -39,7 +39,7 @@ public class BlockKeroseneLamp extends BlockPneumaticCraftModeled {
             return BLOCK_BOUNDS_EW;
         }
 
-        EnumFacing facing = getRotation(source, pos);
+        EnumFacing facing = this.getRotation(source, pos);
         if (facing == EnumFacing.NORTH || facing == EnumFacing.SOUTH) {
             return BLOCK_BOUNDS_NS;
         } else {

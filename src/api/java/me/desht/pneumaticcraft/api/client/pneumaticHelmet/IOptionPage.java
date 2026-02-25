@@ -35,8 +35,8 @@ public interface IOptionPage {
     /**
      * Called immediately before {@link GuiScreen#drawScreen(int, int, float)}
      *
-     * @param x mouse X
-     * @param y mouse Y
+     * @param x            mouse X
+     * @param y            mouse Y
      * @param partialTicks partial ticks since last world ticks
      */
     void drawPreButtons(int x, int y, float partialTicks);
@@ -45,8 +45,8 @@ public interface IOptionPage {
      * Called immediately after {@link GuiScreen#drawScreen(int, int, float)}
      * Here you can render additional things like text.
      *
-     * @param x mouse X
-     * @param y mouse Y
+     * @param x            mouse X
+     * @param y            mouse Y
      * @param partialTicks partial ticks since last world ticks
      */
     void drawScreen(int x, int y, float partialTicks);
@@ -54,15 +54,16 @@ public interface IOptionPage {
     /**
      * Called immediately after GuiScreen#keyTyped(char, int).
      *
-     * @param ch typed character
+     * @param ch  typed character
      * @param key typed keycode
      */
     void keyTyped(char ch, int key);
 
     /**
      * Called when mouse is clicked via {@link GuiScreen#mouseClicked(int, int, int)}
-     * @param x mouse X
-     * @param y mouse Y
+     *
+     * @param x      mouse X
+     * @param y      mouse Y
      * @param button mouse button
      */
     void mouseClicked(int x, int y, int button);
@@ -92,12 +93,15 @@ public interface IOptionPage {
      *
      * @return Y position, default 115
      */
-    default int settingsYposition() { return 115; }
+    default int settingsYposition() {
+        return 115;
+    }
 
     /**
      * Called immediately after {@link GuiScreen#updateScreen()}
      */
-    default void updateScreen() { }
+    default void updateScreen() {
+    }
 
     /**
      * Convenience class for simple toggleable armor features with no additional settings.
@@ -112,12 +116,12 @@ public interface IOptionPage {
         }
 
         protected IUpgradeRenderHandler getRenderHandler() {
-            return renderHandler;
+            return this.renderHandler;
         }
 
         @Override
         public String getPageName() {
-            return name;
+            return this.name;
         }
 
         @Override

@@ -13,7 +13,7 @@ public class DistanceEntitySorter implements Comparator<Entity> {
     }
 
     private int compare_internal(Entity entity1, Entity entity2) {
-        Vec3d vec = drone.getDronePos();
+        Vec3d vec = this.drone.getDronePos();
         double d0 = vec.squareDistanceTo(entity1.getPositionVector());
         double d1 = vec.squareDistanceTo(entity2.getPositionVector());
         return Double.compare(d0, d1);

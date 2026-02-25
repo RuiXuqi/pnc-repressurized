@@ -20,56 +20,55 @@ import java.util.stream.Stream;
 
 /**
  * Helper which allows querying TE's of specific (owned) types, like the universal sensor, Security Station and Charging Station
+ *
  * @author MineMaarten
  */
 @EventBusSubscriber(modid = Names.MOD_ID)
-public class GlobalTileEntityCacheManager{
+public class GlobalTileEntityCacheManager {
     private static final GlobalTileEntityCacheManager CLIENT_INSTANCE = new GlobalTileEntityCacheManager();
     private static final GlobalTileEntityCacheManager SERVER_INSTANCE = new GlobalTileEntityCacheManager();
-    
-    public static GlobalTileEntityCacheManager getInstance(){
+
+    public static GlobalTileEntityCacheManager getInstance() {
         return FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT ? CLIENT_INSTANCE : SERVER_INSTANCE;
     }
-    
+
     @SubscribeEvent
-    public static void onWorldUnloaded(WorldEvent.Unload event){
+    public static void onWorldUnloaded(WorldEvent.Unload event) {
         getInstance().removeFromWorld(event.getWorld());
     }
-    
+
     public final GlobalTileEntityCache<TileEntityUniversalSensor> universalSensors = new GlobalTileEntityCache<>();
     public final GlobalTileEntityCache<TileEntityChargingStation> chargingStations = new GlobalTileEntityCache<>();
     public final GlobalTileEntityCache<TileEntitySecurityStation> securityStations = new GlobalTileEntityCache<>();
-    
-    private void removeFromWorld(World world){
-        universalSensors.removeFromWorld(world);
-        chargingStations.removeFromWorld(world);
-        securityStations.removeFromWorld(world);
+
+    private void removeFromWorld(World world) {
+        this.universalSensors.removeFromWorld(world);
+        this.chargingStations.removeFromWorld(world);
+        this.securityStations.removeFromWorld(world);
     }
-    
-    public static class GlobalTileEntityCache<T extends TileEntity> implements Iterable<T>{
+
+    public static class GlobalTileEntityCache<T extends TileEntity> implements Iterable<T> {
         private final Set<T> tileEntities = Collections.newSetFromMap(new WeakHashMap<>());
-        
-        public void add(T te){
-            tileEntities.add(te);
+
+        public void add(T te) {
+            this.tileEntities.add(te);
         }
-        
-        public void remove(T te){
-            tileEntities.remove(te);
+
+        public void remove(T te) {
+            this.tileEntities.remove(te);
         }
-        
-        public void removeFromWorld(World world){
-            tileEntities.removeIf(te -> te.getWorld() == world);
+
+        public void removeFromWorld(World world) {
+            this.tileEntities.removeIf(te -> te.getWorld() == world);
         }
-        
-        public Stream<T> stream(){
-            return tileEntities.stream();
+
+        public Stream<T> stream() {
+            return this.tileEntities.stream();
         }
 
         @Override
-        public Iterator<T> iterator(){
-            return tileEntities.iterator();
+        public Iterator<T> iterator() {
+            return this.tileEntities.iterator();
         }
     }
 }
-
-

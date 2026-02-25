@@ -53,6 +53,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.util.*;
 
@@ -62,7 +63,7 @@ public class PneumaticCraftUtils {
     /**
      * Returns the EnumFacing of the given entity.
      *
-     * @param entity the entity
+     * @param entity           the entity
      * @param includeUpAndDown false when UP/DOWN should not be included.
      * @return the entity's facing direction
      */
@@ -166,7 +167,7 @@ public class PneumaticCraftUtils {
     /**
      * Takes in the amount of ticks, and converts it into a time notation. 40 ticks will become "2s", while 2400 will result in "2m".
      *
-     * @param ticks number of ticks
+     * @param ticks    number of ticks
      * @param fraction When true, 30 ticks will show as '1.5s' instead of '1s'.
      * @return a formatted time
      */
@@ -198,29 +199,29 @@ public class PneumaticCraftUtils {
     /**
      * Rounds numbers down at the given decimal. 1.234 with decimal 1 will result in a string holding "1.2"
      *
-     * @param value a double-precision quantity
+     * @param value    a double-precision quantity
      * @param decimals number of digits to the right of the decimal point
      * @return a formatted string representation
      */
     public static String roundNumberTo(double value, int decimals) {
-        return new BigDecimal(value).setScale(decimals, BigDecimal.ROUND_HALF_DOWN).toPlainString();
+        return new BigDecimal(value).setScale(decimals, RoundingMode.HALF_DOWN).toPlainString();
     }
 
     /**
      * Rounds numbers down at the given decimal. 1.234 with decimal 1 will result in a string holding "1.2"
      *
-     * @param value a double-precision quantity
+     * @param value    a double-precision quantity
      * @param decimals number of digits to the right of the decimal point
      * @return the rounded value as a double-precision quantity
      */
     public static double roundNumberToDouble(double value, int decimals) {
-        return new BigDecimal(value).setScale(decimals, BigDecimal.ROUND_HALF_DOWN).doubleValue();
+        return new BigDecimal(value).setScale(decimals, RoundingMode.HALF_DOWN).doubleValue();
     }
 
     /**
      * Rounds numbers down at the given decimal. 1.234 with decimal 1 will result in a string holding "1.2"
      *
-     * @param value a floating point quantity
+     * @param value    a floating point quantity
      * @param decimals number of digits to the right of the decimal point
      * @return a formatted string representation
      */
@@ -243,8 +244,8 @@ public class PneumaticCraftUtils {
         if (begin < end) {
             int partitionIndex = _partition(stacks, begin, end);
 
-            quickSort(stacks, begin, partitionIndex-1);
-            quickSort(stacks, partitionIndex+1, end);
+            quickSort(stacks, begin, partitionIndex - 1);
+            quickSort(stacks, partitionIndex + 1, end);
         }
     }
 
@@ -273,7 +274,7 @@ public class PneumaticCraftUtils {
      * Sorts the stacks given alphabetically, combines them (so 2x64 will become 1x128), and adds the strings into the
      * given string list.  This method is aware of inventory items implementing the {@link IInventoryItem} interface.
      *
-     * @param textList string list to add information to
+     * @param textList       string list to add information to
      * @param originalStacks array of item stacks to sort & combine
      */
     public static void sortCombineItemStacksAndToString(List<String> textList, ItemStack[] originalStacks) {
@@ -284,9 +285,9 @@ public class PneumaticCraftUtils {
      * Sorts the stacks given alphabetically, combines them (so 2x64 will become 1x128), and adds the strings into the
      * given string list.  This method is aware of inventory items implementing the {@link IInventoryItem} interface.
      *
-     * @param textList string list to add information to
+     * @param textList       string list to add information to
      * @param originalStacks array of item stacks to sort & combine
-     * @param prefix prefix string to prepend to each line of output
+     * @param prefix         prefix string to prepend to each line of output
      */
     public static void sortCombineItemStacksAndToString(List<String> textList, ItemStack[] originalStacks, String prefix) {
         ItemStack[] stacks = Arrays.copyOf(originalStacks, originalStacks.length);
@@ -299,7 +300,7 @@ public class PneumaticCraftUtils {
             if (!stack.isEmpty()) {
                 if (!stack.isItemEqual(prevItemStack) || prevInventoryItems != null && prevInventoryItems.size() > 0) {
                     if (!prevItemStack.isEmpty()) {
-                        textList.add(prefix  + PneumaticCraftUtils.convertAmountToString(itemCount) + " x " + prevItemStack.getDisplayName());
+                        textList.add(prefix + PneumaticCraftUtils.convertAmountToString(itemCount) + " x " + prevItemStack.getDisplayName());
                     }
                     if (prevInventoryItems != null) {
                         sortCombineItemStacksAndToString(textList, prevInventoryItems.toArray(new ItemStack[0]), "\u21b3 ");
@@ -356,7 +357,7 @@ public class PneumaticCraftUtils {
      * coming from, just the level of the signal at the position.
      *
      * @param world the world
-     * @param pos the position to check
+     * @param pos   the position to check
      * @return the redstone level
      */
     public static int getRedstoneLevel(World world, BlockPos pos) {
@@ -432,7 +433,7 @@ public class PneumaticCraftUtils {
     public static double distBetweenSq(double x1, double y1, double z1, double x2, double y2, double z2) {
         return Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2);
     }
-    
+
     public static double distBetweenSq(Vec3i pos, double x, double y, double z) {
         return distBetweenSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, x, y, z);
     }
@@ -647,10 +648,10 @@ public class PneumaticCraftUtils {
     /**
      * Attempt to place a block in the world, respecting BlockEvent.PlaceEvent results.
      *
-     * @param w the world
-     * @param pos the position in the world
-     * @param player the player who is placing the block
-     * @param face the face against which the block is placed
+     * @param w        the world
+     * @param pos      the position in the world
+     * @param player   the player who is placing the block
+     * @param face     the face against which the block is placed
      * @param newState the blockstate to change the position to
      * @return true if the block could be placed, false otherwise
      */
@@ -687,7 +688,7 @@ public class PneumaticCraftUtils {
     /**
      * Convenience method, ported from 1.8.  Consume one item from the player's inventory.
      *
-     * @param inv player's inventory
+     * @param inv  player's inventory
      * @param item item to consume
      * @return true if an item was consumed
      */
@@ -722,7 +723,7 @@ public class PneumaticCraftUtils {
      * from Block#getActualState or Block#getExtendedState
      *
      * @param world the world
-     * @param pos the block position
+     * @param pos   the block position
      * @return the tile entity, or null if there is none
      */
     public static TileEntity getTileEntitySafely(IBlockAccess world, BlockPos pos) {

@@ -34,29 +34,29 @@ public class FluidItemWrapper implements ICapabilityProvider {
     @Nullable
     @Override
     public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if (!hasCapability(capability, facing)) {
+        if (!this.hasCapability(capability, facing)) {
             return null;
         }
         return CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY.cast(new IFluidHandlerItem() {
             @Nonnull
             @Override
             public ItemStack getContainer() {
-                return stack;
+                return FluidItemWrapper.this.stack;
             }
 
             @Override
             public IFluidTankProperties[] getTankProperties() {
-                FluidTank tank = ISerializableTanks.deserializeTank(stack, tankName, capacity);
+                FluidTank tank = ISerializableTanks.deserializeTank(FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName, FluidItemWrapper.this.capacity);
                 return tank == null ? EMPTY : tank.getTankProperties();
             }
 
             @Override
             public int fill(FluidStack resource, boolean doFill) {
-                FluidTank tank = ISerializableTanks.deserializeTank(stack, tankName, capacity);
+                FluidTank tank = ISerializableTanks.deserializeTank(FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName, FluidItemWrapper.this.capacity);
                 if (tank == null) return 0;
                 int filled = tank.fill(resource, doFill);
                 if (filled > 0 && doFill) {
-                    ISerializableTanks.serializeTank(tank, stack, tankName);
+                    ISerializableTanks.serializeTank(tank, FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName);
                 }
                 return filled;
             }
@@ -64,11 +64,11 @@ public class FluidItemWrapper implements ICapabilityProvider {
             @Nullable
             @Override
             public FluidStack drain(FluidStack resource, boolean doDrain) {
-                FluidTank tank = ISerializableTanks.deserializeTank(stack, tankName, capacity);
+                FluidTank tank = ISerializableTanks.deserializeTank(FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName, FluidItemWrapper.this.capacity);
                 if (tank == null) return null;
                 FluidStack drained = tank.drain(resource, doDrain);
                 if (drained != null && drained.amount > 0 && doDrain) {
-                    ISerializableTanks.serializeTank(tank, stack, tankName);
+                    ISerializableTanks.serializeTank(tank, FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName);
                 }
                 return drained;
             }
@@ -76,11 +76,11 @@ public class FluidItemWrapper implements ICapabilityProvider {
             @Nullable
             @Override
             public FluidStack drain(int maxDrain, boolean doDrain) {
-                FluidTank tank = ISerializableTanks.deserializeTank(stack, tankName, capacity);
+                FluidTank tank = ISerializableTanks.deserializeTank(FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName, FluidItemWrapper.this.capacity);
                 if (tank == null) return null;
                 FluidStack drained = tank.drain(maxDrain, doDrain);
                 if (drained != null && drained.amount > 0 && doDrain) {
-                    ISerializableTanks.serializeTank(tank, stack, tankName);
+                    ISerializableTanks.serializeTank(tank, FluidItemWrapper.this.stack, FluidItemWrapper.this.tankName);
                 }
                 return drained;
             }

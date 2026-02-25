@@ -16,7 +16,7 @@ public class BlockFluxCompressor extends BlockPneumaticCraft {
     }
 
     @Override
-    public EnumGuiId getGuiID(){
+    public EnumGuiId getGuiID() {
         return EnumGuiId.FLUX_COMPRESSOR;
     }
 

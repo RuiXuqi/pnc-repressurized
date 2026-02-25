@@ -24,14 +24,14 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        evaluator = getEvaluator(drone, widget);
-        return evaluator;
+        this.evaluator = this.getEvaluator(drone, widget);
+        return this.evaluator;
     }
 
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[getParameters().length - 1] == null && getConnectedParameters()[getParameters().length * 2 - 1] == null) {
+        if (this.getConnectedParameters()[this.getParameters().length - 1] == null && this.getConnectedParameters()[this.getParameters().length * 2 - 1] == null) {
             curInfo.add("gui.progWidget.condition.error.noFlowControl");
         }
     }
@@ -43,8 +43,8 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        if (evaluator != null) {
-            boolean evaluation = evaluate(drone, this);
+        if (this.evaluator != null) {
+            boolean evaluation = this.evaluate(drone, this);
             if (evaluation) {
                 drone.addDebugEntry("gui.progWidget.condition.evaluatedTrue");
             } else {
@@ -59,12 +59,12 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public boolean evaluate(IDroneBase drone, IProgWidget widget) {
-        return evaluator.getResult();
+        return this.evaluator.getResult();
     }
 
     @Override
     public boolean isAndFunction() {
-        return isAndFunction;
+        return this.isAndFunction;
     }
 
     @Override
@@ -79,8 +79,8 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public List<String> getPossibleJumpLocations() {
-        IProgWidget widget = getConnectedParameters()[getParameters().length - 1];
-        IProgWidget widget2 = getConnectedParameters()[getParameters().length * 2 - 1];
+        IProgWidget widget = this.getConnectedParameters()[this.getParameters().length - 1];
+        IProgWidget widget2 = this.getConnectedParameters()[this.getParameters().length * 2 - 1];
         ProgWidgetString textWidget = widget != null ? (ProgWidgetString) widget : null;
         ProgWidgetString textWidget2 = widget2 != null ? (ProgWidgetString) widget2 : null;
         List<String> locations = new ArrayList<>();
@@ -91,17 +91,17 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public int getRequiredCount() {
-        return getCount();
+        return this.getCount();
     }
 
     @Override
     public void setRequiredCount(int count) {
-        setCount(count);
+        this.setCount(count);
     }
 
     @Override
     public Operator getOperator() {
-        return operator;
+        return this.operator;
     }
 
     @Override
@@ -112,15 +112,15 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("isAndFunction", isAndFunction);
-        tag.setByte("operator", (byte) operator.ordinal());
+        tag.setBoolean("isAndFunction", this.isAndFunction);
+        tag.setByte("operator", (byte) this.operator.ordinal());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        isAndFunction = tag.getBoolean("isAndFunction");
-        operator = ICondition.Operator.values()[tag.getByte("operator")];
+        this.isAndFunction = tag.getBoolean("isAndFunction");
+        this.operator = ICondition.Operator.values()[tag.getByte("operator")];
     }
 
     @Override
@@ -136,8 +136,8 @@ public abstract class ProgWidgetCondition extends ProgWidgetInventoryBase implem
 
     @Override
     public String getExtraStringInfo() {
-        String anyAll = I18n.format(isAndFunction() ? "gui.progWidget.condition.all" : "gui.progWidget.condition.any");
-        return anyAll + " " + getOperator().toString() + " " + getRequiredCount();
+        String anyAll = I18n.format(this.isAndFunction() ? "gui.progWidget.condition.all" : "gui.progWidget.condition.any");
+        return anyAll + " " + this.getOperator().toString() + " " + this.getRequiredCount();
     }
 
     @Override

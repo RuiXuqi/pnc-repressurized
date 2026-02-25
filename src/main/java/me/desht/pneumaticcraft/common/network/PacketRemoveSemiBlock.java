@@ -22,22 +22,22 @@ public class PacketRemoveSemiBlock extends LocationIntPacket<PacketRemoveSemiBlo
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeByte(index);
+        buf.writeByte(this.index);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        index = buf.readByte();
+        this.index = buf.readByte();
     }
 
     @Override
     public void handleClientSide(PacketRemoveSemiBlock message, EntityPlayer player) {
         SemiBlockManager manager = SemiBlockManager.getInstance(player.world);
         manager.getSemiBlocks(player.world, message.pos)
-              .filter(s -> s.getIndex() == message.index)
-              .collect(Collectors.toList()) //To list is necessary, because the indeces will get updated through the removal iterations.
-              .forEach(manager::removeSemiBlock);
+                .filter(s -> s.getIndex() == message.index)
+                .collect(Collectors.toList()) //To list is necessary, because the indeces will get updated through the removal iterations.
+                .forEach(manager::removeSemiBlock);
     }
 
     @Override

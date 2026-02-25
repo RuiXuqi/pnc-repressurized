@@ -17,29 +17,29 @@ public class PacketUpdateLogisticModule extends LocationIntPacket<PacketUpdateLo
 
     public PacketUpdateLogisticModule(ModuleLogistics logisticsModule, int action) {
         super(logisticsModule.getTube().pos());
-        side = logisticsModule.getDirection().ordinal();
-        colorIndex = logisticsModule.getColorChannel();
+        this.side = logisticsModule.getDirection().ordinal();
+        this.colorIndex = logisticsModule.getColorChannel();
         if (action > 0) {
-            status = 1 + action;
+            this.status = 1 + action;
         } else {
-            status = logisticsModule.hasPower() ? 1 : 0;
+            this.status = logisticsModule.hasPower() ? 1 : 0;
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeByte(side);
-        buf.writeByte(colorIndex);
-        buf.writeByte(status);
+        buf.writeByte(this.side);
+        buf.writeByte(this.colorIndex);
+        buf.writeByte(this.status);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        side = buf.readByte();
-        colorIndex = buf.readByte();
-        status = buf.readByte();
+        this.side = buf.readByte();
+        this.colorIndex = buf.readByte();
+        this.status = buf.readByte();
     }
 
     @Override

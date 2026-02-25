@@ -56,7 +56,7 @@ public class BlockAerialInterface extends BlockPneumaticCraft {
     public int getWeakPower(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         TileEntity te = blockAccess.getTileEntity(pos);
         if (te instanceof TileEntityAerialInterface) {
-            return ((TileEntityAerialInterface)te ).shouldEmitRedstone() ? 15 : 0;
+            return ((TileEntityAerialInterface) te).shouldEmitRedstone() ? 15 : 0;
         }
         return 0;
     }

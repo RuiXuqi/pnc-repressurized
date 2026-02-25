@@ -22,16 +22,16 @@ public class PacketToggleArmorFeature extends AbstractPacket<PacketToggleArmorFe
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        featureIndex = buf.readByte();
-        state = buf.readBoolean();
-        slot = EntityEquipmentSlot.values()[buf.readByte()];
+        this.featureIndex = buf.readByte();
+        this.state = buf.readBoolean();
+        this.slot = EntityEquipmentSlot.values()[buf.readByte()];
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeByte(featureIndex);
-        buf.writeBoolean(state);
-        buf.writeByte(slot.ordinal());
+        buf.writeByte(this.featureIndex);
+        buf.writeBoolean(this.state);
+        buf.writeByte(this.slot.ordinal());
     }
 
     @Override

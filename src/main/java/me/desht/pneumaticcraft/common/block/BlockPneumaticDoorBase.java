@@ -36,14 +36,14 @@ public class BlockPneumaticDoorBase extends BlockPneumaticCraftCamo {
     public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
         super.onBlockPlacedBy(world, pos, state, entity, stack);
         TileEntityPneumaticDoorBase doorBase = (TileEntityPneumaticDoorBase) world.getTileEntity(pos);
-        updateDoorSide(doorBase);
+        this.updateDoorSide(doorBase);
     }
 
     @Override
     public void neighborChanged(IBlockState state, World world, BlockPos pos, Block block, BlockPos fromPos) {
         TileEntity te = world.getTileEntity(pos);
         if (te instanceof TileEntityPneumaticDoorBase) {
-            updateDoorSide((TileEntityPneumaticDoorBase) te);
+            this.updateDoorSide((TileEntityPneumaticDoorBase) te);
             EnumFacing dir = ((TileEntityPneumaticDoorBase) te).getRotation();
             if (world.getBlockState(pos.offset(dir)).getBlock() == Blockss.PNEUMATIC_DOOR) {
                 Blockss.PNEUMATIC_DOOR.neighborChanged(world.getBlockState(pos.offset(dir)), world, pos, block, pos.offset(dir));

@@ -31,27 +31,27 @@ public class GuiAssemblyController extends GuiPneumaticContainerBase<TileEntityA
     @Override
     public void initGui() {
         super.initGui();
-        statusStat = addAnimatedStat("gui.tab.status", new ItemStack(Blockss.ASSEMBLY_CONTROLLER), 0xFFFFAA00, false);
+        this.statusStat = this.addAnimatedStat("gui.tab.status", new ItemStack(Blockss.ASSEMBLY_CONTROLLER), 0xFFFFAA00, false);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 18, 21, 4210752);
-        fontRenderer.drawString("Prog.", 70, 24, 4210752);
+        this.fontRenderer.drawString("Upgr.", 18, 21, 4210752);
+        this.fontRenderer.drawString("Prog.", 70, 24, 4210752);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
+        this.statusStat.setText(this.getStatusText());
     }
 
     private List<String> getStatusText() {
         List<String> text = new ArrayList<>();
 
         EnumSet<EnumMachine> foundMachines = EnumSet.of(EnumMachine.CONTROLLER);
-        for (IAssemblyMachine machine : te.findMachines(EnumMachine.values().length)) {
+        for (IAssemblyMachine machine : this.te.findMachines(EnumMachine.values().length)) {
             foundMachines.add(machine.getAssemblyType());
         }
         for (EnumMachine m : EnumMachine.values()) {
@@ -66,6 +66,6 @@ public class GuiAssemblyController extends GuiPneumaticContainerBase<TileEntityA
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
 
-        te.addProblems(textList);
+        this.te.addProblems(textList);
     }
 }

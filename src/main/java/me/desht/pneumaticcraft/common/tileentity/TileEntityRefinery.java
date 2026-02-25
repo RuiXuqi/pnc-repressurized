@@ -38,15 +38,15 @@ public class TileEntityRefinery extends TileEntityTickableBase
     @DescSynced
     @LazySynced
     private final RefineryInputTank inputTank = new RefineryInputTank(PneumaticValues.NORMAL_TANK_CAPACITY);
-    
+
     @GuiSynced
     @DescSynced
     @LazySynced
     private final SmartSyncTank outputTank = new SmartSyncTank(this, PneumaticValues.NORMAL_TANK_CAPACITY, 2);
-    
+
     @GuiSynced
     private final IHeatExchangerLogic heatExchanger = PneumaticRegistry.getInstance().getHeatRegistry().getHeatExchangerLogic();
-    
+
     @SuppressWarnings("unused")
     @DescSynced
     private int inputAmountScaled, outputAmountScaled;
@@ -90,48 +90,48 @@ public class TileEntityRefinery extends TileEntityTickableBase
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote && isMaster()) {
-            lastProgress = 0;
-            List<TileEntityRefinery> refineries = getRefineries();
-            refineryCount = refineries.size();
-            if (prevRefineryCount != refineryCount) searchForRecipe = true;
-            if (searchForRecipe) {
-                Optional<RefineryRecipe> recipe = RefineryRecipe.getRecipe(inputTank.getFluid() != null ?
-                        inputTank.getFluid().getFluid() : null, refineries.size());
-                currentRecipe = recipe.orElse(null);
-                minTemp = currentRecipe == null ? 0 : currentRecipe.getMinimumTemp();
-                searchForRecipe = false;
+        if (!this.getWorld().isRemote && this.isMaster()) {
+            this.lastProgress = 0;
+            List<TileEntityRefinery> refineries = this.getRefineries();
+            this.refineryCount = refineries.size();
+            if (this.prevRefineryCount != this.refineryCount) this.searchForRecipe = true;
+            if (this.searchForRecipe) {
+                Optional<RefineryRecipe> recipe = RefineryRecipe.getRecipe(this.inputTank.getFluid() != null ?
+                        this.inputTank.getFluid().getFluid() : null, refineries.size());
+                this.currentRecipe = recipe.orElse(null);
+                this.minTemp = this.currentRecipe == null ? 0 : this.currentRecipe.getMinimumTemp();
+                this.searchForRecipe = false;
             }
             boolean hasWork = false;
-            if (currentRecipe != null) {
-                if (prevRefineryCount != refineryCount && refineries.size() > 1) {
-                    redistributeFluids(refineries, currentRecipe);
+            if (this.currentRecipe != null) {
+                if (this.prevRefineryCount != this.refineryCount && refineries.size() > 1) {
+                    this.redistributeFluids(refineries, this.currentRecipe);
                 }
 
-                if (refineries.size() > 1 && redstoneAllows() && refine(refineries, true)) {
+                if (refineries.size() > 1 && this.redstoneAllows() && this.refine(refineries, true)) {
                     hasWork = true;
-                    if (heatExchanger.getTemperature() >= currentRecipe.getMinimumTemp()
-                            && inputTank.getFluidAmount() >= currentRecipe.input.amount) {
-                        int progress = Math.max(0, ((int) heatExchanger.getTemperature() - (currentRecipe.getMinimumTemp() - 30)) / 30);
+                    if (this.heatExchanger.getTemperature() >= this.currentRecipe.getMinimumTemp()
+                            && this.inputTank.getFluidAmount() >= this.currentRecipe.input.amount) {
+                        int progress = Math.max(0, ((int) this.heatExchanger.getTemperature() - (this.currentRecipe.getMinimumTemp() - 30)) / 30);
                         progress = Math.min(5, progress);
-                        heatExchanger.addHeat(-progress);
-                        workTimer += progress;
-                        while (workTimer >= 20 && inputTank.getFluidAmount() >= currentRecipe.input.amount) {
-                            workTimer -= 20;
-                            refine(refineries, false);
-                            inputTank.drain(currentRecipe.input.amount, true);
+                        this.heatExchanger.addHeat(-progress);
+                        this.workTimer += progress;
+                        while (this.workTimer >= 20 && this.inputTank.getFluidAmount() >= this.currentRecipe.input.amount) {
+                            this.workTimer -= 20;
+                            this.refine(refineries, false);
+                            this.inputTank.drain(this.currentRecipe.input.amount, true);
                         }
-                        lastProgress = progress;
+                        this.lastProgress = progress;
                     }
                 } else {
-                    workTimer = 0;
+                    this.workTimer = 0;
                 }
             }
-            prevRefineryCount = refineryCount;
-            updateComparatorValue(refineries, hasWork);
-        } else if (getWorld().isRemote && lastProgress > 0) {
-            for (int i = 0; i < lastProgress; i++) {
-                ClientUtils.emitParticles(getWorld(), getPos().offset(EnumFacing.UP, refineryCount - 1), EnumParticleTypes.SMOKE_LARGE);
+            this.prevRefineryCount = this.refineryCount;
+            this.updateComparatorValue(refineries, hasWork);
+        } else if (this.getWorld().isRemote && this.lastProgress > 0) {
+            for (int i = 0; i < this.lastProgress; i++) {
+                ClientUtils.emitParticles(this.getWorld(), this.getPos().offset(EnumFacing.UP, this.refineryCount - 1), EnumParticleTypes.SMOKE_LARGE);
             }
         }
     }
@@ -141,14 +141,14 @@ public class TileEntityRefinery extends TileEntityTickableBase
      * and output) to match the current recipe so the refinery can continue to run.  Of course, it might not be
      * possible to move fluids if there's already something in the new tank, but we'll do our best.
      *
-     * @param refineries list of all refineries (master - this one - is the first)
+     * @param refineries    list of all refineries (master - this one - is the first)
      * @param currentRecipe the current recipe, guaranteed to match the list of refineries
      */
     private void redistributeFluids(List<TileEntityRefinery> refineries, RefineryRecipe currentRecipe) {
         // only the master refinery should have fluid in its input tank
         // scan all non-master refineries, move any fluid from their input tank to the master (this TE), if possible
         for (int i = 1; i < refineries.size(); i++) {
-            tryMoveFluid(refineries.get(i).getInputTank(), this.getInputTank());
+            this.tryMoveFluid(refineries.get(i).getInputTank(), this.getInputTank());
         }
 
         FluidTank[] tempTanks = new FluidTank[refineries.size()];
@@ -165,7 +165,7 @@ public class TileEntityRefinery extends TileEntityTickableBase
                 // using an intermediate temporary tank here to allow for possible swapping of fluids
                 for (int j = 0; j < currentRecipe.outputs.length; j++) {
                     if (currentRecipe.outputs[j].isFluidEqual(fluid)) {
-                        tryMoveFluid(sourceTank, tempTanks[j]);
+                        this.tryMoveFluid(sourceTank, tempTanks[j]);
                         break;
                     }
                 }
@@ -174,7 +174,7 @@ public class TileEntityRefinery extends TileEntityTickableBase
 
         // and finally move fluids back to the actual output tanks
         for (int i = 0; i < refineries.size(); i++) {
-            tryMoveFluid(tempTanks[i], refineries.get(i).getOutputTank());
+            this.tryMoveFluid(tempTanks[i], refineries.get(i).getOutputTank());
         }
     }
 
@@ -200,29 +200,29 @@ public class TileEntityRefinery extends TileEntityTickableBase
     }
 
     private boolean refine(List<TileEntityRefinery> refineries, boolean simulate) {
-    	if(currentRecipe == null) {
-    		blocked = true;
-    		return false;
-    	}
-    	
-        FluidStack[] outputs = currentRecipe.outputs;
+        if (this.currentRecipe == null) {
+            this.blocked = true;
+            return false;
+        }
+
+        FluidStack[] outputs = this.currentRecipe.outputs;
 
         int i = 0;
         for (TileEntityRefinery refinery : refineries) {
-        	if (i > outputs.length - 1) {
-        		blocked = false;
-        		return true;
-        	}
+            if (i > outputs.length - 1) {
+                this.blocked = false;
+                return true;
+            }
 
             if (outputs[i].amount != refinery.outputTank.fill(outputs[i], !simulate)) {
-            	blocked = true;
-            	return false;
+                this.blocked = true;
+                return false;
             }
 
             i++;
         }
 
-        blocked = false;
+        this.blocked = false;
         return true;
     }
 
@@ -235,12 +235,12 @@ public class TileEntityRefinery extends TileEntityTickableBase
     }
 
     private boolean isMaster() {
-        return getMasterRefinery() == this;
+        return this.getMasterRefinery() == this;
     }
 
     @Override
     public boolean redstoneAllows() {
-        boolean isPoweredByRedstone = poweredRedstone > 0;
+        boolean isPoweredByRedstone = this.poweredRedstone > 0;
 
         TileEntityRefinery refinery = this;
         while (refinery.poweredRedstone == 0 && refinery.getCachedNeighbor(EnumFacing.UP) instanceof TileEntityRefinery) {
@@ -248,7 +248,7 @@ public class TileEntityRefinery extends TileEntityTickableBase
             isPoweredByRedstone = refinery.poweredRedstone > 0;
         }
 
-        switch (getRedstoneMode()) {
+        switch (this.getRedstoneMode()) {
             case 0:
                 return true;
             case 1:
@@ -260,15 +260,15 @@ public class TileEntityRefinery extends TileEntityTickableBase
     }
 
     public FluidTank getInputTank() {
-        return inputTank;
+        return this.inputTank;
     }
 
     public FluidTank getOutputTank() {
-        return outputTank;
+        return this.outputTank;
     }
-    
+
     public boolean isBlocked() {
-        return blocked;
+        return this.blocked;
     }
 
     @Override
@@ -276,14 +276,14 @@ public class TileEntityRefinery extends TileEntityTickableBase
         super.writeToNBT(tag);
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        inputTank.writeToNBT(tankTag);
+        this.inputTank.writeToNBT(tankTag);
         tag.setTag("oilTank", tankTag);
 
         tankTag = new NBTTagCompound();
-        outputTank.writeToNBT(tankTag);
+        this.outputTank.writeToNBT(tankTag);
         tag.setTag("outputTank", tankTag);
 
-        tag.setByte("redstoneMode", (byte) redstoneMode);
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
 
         return tag;
     }
@@ -291,47 +291,47 @@ public class TileEntityRefinery extends TileEntityTickableBase
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        inputTank.readFromNBT(tag.getCompoundTag("oilTank"));
-        inputAmountScaled = inputTank.getScaledFluidAmount();
-        outputTank.readFromNBT(tag.getCompoundTag("outputTank"));
-        outputAmountScaled = outputTank.getScaledFluidAmount();
-        redstoneMode = tag.getByte("redstoneMode");
+        this.inputTank.readFromNBT(tag.getCompoundTag("oilTank"));
+        this.inputAmountScaled = this.inputTank.getScaledFluidAmount();
+        this.outputTank.readFromNBT(tag.getCompoundTag("outputTank"));
+        this.outputAmountScaled = this.outputTank.getScaledFluidAmount();
+        this.redstoneMode = tag.getByte("redstoneMode");
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
     private void updateComparatorValue(List<TileEntityRefinery> refineries, boolean didWork) {
         int value;
-        if (inputTank.getFluidAmount() < 10 || refineries.size() < 2 || currentRecipe == null || refineries.size() > currentRecipe.outputs.length) {
+        if (this.inputTank.getFluidAmount() < 10 || refineries.size() < 2 || this.currentRecipe == null || refineries.size() > this.currentRecipe.outputs.length) {
             value = 0;
         } else {
             value = didWork ? 15 : 0;
         }
-        if (value != comparatorValue) {
-            comparatorValue = value;
-            getWorld().updateComparatorOutputLevel(getPos(), getBlockType());
+        if (value != this.comparatorValue) {
+            this.comparatorValue = value;
+            this.getWorld().updateComparatorOutputLevel(this.getPos(), this.getBlockType());
         }
     }
 
     @Override
     public int getComparatorValue() {
-        return getMasterRefinery().comparatorValue;
+        return this.getMasterRefinery().comparatorValue;
     }
 
     @Override
@@ -343,7 +343,7 @@ public class TileEntityRefinery extends TileEntityTickableBase
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(refineryFluidHandler);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.refineryFluidHandler);
         } else {
             return super.getCapability(capability, facing);
         }
@@ -352,15 +352,15 @@ public class TileEntityRefinery extends TileEntityTickableBase
     @Nonnull
     @Override
     public Map<String, FluidTank> getSerializableTanks() {
-        return ImmutableMap.of("OilTank", inputTank, "OutputTank", outputTank);
+        return ImmutableMap.of("OilTank", this.inputTank, "OutputTank", this.outputTank);
     }
 
     @Override
     public void updateScaledFluidAmount(int tankIndex, int amount) {
         if (tankIndex == 1) {
-            inputAmountScaled = amount;
+            this.inputAmountScaled = amount;
         } else if (tankIndex == 2) {
-            outputAmountScaled = amount;
+            this.outputAmountScaled = amount;
         }
     }
 
@@ -373,17 +373,17 @@ public class TileEntityRefinery extends TileEntityTickableBase
 
         @Override
         public boolean canFillFluidType(FluidStack fluid) {
-            return getFluid() != null && getFluid().isFluidEqual(fluid)
+            return this.getFluid() != null && this.getFluid().isFluidEqual(fluid)
                     || isInputFluidValid(fluid.getFluid(), 4);
         }
 
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
-            Fluid newFluid = getFluid() == null ? null : getFluid().getFluid();
-            if (prevFluid != newFluid) {
-                searchForRecipe = true;
-                prevFluid = newFluid;
+            Fluid newFluid = this.getFluid() == null ? null : this.getFluid().getFluid();
+            if (this.prevFluid != newFluid) {
+                TileEntityRefinery.this.searchForRecipe = true;
+                this.prevFluid = newFluid;
             }
         }
     }
@@ -391,24 +391,24 @@ public class TileEntityRefinery extends TileEntityTickableBase
     private class RefineryFluidHandler implements IFluidHandler {
         @Override
         public IFluidTankProperties[] getTankProperties() {
-            return ArrayUtils.addAll(getMasterRefinery().inputTank.getTankProperties(), outputTank.getTankProperties());
+            return ArrayUtils.addAll(TileEntityRefinery.this.getMasterRefinery().inputTank.getTankProperties(), TileEntityRefinery.this.outputTank.getTankProperties());
         }
 
         @Override
         public int fill(FluidStack resource, boolean doFill) {
-            return getMasterRefinery().inputTank.fill(resource, doFill);
+            return TileEntityRefinery.this.getMasterRefinery().inputTank.fill(resource, doFill);
         }
 
         @Nullable
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
-            return outputTank.drain(resource, doDrain);
+            return TileEntityRefinery.this.outputTank.drain(resource, doDrain);
         }
 
         @Nullable
         @Override
         public FluidStack drain(int maxDrain, boolean doDrain) {
-            return outputTank.drain(maxDrain, doDrain);
+            return TileEntityRefinery.this.outputTank.drain(maxDrain, doDrain);
         }
     }
 }

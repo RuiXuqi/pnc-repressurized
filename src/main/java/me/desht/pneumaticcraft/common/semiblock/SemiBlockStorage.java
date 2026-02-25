@@ -34,21 +34,21 @@ public class SemiBlockStorage extends SemiBlockLogistics implements ISpecificPro
 
     @Override
     public int amountRequested(ItemStack stack) {
-        return passesFilter(stack) ? stack.getMaxStackSize() : 0;
+        return this.passesFilter(stack) ? stack.getMaxStackSize() : 0;
     }
 
     @Override
     public boolean canProvide(ItemStack providingStack) {
-        return passesFilter(providingStack);
+        return this.passesFilter(providingStack);
     }
 
     @Override
     public int amountRequested(FluidStack stack) {
-        return passesFilter(stack.getFluid()) ? stack.amount : 0;
+        return this.passesFilter(stack.getFluid()) ? stack.amount : 0;
     }
 
     @Override
     public boolean canProvide(FluidStack providingStack) {
-        return passesFilter(providingStack.getFluid());
+        return this.passesFilter(providingStack.getFluid());
     }
 }

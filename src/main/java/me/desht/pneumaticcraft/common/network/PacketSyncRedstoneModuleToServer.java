@@ -37,13 +37,13 @@ public class PacketSyncRedstoneModuleToServer extends LocationIntPacket<PacketSy
 
     @Override
     public void handleServerSide(PacketSyncRedstoneModuleToServer message, EntityPlayer player) {
-        TileEntity te = player.world.getTileEntity(pos);
+        TileEntity te = player.world.getTileEntity(this.pos);
         if (te instanceof TileEntityPressureTube) {
             TubeModule m = ((TileEntityPressureTube) te).modules[message.side];
             if (m instanceof ModuleRedstone) {
                 ModuleRedstone mr = (ModuleRedstone) m;
                 mr.setColorChannel(message.ourColor);
-                mr.setInvert(invert);
+                mr.setInvert(this.invert);
                 mr.setOperation(ModuleRedstone.Operation.values()[message.op], message.otherColor, message.constantVal);
             }
         }
@@ -53,23 +53,23 @@ public class PacketSyncRedstoneModuleToServer extends LocationIntPacket<PacketSy
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
 
-        buf.writeByte(side);
-        buf.writeByte(op);
-        buf.writeByte(ourColor);
-        buf.writeByte(otherColor);
-        buf.writeByte(constantVal);
-        buf.writeBoolean(invert);
+        buf.writeByte(this.side);
+        buf.writeByte(this.op);
+        buf.writeByte(this.ourColor);
+        buf.writeByte(this.otherColor);
+        buf.writeByte(this.constantVal);
+        buf.writeBoolean(this.invert);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
 
-        side = buf.readByte();
-        op = buf.readByte();
-        ourColor = buf.readByte();
-        otherColor = buf.readByte();
-        constantVal = buf.readByte();
-        invert = buf.readBoolean();
+        this.side = buf.readByte();
+        this.op = buf.readByte();
+        this.ourColor = buf.readByte();
+        this.otherColor = buf.readByte();
+        this.constantVal = buf.readByte();
+        this.invert = buf.readBoolean();
     }
 }

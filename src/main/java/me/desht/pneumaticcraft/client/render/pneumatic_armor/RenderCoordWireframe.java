@@ -37,7 +37,7 @@ public class RenderCoordWireframe {
         double maxX = 1;
         double maxY = 1;
         double maxZ = 1;
-        float progress = (ticksExisted % 20 + partialTicks) / 20;
+        float progress = (this.ticksExisted % 20 + partialTicks) / 20;
         GlStateManager.depthMask(false);
         GlStateManager.disableDepth();
         GlStateManager.disableCull();
@@ -50,7 +50,7 @@ public class RenderCoordWireframe {
         GlStateManager.color(0, progress < 0.5F ? progress + 0.5F : 1.5F - progress, 1, 1);
         GlStateManager.pushMatrix();
         // GlStateManager.translate(-0.5D, -0.5D, -0.5D);
-        GlStateManager.translate(pos.getX(), pos.getY(), pos.getZ());
+        GlStateManager.translate(this.pos.getX(), this.pos.getY(), this.pos.getZ());
         BufferBuilder wr = Tessellator.getInstance().getBuffer();
         wr.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
         wr.pos(minX, minY, minZ).endVertex();

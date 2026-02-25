@@ -74,8 +74,8 @@ public class IC2 implements IThirdParty, IGuiHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onModelRegister(ModelRegistryEvent event) {
-        registerModel(PNEUMATIC_GENERATOR);
-        registerModel(ELECTRIC_COMPRESSOR);
+        this.registerModel(PNEUMATIC_GENERATOR);
+        this.registerModel(ELECTRIC_COMPRESSOR);
     }
 
     @SideOnly(Side.CLIENT)

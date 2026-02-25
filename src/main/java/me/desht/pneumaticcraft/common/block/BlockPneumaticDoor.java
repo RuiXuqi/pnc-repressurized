@@ -64,7 +64,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
             TileEntityPneumaticDoor teDoor = (TileEntityPneumaticDoor) te;
             if (teDoor.rotationAngle == 90) {
                 EnumFacing originalRotation = state.getValue(ROTATION);
-                if(originalRotation != EnumFacing.UP && originalRotation != EnumFacing.DOWN){
+                if (originalRotation != EnumFacing.UP && originalRotation != EnumFacing.DOWN) {
                     EnumFacing facing = teDoor.rightGoing ? originalRotation.rotateY() : originalRotation.rotateYCCW();
                     state = state.withProperty(ROTATION, facing);
                 }
@@ -85,7 +85,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess blockAccess, BlockPos pos) {
-        if (isTrackingPlayerEye) {
+        if (this.isTrackingPlayerEye) {
             return FULL_BLOCK_AABB;
         } else {
             float xMin = 0;
@@ -96,36 +96,44 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
             EnumFacing rotation = state.getValue(ROTATION);
             if (te instanceof TileEntityPneumaticDoor) {
                 TileEntityPneumaticDoor door = (TileEntityPneumaticDoor) te;
-                float cosinus = thickness / 16F - MathHelper.sin((float)Math.toRadians(door.rotationAngle)) * thickness / 16F;
-                float sinus = thickness / 16F - MathHelper.cos((float) Math.toRadians(door.rotationAngle)) * thickness / 16F;
+                float cosinus = this.thickness / 16F - MathHelper.sin((float) Math.toRadians(door.rotationAngle)) * this.thickness / 16F;
+                float sinus = this.thickness / 16F - MathHelper.cos((float) Math.toRadians(door.rotationAngle)) * this.thickness / 16F;
                 if (door.rightGoing) {
                     switch (rotation) {
                         case NORTH:
-                            zMin = cosinus; xMax = 1 - sinus;
+                            zMin = cosinus;
+                            xMax = 1 - sinus;
                             break;
                         case WEST:
-                            xMin = cosinus; zMin = sinus;
+                            xMin = cosinus;
+                            zMin = sinus;
                             break;
                         case SOUTH:
-                            zMax = 1 - cosinus; xMin = sinus;
+                            zMax = 1 - cosinus;
+                            xMin = sinus;
                             break;
                         case EAST:
-                            xMax = 1 - cosinus; zMax = 1 - sinus;
+                            xMax = 1 - cosinus;
+                            zMax = 1 - sinus;
                             break;
                     }
                 } else {
                     switch (rotation) {
                         case NORTH:
-                            zMin = cosinus; xMin = sinus;
+                            zMin = cosinus;
+                            xMin = sinus;
                             break;
                         case WEST:
-                            xMin = cosinus; zMax = 1 - sinus;
+                            xMin = cosinus;
+                            zMax = 1 - sinus;
                             break;
                         case SOUTH:
-                            zMax = 1 - cosinus; xMax = 1 - sinus;
+                            zMax = 1 - cosinus;
+                            xMax = 1 - sinus;
                             break;
                         case EAST:
-                            xMax = 1 - cosinus; zMin = sinus;
+                            xMax = 1 - cosinus;
+                            zMin = sinus;
                             break;
                     }
                 }
@@ -138,9 +146,9 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        thickness = 15;
-        AxisAlignedBB aabb = getBoundingBox(blockState, worldIn, pos);
-        thickness = 13;
+        this.thickness = 15;
+        AxisAlignedBB aabb = this.getBoundingBox(blockState, worldIn, pos);
+        this.thickness = 13;
         return aabb;
     }
 
@@ -193,7 +201,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
     public boolean rotateBlock(World world, EntityPlayer player, BlockPos pos, EnumFacing face, EnumHand hand) {
         IBlockState state = world.getBlockState(pos);
         if (isTopDoor(state)) {
-            return rotateBlock(world, player, pos.offset(EnumFacing.DOWN), face, hand);
+            return this.rotateBlock(world, player, pos.offset(EnumFacing.DOWN), face, hand);
         } else {
             super.rotateBlock(world, player, pos, face, hand);
             IBlockState newState = world.getBlockState(pos);
@@ -213,7 +221,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing side, float par7, float par8, float par9) {
-        TileEntityPneumaticDoorBase doorBase = getDoorBase(world, pos);
+        TileEntityPneumaticDoorBase doorBase = this.getDoorBase(world, pos);
         if (!world.isRemote && doorBase != null && doorBase.redstoneMode == 2 && doorBase.getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR && hand == EnumHand.MAIN_HAND) {
             doorBase.setOpening(!doorBase.isOpening());
             doorBase.setNeighborOpening(doorBase.isOpening());
@@ -227,7 +235,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
         if (isTopDoor(state)) {
             BlockPos lowerPos = pos.offset(EnumFacing.DOWN);
             if (world.getBlockState(lowerPos).getBlock() == Blockss.PNEUMATIC_DOOR)
-                dropBlockAsItem(world, lowerPos, world.getBlockState(lowerPos), 0);
+                this.dropBlockAsItem(world, lowerPos, world.getBlockState(lowerPos), 0);
             world.setBlockToAir(lowerPos);
         } else {
             world.setBlockToAir(pos.offset(EnumFacing.UP));
@@ -246,7 +254,7 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
         if (!powered) {
             powered = world.getRedstonePowerFromNeighbors(pos.offset(isTopDoor(state) ? EnumFacing.DOWN : EnumFacing.UP)) > 0;
         }
-        TileEntityPneumaticDoorBase doorBase = getDoorBase(world, pos);
+        TileEntityPneumaticDoorBase doorBase = this.getDoorBase(world, pos);
         if (!world.isRemote && doorBase != null && doorBase.getPressure() >= PneumaticValues.MIN_PRESSURE_PNEUMATIC_DOOR) {
             if (powered != doorBase.wasPowered) {
                 doorBase.wasPowered = powered;
@@ -258,9 +266,9 @@ public class BlockPneumaticDoor extends BlockPneumaticCraftModeled {
     private TileEntityPneumaticDoorBase getDoorBase(World world, BlockPos pos) {
         if (world.getBlockState(pos).getBlock() != this) return null;
         if (!isTopDoor(world.getBlockState(pos))) {
-            return getDoorBase(world, pos.offset(EnumFacing.UP));
+            return this.getDoorBase(world, pos.offset(EnumFacing.UP));
         } else {
-            EnumFacing dir = getRotation(world, pos);
+            EnumFacing dir = this.getRotation(world, pos);
             if (dir.getAxis() == EnumFacing.Axis.Y) {
                 // should never happen, but see https://github.com/TeamPneumatic/pnc-repressurized/issues/284
                 return null;

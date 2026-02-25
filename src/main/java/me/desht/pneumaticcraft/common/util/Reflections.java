@@ -14,7 +14,7 @@ import java.lang.reflect.Method;
 
 /**
  * Gather all the reflection work we need to do here for ease of reference.
- *
+ * <p>
  * Note: any private field access is handled via access transformers (META-INF/pneumaticcraft_at.cfg)
  */
 public class Reflections {

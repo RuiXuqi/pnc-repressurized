@@ -68,68 +68,68 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
 
     public TileEntityChargingStation() {
         super(PneumaticValues.DANGER_PRESSURE_CHARGING_STATION, PneumaticValues.MAX_PRESSURE_CHARGING_STATION, PneumaticValues.VOLUME_CHARGING_STATION, 4);
-        inventory = new ChargingStationHandler();
-        addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
+        this.inventory = new ChargingStationHandler();
+        this.addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
     }
 
     @Override
     public void onDescUpdate() {
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
 
         super.onDescUpdate();
     }
 
     @Nonnull
     public ItemStack getChargingStack() {
-        return inventory.getStackInSlot(CHARGE_INVENTORY_INDEX);
+        return this.inventory.getStackInSlot(CHARGE_INVENTORY_INDEX);
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!world.isRemote) {
-            discharging = false;
-            charging = false;
+        if (!this.world.isRemote) {
+            this.discharging = false;
+            this.charging = false;
 
-            chargingStackSynced = inventory.getStackInSlot(CHARGE_INVENTORY_INDEX);
+            this.chargingStackSynced = this.inventory.getStackInSlot(CHARGE_INVENTORY_INDEX);
 
-            int airToTransfer = (int) (PneumaticValues.CHARGING_STATION_CHARGE_RATE * getSpeedMultiplierFromUpgrades());
+            int airToTransfer = (int) (PneumaticValues.CHARGING_STATION_CHARGE_RATE * this.getSpeedMultiplierFromUpgrades());
 
-            for (Pair<IPressurizable, ItemStack> entry : findChargeableItems()) {
+            for (Pair<IPressurizable, ItemStack> entry : this.findChargeableItems()) {
                 IPressurizable p = entry.getLeft();
                 ItemStack chargingStack = entry.getRight();
 
                 float itemPressure = p.getPressure(chargingStack);
                 float itemVolume = p.getVolume(chargingStack);
-                float delta = Math.abs(getPressure() - itemPressure) / 2.0F;
+                float delta = Math.abs(this.getPressure() - itemPressure) / 2.0F;
                 int airInItem = (int) (itemPressure * itemVolume);
 
-                if (itemPressure > getPressure() + 0.01F && itemPressure > 0F) {
+                if (itemPressure > this.getPressure() + 0.01F && itemPressure > 0F) {
                     // move air from item to charger
-                    int airToMove = Math.min(Math.min(airToTransfer, airInItem), (int) (delta * airHandler.getVolume()));
+                    int airToMove = Math.min(Math.min(airToTransfer, airInItem), (int) (delta * this.airHandler.getVolume()));
                     p.addAir(chargingStack, -airToMove);
                     this.addAir(airToMove);
-                    discharging = true;
-                } else if (itemPressure < getPressure() - 0.01F && itemPressure < p.maxPressure(chargingStack)) {
+                    this.discharging = true;
+                } else if (itemPressure < this.getPressure() - 0.01F && itemPressure < p.maxPressure(chargingStack)) {
                     // move air from charger to item
                     int maxAirInItem = (int) (p.maxPressure(chargingStack) * itemVolume);
-                    int airToMove = Math.min(Math.min(airToTransfer, airHandler.getAir()), maxAirInItem - airInItem);
+                    int airToMove = Math.min(Math.min(airToTransfer, this.airHandler.getAir()), maxAirInItem - airInItem);
                     airToMove = Math.min((int) (delta * itemVolume), airToMove);
                     p.addAir(chargingStack, airToMove);
                     this.addAir(-airToMove);
-                    charging = true;
+                    this.charging = true;
                 }
             }
 
-            if (oldRedstoneStatus != shouldEmitRedstone()) {
-                oldRedstoneStatus = shouldEmitRedstone();
-                updateNeighbours();
+            if (this.oldRedstoneStatus != this.shouldEmitRedstone()) {
+                this.oldRedstoneStatus = this.shouldEmitRedstone();
+                this.updateNeighbours();
             }
 
-            List<Pair<EnumFacing, IAirHandler>> teList = getAirHandler(null).getConnectedPneumatics();
+            List<Pair<EnumFacing, IAirHandler>> teList = this.getAirHandler(null).getConnectedPneumatics();
             if (teList.size() == 0) {
-                getAirHandler(null).airLeak(getRotation());
+                this.getAirHandler(null).airLeak(this.getRotation());
             }
         }
     }
@@ -138,22 +138,22 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
     protected void onFirstServerUpdate() {
         super.onFirstServerUpdate();
 
-        chargingStackSynced = new ItemStack(getChargingStack().getItem());
-        dispenserUpgradeInserted = getUpgrades(EnumUpgrade.DISPENSER) > 0;
+        this.chargingStackSynced = new ItemStack(this.getChargingStack().getItem());
+        this.dispenserUpgradeInserted = this.getUpgrades(EnumUpgrade.DISPENSER) > 0;
     }
 
     private List<Pair<IPressurizable, ItemStack>> findChargeableItems() {
         List<Pair<IPressurizable, ItemStack>> res = new ArrayList<>();
 
-        IPressurizable p = IPressurizable.of(getChargingStack());
+        IPressurizable p = IPressurizable.of(this.getChargingStack());
         if (p != null) {
-            res.add(Pair.of(p, getChargingStack()));
-            chargingItemPressure = p.getPressure(getChargingStack());
+            res.add(Pair.of(p, this.getChargingStack()));
+            this.chargingItemPressure = p.getPressure(this.getChargingStack());
         }
 
-        if (getUpgrades(EnumUpgrade.DISPENSER) > 0) {
+        if (this.getUpgrades(EnumUpgrade.DISPENSER) > 0) {
             // creating a new word, 'entities padding'!
-            List<Entity> entitiesPadding = getWorld().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getPos().up()));
+            List<Entity> entitiesPadding = this.getWorld().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(this.getPos().up()));
             for (Entity entity : entitiesPadding) {
                 if (entity instanceof IPressurizable) {
                     res.add(Pair.of((IPressurizable) entity, ItemStack.EMPTY));
@@ -179,34 +179,34 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return getRotation() == side;
+        return this.getRotation() == side;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 3) redstoneMode = 0;
-            updateNeighbours();
-        } else if ((buttonID == 1 || buttonID == 2) && getChargingStack().getItem() instanceof IChargingStationGUIHolderItem) {
+            this.redstoneMode++;
+            if (this.redstoneMode > 3) this.redstoneMode = 0;
+            this.updateNeighbours();
+        } else if ((buttonID == 1 || buttonID == 2) && this.getChargingStack().getItem() instanceof IChargingStationGUIHolderItem) {
             player.openGui(PneumaticCraftRepressurized.instance,
                     buttonID == 1 ?
-                            ((IChargingStationGUIHolderItem) getChargingStack().getItem()).getGuiID().ordinal() :
+                            ((IChargingStationGUIHolderItem) this.getChargingStack().getItem()).getGuiID().ordinal() :
                             EnumGuiId.CHARGING_STATION.ordinal(),
-                    getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
+                    this.getWorld(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
         }
     }
 
     public boolean shouldEmitRedstone() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return false;
             case 1:
-                return !charging && !discharging && getChargingStack().getItem() instanceof IPressurizable;
+                return !this.charging && !this.discharging && this.getChargingStack().getItem() instanceof IPressurizable;
             case 2:
-                return charging;
+                return this.charging;
             case 3:
-                return discharging;
+                return this.discharging;
 
         }
         return false;
@@ -215,16 +215,16 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     public ChargeableItemHandler getChargeableInventory() {
-        return getWorld().isRemote ? new ChargeableItemHandler(this) : chargeableInventory;
+        return this.getWorld().isRemote ? new ChargeableItemHandler(this) : this.chargeableInventory;
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
@@ -235,36 +235,36 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstoneMode = tag.getInteger("redstoneMode");
-        inventory = new ChargingStationHandler();
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.redstoneMode = tag.getInteger("redstoneMode");
+        this.inventory = new ChargingStationHandler();
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
 
-        ItemStack chargeSlot = getChargingStack();
+        ItemStack chargeSlot = this.getChargingStack();
         if (chargeSlot.getItem() instanceof IChargingStationGUIHolderItem) {
-            chargeableInventory = new ChargeableItemHandler(this);
+            this.chargeableInventory = new ChargeableItemHandler(this);
         }
 
-        camoStack = ICamouflageableTE.readCamoStackFromNBT(tag);
-        camoState = ICamouflageableTE.getStateForStack(camoStack);
+        this.camoStack = ICamouflageableTE.readCamoStackFromNBT(tag);
+        this.camoState = ICamouflageableTE.getStateForStack(this.camoStack);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (chargeableInventory != null) {
-            chargeableInventory.writeToNBT();
+        if (this.chargeableInventory != null) {
+            this.chargeableInventory.writeToNBT();
         }
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setTag("Items", inventory.serializeNBT());
-        ICamouflageableTE.writeCamoStackToNBT(camoStack, tag);
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setTag("Items", this.inventory.serializeNBT());
+        ICamouflageableTE.writeCamoStackToNBT(this.camoStack, tag);
         return tag;
     }
 
     @Override
     public void markDirty() {
         super.markDirty();
-        if (chargeableInventory != null) {
-            chargeableInventory.writeToNBT();
+        if (this.chargeableInventory != null) {
+            this.chargeableInventory.writeToNBT();
         }
     }
 
@@ -272,14 +272,14 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
     protected void onUpgradesChanged() {
         super.onUpgradesChanged();
 
-        if (world != null && !world.isRemote) {
-            dispenserUpgradeInserted = getUpgrades(EnumUpgrade.DISPENSER) > 0;
+        if (this.world != null && !this.world.isRemote) {
+            this.dispenserUpgradeInserted = this.getUpgrades(EnumUpgrade.DISPENSER) > 0;
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
@@ -294,25 +294,25 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
 
     @Override
     public IBlockState getCamouflage() {
-        return camoState;
+        return this.camoState;
     }
 
     @Override
     public void setCamouflage(IBlockState state) {
-        camoState = state;
-        camoStack = ICamouflageableTE.getStackForState(state);
-        sendDescriptionPacket();
-        markDirty();
+        this.camoState = state;
+        this.camoStack = ICamouflageableTE.getStackForState(state);
+        this.sendDescriptionPacket();
+        this.markDirty();
     }
-    
+
     @Override
-    public void invalidate(){
+    public void invalidate() {
         super.invalidate();
         GlobalTileEntityCacheManager.getInstance().chargingStations.remove(this);
     }
-    
+
     @Override
-    public void validate(){
+    public void validate() {
         super.validate();
         GlobalTileEntityCacheManager.getInstance().chargingStations.add(this);
     }
@@ -321,9 +321,9 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
         ChargingStationHandler() {
             super(TileEntityChargingStation.this, INVENTORY_SIZE);
         }
-        
+
         @Override
-        public int getSlotLimit(int slot){
+        public int getSlotLimit(int slot) {
             return 1;
         }
 
@@ -336,9 +336,9 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
         protected void onContentsChanged(int slot) {
             TileEntityChargingStation teCS = TileEntityChargingStation.this;
 
-            ItemStack newStack = getStackInSlot(slot);
-            if (!ItemStack.areItemsEqual(chargingStackSynced, newStack)) {
-                chargingStackSynced = new ItemStack(newStack.getItem());
+            ItemStack newStack = this.getStackInSlot(slot);
+            if (!ItemStack.areItemsEqual(TileEntityChargingStation.this.chargingStackSynced, newStack)) {
+                TileEntityChargingStation.this.chargingStackSynced = new ItemStack(newStack.getItem());
             }
 
             if (teCS.getWorld().isRemote || slot != CHARGE_INVENTORY_INDEX) return;
@@ -349,7 +349,7 @@ public class TileEntityChargingStation extends TileEntityPneumaticBase implement
 
             // if any other player has a gui open for the previous item, force a reopen of the charging station gui
             for (EntityPlayer player : teCS.getWorld().playerEntities) {
-                if (player.openContainer instanceof ContainerChargingStationItemInventory && ((ContainerChargingStationItemInventory) player.openContainer).te == te) {
+                if (player.openContainer instanceof ContainerChargingStationItemInventory && ((ContainerChargingStationItemInventory) player.openContainer).te == this.te) {
                     player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.CHARGING_STATION.ordinal(), teCS.getWorld(), teCS.getPos().getX(), teCS.getPos().getY(), teCS.getPos().getZ());
                 }
             }

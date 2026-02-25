@@ -41,17 +41,17 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
 
     @Override
     public int getID() {
-        return id;
+        return this.id;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTick) {
-        drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2, enabled ? 0xFFA0A0A0 : 0xFF999999);
-        drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2 - 1, enabled ? 0XFF202020 : 0xFFAAAAAA);
-        if (checked) {
-            drawCircle(x + BUTTON_WIDTH / 2, y + BUTTON_HEIGHT / 2, 1, enabled ? 0xFFFFFFFF : 0xFFAAAAAA);
+        this.drawCircle(this.x + BUTTON_WIDTH / 2, this.y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2, this.enabled ? 0xFFA0A0A0 : 0xFF999999);
+        this.drawCircle(this.x + BUTTON_WIDTH / 2, this.y + BUTTON_HEIGHT / 2, BUTTON_WIDTH / 2 - 1, this.enabled ? 0XFF202020 : 0xFFAAAAAA);
+        if (this.checked) {
+            this.drawCircle(this.x + BUTTON_WIDTH / 2, this.y + BUTTON_HEIGHT / 2, 1, this.enabled ? 0xFFFFFFFF : 0xFFAAAAAA);
         }
-        fontRenderer.drawString(I18n.format(text), x + 1 + BUTTON_WIDTH, y + BUTTON_HEIGHT / 2 - fontRenderer.FONT_HEIGHT / 2, enabled ? color : 0xFF888888);
+        this.fontRenderer.drawString(I18n.format(this.text), this.x + 1 + BUTTON_WIDTH, this.y + BUTTON_HEIGHT / 2 - this.fontRenderer.FONT_HEIGHT / 2, this.enabled ? this.color : 0xFF888888);
     }
 
     private void drawCircle(int x, int y, int radius, int color) {
@@ -69,7 +69,7 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
         for (int i = 0; i < points; i++) {
             double sin = Math.sin((double) i / points * Math.PI * 2);
             double cos = Math.cos((double) i / points * Math.PI * 2);
-            wr.pos(x + sin * radius, y + cos * radius, zLevel).endVertex();
+            wr.pos(x + sin * radius, y + cos * radius, this.zLevel).endVertex();
         }
         Tessellator.getInstance().draw();
         GlStateManager.enableTexture2D();
@@ -78,21 +78,21 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, BUTTON_WIDTH + fontRenderer.getStringWidth(text), BUTTON_HEIGHT);
+        return new Rectangle(this.x, this.y, BUTTON_WIDTH + this.fontRenderer.getStringWidth(this.text), BUTTON_HEIGHT);
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
-        if (enabled) {
-            if (otherChoices != null) {
-                for (GuiRadioButton radioButton : otherChoices) {
+        if (this.enabled) {
+            if (this.otherChoices != null) {
+                for (GuiRadioButton radioButton : this.otherChoices) {
                     radioButton.checked = false;
                 }
             } else {
                 throw new IllegalArgumentException("A radio button needs more than one choice! You need to set the GuiRadioButton#otherChoices field!");
             }
-            checked = true;
-            listener.actionPerformed(this);
+            this.checked = true;
+            this.listener.actionPerformed(this);
         }
     }
 
@@ -102,7 +102,7 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
     }
 
     public void setTooltip(String tooltip) {
-        setTooltip(Collections.singletonList(tooltip));
+        this.setTooltip(Collections.singletonList(tooltip));
     }
 
     public void setTooltip(List<String> tooltip) {
@@ -111,7 +111,7 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTooltip, boolean shiftPressed) {
-        curTooltip.addAll(tooltip);
+        curTooltip.addAll(this.tooltip);
     }
 
     @Override
@@ -121,7 +121,7 @@ public class GuiRadioButton extends Gui implements IGuiWidget {
 
     @Override
     public void setListener(IWidgetListener gui) {
-        listener = gui;
+        this.listener = gui;
     }
 
     @Override

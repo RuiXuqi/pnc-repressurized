@@ -1,47 +1,47 @@
 package me.desht.pneumaticcraft.common.util;
 
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.items.ItemStackHandler;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.items.ItemStackHandler;
-
-public class ItemStackHandlerIterable implements Iterable<ItemStack>{
+public class ItemStackHandlerIterable implements Iterable<ItemStack> {
 
     private final ItemStackHandler itemStackHandler;
-    
-    public ItemStackHandlerIterable(ItemStackHandler itemStackHandler){
+
+    public ItemStackHandlerIterable(ItemStackHandler itemStackHandler) {
         this.itemStackHandler = itemStackHandler;
     }
-    
+
     @Override
-    public Iterator<ItemStack> iterator(){
-        return new Iterator<ItemStack>(){
+    public Iterator<ItemStack> iterator() {
+        return new Iterator<ItemStack>() {
             private int curIndex = 0;
-            
+
             @Override
-            public boolean hasNext(){
-                return curIndex < itemStackHandler.getSlots();
+            public boolean hasNext() {
+                return this.curIndex < ItemStackHandlerIterable.this.itemStackHandler.getSlots();
             }
 
             @Override
-            public ItemStack next(){
-                if(!hasNext()) throw new NoSuchElementException();
-                return itemStackHandler.getStackInSlot(curIndex++);
+            public ItemStack next() {
+                if (!this.hasNext()) throw new NoSuchElementException();
+                return ItemStackHandlerIterable.this.itemStackHandler.getStackInSlot(this.curIndex++);
             }
-            
+
             @Override
             public void remove() {
-                if(curIndex == 0) throw new IllegalStateException("First call next()!");
-                itemStackHandler.setStackInSlot(curIndex - 1, ItemStack.EMPTY);
+                if (this.curIndex == 0) throw new IllegalStateException("First call next()!");
+                ItemStackHandlerIterable.this.itemStackHandler.setStackInSlot(this.curIndex - 1, ItemStack.EMPTY);
             }
         };
     }
-    
-    public Stream<ItemStack> stream(){
-        return StreamSupport.stream(spliterator(), false);
+
+    public Stream<ItemStack> stream() {
+        return StreamSupport.stream(this.spliterator(), false);
     }
 
 }

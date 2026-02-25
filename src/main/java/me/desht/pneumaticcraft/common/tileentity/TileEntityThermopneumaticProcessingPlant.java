@@ -82,79 +82,79 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            searchForRecipe = true;
+            TileEntityThermopneumaticProcessingPlant.this.searchForRecipe = true;
         }
     };
     private final ThermopneumaticFluidHandler fluidHandler = new ThermopneumaticFluidHandler();
 
     public TileEntityThermopneumaticProcessingPlant() {
         super(5, 7, 3000, 4);
-        addApplicableUpgrade(EnumUpgrade.DISPENSER);
-        heatExchanger.setThermalResistance(10);
+        this.addApplicableUpgrade(EnumUpgrade.DISPENSER);
+        this.heatExchanger.setThermalResistance(10);
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing dir) {
-        return getRotation().getOpposite() != dir && dir != EnumFacing.UP;
+        return this.getRotation().getOpposite() != dir && dir != EnumFacing.UP;
     }
 
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
+        if (!this.getWorld().isRemote) {
             // bit of a kludge since inv/fluid changes aren't always reliably detected
-            if (searchForRecipe || (getWorld().getTotalWorldTime() & 0xf) == 0) {
-                currentRecipe = getValidRecipe();
-                searchForRecipe = false;
+            if (this.searchForRecipe || (this.getWorld().getTotalWorldTime() & 0xf) == 0) {
+                this.currentRecipe = this.getValidRecipe();
+                this.searchForRecipe = false;
             }
-            hasRecipe = currentRecipe != null;
-            didWork = false;
-            if (hasRecipe) {
-                ItemStack stackInSlot = handler.getStackInSlot(0);
-                requiredPressure = currentRecipe.getRequiredPressure(inputTank.getFluid(), stackInSlot);
-                requiredTemperature = currentRecipe.getRequiredTemperature(inputTank.getFluid(), stackInSlot);
-                if (redstoneAllows() && heatExchanger.getTemperature() >= requiredTemperature && hasEnoughPressure()) {
-                    double inc = requiredTemperature > 0 ? Math.min(MAX_SPEED_UP, heatExchanger.getTemperature() / requiredTemperature) : 1.0;
-                    craftingProgress += inc * 100;
-                    if (craftingProgress >= CRAFTING_TIME) {
-                        outputTank.fill(currentRecipe.getRecipeOutput(inputTank.getFluid(), stackInSlot).copy(), true);
-                        currentRecipe.useResources(inputTank, handler);
-                        addAir(-currentRecipe.airUsed(inputTank.getFluid(), stackInSlot));
-                        heatExchanger.addHeat(-currentRecipe.heatUsed(inputTank.getFluid(), stackInSlot) * inc * 0.75);
-                        craftingProgress -= CRAFTING_TIME;
+            this.hasRecipe = this.currentRecipe != null;
+            this.didWork = false;
+            if (this.hasRecipe) {
+                ItemStack stackInSlot = this.handler.getStackInSlot(0);
+                this.requiredPressure = this.currentRecipe.getRequiredPressure(this.inputTank.getFluid(), stackInSlot);
+                this.requiredTemperature = this.currentRecipe.getRequiredTemperature(this.inputTank.getFluid(), stackInSlot);
+                if (this.redstoneAllows() && this.heatExchanger.getTemperature() >= this.requiredTemperature && this.hasEnoughPressure()) {
+                    double inc = this.requiredTemperature > 0 ? Math.min(MAX_SPEED_UP, this.heatExchanger.getTemperature() / this.requiredTemperature) : 1.0;
+                    this.craftingProgress += inc * 100;
+                    if (this.craftingProgress >= CRAFTING_TIME) {
+                        this.outputTank.fill(this.currentRecipe.getRecipeOutput(this.inputTank.getFluid(), stackInSlot).copy(), true);
+                        this.currentRecipe.useResources(this.inputTank, this.handler);
+                        this.addAir(-this.currentRecipe.airUsed(this.inputTank.getFluid(), stackInSlot));
+                        this.heatExchanger.addHeat(-this.currentRecipe.heatUsed(this.inputTank.getFluid(), stackInSlot) * inc * 0.75);
+                        this.craftingProgress -= CRAFTING_TIME;
                     }
-                    didWork = true;
+                    this.didWork = true;
                 }
             } else {
-                craftingProgress = 0;
-                requiredTemperature = 0;
-                requiredPressure = 0;
+                this.craftingProgress = 0;
+                this.requiredTemperature = 0;
+                this.requiredPressure = 0;
             }
         } else {
-            if (didWork && getWorld().rand.nextBoolean()) {
-                ClientUtils.emitParticles(getWorld(), getPos(), EnumParticleTypes.SMOKE_NORMAL);
+            if (this.didWork && this.getWorld().rand.nextBoolean()) {
+                ClientUtils.emitParticles(this.getWorld(), this.getPos(), EnumParticleTypes.SMOKE_NORMAL);
             }
         }
     }
 
     private boolean hasEnoughPressure() {
-        if (getMinWorkingPressure() == 0) {
+        if (this.getMinWorkingPressure() == 0) {
             return true;
-        } else if (getMinWorkingPressure() > 0) {
-            return getPressure() >= getMinWorkingPressure();
+        } else if (this.getMinWorkingPressure() > 0) {
+            return this.getPressure() >= this.getMinWorkingPressure();
         } else {
-            return getPressure() <= getMinWorkingPressure();
+            return this.getPressure() <= this.getMinWorkingPressure();
         }
     }
 
     private IThermopneumaticProcessingPlantRecipe getValidRecipe() {
         for (IThermopneumaticProcessingPlantRecipe recipe : BasicThermopneumaticProcessingPlantRecipe.recipes) {
-            if (recipe.isValidRecipe(inputTank.getFluid(), handler.getStackInSlot(0))) {
-                if (outputTank.getFluid() == null) {
+            if (recipe.isValidRecipe(this.inputTank.getFluid(), this.handler.getStackInSlot(0))) {
+                if (this.outputTank.getFluid() == null) {
                     return recipe;
                 } else {
-                    FluidStack output = recipe.getRecipeOutput(inputTank.getFluid(), handler.getStackInSlot(0));
-                    if (output.getFluid() == outputTank.getFluid().getFluid() && output.amount <= outputTank.getCapacity() - outputTank.getFluidAmount()) {
+                    FluidStack output = recipe.getRecipeOutput(this.inputTank.getFluid(), this.handler.getStackInSlot(0));
+                    if (output.getFluid() == this.outputTank.getFluid().getFluid() && output.amount <= this.outputTank.getCapacity() - this.outputTank.getFluidAmount()) {
                         return recipe;
                     }
                 }
@@ -165,7 +165,7 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return handler;
+        return this.handler;
     }
 
     @Override
@@ -178,38 +178,38 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(fluidHandler);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.fluidHandler);
         }
         return super.getCapability(capability, facing);
     }
 
     public FluidTank getInputTank() {
-        return inputTank;
+        return this.inputTank;
     }
 
     public FluidTank getOutputTank() {
-        return outputTank;
+        return this.outputTank;
     }
 
     @SideOnly(Side.CLIENT)
     public double getCraftingPercentage() {
-        return (double) craftingProgress / CRAFTING_TIME;
+        return (double) this.craftingProgress / CRAFTING_TIME;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        tag.setTag("Items", handler.serializeNBT());
-        tag.setByte("redstoneMode", (byte) redstoneMode);
-        tag.setInteger("craftingProgress", craftingProgress);
+        tag.setTag("Items", this.handler.serializeNBT());
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
+        tag.setInteger("craftingProgress", this.craftingProgress);
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        inputTank.writeToNBT(tankTag);
+        this.inputTank.writeToNBT(tankTag);
         tag.setTag("inputTank", tankTag);
 
         tankTag = new NBTTagCompound();
-        outputTank.writeToNBT(tankTag);
+        this.outputTank.writeToNBT(tankTag);
         tag.setTag("outputTank", tankTag);
 
         return tag;
@@ -218,42 +218,42 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        handler.deserializeNBT(tag.getCompoundTag("Items"));
-        redstoneMode = tag.getByte("redstoneMode");
-        craftingProgress = tag.getInteger("craftingProgress");
-        inputTank.readFromNBT(tag.getCompoundTag("inputTank"));
-        inputAmountScaled = inputTank.getScaledFluidAmount();
-        outputTank.readFromNBT(tag.getCompoundTag("outputTank"));
-        outputAmountScaled = outputTank.getScaledFluidAmount();
+        this.handler.deserializeNBT(tag.getCompoundTag("Items"));
+        this.redstoneMode = tag.getByte("redstoneMode");
+        this.craftingProgress = tag.getInteger("craftingProgress");
+        this.inputTank.readFromNBT(tag.getCompoundTag("inputTank"));
+        this.inputAmountScaled = this.inputTank.getScaledFluidAmount();
+        this.outputTank.readFromNBT(tag.getCompoundTag("outputTank"));
+        this.outputAmountScaled = this.outputTank.getScaledFluidAmount();
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         } else if (buttonID == 1) {
             // move input fluid to output if poss.
-            FluidUtil.tryFluidTransfer(outputTank, inputTank, inputTank.getFluidAmount(), true);
+            FluidUtil.tryFluidTransfer(this.outputTank, this.inputTank, this.inputTank.getFluidAmount(), true);
         } else if (buttonID == 2) {
             // dump input fluid
-            inputTank.drain(inputTank.getCapacity(), true);
+            this.inputTank.drain(this.inputTank.getCapacity(), true);
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public float getMinWorkingPressure() {
-        return requiredPressure;
+        return this.requiredPressure;
     }
 
     @Override
@@ -264,58 +264,58 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
     @Nonnull
     @Override
     public Map<String, FluidTank> getSerializableTanks() {
-        return ImmutableMap.of("InputTank", inputTank, "OutputTank", outputTank);
+        return ImmutableMap.of("InputTank", this.inputTank, "OutputTank", this.outputTank);
     }
 
     @Override
     public void updateScaledFluidAmount(int tankIndex, int amount) {
         if (tankIndex == 1) {
-            inputAmountScaled = amount;
+            this.inputAmountScaled = amount;
         } else if (tankIndex == 2) {
-            outputAmountScaled = amount;
+            this.outputAmountScaled = amount;
         }
     }
 
     private class ThermopneumaticFluidTankInput extends SmartSyncTank {
         private Fluid prevFluid;
 
-        ThermopneumaticFluidTankInput(int capacity){
+        ThermopneumaticFluidTankInput(int capacity) {
             super(TileEntityThermopneumaticProcessingPlant.this, capacity, 1);
         }
-        
+
         @Override
-        public boolean canFillFluidType(FluidStack fluid){
+        public boolean canFillFluidType(FluidStack fluid) {
             return fluid == null || BasicThermopneumaticProcessingPlantRecipe.recipes.stream().anyMatch(r -> r.isValidInput(fluid));
         }
 
         @Override
         protected void onContentsChanged() {
             super.onContentsChanged();
-            Fluid newFluid = getFluid() == null ? null : getFluid().getFluid();
-            if (prevFluid != newFluid) {
-                searchForRecipe = true;
-                prevFluid = newFluid;
+            Fluid newFluid = this.getFluid() == null ? null : this.getFluid().getFluid();
+            if (this.prevFluid != newFluid) {
+                TileEntityThermopneumaticProcessingPlant.this.searchForRecipe = true;
+                this.prevFluid = newFluid;
             }
         }
     }
 
     private class ThermopneumaticFluidTankOutput extends SmartSyncTank {
 
-        ThermopneumaticFluidTankOutput(int capacity){
+        ThermopneumaticFluidTankOutput(int capacity) {
             super(TileEntityThermopneumaticProcessingPlant.this, capacity, 2);
         }
 
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
             FluidStack res = super.drain(resource, doDrain);
-            if (doDrain && res != null && res.amount > 0) searchForRecipe = true;
+            if (doDrain && res != null && res.amount > 0) TileEntityThermopneumaticProcessingPlant.this.searchForRecipe = true;
             return res;
         }
 
         @Override
         public FluidStack drain(int maxDrain, boolean doDrain) {
             FluidStack res = super.drain(maxDrain, doDrain);
-            if (doDrain && res != null && res.amount > 0) searchForRecipe = true;
+            if (doDrain && res != null && res.amount > 0) TileEntityThermopneumaticProcessingPlant.this.searchForRecipe = true;
             return res;
         }
     }
@@ -323,24 +323,24 @@ public class TileEntityThermopneumaticProcessingPlant extends TileEntityPneumati
     private class ThermopneumaticFluidHandler implements IFluidHandler {
         @Override
         public IFluidTankProperties[] getTankProperties() {
-            return ArrayUtils.addAll(inputTank.getTankProperties(), outputTank.getTankProperties());
+            return ArrayUtils.addAll(TileEntityThermopneumaticProcessingPlant.this.inputTank.getTankProperties(), TileEntityThermopneumaticProcessingPlant.this.outputTank.getTankProperties());
         }
 
         @Override
         public int fill(FluidStack resource, boolean doFill) {
-            return inputTank.fill(resource, doFill);
+            return TileEntityThermopneumaticProcessingPlant.this.inputTank.fill(resource, doFill);
         }
 
         @Nullable
         @Override
         public FluidStack drain(FluidStack resource, boolean doDrain) {
-            return outputTank.getFluid() != null && outputTank.getFluid().isFluidEqual(resource) ? outputTank.drain(resource.amount, doDrain) : null;
+            return TileEntityThermopneumaticProcessingPlant.this.outputTank.getFluid() != null && TileEntityThermopneumaticProcessingPlant.this.outputTank.getFluid().isFluidEqual(resource) ? TileEntityThermopneumaticProcessingPlant.this.outputTank.drain(resource.amount, doDrain) : null;
         }
 
         @Nullable
         @Override
         public FluidStack drain(int maxDrain, boolean doDrain) {
-            return outputTank.drain(maxDrain, doDrain);
+            return TileEntityThermopneumaticProcessingPlant.this.outputTank.drain(maxDrain, doDrain);
         }
     }
 }

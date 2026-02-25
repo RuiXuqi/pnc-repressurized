@@ -25,15 +25,15 @@ public class GuiProgWidgetDropItem extends GuiProgWidgetImportExport {
         super.initGui();
 
         List<GuiRadioButton> radioButtons = new ArrayList<>();
-        GuiRadioButton radioButton = new GuiRadioButton(7, guiLeft + 4, guiTop + 80, 0xFF404040, "Random");
-        radioButton.checked = !((ProgWidgetDropItem) widget).dropStraight();
-        addWidget(radioButton);
+        GuiRadioButton radioButton = new GuiRadioButton(7, this.guiLeft + 4, this.guiTop + 80, 0xFF404040, "Random");
+        radioButton.checked = !((ProgWidgetDropItem) this.widget).dropStraight();
+        this.addWidget(radioButton);
         radioButtons.add(radioButton);
         radioButton.otherChoices = radioButtons;
 
-        GuiRadioButton radioButton2 = new GuiRadioButton(8, guiLeft + 4, guiTop + 94, 0xFF404040, "Straight");
-        radioButton2.checked = ((ProgWidgetDropItem) widget).dropStraight();
-        addWidget(radioButton2);
+        GuiRadioButton radioButton2 = new GuiRadioButton(8, this.guiLeft + 4, this.guiTop + 94, 0xFF404040, "Straight");
+        radioButton2.checked = ((ProgWidgetDropItem) this.widget).dropStraight();
+        this.addWidget(radioButton2);
         radioButtons.add(radioButton2);
         radioButton2.otherChoices = radioButtons;
     }
@@ -41,7 +41,7 @@ public class GuiProgWidgetDropItem extends GuiProgWidgetImportExport {
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
         if (guiWidget.getID() == 7 || guiWidget.getID() == 8) {
-            ((ProgWidgetDropItem) widget).setDropStraight(guiWidget.getID() == 8);
+            ((ProgWidgetDropItem) this.widget).setDropStraight(guiWidget.getID() == 8);
         }
         super.actionPerformed(guiWidget);
     }
@@ -49,6 +49,6 @@ public class GuiProgWidgetDropItem extends GuiProgWidgetImportExport {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        fontRenderer.drawString("Drop method:", guiLeft + 8, guiTop + 70, 0xFF404060);
+        this.fontRenderer.drawString("Drop method:", this.guiLeft + 8, this.guiTop + 70, 0xFF404060);
     }
 }

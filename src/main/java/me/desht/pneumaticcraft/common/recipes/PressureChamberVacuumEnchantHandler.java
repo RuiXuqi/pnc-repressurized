@@ -26,33 +26,34 @@ public class PressureChamberVacuumEnchantHandler implements IPressureChamberReci
 
     @Override
     public boolean isValidRecipe(ItemStackHandler chamberHandler) {
-        return !getDisenchantableItem(chamberHandler).isEmpty() && !getBook(chamberHandler).isEmpty();
+        return !this.getDisenchantableItem(chamberHandler).isEmpty() && !this.getBook(chamberHandler).isEmpty();
 
     }
-    
-    public ItemStack getDisenchantableItem(ItemStackHandler inputStacks){
+
+    public ItemStack getDisenchantableItem(ItemStackHandler inputStacks) {
         return new ItemStackHandlerIterable(inputStacks)
-                        .stream()
-                        .filter(stack -> stack.getItem() != Items.ENCHANTED_BOOK && EnchantmentHelper.getEnchantments(stack).size() > 0)
-                        .findFirst()
-                        .orElse(ItemStack.EMPTY);
+                .stream()
+                .filter(stack -> stack.getItem() != Items.ENCHANTED_BOOK && EnchantmentHelper.getEnchantments(stack).size() > 0)
+                .findFirst()
+                .orElse(ItemStack.EMPTY);
     }
-    
-    public ItemStack getBook(ItemStackHandler inputStacks){
+
+    public ItemStack getBook(ItemStackHandler inputStacks) {
         return new ItemStackHandlerIterable(inputStacks)
-                        .stream()
-                        .filter(stack -> stack.getItem() == Items.BOOK)
-                        .findFirst()
-                        .orElse(ItemStack.EMPTY);
+                .stream()
+                .filter(stack -> stack.getItem() == Items.BOOK)
+                .findFirst()
+                .orElse(ItemStack.EMPTY);
     }
 
     @Override
     public NonNullList<ItemStack> craftRecipe(ItemStackHandler chamberHandler) {
-        ItemStack enchantedStack = getDisenchantableItem(chamberHandler);
+        ItemStack enchantedStack = this.getDisenchantableItem(chamberHandler);
 
         // take a random enchantment off the enchanted item...
         Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(enchantedStack);
-        if (enchantments.isEmpty()) return EMPTY_RESULT;  // shouldn't happen, but https://github.com/TeamPneumatic/pnc-repressurized/issues/424
+        if (enchantments.isEmpty())
+            return EMPTY_RESULT;  // shouldn't happen, but https://github.com/TeamPneumatic/pnc-repressurized/issues/424
         List<Enchantment> l = new ArrayList<>(enchantments.keySet());
         Enchantment strippedEnchantment = l.get(new Random().nextInt(l.size()));
         int level = enchantments.get(strippedEnchantment);
@@ -61,7 +62,7 @@ public class PressureChamberVacuumEnchantHandler implements IPressureChamberReci
 
         // ...and create an enchanted book with it
         ItemStack enchantedBook = new ItemStack(Items.ENCHANTED_BOOK);
-        getBook(chamberHandler).shrink(1);
+        this.getBook(chamberHandler).shrink(1);
         EnchantmentHelper.setEnchantments(ImmutableMap.of(strippedEnchantment, level), enchantedBook);
 
         return NonNullList.from(ItemStack.EMPTY, enchantedBook);

@@ -11,7 +11,7 @@ public class ProgWidgetLabel extends ProgWidget implements ILabel {
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) curInfo.add("gui.progWidget.label.error.noLabel");
+        if (this.getConnectedParameters()[0] == null) curInfo.add("gui.progWidget.label.error.noLabel");
     }
 
     @Override
@@ -56,7 +56,7 @@ public class ProgWidgetLabel extends ProgWidget implements ILabel {
 
     @Override
     public String getLabel() {
-        ProgWidgetString labelWidget = (ProgWidgetString) getConnectedParameters()[0];
+        ProgWidgetString labelWidget = (ProgWidgetString) this.getConnectedParameters()[0];
         return labelWidget != null ? labelWidget.string : null;
     }
 

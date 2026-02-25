@@ -15,14 +15,14 @@ public class PacketMultiPart extends AbstractPacket<PacketMultiPart> {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        payload = new byte[buf.readInt()];
-        buf.readBytes(payload);
+        this.payload = new byte[buf.readInt()];
+        buf.readBytes(this.payload);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(payload.length);
-        buf.writeBytes(payload);
+        buf.writeInt(this.payload.length);
+        buf.writeBytes(this.payload);
     }
 
     @Override

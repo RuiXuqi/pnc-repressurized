@@ -19,9 +19,9 @@ public abstract class ModelModuleBase extends ModelBase {
     public final void renderModel(float scale, TubeModule module, float partialTicks) {
         GlStateManager.pushMatrix();
 
-        FMLClientHandler.instance().getClient().getTextureManager().bindTexture(getTexture());
+        FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.getTexture());
         RenderUtils.rotateMatrixByMetadata(module.getDirection().ordinal());
-        renderDynamic(scale, partialTicks);
+        this.renderDynamic(scale, partialTicks);
 
         GlStateManager.popMatrix();
     }

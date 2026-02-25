@@ -48,17 +48,17 @@ public class HeatExchangerLogicConstant implements IHeatExchangerLogic {
 
     @Override
     public double getAmbientTemperature() {
-        return temperature;
+        return this.temperature;
     }
 
     @Override
     public double getTemperature() {
-        return temperature;
+        return this.temperature;
     }
 
     @Override
     public int getTemperatureAsInt() {
-        return (int) temperature;
+        return (int) this.temperature;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class HeatExchangerLogicConstant implements IHeatExchangerLogic {
 
     @Override
     public double getThermalResistance() {
-        return thermalResistance;
+        return this.thermalResistance;
     }
 
     @Override

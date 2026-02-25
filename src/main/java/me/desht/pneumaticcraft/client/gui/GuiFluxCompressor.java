@@ -30,34 +30,34 @@ public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxC
     @Override
     public void initGui() {
         super.initGui();
-        inputStat = addAnimatedStat("Input", Textures.GUI_BUILDCRAFT_ENERGY, 0xFF555555, false);
+        this.inputStat = this.addAnimatedStat("Input", Textures.GUI_BUILDCRAFT_ENERGY, 0xFF555555, false);
 
-        IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, null);
-        addWidget(new WidgetEnergy(guiLeft + 20, guiTop + 20, storage));
-        addWidget(new WidgetTemperature(0, guiLeft + 87, guiTop + 20, 273, 675,
-                te.getHeatExchangerLogic(null), 325, 625));
+        IEnergyStorage storage = this.te.getCapability(CapabilityEnergy.ENERGY, null);
+        this.addWidget(new WidgetEnergy(this.guiLeft + 20, this.guiTop + 20, storage));
+        this.addWidget(new WidgetTemperature(0, this.guiLeft + 87, this.guiTop + 20, 273, 675,
+                this.te.getHeatExchangerLogic(null), 325, 625));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 53, 19, 4210752);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        inputStat.setText(getOutputStat());
+        this.inputStat.setText(this.getOutputStat());
     }
 
     private List<String> getOutputStat() {
         List<String> textList = new ArrayList<>();
         textList.add(TextFormatting.GRAY + "Maximum RF usage:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() + " RF/tick");
+        textList.add(TextFormatting.BLACK.toString() + this.te.getInfoEnergyPerTick() + " RF/tick");
         textList.add(TextFormatting.GRAY + "Maximum input rate:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyPerTick() * 2 + " RF/tick");
+        textList.add(TextFormatting.BLACK.toString() + this.te.getInfoEnergyPerTick() * 2 + " RF/tick");
         textList.add(TextFormatting.GRAY + "Current stored RF:");
-        textList.add(TextFormatting.BLACK.toString() + te.getInfoEnergyStored() + " RF");
+        textList.add(TextFormatting.BLACK.toString() + this.te.getInfoEnergyStored() + " RF");
         return textList;
     }
 
@@ -65,13 +65,13 @@ public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxC
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
         pressureStatText.add("\u00a77Max Production:");
-        pressureStatText.add("\u00a70" + te.getAirRate() + " mL/tick.");
+        pressureStatText.add("\u00a70" + this.te.getAirRate() + " mL/tick.");
     }
 
     @Override
     protected void addProblems(List<String> textList) {
         super.addProblems(textList);
-        if (te.getInfoEnergyPerTick() > te.getInfoEnergyStored()) {
+        if (this.te.getInfoEnergyPerTick() > this.te.getInfoEnergyStored()) {
             textList.add("gui.tab.problems.fluxCompressor.noRF");
         }
     }
@@ -79,8 +79,8 @@ public class GuiFluxCompressor extends GuiPneumaticContainerBase<TileEntityFluxC
     @Override
     protected void addWarnings(List<String> curInfo) {
         super.addWarnings(curInfo);
-        if (te.getEfficiency() < 100) {
-            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", te.getEfficiency() + "%%"));
+        if (this.te.getEfficiency() < 100) {
+            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", this.te.getEfficiency() + "%%"));
         }
     }
 }

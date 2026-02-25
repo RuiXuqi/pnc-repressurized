@@ -43,47 +43,47 @@ public class GlobalVariableManager extends WorldSavedData {
     }
 
     public void set(String varName, boolean value) {
-        set(varName, value ? 1 : 0);
+        this.set(varName, value ? 1 : 0);
     }
 
     public void set(String varName, int value) {
-        set(varName, value, 0, 0);
+        this.set(varName, value, 0, 0);
     }
 
     public void set(String varName, int x, int y, int z) {
-        set(varName, new BlockPos(x, y, z));
+        this.set(varName, new BlockPos(x, y, z));
     }
 
     public void set(String varName, BlockPos pos) {
-        globalVars.put(varName, pos);
-        save();
+        this.globalVars.put(varName, pos);
+        this.save();
     }
 
     public void set(String varName, ItemStack item) {
-        globalItemVars.put(varName, item);
-        save();
+        this.globalItemVars.put(varName, item);
+        this.save();
     }
 
     private void save() {
-        markDirty();
+        this.markDirty();
     }
 
     public boolean getBoolean(String varName) {
-        return getInteger(varName) != 0;
+        return this.getInteger(varName) != 0;
     }
 
     public int getInteger(String varName) {
-        return getPos(varName).getX();
+        return this.getPos(varName).getX();
     }
 
     public BlockPos getPos(String varName) {
-        BlockPos pos = globalVars.get(varName);
+        BlockPos pos = this.globalVars.get(varName);
         //if(pos != null) Log.info("getting var: " + varName + " set to " + pos.chunkPosX + ", " + pos.chunkPosY + ", " + pos.chunkPosZ);
         return pos != null ? pos : BlockPos.ORIGIN;
     }
 
     public ItemStack getItem(String varName) {
-        return globalItemVars.getOrDefault(varName, ItemStack.EMPTY);
+        return this.globalItemVars.getOrDefault(varName, ItemStack.EMPTY);
     }
 
     public GlobalVariableManager(String dataKey) {
@@ -92,14 +92,14 @@ public class GlobalVariableManager extends WorldSavedData {
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
-        globalVars.clear();
+        this.globalVars.clear();
         NBTTagList list = tag.getTagList("globalVars", 10);
         for (int i = 0; i < list.tagCount(); i++) {
             NBTTagCompound t = list.getCompoundTagAt(i);
-            globalVars.put(t.getString("varName"), new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
+            this.globalVars.put(t.getString("varName"), new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
         }
 
-        readItemVars(tag, globalItemVars);
+        readItemVars(tag, this.globalItemVars);
     }
 
     public static void readItemVars(NBTTagCompound tag, Map<String, ItemStack> map) {
@@ -114,7 +114,7 @@ public class GlobalVariableManager extends WorldSavedData {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         NBTTagList list = new NBTTagList();
-        for (Map.Entry<String, BlockPos> entry : globalVars.entrySet()) {
+        for (Map.Entry<String, BlockPos> entry : this.globalVars.entrySet()) {
             NBTTagCompound t = new NBTTagCompound();
             t.setString("varName", entry.getKey());
             BlockPos pos = entry.getValue();
@@ -125,13 +125,13 @@ public class GlobalVariableManager extends WorldSavedData {
         }
         tag.setTag("globalVars", list);
 
-        writeItemVars(tag, globalItemVars);
+        this.writeItemVars(tag, this.globalItemVars);
         return tag;
     }
 
     public void writeItemVars(NBTTagCompound tag, Map<String, ItemStack> map) {
         NBTTagList list = new NBTTagList();
-        for (Map.Entry<String, ItemStack> entry : globalItemVars.entrySet()) {
+        for (Map.Entry<String, ItemStack> entry : this.globalItemVars.entrySet()) {
             NBTTagCompound t = new NBTTagCompound();
             t.setString("varName", entry.getKey());
             NBTTagCompound itemTag = new NBTTagCompound();
@@ -144,8 +144,8 @@ public class GlobalVariableManager extends WorldSavedData {
 
     public String[] getAllActiveVariableNames() {
         Set<String> varNames = new HashSet<>();
-        varNames.addAll(globalVars.keySet());
-        varNames.addAll(globalItemVars.keySet());
+        varNames.addAll(this.globalVars.keySet());
+        varNames.addAll(this.globalItemVars.keySet());
         return varNames.toArray(new String[0]);
     }
 

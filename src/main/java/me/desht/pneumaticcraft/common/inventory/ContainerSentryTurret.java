@@ -11,10 +11,10 @@ public class ContainerSentryTurret extends ContainerPneumaticBase<TileEntitySent
 
         // Add the hopper slots.
         for (int i = 0; i < 4; i++)
-            addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), i, 80 + i * 18, 29));
+            this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), i, 80 + i * 18, 29));
 
-        addUpgradeSlots(23, 29);
+        this.addUpgradeSlots(23, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

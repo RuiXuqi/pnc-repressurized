@@ -14,13 +14,13 @@ public class RenderDroneHeldItem {
 
     public RenderDroneHeldItem(World world) {
         this.world = world;
-        if (customRenderItem == null) {
-            customRenderItem = new AbstractModelRenderer.NoBobItemRenderer();
+        if (this.customRenderItem == null) {
+            this.customRenderItem = new AbstractModelRenderer.NoBobItemRenderer();
         }
     }
 
     public void render(@Nonnull ItemStack droneHeldItem) {
-        EntityItem carriedItem = new EntityItem(world);
+        EntityItem carriedItem = new EntityItem(this.world);
         carriedItem.hoverStart = 0.0F;
         carriedItem.setItem(droneHeldItem);
 
@@ -35,6 +35,6 @@ public class RenderDroneHeldItem {
         }
         GlStateManager.translate(0, yOffset, 0);
         GlStateManager.scale(scaleFactor, scaleFactor, scaleFactor);
-        customRenderItem.doRender(carriedItem, 0, 0, 0, 0, 0);
+        this.customRenderItem.doRender(carriedItem, 0, 0, 0, 0, 0);
     }
 }

@@ -13,9 +13,9 @@ public class WidgetTextFieldNumber extends WidgetTextField {
 
     public WidgetTextFieldNumber(FontRenderer fontRenderer, int x, int y, int width, int height) {
         super(fontRenderer, x, y, width, height);
-        setValue(0);
+        this.setValue(0);
 
-        setValidator(input -> {
+        this.setValidator(input -> {
             if (input == null || input.isEmpty() || input.equals("-")) {
                 return true;  // treat as numeric zero
             }
@@ -30,28 +30,28 @@ public class WidgetTextFieldNumber extends WidgetTextField {
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
-        boolean wasFocused = isFocused();
+        boolean wasFocused = this.isFocused();
         super.onMouseClicked(mouseX, mouseY, button);
-        if (isFocused()) {
+        if (this.isFocused()) {
             if (!wasFocused) { //setText("");
-                setCursorPositionEnd();
-                setSelectionPos(0);
+                this.setCursorPositionEnd();
+                this.setSelectionPos(0);
             }
         } else {
-            setValue(getDoubleValue());
+            this.setValue(this.getDoubleValue());
         }
     }
 
     public WidgetTextFieldNumber setValue(double value) {
-        setText(PneumaticCraftUtils.roundNumberTo(value, decimals));
+        this.setText(PneumaticCraftUtils.roundNumberTo(value, this.decimals));
         return this;
     }
 
     public int getValue() {
-        return MathHelper.clamp(NumberUtils.toInt(getText()), minValue, maxValue);
+        return MathHelper.clamp(NumberUtils.toInt(this.getText()), this.minValue, this.maxValue);
     }
 
     public double getDoubleValue() {
-        return PneumaticCraftUtils.roundNumberToDouble(MathHelper.clamp(NumberUtils.toDouble(getText()), minValue, maxValue), decimals);
+        return PneumaticCraftUtils.roundNumberToDouble(MathHelper.clamp(NumberUtils.toDouble(this.getText()), this.minValue, this.maxValue), this.decimals);
     }
 }

@@ -16,7 +16,7 @@ public class KickUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleableRe
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(IItemRegistry.EnumUpgrade.DISPENSER) };
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.DISPENSER)};
     }
 
     @Override

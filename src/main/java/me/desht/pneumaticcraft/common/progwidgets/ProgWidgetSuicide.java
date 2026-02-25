@@ -71,9 +71,9 @@ public class ProgWidgetSuicide extends ProgWidget {
 
         @Override
         public boolean shouldExecute() {
-            MinecraftForge.EVENT_BUS.post(new DroneSuicideEvent(drone));
+            MinecraftForge.EVENT_BUS.post(new DroneSuicideEvent(this.drone));
 //            drone.setCustomNameTag("");
-            drone.attackEntityFrom(new DamageSourceDroneOverload("suicide"), 2000.0F);
+            this.drone.attackEntityFrom(new DamageSourceDroneOverload("suicide"), 2000.0F);
             return false;
         }
     }

@@ -29,54 +29,54 @@ public class GuiProgWidgetCondition extends GuiProgWidgetAreaShow<ProgWidget> {
     public void initGui() {
         super.initGui();
 
-        if (isSidedWidget()) {
+        if (this.isSidedWidget()) {
             for (int i = 0; i < 6; i++) {
                 String sideName = PneumaticCraftUtils.getOrientationName(EnumFacing.byIndex(i));
-                GuiCheckBox checkBox = new GuiCheckBox(i, guiLeft + 4, guiTop + 30 + i * 12, 0xFF404040, sideName);
-                checkBox.checked = ((ISidedWidget) widget).getSides()[i];
-                addWidget(checkBox);
+                GuiCheckBox checkBox = new GuiCheckBox(i, this.guiLeft + 4, this.guiTop + 30 + i * 12, 0xFF404040, sideName);
+                checkBox.checked = ((ISidedWidget) this.widget).getSides()[i];
+                this.addWidget(checkBox);
             }
         }
 
-        int baseX = isSidedWidget() ? 90 : 4;
-        int baseY = isUsingAndOr() ? 60 : 30;
+        int baseX = this.isSidedWidget() ? 90 : 4;
+        int baseY = this.isUsingAndOr() ? 60 : 30;
 
         List<GuiRadioButton> radioButtons;
         GuiRadioButton radioButton;
-        if (isUsingAndOr()) {
+        if (this.isUsingAndOr()) {
             radioButtons = new ArrayList<>();
-            radioButton = new GuiRadioButton(6, guiLeft + baseX, guiTop + 30, 0xFF404040, "Any block");
-            radioButton.checked = !((ICondition) widget).isAndFunction();
-            addWidget(radioButton);
+            radioButton = new GuiRadioButton(6, this.guiLeft + baseX, this.guiTop + 30, 0xFF404040, "Any block");
+            radioButton.checked = !((ICondition) this.widget).isAndFunction();
+            this.addWidget(radioButton);
             radioButtons.add(radioButton);
             radioButton.otherChoices = radioButtons;
 
-            radioButton = new GuiRadioButton(7, guiLeft + baseX, guiTop + 42, 0xFF404040, "All blocks");
-            radioButton.checked = ((ICondition) widget).isAndFunction();
-            addWidget(radioButton);
+            radioButton = new GuiRadioButton(7, this.guiLeft + baseX, this.guiTop + 42, 0xFF404040, "All blocks");
+            radioButton.checked = ((ICondition) this.widget).isAndFunction();
+            this.addWidget(radioButton);
             radioButtons.add(radioButton);
             radioButton.otherChoices = radioButtons;
         }
 
-        if (requiresNumber()) {
+        if (this.requiresNumber()) {
             radioButtons = new ArrayList<>();
             for (int i = 0; i < ICondition.Operator.values().length; i++) {
-                radioButton = new GuiRadioButton(8 + i, guiLeft + baseX, guiTop + baseY + i * 12, 0xFF404040, ICondition.Operator.values()[i].toString());
-                radioButton.checked = ((ICondition) widget).getOperator().ordinal() == i;
-                addWidget(radioButton);
+                radioButton = new GuiRadioButton(8 + i, this.guiLeft + baseX, this.guiTop + baseY + i * 12, 0xFF404040, ICondition.Operator.values()[i].toString());
+                radioButton.checked = ((ICondition) this.widget).getOperator().ordinal() == i;
+                this.addWidget(radioButton);
                 radioButtons.add(radioButton);
                 radioButton.otherChoices = radioButtons;
             }
 
-            textField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, guiLeft + baseX, guiTop + baseY + 40, 50, 11);
-            textField.setText(((ICondition) widget).getRequiredCount() + "");
-            textField.setFocused(true);
-            addWidget(textField);
+            this.textField = new WidgetTextField(Minecraft.getMinecraft().fontRenderer, this.guiLeft + baseX, this.guiTop + baseY + 40, 50, 11);
+            this.textField.setText(((ICondition) this.widget).getRequiredCount() + "");
+            this.textField.setFocused(true);
+            this.addWidget(this.textField);
         }
     }
 
     protected boolean isSidedWidget() {
-        return widget instanceof ISidedWidget;
+        return this.widget instanceof ISidedWidget;
     }
 
     protected boolean isUsingAndOr() {
@@ -91,17 +91,17 @@ public class GuiProgWidgetCondition extends GuiProgWidgetAreaShow<ProgWidget> {
     public void actionPerformed(IGuiWidget checkBox) {
         if (!(checkBox instanceof GuiLabel)) {
             if (checkBox.getID() < 6) {
-                ((ISidedWidget) widget).getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
+                ((ISidedWidget) this.widget).getSides()[checkBox.getID()] = ((GuiCheckBox) checkBox).checked;
             } else {
                 switch (checkBox.getID()) {
                     case 6:
-                        ((ICondition) widget).setAndFunction(false);
+                        ((ICondition) this.widget).setAndFunction(false);
                         break;
                     case 7:
-                        ((ICondition) widget).setAndFunction(true);
+                        ((ICondition) this.widget).setAndFunction(true);
                         break;
                     default:
-                        ((ICondition) widget).setOperator(ICondition.Operator.values()[checkBox.getID() - 8]);
+                        ((ICondition) this.widget).setOperator(ICondition.Operator.values()[checkBox.getID() - 8]);
                 }
             }
         }
@@ -110,8 +110,8 @@ public class GuiProgWidgetCondition extends GuiProgWidgetAreaShow<ProgWidget> {
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        if (requiresNumber()) {
-            ((ICondition) this.widget).setRequiredCount(NumberUtils.toInt(textField.getText()));
+        if (this.requiresNumber()) {
+            ((ICondition) this.widget).setRequiredCount(NumberUtils.toInt(this.textField.getText()));
         }
         super.onKeyTyped(widget);
     }
@@ -119,8 +119,8 @@ public class GuiProgWidgetCondition extends GuiProgWidgetAreaShow<ProgWidget> {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        if (isSidedWidget()) fontRenderer.drawString("Accessing sides:", guiLeft + 4, guiTop + 20, 0xFF404060);
-        fontRenderer.drawString(widget.getExtraStringInfo(), guiLeft + xSize / 2 - fontRenderer.getStringWidth(widget.getExtraStringInfo()) / 2, guiTop + 120, 0xFF404060);
+        if (this.isSidedWidget()) this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
+        this.fontRenderer.drawString(this.widget.getExtraStringInfo(), this.guiLeft + this.xSize / 2 - this.fontRenderer.getStringWidth(this.widget.getExtraStringInfo()) / 2, this.guiTop + 120, 0xFF404060);
     }
 
 }

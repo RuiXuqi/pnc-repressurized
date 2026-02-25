@@ -14,35 +14,35 @@ public class ModelCharging extends ModelModuleBase {
 
     public ModelCharging(ModuleCharging charging) {
         this.chargingModule = charging;
-        textureWidth = 64;
-        textureHeight = 32;
+        this.textureWidth = 64;
+        this.textureHeight = 32;
 
-        shape1 = new ModelRenderer(this, 22, 0);
-        shape1.addBox(0F, 0F, 0F, 2, 2, 2);
-        shape1.setRotationPoint(1F, 15F, 8F);
-        shape1.setTextureSize(64, 32);
-        shape1.mirror = true;
-        setRotation(shape1, 0F, 3.141593F, 0F);
-        shape2 = new ModelRenderer(this, 12, 0);
-        shape2.addBox(0F, 0F, 0F, 3, 3, 2);
-        shape2.setRotationPoint(1.5F, 14.5F, 6F);
-        shape2.setTextureSize(64, 32);
-        shape2.mirror = true;
-        setRotation(shape2, 0F, 3.141593F, 0F);
-        shape3 = new ModelRenderer(this, 0, 0);
-        shape3.addBox(0F, 0F, 0F, 4, 4, 2);
-        shape3.setRotationPoint(2F, 14F, 4F);
-        shape3.setTextureSize(64, 32);
-        shape3.mirror = true;
-        setRotation(shape3, 0F, 3.141593F, 0F);
+        this.shape1 = new ModelRenderer(this, 22, 0);
+        this.shape1.addBox(0F, 0F, 0F, 2, 2, 2);
+        this.shape1.setRotationPoint(1F, 15F, 8F);
+        this.shape1.setTextureSize(64, 32);
+        this.shape1.mirror = true;
+        this.setRotation(this.shape1, 0F, 3.141593F, 0F);
+        this.shape2 = new ModelRenderer(this, 12, 0);
+        this.shape2.addBox(0F, 0F, 0F, 3, 3, 2);
+        this.shape2.setRotationPoint(1.5F, 14.5F, 6F);
+        this.shape2.setTextureSize(64, 32);
+        this.shape2.mirror = true;
+        this.setRotation(this.shape2, 0F, 3.141593F, 0F);
+        this.shape3 = new ModelRenderer(this, 0, 0);
+        this.shape3.addBox(0F, 0F, 0F, 4, 4, 2);
+        this.shape3.setRotationPoint(2F, 14F, 4F);
+        this.shape3.setTextureSize(64, 32);
+        this.shape3.mirror = true;
+        this.setRotation(this.shape3, 0F, 3.141593F, 0F);
     }
 
     @Override
     protected void renderDynamic(float scale, float partialTicks) {
-        if (chargingModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
-        shape1.render(scale);
-        shape2.render(scale);
-        shape3.render(scale);
+        if (this.chargingModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
+        this.shape1.render(scale);
+        this.shape2.render(scale);
+        this.shape3.render(scale);
     }
 
     @Override

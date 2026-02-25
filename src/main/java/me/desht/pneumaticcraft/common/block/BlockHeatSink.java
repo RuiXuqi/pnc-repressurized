@@ -38,7 +38,7 @@ public class BlockHeatSink extends BlockPneumaticCraftModeled {
             return FULL_BLOCK_AABB;
         }
 
-        EnumFacing dir = getRotation(source, pos);
+        EnumFacing dir = this.getRotation(source, pos);
         return new AxisAlignedBB(
                 dir.getXOffset() <= 0 ? 0 : 1F - BBConstants.HEAT_SINK_THICKNESS,
                 dir.getYOffset() <= 0 ? 0 : 1F - BBConstants.HEAT_SINK_THICKNESS,
@@ -80,7 +80,7 @@ public class BlockHeatSink extends BlockPneumaticCraftModeled {
                     entity.setFire(3);
                 }
             } else if (temp < 243) { // -30C
-                int durationTicks = (243 - (int)heat.getTemperature()) * 2;
+                int durationTicks = (243 - (int) heat.getTemperature()) * 2;
                 int amplifier = (243 - (int) heat.getTemperature()) / 20;
                 ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, durationTicks, amplifier));
                 if (temp < 213) { // -60C

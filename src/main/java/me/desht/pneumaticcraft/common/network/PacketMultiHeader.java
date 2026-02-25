@@ -25,14 +25,14 @@ public class PacketMultiHeader extends AbstractPacket<PacketMultiHeader> {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        length = buf.readInt();
-        className = ByteBufUtils.readUTF8String(buf);
+        this.length = buf.readInt();
+        this.className = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(length);
-        ByteBufUtils.writeUTF8String(buf, className);
+        buf.writeInt(this.length);
+        ByteBufUtils.writeUTF8String(buf, this.className);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class PacketMultiHeader extends AbstractPacket<PacketMultiHeader> {
         try {
             ClassLoader cl = Thread.currentThread().getContextClassLoader();
             if (cl == null) cl = PacketMultiHeader.class.getClassLoader(); // fallback
-            Class<? extends AbstractPacket> clazz = (Class<? extends AbstractPacket>) cl.loadClass(className);
-            payloadBuffers.put(player.getUniqueID(), new PayloadBuffer(clazz, length));
+            Class<? extends AbstractPacket> clazz = (Class<? extends AbstractPacket>) cl.loadClass(this.className);
+            payloadBuffers.put(player.getUniqueID(), new PayloadBuffer(clazz, this.length));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

@@ -30,9 +30,9 @@ public class ProgWidgetRedstoneCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                int redstoneLevel = PneumaticCraftUtils.getRedstoneLevel(drone.world(), pos);
-                int requiredRedstone = ((ICondition) widget).getRequiredCount();
-                return ((ICondition) widget).getOperator().evaluate(redstoneLevel, requiredRedstone);
+                int redstoneLevel = PneumaticCraftUtils.getRedstoneLevel(this.drone.world(), pos);
+                int requiredRedstone = ((ICondition) this.widget).getRequiredCount();
+                return ((ICondition) this.widget).getOperator().evaluate(redstoneLevel, requiredRedstone);
             }
 
         };

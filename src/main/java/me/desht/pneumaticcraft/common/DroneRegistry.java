@@ -27,7 +27,7 @@ public class DroneRegistry implements IDroneRegistry {
     @Override
     public void addPathfindableBlock(Block block, IPathfindHandler handler) {
         if (block == null) throw new IllegalArgumentException("Block can't be null!");
-        pathfindableBlocks.put(block, handler);
+        this.pathfindableBlocks.put(block, handler);
     }
 
     @Override

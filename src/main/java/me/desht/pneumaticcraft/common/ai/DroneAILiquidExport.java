@@ -20,50 +20,50 @@ public class DroneAILiquidExport extends DroneAIImExBase {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return fillTank(pos, true);
+        return this.fillTank(pos, true);
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return fillTank(pos, false) && super.doBlockInteraction(pos, distToBlock);
+        return this.fillTank(pos, false) && super.doBlockInteraction(pos, distToBlock);
     }
 
     private boolean fillTank(BlockPos pos, boolean simulate) {
-        IFluidTank droneTank = drone.getTank();
+        IFluidTank droneTank = this.drone.getTank();
         if (droneTank.getFluidAmount() == 0) {
-            drone.addDebugEntry("gui.progWidget.liquidExport.debug.emptyDroneTank");
-            abort();
+            this.drone.addDebugEntry("gui.progWidget.liquidExport.debug.emptyDroneTank");
+            this.abort();
             return false;
         } else {
-            TileEntity te = drone.world().getTileEntity(pos);
+            TileEntity te = this.drone.world().getTileEntity(pos);
             if (te != null) {
                 FluidStack exportedFluid = droneTank.drain(Integer.MAX_VALUE, false);
-                if (exportedFluid != null && ((ILiquidFiltered) widget).isFluidValid(exportedFluid.getFluid())) {
+                if (exportedFluid != null && ((ILiquidFiltered) this.widget).isFluidValid(exportedFluid.getFluid())) {
                     for (int i = 0; i < 6; i++) {
-                        if (((ISidedWidget) widget).getSides()[i] && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i))) {
+                        if (((ISidedWidget) this.widget).getSides()[i] && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i))) {
                             IFluidHandler tank = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.byIndex(i));
                             int filledAmount = tank.fill(exportedFluid, false);
                             if (filledAmount > 0) {
-                                if (((ICountWidget) widget).useCount()) {
-                                    filledAmount = Math.min(filledAmount, getRemainingCount());
+                                if (((ICountWidget) this.widget).useCount()) {
+                                    filledAmount = Math.min(filledAmount, this.getRemainingCount());
                                 }
                                 if (!simulate) {
-                                    decreaseCount(tank.fill(droneTank.drain(filledAmount, true), true));
+                                    this.decreaseCount(tank.fill(droneTank.drain(filledAmount, true), true));
                                 }
                                 return true;
                             }
                         }
                     }
-                    drone.addDebugEntry("gui.progWidget.liquidExport.debug.filledToMax", pos);
+                    this.drone.addDebugEntry("gui.progWidget.liquidExport.debug.filledToMax", pos);
                 } else {
-                    drone.addDebugEntry("gui.progWidget.liquidExport.debug.noValidFluid");
+                    this.drone.addDebugEntry("gui.progWidget.liquidExport.debug.noValidFluid");
                 }
-            } else if (((ILiquidExport) widget).isPlacingFluidBlocks() && (!((ICountWidget) widget).useCount() || getRemainingCount() >= 1000)) {
+            } else if (((ILiquidExport) this.widget).isPlacingFluidBlocks() && (!((ICountWidget) this.widget).useCount() || this.getRemainingCount() >= 1000)) {
                 Block fluidBlock = droneTank.getFluid().getFluid().getBlock();
-                World w = drone.world();
-                if (droneTank.getFluidAmount() >= 1000 && fluidBlock != null && isBlockSuitableForExport(w, pos)) {
+                World w = this.drone.world();
+                if (droneTank.getFluidAmount() >= 1000 && fluidBlock != null && this.isBlockSuitableForExport(w, pos)) {
                     if (!simulate) {
-                        decreaseCount(1000);
+                        this.decreaseCount(1000);
                         droneTank.drain(1000, true);
                         w.setBlockState(pos, fluidBlock.getDefaultState());
                     }

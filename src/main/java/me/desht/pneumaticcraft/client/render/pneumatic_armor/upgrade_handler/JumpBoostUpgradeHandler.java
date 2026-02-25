@@ -16,7 +16,7 @@ public class JumpBoostUpgradeHandler extends IUpgradeRenderHandler.SimpleTogglea
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(IItemRegistry.EnumUpgrade.RANGE) };
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.RANGE)};
     }
 
     @Override

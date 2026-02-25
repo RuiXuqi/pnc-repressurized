@@ -21,9 +21,9 @@ public class DroneEntityAIPickupItems extends EntityAIBase {
 
     public DroneEntityAIPickupItems(IDroneBase drone, ProgWidgetAreaItemBase progWidgetPickupItem) {
         this.drone = drone;
-        setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
-        itemPickupWidget = progWidgetPickupItem;
-        theNearestAttackableTargetSorter = new DistanceEntitySorter(drone);
+        this.setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
+        this.itemPickupWidget = progWidgetPickupItem;
+        this.theNearestAttackableTargetSorter = new DistanceEntitySorter(drone);
     }
 
     /**
@@ -31,24 +31,24 @@ public class DroneEntityAIPickupItems extends EntityAIBase {
      */
     @Override
     public boolean shouldExecute() {
-        List<Entity> pickableItems = itemPickupWidget.getEntitiesInArea(drone.world(), entity -> entity instanceof EntityItem && entity.isEntityAlive());
+        List<Entity> pickableItems = this.itemPickupWidget.getEntitiesInArea(this.drone.world(), entity -> entity instanceof EntityItem && entity.isEntityAlive());
 
         if (pickableItems.isEmpty()) {
-            drone.addDebugEntry("gui.progWidget.itemPickup.debug.noItems");
+            this.drone.addDebugEntry("gui.progWidget.itemPickup.debug.noItems");
             return false;
         }
-        pickableItems.sort(theNearestAttackableTargetSorter);
+        pickableItems.sort(this.theNearestAttackableTargetSorter);
         for (Entity ent : pickableItems) {
             ItemStack stack = ((EntityItem) ent).getItem();
-            if (itemPickupWidget.isItemValidForFilters(stack)) {
-                if (IOHelper.insert(drone, stack, null, true).isEmpty()) {
-                    if (drone.getPathNavigator().moveToEntity(ent)) {
-                        curPickingUpEntity = (EntityItem) ent;
+            if (this.itemPickupWidget.isItemValidForFilters(stack)) {
+                if (IOHelper.insert(this.drone, stack, null, true).isEmpty()) {
+                    if (this.drone.getPathNavigator().moveToEntity(ent)) {
+                        this.curPickingUpEntity = (EntityItem) ent;
                         return true;
                     }
                 }
             } else {
-                drone.addDebugEntry("gui.progWidget.itemPickup.debug.itemNotValid");
+                this.drone.addDebugEntry("gui.progWidget.itemPickup.debug.itemNotValid");
             }
         }
         return false;
@@ -60,18 +60,18 @@ public class DroneEntityAIPickupItems extends EntityAIBase {
      */
     @Override
     public boolean shouldContinueExecuting() {
-        if (curPickingUpEntity.isDead) return false;
-        if (new Vec3d(curPickingUpEntity.posX, curPickingUpEntity.posY, curPickingUpEntity.posZ).squareDistanceTo(drone.getDronePos()) < 2.25) {
-            ItemStack stack = curPickingUpEntity.getItem();
-            if (itemPickupWidget.isItemValidForFilters(stack)) {
-                tryPickupItem(drone, curPickingUpEntity);
+        if (this.curPickingUpEntity.isDead) return false;
+        if (new Vec3d(this.curPickingUpEntity.posX, this.curPickingUpEntity.posY, this.curPickingUpEntity.posZ).squareDistanceTo(this.drone.getDronePos()) < 2.25) {
+            ItemStack stack = this.curPickingUpEntity.getItem();
+            if (this.itemPickupWidget.isItemValidForFilters(stack)) {
+                tryPickupItem(this.drone, this.curPickingUpEntity);
             }
             return false;
         }
-        return !drone.getPathNavigator().hasNoPath();
+        return !this.drone.getPathNavigator().hasNoPath();
     }
 
-    static void tryPickupItem(IDrone drone, EntityItem itemEntity){
+    static void tryPickupItem(IDrone drone, EntityItem itemEntity) {
         ItemStack stack = itemEntity.getItem();
         int stackSize = stack.getCount();
 

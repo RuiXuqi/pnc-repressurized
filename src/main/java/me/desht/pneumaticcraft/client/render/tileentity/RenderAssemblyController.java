@@ -13,7 +13,7 @@ public class RenderAssemblyController extends AbstractModelRenderer<TileEntityAs
     private final ModelAssemblyControllerScreen model;
 
     public RenderAssemblyController() {
-        model = new ModelAssemblyControllerScreen();
+        this.model = new ModelAssemblyControllerScreen();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class RenderAssemblyController extends AbstractModelRenderer<TileEntityAs
         // have the screen face the player
         GlStateManager.rotate(180 + Minecraft.getMinecraft().getRenderManager().playerViewY, 0.0F, 1.0F, 0.0F);
 
-        model.renderModel(0.0625f);
+        this.model.renderModel(0.0625f);
 
         // status text & possible problem icon
         double textSize = 1 / 100D;
@@ -37,7 +37,7 @@ public class RenderAssemblyController extends AbstractModelRenderer<TileEntityAs
         GlStateManager.scale(textSize, textSize, textSize);
         GlStateManager.disableLighting();
         Minecraft.getMinecraft().fontRenderer.drawString(te.displayedText, 1, 4, 0xFFFFFFFF);
-        if(te.hasProblem) {
+        if (te.hasProblem) {
             GuiPneumaticContainerBase.drawTexture(Textures.GUI_PROBLEMS_TEXTURE, 28, 12);
         }
         GlStateManager.enableLighting();

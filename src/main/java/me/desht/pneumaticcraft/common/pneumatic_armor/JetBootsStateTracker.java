@@ -33,20 +33,21 @@ public class JetBootsStateTracker {
      * Set jet boots state server-side.  No-op if called client-side (client state is updated by the
      * PacketJetBootsStateSync packet).
      *
-     * @param player the player
-     * @param enabled jet boots switched on?
-     * @param active jet boots firing?
+     * @param player      the player
+     * @param enabled     jet boots switched on?
+     * @param active      jet boots firing?
      * @param builderMode in builder mode?
      */
     void setJetBootsState(EntityPlayer player, boolean enabled, boolean active, boolean builderMode) {
         if (!player.world.isRemote) {
-            JetBootsState state = stateMap.computeIfAbsent(player.getUniqueID(), uuid -> new JetBootsState(false, false, false));
+            JetBootsState state = this.stateMap.computeIfAbsent(player.getUniqueID(), uuid -> new JetBootsState(false, false, false));
 
             boolean sendPacket = state.enabled != enabled || state.active != active || state.builderMode != builderMode;
             state.enabled = enabled;
             state.active = active;
             state.builderMode = builderMode;
-            if (sendPacket) NetworkHandler.sendToDimension(new PacketJetBootsStateSync(player, state), player.world.provider.getDimension());
+            if (sendPacket)
+                NetworkHandler.sendToDimension(new PacketJetBootsStateSync(player, state), player.world.provider.getDimension());
         }
     }
 
@@ -54,29 +55,29 @@ public class JetBootsStateTracker {
      * Set jet boots state client-side; only called from PacketJetBootsStateSync packet handler.
      *
      * @param playerId a player's UUID (not necessarily the client player; could be another player in this dimension)
-     * @param state full jet boots state
+     * @param state    full jet boots state
      */
     public void setJetBootsState(UUID playerId, JetBootsState state) {
-        stateMap.put(playerId, state);
+        this.stateMap.put(playerId, state);
     }
 
     public boolean areJetBootsEnabled(EntityPlayer player) {
-        JetBootsState state = stateMap.get(player.getUniqueID());
+        JetBootsState state = this.stateMap.get(player.getUniqueID());
         return state != null && state.enabled;
     }
 
     public boolean areJetBootsActive(EntityPlayer player) {
-        JetBootsState state = stateMap.get(player.getUniqueID());
+        JetBootsState state = this.stateMap.get(player.getUniqueID());
         return state != null && state.active;
     }
 
     public boolean isBuilderMode(EntityPlayer player) {
-        JetBootsState state = stateMap.get(player.getUniqueID());
+        JetBootsState state = this.stateMap.get(player.getUniqueID());
         return state != null && state.builderMode;
     }
 
     public JetBootsState getJetBootsState(EntityPlayer player) {
-        return stateMap.getOrDefault(player.getUniqueID(), new JetBootsState(false, false, false));
+        return this.stateMap.getOrDefault(player.getUniqueID(), new JetBootsState(false, false, false));
     }
 
     public static class JetBootsState {
@@ -91,15 +92,15 @@ public class JetBootsStateTracker {
         }
 
         public boolean isEnabled() {
-            return enabled;
+            return this.enabled;
         }
 
         public boolean isActive() {
-            return active;
+            return this.active;
         }
 
         public boolean isBuilderMode() {
-            return builderMode;
+            return this.builderMode;
         }
 
         public void setEnabled(boolean enabled) {
@@ -115,12 +116,12 @@ public class JetBootsStateTracker {
         }
 
         public boolean shouldRotatePlayer() {
-            return enabled && active && !builderMode;
+            return this.enabled && this.active && !this.builderMode;
         }
 
         @Override
         public String toString() {
-            return String.format("[en=%b,ac=%b,bu=%b]", enabled, active, builderMode);
+            return String.format("[en=%b,ac=%b,bu=%b]", this.enabled, this.active, this.builderMode);
         }
     }
 }

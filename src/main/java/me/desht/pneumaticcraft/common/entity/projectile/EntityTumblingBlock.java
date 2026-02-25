@@ -47,7 +47,7 @@ public class EntityTumblingBlock extends EntityThrowable {
 
         this.preventEntitySpawning = true;
         this.setSize(0.98F, 0.98F);
-        this.setPosition(x, y + (double)((1.0F - this.height) / 2.0F), z);
+        this.setPosition(x, y + (double) ((1.0F - this.height) / 2.0F), z);
         this.motionX = 0.0D;
         this.motionY = 0.0D;
         this.motionZ = 0.0D;
@@ -55,13 +55,13 @@ public class EntityTumblingBlock extends EntityThrowable {
         this.prevPosY = y;
         this.prevPosZ = z;
         this.setOrigin(new BlockPos(this));
-        dataManager.set(STATE_STACK, stack);
+        this.dataManager.set(STATE_STACK, stack);
     }
 
     @Override
     protected void entityInit() {
-        dataManager.register(ORIGIN, BlockPos.ORIGIN);
-        dataManager.register(STATE_STACK, ItemStack.EMPTY);
+        this.dataManager.register(ORIGIN, BlockPos.ORIGIN);
+        this.dataManager.register(STATE_STACK, ItemStack.EMPTY);
     }
 
     @Override
@@ -74,17 +74,16 @@ public class EntityTumblingBlock extends EntityThrowable {
     }
 
     public ItemStack getStack() {
-        return dataManager.get(STATE_STACK);
+        return this.dataManager.get(STATE_STACK);
     }
 
     @SideOnly(Side.CLIENT)
-    public BlockPos getOrigin()
-    {
+    public BlockPos getOrigin() {
         return this.dataManager.get(ORIGIN);
     }
 
     private void setOrigin(BlockPos pos) {
-        dataManager.set(ORIGIN, pos);
+        this.dataManager.set(ORIGIN, pos);
     }
 
     @Override
@@ -95,55 +94,55 @@ public class EntityTumblingBlock extends EntityThrowable {
 
         super.onUpdate();  // handles nearly all of the in-flight logic
 
-        if (!world.isRemote) {
+        if (!this.world.isRemote) {
             BlockPos blockpos1 = new BlockPos(this);
-            if (!onGround && (ticksExisted > 100 && (blockpos1.getY() < 1 || blockpos1.getY() > 256) || ticksExisted > 600)) {
-                dropAsItem();
-                setDead();
+            if (!this.onGround && (this.ticksExisted > 100 && (blockpos1.getY() < 1 || blockpos1.getY() > 256) || this.ticksExisted > 600)) {
+                this.dropAsItem();
+                this.setDead();
             }
         }
     }
 
     @Override
     protected void onImpact(RayTraceResult result) {
-        if (!world.isRemote) {
+        if (!this.world.isRemote) {
             if (result.typeOfHit == RayTraceResult.Type.BLOCK) {
-                setDead();
-                if (!tryPlaceAsBlock(result.getBlockPos(), result.sideHit)) {
-                    dropAsItem();
+                this.setDead();
+                if (!this.tryPlaceAsBlock(result.getBlockPos(), result.sideHit)) {
+                    this.dropAsItem();
                 }
             }
         }
     }
 
     private boolean tryPlaceAsBlock(BlockPos pos0, EnumFacing side) {
-        Block b = world.getBlockState(pos0).getBlock();
-        BlockPos pos = b.isReplaceable(world, pos0) ? pos0 : pos0.offset(side);
-        if (world.getBlockState(pos).getBlock().isReplaceable(world, pos)) {
-            ItemStack stack = dataManager.get(STATE_STACK);
-            Block block = ((ItemBlock)stack.getItem()).getBlock();
-            EntityPlayer placer = thrower instanceof EntityPlayer ? (EntityPlayer) thrower : getFakePlayer();
+        Block b = this.world.getBlockState(pos0).getBlock();
+        BlockPos pos = b.isReplaceable(this.world, pos0) ? pos0 : pos0.offset(side);
+        if (this.world.getBlockState(pos).getBlock().isReplaceable(this.world, pos)) {
+            ItemStack stack = this.dataManager.get(STATE_STACK);
+            Block block = ((ItemBlock) stack.getItem()).getBlock();
+            EntityPlayer placer = this.thrower instanceof EntityPlayer ? (EntityPlayer) this.thrower : this.getFakePlayer();
 
-            IBlockState newState = block.getStateForPlacement(world, pos, side, 0f, 0f, 0f, stack.getMetadata(), placer, EnumHand.MAIN_HAND);
-            return PneumaticCraftUtils.tryPlaceBlock(world, pos, placer, side, newState);
+            IBlockState newState = block.getStateForPlacement(this.world, pos, side, 0f, 0f, 0f, stack.getMetadata(), placer, EnumHand.MAIN_HAND);
+            return PneumaticCraftUtils.tryPlaceBlock(this.world, pos, placer, side, newState);
         }
         return false;
     }
 
     private void dropAsItem() {
         if (this.world.getGameRules().getBoolean("doEntityDrops")) {
-            entityDropItem(dataManager.get(STATE_STACK).copy(), 0.0F);
+            this.entityDropItem(this.dataManager.get(STATE_STACK).copy(), 0.0F);
         }
     }
 
     private EntityPlayer getFakePlayer() {
         if (fakePlayer == null) {
-            fakePlayer = FakePlayerFactory.get((WorldServer) world, new GameProfile(null, "[Tumbling Block]"));
+            fakePlayer = FakePlayerFactory.get((WorldServer) this.world, new GameProfile(null, "[Tumbling Block]"));
             fakePlayer.connection = new FakeNetHandlerPlayerServer(FMLCommonHandler.instance().getMinecraftServerInstance(), fakePlayer);
         }
-        fakePlayer.posX = posX;
-        fakePlayer.posY = posY;
-        fakePlayer.posZ = posZ;
+        fakePlayer.posX = this.posX;
+        fakePlayer.posY = this.posY;
+        fakePlayer.posZ = this.posZ;
         return fakePlayer;
     }
 }

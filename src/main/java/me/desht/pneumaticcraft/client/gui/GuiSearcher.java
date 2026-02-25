@@ -40,7 +40,7 @@ public class GuiSearcher extends InventoryEffectRenderer {
     private static final ResourceLocation GUI_TEXTURE = new ResourceLocation(Textures.GUI_ITEM_SEARCHER_LOCATION);
     private static final ResourceLocation SCROLL_TEXTURE = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
     private static List<SearchEntry> cachedSearchEntries;
-//    private final InventoryBasic inventory = new InventoryBasic("tmp", true, 49);
+    //    private final InventoryBasic inventory = new InventoryBasic("tmp", true, 49);
     private final ItemStackHandler inventory = new ItemStackHandler(49);
     private final GuiScreen parentScreen;
 
@@ -70,20 +70,20 @@ public class GuiSearcher extends InventoryEffectRenderer {
 
     public GuiSearcher(EntityPlayer par1EntityPlayer) {
         super(new ContainerSearcher());
-        par1EntityPlayer.openContainer = inventorySlots;
-        allowUserInput = true;
-        ySize = 176;
-        parentScreen = FMLClientHandler.instance().getClient().currentScreen;
-        ((ContainerSearcher) inventorySlots).init(this);
+        par1EntityPlayer.openContainer = this.inventorySlots;
+        this.allowUserInput = true;
+        this.ySize = 176;
+        this.parentScreen = FMLClientHandler.instance().getClient().currentScreen;
+        ((ContainerSearcher) this.inventorySlots).init(this);
     }
 
     @Nonnull
     public ItemStack getSearchStack() {
-        return inventory.getStackInSlot(48);
+        return this.inventory.getStackInSlot(48);
     }
 
     public void setSearchStack(@Nonnull ItemStack stack) {
-        inventory.setStackInSlot(48, stack);
+        this.inventory.setStackInSlot(48, stack);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class GuiSearcher extends InventoryEffectRenderer {
             if (par1Slot.slotNumber == 48) {
                 par1Slot.putStack(ItemStack.EMPTY);
             } else {
-                inventory.setStackInSlot(48, par1Slot.getStack());
+                this.inventory.setStackInSlot(48, par1Slot.getStack());
             }
         }
     }
@@ -103,16 +103,16 @@ public class GuiSearcher extends InventoryEffectRenderer {
     @Override
     public void initGui() {
         super.initGui();
-        buttonList.clear();
+        this.buttonList.clear();
         Keyboard.enableRepeatEvents(true);
-        searchField = new GuiTextField(-1, fontRenderer, guiLeft + 20, guiTop + 36, 89, fontRenderer.FONT_HEIGHT);
-        searchField.setMaxStringLength(15);
-        searchField.setEnableBackgroundDrawing(true);
-        searchField.setVisible(true);
-        searchField.setFocused(true);
-        searchField.setTextColor(16777215);
+        this.searchField = new GuiTextField(-1, this.fontRenderer, this.guiLeft + 20, this.guiTop + 36, 89, this.fontRenderer.FONT_HEIGHT);
+        this.searchField.setMaxStringLength(15);
+        this.searchField.setEnableBackgroundDrawing(true);
+        this.searchField.setVisible(true);
+        this.searchField.setFocused(true);
+        this.searchField.setTextColor(16777215);
 
-        updateCreativeSearch();
+        this.updateCreativeSearch();
     }
 
     /**
@@ -127,10 +127,10 @@ public class GuiSearcher extends InventoryEffectRenderer {
     @Override
     public void updateScreen() {
         EntityPlayer player = FMLClientHandler.instance().getClient().player;
-        if (parentScreen instanceof GuiHelmetMainScreen) {
+        if (this.parentScreen instanceof GuiHelmetMainScreen) {
             if (player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() != Itemss.PNEUMATIC_HELMET) {
-                mc.displayGuiScreen(parentScreen);
-                onGuiClosed();
+                this.mc.displayGuiScreen(this.parentScreen);
+                this.onGuiClosed();
             }
         }
     }
@@ -140,18 +140,18 @@ public class GuiSearcher extends InventoryEffectRenderer {
      */
     @Override
     protected void keyTyped(char par1, int par2) throws IOException {
-        if (field_74234_w) {
-            field_74234_w = false;
-            searchField.setText("");
+        if (this.field_74234_w) {
+            this.field_74234_w = false;
+            this.searchField.setText("");
         }
 
         if (par2 == 1)//esc
         {
-            mc.displayGuiScreen(parentScreen);
-            onGuiClosed();
+            this.mc.displayGuiScreen(this.parentScreen);
+            this.onGuiClosed();
         } else {
-            if (searchField.textboxKeyTyped(par1, par2)) {
-                updateCreativeSearch();
+            if (this.searchField.textboxKeyTyped(par1, par2)) {
+                this.updateCreativeSearch();
             } else {
                 super.keyTyped(par1, par2);
             }
@@ -165,16 +165,17 @@ public class GuiSearcher extends InventoryEffectRenderer {
             list.add(itemstack);
         }
     }
-    
+
     /**
      * Lazy cache.
+     *
      * @return
      */
-    private Stream<SearchEntry> getSearchEntries(){
-        if(cachedSearchEntries == null){
+    private Stream<SearchEntry> getSearchEntries() {
+        if (cachedSearchEntries == null) {
             NonNullList<ItemStack> itemList = NonNullList.create();
 
-            for(Item item : Item.REGISTRY){
+            for (Item item : Item.REGISTRY) {
                 if (item != null && item.getCreativeTab() != null) {
                     item.getSubItems(item.getCreativeTab(), itemList);
                 }
@@ -182,7 +183,7 @@ public class GuiSearcher extends InventoryEffectRenderer {
 
             for (Enchantment enchantment : Enchantment.REGISTRY) {
                 if (enchantment != null && enchantment.type != null) {
-                    getAllEnchantedBooks(enchantment, itemList);
+                    this.getAllEnchantedBooks(enchantment, itemList);
                 }
             }
 
@@ -192,19 +193,19 @@ public class GuiSearcher extends InventoryEffectRenderer {
     }
 
     private void updateCreativeSearch() {
-        ContainerSearcher containerSearcher = (ContainerSearcher) inventorySlots;
+        ContainerSearcher containerSearcher = (ContainerSearcher) this.inventorySlots;
         containerSearcher.itemList.clear();
 
-        String s = searchField.getText().toLowerCase();
+        String s = this.searchField.getText().toLowerCase();
 
-        List<ItemStack> applicableEntries = getSearchEntries()
-                                                .filter(entry -> entry.test(s))
-                                                .map(entry -> entry.stack)
-                                                .collect(Collectors.toList());
-        
+        List<ItemStack> applicableEntries = this.getSearchEntries()
+                .filter(entry -> entry.test(s))
+                .map(entry -> entry.stack)
+                .collect(Collectors.toList());
+
         containerSearcher.itemList.addAll(applicableEntries);
 
-        currentScroll = 0.0F;
+        this.currentScroll = 0.0F;
         containerSearcher.scrollTo(0.0F);
     }
 
@@ -213,16 +214,16 @@ public class GuiSearcher extends InventoryEffectRenderer {
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        fontRenderer.drawString("Item Searcher", 23, 5, 4210752);
-        fontRenderer.drawString("Search Box", 23, 25, 4210752);
-        fontRenderer.drawString("Target", 113, 10, 4210752);
+        this.fontRenderer.drawString("Item Searcher", 23, 5, 4210752);
+        this.fontRenderer.drawString("Search Box", 23, 25, 4210752);
+        this.fontRenderer.drawString("Target", 113, 10, 4210752);
     }
 
     /**
      * returns (if you are not on the inventoryTab) and (the flag isn't set) and( you have more than 1 page of items)
      */
     private boolean needsScrollBars() {
-        return ((ContainerSearcher) inventorySlots).hasMoreThan1PageOfItemsInList();
+        return ((ContainerSearcher) this.inventorySlots).hasMoreThan1PageOfItemsInList();
     }
 
     /**
@@ -233,8 +234,8 @@ public class GuiSearcher extends InventoryEffectRenderer {
         super.handleMouseInput();
         int i = Mouse.getEventDWheel();
 
-        if (i != 0 && needsScrollBars()) {
-            int j = ((ContainerSearcher) inventorySlots).itemList.size() / 9 - 5 + 1;
+        if (i != 0 && this.needsScrollBars()) {
+            int j = ((ContainerSearcher) this.inventorySlots).itemList.size() / 9 - 5 + 1;
 
             if (i > 0) {
                 i = 1;
@@ -244,17 +245,17 @@ public class GuiSearcher extends InventoryEffectRenderer {
                 i = -1;
             }
 
-            currentScroll = (float) (currentScroll - (double) i / (double) j);
+            this.currentScroll = (float) (this.currentScroll - (double) i / (double) j);
 
-            if (currentScroll < 0.0F) {
-                currentScroll = 0.0F;
+            if (this.currentScroll < 0.0F) {
+                this.currentScroll = 0.0F;
             }
 
-            if (currentScroll > 1.0F) {
-                currentScroll = 1.0F;
+            if (this.currentScroll > 1.0F) {
+                this.currentScroll = 1.0F;
             }
 
-            ((ContainerSearcher) inventorySlots).scrollTo(currentScroll);
+            ((ContainerSearcher) this.inventorySlots).scrollTo(this.currentScroll);
         }
     }
 
@@ -263,41 +264,41 @@ public class GuiSearcher extends InventoryEffectRenderer {
      */
     @Override
     public void drawScreen(int par1, int par2, float par3) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
 
         boolean flag = Mouse.isButtonDown(0);
-        int k = guiLeft;
-        int l = guiTop;
+        int k = this.guiLeft;
+        int l = this.guiTop;
         int i1 = k + 156;
         int j1 = l + 48;
         int k1 = i1 + 14;
         int l1 = j1 + 112;
-        if (!wasClicking && flag && par1 >= i1 && par2 >= j1 && par1 < k1 && par2 < l1) {
-            isScrolling = needsScrollBars();
+        if (!this.wasClicking && flag && par1 >= i1 && par2 >= j1 && par1 < k1 && par2 < l1) {
+            this.isScrolling = this.needsScrollBars();
         }
 
         if (!flag) {
-            isScrolling = false;
+            this.isScrolling = false;
         }
 
-        wasClicking = flag;
+        this.wasClicking = flag;
 
-        if (isScrolling) {
-            currentScroll = (par2 - j1 - 7.5F) / (l1 - j1 - 15.0F);
+        if (this.isScrolling) {
+            this.currentScroll = (par2 - j1 - 7.5F) / (l1 - j1 - 15.0F);
 
-            if (currentScroll < 0.0F) {
-                currentScroll = 0.0F;
+            if (this.currentScroll < 0.0F) {
+                this.currentScroll = 0.0F;
             }
 
-            if (currentScroll > 1.0F) {
-                currentScroll = 1.0F;
+            if (this.currentScroll > 1.0F) {
+                this.currentScroll = 1.0F;
             }
 
-            ((ContainerSearcher) inventorySlots).scrollTo(currentScroll);
+            ((ContainerSearcher) this.inventorySlots).scrollTo(this.currentScroll);
         }
-        if (firstRun) {
-            firstRun = false;
-            ((ContainerSearcher) inventorySlots).scrollTo(0);
+        if (this.firstRun) {
+            this.firstRun = false;
+            ((ContainerSearcher) this.inventorySlots).scrollTo(0);
         }
 
         super.drawScreen(par1, par2, par3);
@@ -305,7 +306,7 @@ public class GuiSearcher extends InventoryEffectRenderer {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
 
-        renderHoveredToolTip(par1, par2);
+        this.renderHoveredToolTip(par1, par2);
     }
 
     /**
@@ -313,17 +314,17 @@ public class GuiSearcher extends InventoryEffectRenderer {
      */
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-        mc.getTextureManager().bindTexture(GUI_TEXTURE);
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
-        searchField.drawTextBox();
+        this.mc.getTextureManager().bindTexture(GUI_TEXTURE);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(xStart, yStart, 0, 0, this.xSize, this.ySize);
+        this.searchField.drawTextBox();
 
-        int i1 = guiLeft + 156;
-        int k = guiTop + 48;
+        int i1 = this.guiLeft + 156;
+        int k = this.guiTop + 48;
         int l = k + 112;
-        mc.getTextureManager().bindTexture(SCROLL_TEXTURE);
-        drawTexturedModalRect(i1, k + (int) ((l - k - 17) * currentScroll), 232 + (needsScrollBars() ? 0 : 12), 0, 12, 15);
+        this.mc.getTextureManager().bindTexture(SCROLL_TEXTURE);
+        this.drawTexturedModalRect(i1, k + (int) ((l - k - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
 
     }
 
@@ -331,22 +332,22 @@ public class GuiSearcher extends InventoryEffectRenderer {
      * Returns the creative inventory
      */
     public IItemHandlerModifiable getInventory() {
-        return inventory;
+        return this.inventory;
     }
-    
-    public class SearchEntry implements Predicate<String>{
+
+    public class SearchEntry implements Predicate<String> {
         public final ItemStack stack;
         private final String tooltip;
-        
-        public SearchEntry(ItemStack stack){
+
+        public SearchEntry(ItemStack stack) {
             this.stack = stack;
-            List<String> t = stack.getTooltip(mc.player, mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-            tooltip = StringUtils.join(t, "\n").toLowerCase();
+            List<String> t = stack.getTooltip(GuiSearcher.this.mc.player, GuiSearcher.this.mc.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+            this.tooltip = StringUtils.join(t, "\n").toLowerCase();
         }
-        
+
         @Override
-        public boolean test(String searchString){
-            return tooltip.contains(searchString);
+        public boolean test(String searchString) {
+            return this.tooltip.contains(searchString);
         }
     }
 }

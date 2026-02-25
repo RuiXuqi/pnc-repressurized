@@ -41,6 +41,7 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     public enum Status {
         IDLE("idling"), PUMPING("pumping"), DIGGING("diggingDown"), RETRACTING("retracting"), STUCK("stuck");
         public final String desc;
+
         Status(String desc) {
             this.desc = desc;
         }
@@ -70,7 +71,7 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
 
     public TileEntityGasLift() {
         super(5, 7, 3000, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED, EnumUpgrade.DISPENSER);
     }
 
     @Override
@@ -79,23 +80,23 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     }
 
     private void updateConnections() {
-        List<Pair<EnumFacing, IAirHandler>> connections = getAirHandler(null).getConnectedPneumatics();
-        Arrays.fill(sidesConnected, false);
+        List<Pair<EnumFacing, IAirHandler>> connections = this.getAirHandler(null).getConnectedPneumatics();
+        Arrays.fill(this.sidesConnected, false);
         for (Pair<EnumFacing, IAirHandler> entry : connections) {
-            sidesConnected[entry.getKey().ordinal()] = true;
+            this.sidesConnected[entry.getKey().ordinal()] = true;
         }
     }
 
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        updateConnections();
+        this.updateConnections();
     }
 
     @Override
     public void onNeighborTileUpdate() {
         super.onNeighborTileUpdate();
-        updateConnections();
+        this.updateConnections();
     }
 
     @Override
@@ -106,99 +107,99 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     @Override
     public void update() {
         super.update();
-        if (!getWorld().isRemote) {
-            ticker++;
-            if (currentDepth > 0) {
-                int curCheckingPipe = ticker % currentDepth;
-                if (curCheckingPipe > 0 && !isPipe(world, getPos().offset(EnumFacing.DOWN, curCheckingPipe))) {
-                    currentDepth = curCheckingPipe - 1;
+        if (!this.getWorld().isRemote) {
+            this.ticker++;
+            if (this.currentDepth > 0) {
+                int curCheckingPipe = this.ticker % this.currentDepth;
+                if (curCheckingPipe > 0 && !this.isPipe(this.world, this.getPos().offset(EnumFacing.DOWN, curCheckingPipe))) {
+                    this.currentDepth = curCheckingPipe - 1;
                 }
             }
-            if (ticker == 400) {
-                pumpingLake = null;
-                ticker = 0;
+            if (this.ticker == 400) {
+                this.pumpingLake = null;
+                this.ticker = 0;
             }
 
-            if (redstoneAllows() && getPressure() >= getMinWorkingPressure()) {
-                workTimer += this.getSpeedMultiplierFromUpgrades();
-                while (workTimer > 20) {
-                    workTimer -= 20;
-                    status = Status.IDLE;
-                    if (mode == 2) {
-                        retractPipes();
+            if (this.redstoneAllows() && this.getPressure() >= this.getMinWorkingPressure()) {
+                this.workTimer += this.getSpeedMultiplierFromUpgrades();
+                while (this.workTimer > 20) {
+                    this.workTimer -= 20;
+                    this.status = Status.IDLE;
+                    if (this.mode == 2) {
+                        this.retractPipes();
                     } else {
-                        if (!suckLiquid() && !tryDigDown()) {
+                        if (!this.suckLiquid() && !this.tryDigDown()) {
                             break;
                         }
                     }
                 }
             } else {
-                status = Status.IDLE;
+                this.status = Status.IDLE;
             }
         }
     }
 
     private void retractPipes() {
-        if (currentDepth > 0) {
-            status = Status.RETRACTING;
-            if (isPipe(world, getPos().add(0, -currentDepth, 0))) {
-                BlockPos pos1 = getPos().offset(EnumFacing.DOWN, currentDepth);
-                ItemStack toInsert = new ItemStack(world.getBlockState(pos1).getBlock());
-                if (inventory.insertItem(0, toInsert, true).isEmpty()) {
-                    inventory.insertItem(0, toInsert, false);
-                    world.destroyBlock(pos1, false);
-                    addAir(-100);
-                    currentDepth--;
+        if (this.currentDepth > 0) {
+            this.status = Status.RETRACTING;
+            if (this.isPipe(this.world, this.getPos().add(0, -this.currentDepth, 0))) {
+                BlockPos pos1 = this.getPos().offset(EnumFacing.DOWN, this.currentDepth);
+                ItemStack toInsert = new ItemStack(this.world.getBlockState(pos1).getBlock());
+                if (this.inventory.insertItem(0, toInsert, true).isEmpty()) {
+                    this.inventory.insertItem(0, toInsert, false);
+                    this.world.destroyBlock(pos1, false);
+                    this.addAir(-100);
+                    this.currentDepth--;
                 } else {
-                    status = Status.IDLE;
+                    this.status = Status.IDLE;
                 }
             } else {
-                currentDepth--;
+                this.currentDepth--;
             }
         }
     }
 
     private boolean tryDigDown() {
-        if (isUnbreakable(getPos().offset(EnumFacing.DOWN, currentDepth + 1))) {
-            status = Status.STUCK;
-        } else if (getPos().getY() - currentDepth >= 0) {
-            status = Status.DIGGING;
-            currentDepth++;
-            BlockPos pos1 = getPos().offset(EnumFacing.DOWN, currentDepth);
-            if (!isPipe(world, pos1)) {
-                ItemStack extracted = inventory.extractItem(0, 1, true);
+        if (this.isUnbreakable(this.getPos().offset(EnumFacing.DOWN, this.currentDepth + 1))) {
+            this.status = Status.STUCK;
+        } else if (this.getPos().getY() - this.currentDepth >= 0) {
+            this.status = Status.DIGGING;
+            this.currentDepth++;
+            BlockPos pos1 = this.getPos().offset(EnumFacing.DOWN, this.currentDepth);
+            if (!this.isPipe(this.world, pos1)) {
+                ItemStack extracted = this.inventory.extractItem(0, 1, true);
                 if (extracted.getItem() instanceof ItemBlock) {
-                    IBlockState currentState = world.getBlockState(pos1);
+                    IBlockState currentState = this.world.getBlockState(pos1);
                     IBlockState newState = ((ItemBlock) extracted.getItem()).getBlock().getDefaultState();
 
-                    int airRequired = Math.round(66.66f * currentState.getBlockHardness(world, pos1));
-                    if (getPipeTier(newState) > 1) airRequired /= 2;
+                    int airRequired = Math.round(66.66f * currentState.getBlockHardness(this.world, pos1));
+                    if (this.getPipeTier(newState) > 1) airRequired /= 2;
 
-                    if (getAirHandler(null).getAir() > airRequired) {
-                        inventory.extractItem(0, 1, false);
-                        world.destroyBlock(pos1, false);
-                        world.setBlockState(pos1, newState);
+                    if (this.getAirHandler(null).getAir() > airRequired) {
+                        this.inventory.extractItem(0, 1, false);
+                        this.world.destroyBlock(pos1, false);
+                        this.world.setBlockState(pos1, newState);
                         // kludge: don't permit placing more than one tube per tick
                         // causes TE cache problems - root cause to be determined
-                        workTimer = 19;
-                        addAir(-airRequired);
+                        this.workTimer = 19;
+                        this.addAir(-airRequired);
                     } else {
-                        status = Status.IDLE;
-                        currentDepth--;
+                        this.status = Status.IDLE;
+                        this.currentDepth--;
                     }
                 } else {
-                    status = Status.IDLE;
-                    currentDepth--;
+                    this.status = Status.IDLE;
+                    this.currentDepth--;
                 }
             }
         } else {
-            status = Status.IDLE;
+            this.status = Status.IDLE;
         }
-        return status == Status.DIGGING;
+        return this.status == Status.DIGGING;
     }
 
     private boolean isPipe(World world, BlockPos pos) {
-        return getPipeTier(world.getBlockState(pos)) >= 1;
+        return this.getPipeTier(world.getBlockState(pos)) >= 1;
     }
 
     private int getPipeTier(IBlockState state) {
@@ -207,41 +208,41 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     }
 
     private boolean isUnbreakable(BlockPos pos) {
-        return world().getBlockState(pos).getBlockHardness(world, pos) < 0;
+        return this.world().getBlockState(pos).getBlockHardness(this.world, pos) < 0;
     }
 
 
     private boolean suckLiquid() {
-        BlockPos pos = getPos().offset(EnumFacing.DOWN, currentDepth + 1);
+        BlockPos pos = this.getPos().offset(EnumFacing.DOWN, this.currentDepth + 1);
 
-        FluidStack fluidStack = FluidUtils.getFluidAt(world, pos, false);
+        FluidStack fluidStack = FluidUtils.getFluidAt(this.world, pos, false);
         if (fluidStack == null || fluidStack.amount < Fluid.BUCKET_VOLUME) {
-            pumpingLake = null;
+            this.pumpingLake = null;
             return false;
         }
 
-        if (tank.fill(fluidStack, false) == Fluid.BUCKET_VOLUME) {
-            if (pumpingLake == null) {
-                findLake(fluidStack.getFluid());
+        if (this.tank.fill(fluidStack, false) == Fluid.BUCKET_VOLUME) {
+            if (this.pumpingLake == null) {
+                this.findLake(fluidStack.getFluid());
             }
             boolean foundSource = false;
             BlockPos curPos = null;
-            while (pumpingLake.size() > 0) {
-                curPos = pumpingLake.get(0);
-                if (FluidUtils.isSourceBlock(getWorld(), curPos, fluidStack.getFluid())) {
+            while (this.pumpingLake.size() > 0) {
+                curPos = this.pumpingLake.get(0);
+                if (FluidUtils.isSourceBlock(this.getWorld(), curPos, fluidStack.getFluid())) {
                     foundSource = true;
                     break;
                 }
-                pumpingLake.remove(0);
+                this.pumpingLake.remove(0);
             }
-            if (pumpingLake.isEmpty()) {
-                pumpingLake = null;
+            if (this.pumpingLake.isEmpty()) {
+                this.pumpingLake = null;
             } else if (foundSource) {
-                FluidStack fluidStack1 = FluidUtils.getFluidAt(world, curPos, true);
+                FluidStack fluidStack1 = FluidUtils.getFluidAt(this.world, curPos, true);
                 if (fluidStack1 != null && fluidStack1.amount == Fluid.BUCKET_VOLUME) {
-                    tank.fill(fluidStack1, true);
-                    addAir(-100);
-                    status = Status.PUMPING;
+                    this.tank.fill(fluidStack1, true);
+                    this.addAir(-100);
+                    this.status = Status.PUMPING;
                 }
             }
         }
@@ -249,59 +250,59 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     }
 
     private void findLake(Fluid fluid) {
-        pumpingLake = new ArrayList<>();
+        this.pumpingLake = new ArrayList<>();
         Stack<BlockPos> pendingPositions = new Stack<>();
-        BlockPos thisPos = getPos().offset(EnumFacing.DOWN, currentDepth + 1);
+        BlockPos thisPos = this.getPos().offset(EnumFacing.DOWN, this.currentDepth + 1);
         pendingPositions.add(thisPos);
-        pumpingLake.add(thisPos);
+        this.pumpingLake.add(thisPos);
         while (!pendingPositions.empty()) {
             BlockPos checkingPos = pendingPositions.pop();
             for (EnumFacing d : EnumFacing.VALUES) {
                 if (d == EnumFacing.DOWN) continue;
                 BlockPos newPos = checkingPos.offset(d);
                 if (PneumaticCraftUtils.distBetweenSq(newPos, thisPos) <= MAX_PUMP_RANGE_SQUARED
-                        && FluidUtils.isSourceBlock(getWorld(), newPos, fluid)
-                        && !pumpingLake.contains(newPos)) {
+                        && FluidUtils.isSourceBlock(this.getWorld(), newPos, fluid)
+                        && !this.pumpingLake.contains(newPos)) {
                     pendingPositions.add(newPos);
-                    pumpingLake.add(newPos);
+                    this.pumpingLake.add(newPos);
                 }
             }
         }
-        pumpingLake.sort(new ChunkPositionSorter(getPos().getX() + 0.5, getPos().getY() - currentDepth - 1, getPos().getZ() + 0.5));
-        Collections.reverse(pumpingLake);
+        this.pumpingLake.sort(new ChunkPositionSorter(this.getPos().getX() + 0.5, this.getPos().getY() - this.currentDepth - 1, this.getPos().getZ() + 0.5));
+        Collections.reverse(this.pumpingLake);
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         } else if (buttonID > 0 && buttonID < 4) {
-            mode = buttonID - 1;
+            this.mode = buttonID - 1;
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
     public float getMinWorkingPressure() {
-        return 0.5F + currentDepth * 0.05F;
+        return 0.5F + this.currentDepth * 0.05F;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setTag("Items", inventory.serializeNBT());
-        tag.setByte("redstoneMode", (byte) redstoneMode);
-        tag.setByte("mode", (byte) mode);
+        tag.setTag("Items", this.inventory.serializeNBT());
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
+        tag.setByte("mode", (byte) this.mode);
 
         NBTTagCompound tankTag = new NBTTagCompound();
-        tank.writeToNBT(tankTag);
+        this.tank.writeToNBT(tankTag);
         tag.setTag("tank", tankTag);
-        tag.setInteger("currentDepth", currentDepth);
+        tag.setInteger("currentDepth", this.currentDepth);
 
         return tag;
     }
@@ -309,16 +310,16 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        redstoneMode = tag.getByte("redstoneMode");
-        mode = tag.getByte("mode");
-        tank.readFromNBT(tag.getCompoundTag("tank"));
-        currentDepth = tag.getInteger("currentDepth");
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.redstoneMode = tag.getByte("redstoneMode");
+        this.mode = tag.getByte("mode");
+        this.tank.readFromNBT(tag.getCompoundTag("tank"));
+        this.currentDepth = tag.getInteger("currentDepth");
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
@@ -330,14 +331,14 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(tank);
+            return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.cast(this.tank);
         } else {
             return super.getCapability(capability, facing);
         }
     }
 
     public FluidTank getTank() {
-        return tank;
+        return this.tank;
     }
 
     /**
@@ -351,6 +352,6 @@ public class TileEntityGasLift extends TileEntityPneumaticBase
     @Nonnull
     @Override
     public Map<String, FluidTank> getSerializableTanks() {
-        return ImmutableMap.of("Tank", tank);
+        return ImmutableMap.of("Tank", this.tank);
     }
 }

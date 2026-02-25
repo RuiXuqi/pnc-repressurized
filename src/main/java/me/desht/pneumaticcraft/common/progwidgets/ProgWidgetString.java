@@ -15,16 +15,16 @@ import java.util.List;
 public class ProgWidgetString extends ProgWidget {
     public String string = "";
 
-    public static ProgWidgetString withText(String string){
+    public static ProgWidgetString withText(String string) {
         ProgWidgetString widget = new ProgWidgetString();
         widget.string = string;
         return widget;
     }
-    
+
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        if (addToTooltip()) curTooltip.add("Value: \"" + string + "\"");
+        if (this.addToTooltip()) curTooltip.add("Value: \"" + this.string + "\"");
     }
 
     protected boolean addToTooltip() {
@@ -33,7 +33,7 @@ public class ProgWidgetString extends ProgWidget {
 
     @Override
     public String getExtraStringInfo() {
-        return "\"" + string + "\"";
+        return "\"" + this.string + "\"";
     }
 
     @Override
@@ -64,13 +64,13 @@ public class ProgWidgetString extends ProgWidget {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setString("string", string);
+        tag.setString("string", this.string);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        string = tag.getString("string");
+        this.string = tag.getString("string");
     }
 
     @Override

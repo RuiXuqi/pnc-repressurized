@@ -12,12 +12,14 @@ import java.util.List;
 public interface IPneumaticHelmetRegistry {
     /**
      * Register an entity tracker for the Pneumatic Helmet.
+     *
      * @param entry the entity tracker
      */
     void registerEntityTrackEntry(Class<? extends IEntityTrackEntry> entry);
 
     /**
      * Register a block tracker for the Pneumatic Helmet
+     *
      * @param entry the block tracker
      */
     void registerBlockTrackEntry(IBlockTrackEntry entry);
@@ -27,7 +29,7 @@ public interface IPneumaticHelmetRegistry {
      * vanilla or from a different mod.  For your own entities, just have your entity implement {@link IHackableEntity}
      *
      * @param entityClazz entity class; subclasses of this entity will also be affected
-     * @param iHackable the hack to register
+     * @param iHackable   the hack to register
      */
     void addHackable(Class<? extends Entity> entityClazz, Class<? extends IHackableEntity> iHackable);
 
@@ -35,7 +37,7 @@ public interface IPneumaticHelmetRegistry {
      * Register a "foreign" block with your hackable. This should be used for blocks you didn't create, i.e.
      * vanilla or from a different mod.  For your own blocks, just have your block implement {@link IHackableBlock}
      *
-     * @param block the block class; subclasses of this block will also be affected
+     * @param block     the block class; subclasses of this block will also be affected
      * @param iHackable the hack to register
      */
     void addHackable(Block block, Class<? extends IHackableBlock> iHackable);

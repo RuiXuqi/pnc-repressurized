@@ -37,11 +37,11 @@ public class ProgWidgetBlockCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                if (checkingForAir && drone.world().isAirBlock(pos)) return true;
-                if (checkingForLiquids && PneumaticCraftUtils.isBlockLiquid(drone.world().getBlockState(pos).getBlock()))
+                if (ProgWidgetBlockCondition.this.checkingForAir && this.drone.world().isAirBlock(pos)) return true;
+                if (ProgWidgetBlockCondition.this.checkingForLiquids && PneumaticCraftUtils.isBlockLiquid(this.drone.world().getBlockState(pos).getBlock()))
                     return true;
-                if (!checkingForAir && !checkingForLiquids || getConnectedParameters()[1] != null) {
-                    return DroneAIDig.isBlockValidForFilter(drone.world(), drone, pos, widget);
+                if (!ProgWidgetBlockCondition.this.checkingForAir && !ProgWidgetBlockCondition.this.checkingForLiquids || ProgWidgetBlockCondition.this.getConnectedParameters()[1] != null) {
+                    return DroneAIDig.isBlockValidForFilter(this.drone.world(), this.drone, pos, this.widget);
                 } else {
                     return false;
                 }
@@ -56,8 +56,8 @@ public class ProgWidgetBlockCondition extends ProgWidgetCondition {
             @Override
             public void initGui() {
                 super.initGui();
-                addWidget(new GuiCheckBox(500, guiLeft + 5, guiTop + 60, 0xFF404040, I18n.format("gui.progWidget.conditionBlock.checkForAir")).setChecked(checkingForAir).setTooltip(I18n.format("gui.progWidget.conditionBlock.checkForAir.tooltip")));
-                addWidget(new GuiCheckBox(501, guiLeft + 5, guiTop + 72, 0xFF404040, I18n.format("gui.progWidget.conditionBlock.checkForLiquids")).setChecked(checkingForLiquids).setTooltip(I18n.format("gui.progWidget.conditionBlock.checkForLiquids.tooltip")));
+                this.addWidget(new GuiCheckBox(500, this.guiLeft + 5, this.guiTop + 60, 0xFF404040, I18n.format("gui.progWidget.conditionBlock.checkForAir")).setChecked(ProgWidgetBlockCondition.this.checkingForAir).setTooltip(I18n.format("gui.progWidget.conditionBlock.checkForAir.tooltip")));
+                this.addWidget(new GuiCheckBox(501, this.guiLeft + 5, this.guiTop + 72, 0xFF404040, I18n.format("gui.progWidget.conditionBlock.checkForLiquids")).setChecked(ProgWidgetBlockCondition.this.checkingForLiquids).setTooltip(I18n.format("gui.progWidget.conditionBlock.checkForLiquids.tooltip")));
             }
 
             @Override
@@ -74,10 +74,10 @@ public class ProgWidgetBlockCondition extends ProgWidgetCondition {
             public void actionPerformed(IGuiWidget widget) {
                 switch (widget.getID()) {
                     case 500:
-                        checkingForAir = !checkingForAir;
+                        ProgWidgetBlockCondition.this.checkingForAir = !ProgWidgetBlockCondition.this.checkingForAir;
                         break;
                     case 501:
-                        checkingForLiquids = !checkingForLiquids;
+                        ProgWidgetBlockCondition.this.checkingForLiquids = !ProgWidgetBlockCondition.this.checkingForLiquids;
                         break;
                     default:
                         super.actionPerformed(widget);
@@ -96,15 +96,15 @@ public class ProgWidgetBlockCondition extends ProgWidgetCondition {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("checkingForAir", checkingForAir);
-        tag.setBoolean("checkingForLiquids", checkingForLiquids);
+        tag.setBoolean("checkingForAir", this.checkingForAir);
+        tag.setBoolean("checkingForLiquids", this.checkingForLiquids);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        checkingForAir = tag.getBoolean("checkingForAir");
-        checkingForLiquids = tag.getBoolean("checkingForLiquids");
+        this.checkingForAir = tag.getBoolean("checkingForAir");
+        this.checkingForLiquids = tag.getBoolean("checkingForLiquids");
     }
 
 }

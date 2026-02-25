@@ -26,12 +26,16 @@ public interface IPositionProvider {
      * @param index the index in the list returned by getStoredPositions()
      * @return a color in ARGB format, or 0 to skip rendering completely
      */
-    default int getRenderColor(int index) { return 0xFFFFFF00; }
-    
+    default int getRenderColor(int index) {
+        return 0xFFFFFF00;
+    }
+
     /**
      * Whether or not the rendered positions should be visible through the world.
-     * 
+     *
      * @return true if visible through the world, false if not.
      */
-    default boolean disableDepthTest() { return true; }
+    default boolean disableDepthTest() {
+        return true;
+    }
 }

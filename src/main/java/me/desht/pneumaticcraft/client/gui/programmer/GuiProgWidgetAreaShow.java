@@ -19,32 +19,32 @@ public class GuiProgWidgetAreaShow<Widget extends IProgWidget> extends GuiProgWi
     public void initGui() {
         super.initGui();
 
-        if (showShowAreaButtons() && widget instanceof IAreaProvider) {
-            buttonList.add(new GuiButton(1000, guiLeft + xSize / 2 - 50, guiTop + 150, 100, 20, I18n.format("gui.programmer.button.showArea")));
-            if (AreaShowManager.getInstance().isShowing(guiProgrammer.te))
-                buttonList.add(new GuiButton(1001, guiLeft + xSize / 2 - 50, guiTop + 175, 100, 20, I18n.format("gui.programmer.button.stopShowingArea")));
+        if (this.showShowAreaButtons() && this.widget instanceof IAreaProvider) {
+            this.buttonList.add(new GuiButton(1000, this.guiLeft + this.xSize / 2 - 50, this.guiTop + 150, 100, 20, I18n.format("gui.programmer.button.showArea")));
+            if (AreaShowManager.getInstance().isShowing(this.guiProgrammer.te))
+                this.buttonList.add(new GuiButton(1001, this.guiLeft + this.xSize / 2 - 50, this.guiTop + 175, 100, 20, I18n.format("gui.programmer.button.stopShowingArea")));
         }
     }
 
     @Override
     public void actionPerformed(GuiButton button) throws IOException {
-        if (showShowAreaButtons() && widget instanceof IAreaProvider) {
+        if (this.showShowAreaButtons() && this.widget instanceof IAreaProvider) {
             if (button.id == 1000) {
-                if (!AreaShowManager.getInstance().isShowing(guiProgrammer.te))
-                    buttonList.add(new GuiButton(1001, guiLeft + xSize / 2 - 50, guiTop + 175, 100, 20, I18n.format("gui.programmer.button.stopShowingArea")));
-                guiProgrammer.te.previewArea(widget.getX(), widget.getY());
+                if (!AreaShowManager.getInstance().isShowing(this.guiProgrammer.te))
+                    this.buttonList.add(new GuiButton(1001, this.guiLeft + this.xSize / 2 - 50, this.guiTop + 175, 100, 20, I18n.format("gui.programmer.button.stopShowingArea")));
+                this.guiProgrammer.te.previewArea(this.widget.getX(), this.widget.getY());
                 return;
             } else if (button.id == 1001) {
-                AreaShowManager.getInstance().removeHandlers(guiProgrammer.te);
-                buttonList.remove(button);
+                AreaShowManager.getInstance().removeHandlers(this.guiProgrammer.te);
+                this.buttonList.remove(button);
                 return;
             }
         }
         // PacketDispatcher.sendPacketToServer(PacketHandlerPneumaticCraft.showDroneArea(guiProgrammer.te.getPos().getX(), guiProgrammer.te.getPos().getY(), guiProgrammer.te.getPos().getZ(), widget.getX(), widget.getY()));
         super.actionPerformed(button);
     }
-    
-    public boolean showShowAreaButtons(){
+
+    public boolean showShowAreaButtons() {
         return true;
     }
 }

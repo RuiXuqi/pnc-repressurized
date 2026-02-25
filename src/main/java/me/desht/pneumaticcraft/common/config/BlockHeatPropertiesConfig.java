@@ -49,7 +49,7 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
         super.preInit(file);
 
         // TODO this part shouldn't be necessary with data packs in 1.13
-        mergeConfigs();
+        this.mergeConfigs();
     }
 
     /**
@@ -65,9 +65,9 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
         JsonObject internalJsonObject = (JsonObject) parser.parse(cfg);
 
         JsonObject toWrite;
-        if (file.exists()) {
+        if (this.file.exists()) {
             // existing properties file - overwrite defaults, merge in any new block properties
-            JsonObject fileJsonObject = (JsonObject) parser.parse(FileUtils.readFileToString(file, Charsets.UTF_8));
+            JsonObject fileJsonObject = (JsonObject) parser.parse(FileUtils.readFileToString(this.file, Charsets.UTF_8));
 
             fileJsonObject.add("Description", internalJsonObject.get("Description"));
 
@@ -93,7 +93,7 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
             toWrite = internalJsonObject;
         }
 
-        try (PrintWriter out = new PrintWriter(file)) {
+        try (PrintWriter out = new PrintWriter(this.file)) {
             Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             out.println(gson.toJson(toWrite));
         }
@@ -127,9 +127,9 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
                     if (che != null) {
                         IBlockState state = che.getBlockState();
                         if (entry.getKey().indexOf('[') == -1) {
-                            ignoreVariants.add(state.getBlock());
+                            this.ignoreVariants.add(state.getBlock());
                         }
-                        customHeatEntries.put(makeKeyForState(state), che);
+                        this.customHeatEntries.put(this.makeKeyForState(state), che);
                     } else {
                         String what = entry.getKey().indexOf(':') == -1 ? "fluid" : "block";
                         Log.warning("skipping BlockHeatProperties.cfg entry '" + entry.getKey() + "': unknown " + what + " (mod not loaded?)");
@@ -138,7 +138,7 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
                     Log.error("invalid blockstate for " + entry.getKey() + ": " + e.getMessage());
                 }
             } else {
-                Log.error("Invalid JSON? entry '" + entry.getKey() + "' in " + getConfigFilename());
+                Log.error("Invalid JSON? entry '" + entry.getKey() + "' in " + this.getConfigFilename());
             }
         }
     }
@@ -146,23 +146,23 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
     // TODO remove in 1.13: we will just store by block then
     private String makeKeyForState(IBlockState blockState) {
         Block b = blockState.getBlock();
-        return ignoreVariants.contains(b) ?
+        return this.ignoreVariants.contains(b) ?
                 b.getRegistryName().toString() :
                 b.getRegistryName() + ":" + b.getMetaFromState(blockState);
     }
 
     public Map<String, CustomHeatEntry> getCustomHeatEntries() {
-        return customHeatEntries;
+        return this.customHeatEntries;
     }
 
     public CustomHeatEntry getCustomHeatEntry(IBlockState state) {
-        String key = makeKeyForState(state);
-        CustomHeatEntry entry = customHeatEntries.get(key);
+        String key = this.makeKeyForState(state);
+        CustomHeatEntry entry = this.customHeatEntries.get(key);
         if (entry == null) {
             Fluid fluid = FluidRegistry.lookupFluidForBlock(state.getBlock());
             if (fluid != null) {
-                entry = buildDefaultFluidEntry(state, fluid);
-                customHeatEntries.put(key, entry);
+                entry = this.buildDefaultFluidEntry(state, fluid);
+                this.customHeatEntries.put(key, entry);
             }
         }
         return entry;
@@ -252,7 +252,7 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
                 temperature = value.get("temperature").getAsInt();
             } else {
                 if (fluid == null) {
-                    throw new JsonSyntaxException(blockState.toString() + ": Non-fluid definitions must have a temperature field!");
+                    throw new JsonSyntaxException(blockState + ": Non-fluid definitions must have a temperature field!");
                 } else {
                     temperature = fluid.getTemperature();
                 }
@@ -280,43 +280,43 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
         }
 
         public int getTotalHeat() {
-            return totalHeat;
+            return this.totalHeat;
         }
 
         public int getTemperature() {
-            return temperature;
+            return this.temperature;
         }
 
         public double getThermalResistance() {
-            return thermalResistance;
+            return this.thermalResistance;
         }
 
         public IBlockState getBlockState() {
-            return blockState;
+            return this.blockState;
         }
 
         public IBlockState getTransformHot() {
-            return transformHot;
+            return this.transformHot;
         }
 
         public IBlockState getTransformCold() {
-            return transformCold;
+            return this.transformCold;
         }
 
         public IBlockState getTransformHotFlowing() {
-            return transformHotFlowing;
+            return this.transformHotFlowing;
         }
 
         public IBlockState getTransformColdFlowing() {
-            return transformColdFlowing;
+            return this.transformColdFlowing;
         }
 
         public String getId() {
-            return id;
+            return this.id;
         }
 
         public boolean isDefaultState() {
-            return isDefaultState;
+            return this.isDefaultState;
         }
 
         private static IBlockState maybeParseBlockState(JsonObject value, String field) throws InvalidBlockStateException {
@@ -376,7 +376,7 @@ public class BlockHeatPropertiesConfig extends JsonConfig {
 
             if (optional.isPresent()) {
                 return state.withProperty(property, optional.get());
-            }  else {
+            } else {
                 Log.warning(String.format("Unable to read property: %s with value: %s for blockstate: %s", property, propVal, state));
                 return state;
             }

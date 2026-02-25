@@ -28,13 +28,13 @@ public class DroneAIExternalProgram extends DroneAIBlockInteraction<ProgWidgetEx
     public DroneAIExternalProgram(IDroneBase drone, DroneAIManager mainAI, ProgWidgetExternalProgram widget) {
         super(drone, widget);
         this.mainAI = mainAI;
-        subAI = new DroneAIManager(drone, new ArrayList<>());
+        this.subAI = new DroneAIManager(drone, new ArrayList<>());
     }
 
     @Override
     public boolean shouldExecute() {
         if (super.shouldExecute()) {
-            traversedPositions.clear();
+            this.traversedPositions.clear();
             return true;
         } else {
             return false;
@@ -48,9 +48,9 @@ public class DroneAIExternalProgram extends DroneAIBlockInteraction<ProgWidgetEx
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        if (traversedPositions.add(pos)) {
-            curSlot = 0;
-            TileEntity te = drone.world().getTileEntity(pos);
+        if (this.traversedPositions.add(pos)) {
+            this.curSlot = 0;
+            TileEntity te = this.drone.world().getTileEntity(pos);
             return te != null && te.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
         }
         return false;
@@ -58,26 +58,26 @@ public class DroneAIExternalProgram extends DroneAIBlockInteraction<ProgWidgetEx
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        IItemHandler inv = IOHelper.getInventoryForTE(drone.world().getTileEntity(pos));
+        IItemHandler inv = IOHelper.getInventoryForTE(this.drone.world().getTileEntity(pos));
         if (inv == null) return false;
-        if (curProgramTag != null) {
-            if (curSlot < inv.getSlots()) {
-                ItemStack stack = inv.getStackInSlot(curSlot);
-                if (curProgramTag.equals(stack.getTagCompound())) {
-                    subAI.onUpdateTasks();
-                    if (subAI.isIdling() || isRunningSameProgram(subAI.getCurrentAI())) {
-                        curProgramTag = null;
-                        curSlot++;
+        if (this.curProgramTag != null) {
+            if (this.curSlot < inv.getSlots()) {
+                ItemStack stack = inv.getStackInSlot(this.curSlot);
+                if (this.curProgramTag.equals(stack.getTagCompound())) {
+                    this.subAI.onUpdateTasks();
+                    if (this.subAI.isIdling() || this.isRunningSameProgram(this.subAI.getCurrentAI())) {
+                        this.curProgramTag = null;
+                        this.curSlot++;
                     }
                 } else {
-                    curProgramTag = null;
-                    subAI.setWidgets(new ArrayList<>());
+                    this.curProgramTag = null;
+                    this.subAI.setWidgets(new ArrayList<>());
                 }
             }
             return true;
         } else {
-            while (curSlot < inv.getSlots()) {
-                ItemStack stack = inv.getStackInSlot(curSlot);
+            while (this.curSlot < inv.getSlots()) {
+                ItemStack stack = inv.getStackInSlot(this.curSlot);
                 if (stack.getItem() instanceof IProgrammable) {
                     IProgrammable programmable = (IProgrammable) stack.getItem();
                     if (programmable.canProgram(stack) && programmable.usesPieces(stack)) {
@@ -85,24 +85,24 @@ public class DroneAIExternalProgram extends DroneAIBlockInteraction<ProgWidgetEx
 
                         boolean areWidgetsValid = true;
                         for (IProgWidget widget : widgets) {
-                            if (!drone.isProgramApplicable(widget)) {
+                            if (!this.drone.isProgramApplicable(widget)) {
                                 areWidgetsValid = false;
                                 break;
                             }
                         }
 
                         if (areWidgetsValid) {
-                            if (widget.shareVariables) mainAI.connectVariables(subAI);
-                            subAI.getDrone().getAIManager().setLabel("Main");
-                            subAI.setWidgets(widgets);
-                            curProgramTag = stack.getTagCompound();
-                            if (!subAI.isIdling()) {
+                            if (this.widget.shareVariables) this.mainAI.connectVariables(this.subAI);
+                            this.subAI.getDrone().getAIManager().setLabel("Main");
+                            this.subAI.setWidgets(widgets);
+                            this.curProgramTag = stack.getTagCompound();
+                            if (!this.subAI.isIdling()) {
                                 return true;
                             }
                         }
                     }
                 }
-                curSlot++;
+                this.curSlot++;
             }
             return false;
         }
@@ -110,11 +110,11 @@ public class DroneAIExternalProgram extends DroneAIBlockInteraction<ProgWidgetEx
 
     //Prevent a memory leak, as a result of the same External program recursively calling itself.
     private boolean isRunningSameProgram(EntityAIBase ai) {
-        return ai instanceof DroneAIExternalProgram && curProgramTag.equals(((DroneAIExternalProgram) ai).curProgramTag);
+        return ai instanceof DroneAIExternalProgram && this.curProgramTag.equals(((DroneAIExternalProgram) ai).curProgramTag);
     }
 
     DroneAIManager getRunningAI() {
-        return subAI;
+        return this.subAI;
     }
 
 }

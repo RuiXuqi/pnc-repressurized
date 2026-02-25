@@ -20,12 +20,12 @@ public class PacketUpdateRemoteLayout extends AbstractPacket<PacketUpdateRemoteL
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        layout = ByteBufUtils.readTag(buf);
+        this.layout = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeTag(buf, layout);
+        ByteBufUtils.writeTag(buf, this.layout);
     }
 
     @Override

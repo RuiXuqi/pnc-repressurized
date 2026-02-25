@@ -26,36 +26,36 @@ public class GuiGasLift extends GuiPneumaticContainerBase<TileEntityGasLift> {
     @Override
     public void initGui() {
         super.initGui();
-        addWidget(new WidgetTank(-1, guiLeft + 80, guiTop + 15, te.getTank()));
-        statusStat = addAnimatedStat("gui.tab.status", new ItemStack(Blockss.GAS_LIFT), 0xFFFFAA00, false);
+        this.addWidget(new WidgetTank(-1, this.guiLeft + 80, this.guiTop + 15, this.te.getTank()));
+        this.statusStat = this.addAnimatedStat("gui.tab.status", new ItemStack(Blockss.GAS_LIFT), 0xFFFFAA00, false);
 
-        GuiAnimatedStat optionStat = addAnimatedStat("gui.tab.gasLift.mode", new ItemStack(Blockss.PRESSURE_TUBE), 0xFFFFCC00, false);
+        GuiAnimatedStat optionStat = this.addAnimatedStat("gui.tab.gasLift.mode", new ItemStack(Blockss.PRESSURE_TUBE), 0xFFFFCC00, false);
         optionStat.addPadding(4, 17);
 
         GuiButtonSpecial button = new GuiButtonSpecial(1, 5, 20, 20, 20, "");
         button.setRenderStacks(new ItemStack(Items.BUCKET));
         button.setTooltipText(I18n.format("gui.tab.gasLift.mode.pumpEmpty"));
         optionStat.addWidget(button);
-        modeButtons[0] = button;
+        this.modeButtons[0] = button;
 
         button = new GuiButtonSpecial(2, 30, 20, 20, 20, "");
         button.setRenderStacks(new ItemStack(Items.WATER_BUCKET));
         button.setTooltipText(I18n.format("gui.tab.gasLift.mode.pumpLeave"));
         optionStat.addWidget(button);
-        modeButtons[1] = button;
+        this.modeButtons[1] = button;
 
         button = new GuiButtonSpecial(3, 55, 20, 20, 20, "");
         button.setRenderStacks(new ItemStack(Blockss.PRESSURE_TUBE));
         button.setTooltipText(I18n.format("gui.tab.gasLift.mode.drawIn"));
         optionStat.addWidget(button);
-        modeButtons[2] = button;
+        this.modeButtons[2] = button;
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
 
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 17, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 17, 19, 4210752);
     }
 
     @Override
@@ -66,36 +66,36 @@ public class GuiGasLift extends GuiPneumaticContainerBase<TileEntityGasLift> {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatus());
-        for (int i = 0; i < modeButtons.length; i++) {
-            modeButtons[i].enabled = te.mode != i;
+        this.statusStat.setText(this.getStatus());
+        for (int i = 0; i < this.modeButtons.length; i++) {
+            this.modeButtons[i].enabled = this.te.mode != i;
         }
     }
 
     private List<String> getStatus() {
         List<String> textList = new ArrayList<>();
         textList.add(I18n.format("gui.tab.status.gasLift.action"));
-        String status = "gui.tab.status.gasLift.action." + te.status.desc;
-        textList.add(I18n.format(status, te.getTank().getFluid() != null ? te.getTank().getFluid().getLocalizedName() : ""));
-        textList.add(I18n.format("gui.tab.status.gasLift.currentDepth", te.currentDepth));
+        String status = "gui.tab.status.gasLift.action." + this.te.status.desc;
+        textList.add(I18n.format(status, this.te.getTank().getFluid() != null ? this.te.getTank().getFluid().getLocalizedName() : ""));
+        textList.add(I18n.format("gui.tab.status.gasLift.currentDepth", this.te.currentDepth));
         return textList;
     }
 
     @Override
     public void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
-        if (te.mode == 0 || te.mode == 1) {
-            if (te.getTank().getCapacity() - te.getTank().getFluidAmount() < 1000) {
+        if (this.te.mode == 0 || this.te.mode == 1) {
+            if (this.te.getTank().getCapacity() - this.te.getTank().getFluidAmount() < 1000) {
                 curInfo.add(I18n.format("gui.tab.problems.gasLift.noLiquidSpace"));
             }
-            if (te.getPrimaryInventory().getStackInSlot(0).isEmpty()) {
+            if (this.te.getPrimaryInventory().getStackInSlot(0).isEmpty()) {
                 curInfo.add(I18n.format("gui.tab.problems.gasLift.noTubes"));
             }
-            if (te.status == TileEntityGasLift.Status.STUCK) {
+            if (this.te.status == TileEntityGasLift.Status.STUCK) {
                 curInfo.add(I18n.format("gui.tab.problems.gasLift.stuck"));
             }
         } else {
-            if (te.getPrimaryInventory().getStackInSlot(0).getCount() == 64) {
+            if (this.te.getPrimaryInventory().getStackInSlot(0).getCount() == 64) {
                 curInfo.add(I18n.format("gui.tab.problems.gasLift.noTubeSpace"));
             }
         }

@@ -41,42 +41,42 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
     public GuiSecurityStationInventory(InventoryPlayer player, TileEntitySecurityStation te) {
 
         super(new ContainerSecurityStationInventory(player, te), te, Textures.GUI_SECURITY_STATION);
-        ySize = 239;
+        this.ySize = 239;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        statusStat = addAnimatedStat("Security Status", new ItemStack(Blockss.SECURITY_STATION), 0xFFFFAA00, false);
-        accessStat = addAnimatedStat("Shared Users", new ItemStack(Items.SKULL, 1, 3), 0xFF005500, false);
+        this.statusStat = this.addAnimatedStat("Security Status", new ItemStack(Blockss.SECURITY_STATION), 0xFFFFAA00, false);
+        this.accessStat = this.addAnimatedStat("Shared Users", new ItemStack(Items.SKULL, 1, 3), 0xFF005500, false);
 
-        Rectangle accessButtonRectangle = accessStat.getButtonScaledRectangle(145, 10, 20, 20);
-        addButton = getButtonFromRectangle(1, accessButtonRectangle, "+");
-        rebootButton = new GuiButton(2, xStart + 110, yStart + 20, 60, 20, "Reboot");
-        sharedUserTextField = getTextFieldFromRectangle(accessStat.getButtonScaledRectangle(20, 15, 120, 10));
-        accessStat.addWidget(sharedUserTextField);
-        accessStat.addWidget(addButton);
+        Rectangle accessButtonRectangle = this.accessStat.getButtonScaledRectangle(145, 10, 20, 20);
+        this.addButton = this.getButtonFromRectangle(1, accessButtonRectangle, "+");
+        this.rebootButton = new GuiButton(2, xStart + 110, yStart + 20, 60, 20, "Reboot");
+        this.sharedUserTextField = this.getTextFieldFromRectangle(this.accessStat.getButtonScaledRectangle(20, 15, 120, 10));
+        this.accessStat.addWidget(this.sharedUserTextField);
+        this.accessStat.addWidget(this.addButton);
 
-        GuiButtonSpecial testButton = new GuiButtonSpecial(3, guiLeft + 108, guiTop + 103, 64, 20, I18n.format("gui.securityStation.test"));
+        GuiButtonSpecial testButton = new GuiButtonSpecial(3, this.guiLeft + 108, this.guiTop + 103, 64, 20, I18n.format("gui.securityStation.test"));
         testButton.setTooltipText(I18n.format("gui.securityStation.test.tooltip"));
-        buttonList.add(testButton);
-        buttonList.add(rebootButton);
-        buttonList.add(new GuiButton(-1, guiLeft + 108, guiTop + 125, 64, 20, I18n.format("gui.universalSensor.button.showRange")));
+        this.buttonList.add(testButton);
+        this.buttonList.add(this.rebootButton);
+        this.buttonList.add(new GuiButton(-1, this.guiLeft + 108, this.guiTop + 125, 64, 20, I18n.format("gui.universalSensor.button.showRange")));
 
-        updateUserRemoveButtons();
+        this.updateUserRemoveButtons();
 
-        nodeHandler = new NetworkConnectionBackground(this, te, xStart + 25, yStart + 30, 18, 0xFF2222FF);
+        this.nodeHandler = new NetworkConnectionBackground(this, this.te, xStart + 25, yStart + 30, 18, 0xFF2222FF);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Network Layout", 15, 12, 4210752);
-        fontRenderer.drawString("Upgr.", 133, 52, 4210752);
+        this.fontRenderer.drawString("Network Layout", 15, 12, 4210752);
+        this.fontRenderer.drawString("Upgr.", 133, 52, 4210752);
     }
 
     @Override
@@ -93,45 +93,45 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        nodeHandler.render();
+        this.nodeHandler.render();
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
-        accessStat.setTextWithoutCuttingString(getAccessText());
+        this.statusStat.setText(this.getStatusText());
+        this.accessStat.setTextWithoutCuttingString(this.getAccessText());
         String rebootButtonString;
-        if (te.getRebootTime() > 0) {
-            rebootButtonString = te.getRebootTime() % 100 < 50 ? TextFormatting.YELLOW + "Rebooting.." : PneumaticCraftUtils.convertTicksToMinutesAndSeconds(te.getRebootTime(), false);
+        if (this.te.getRebootTime() > 0) {
+            rebootButtonString = this.te.getRebootTime() % 100 < 50 ? TextFormatting.YELLOW + "Rebooting.." : PneumaticCraftUtils.convertTicksToMinutesAndSeconds(this.te.getRebootTime(), false);
         } else {
             rebootButtonString = "Reboot";
         }
 
-        rebootButton.displayString = rebootButtonString;
+        this.rebootButton.displayString = rebootButtonString;
 
-        addButton.visible = accessStat.isDoneExpanding();
-        for (GuiButton button : removeUserButtons) {
-            button.enabled = accessStat.isDoneExpanding();
+        this.addButton.visible = this.accessStat.isDoneExpanding();
+        for (GuiButton button : this.removeUserButtons) {
+            button.enabled = this.accessStat.isDoneExpanding();
         }
-        if (removeUserButtons.size() != te.sharedUsers.size()) {
-            updateUserRemoveButtons();
+        if (this.removeUserButtons.size() != this.te.sharedUsers.size()) {
+            this.updateUserRemoveButtons();
         }
     }
 
     @Override
     protected void addProblems(List<String> text) {
         super.addProblems(text);
-        if (te.getRebootTime() > 0) {
+        if (this.te.getRebootTime() > 0) {
             text.add(TextFormatting.WHITE + "The Security Station doesn't provide security!");
-            text.add(TextFormatting.BLACK + "The station is rebooting (" + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(te.getRebootTime(), false) + ").");
-        } else if (te.isHacked()) {
+            text.add(TextFormatting.BLACK + "The station is rebooting (" + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(this.te.getRebootTime(), false) + ").");
+        } else if (this.te.isHacked()) {
             text.add(TextFormatting.WHITE + "This Station has been hacked!");
             text.add(TextFormatting.BLACK + "Reboot the station.");
         }
-        if (!te.hasValidNetwork()) {
+        if (!this.te.hasValidNetwork()) {
             text.add(TextFormatting.GRAY + "Invalid network configuration!");
-            switch (te.checkForNetworkValidity()) {
+            switch (this.te.checkForNetworkValidity()) {
                 case NO_SUBROUTINE:
                     text.add(TextFormatting.BLACK + "Add a Diagnostic Subroutine.");
                     break;
@@ -163,22 +163,22 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
     private List<String> getStatusText() {
         List<String> text = new ArrayList<>();
         text.add(TextFormatting.WHITE + "Protection");
-        if (te.getRebootTime() > 0) {
+        if (this.te.getRebootTime() > 0) {
             text.add(TextFormatting.DARK_RED + "No protection because of rebooting!");
-        } else if (te.isHacked()) {
+        } else if (this.te.isHacked()) {
             text.add(TextFormatting.DARK_RED + "Hacked by:");
-            for (GameProfile hacker : te.hackedUsers) {
+            for (GameProfile hacker : this.te.hackedUsers) {
                 text.add(TextFormatting.DARK_RED + "\u2022 " + hacker.getName());
             }
         } else {
             text.add(TextFormatting.BLACK + "System secure");
         }
         text.add(TextFormatting.WHITE + "Security Level");
-        text.add(TextFormatting.BLACK + "Level " + te.getSecurityLevel());
+        text.add(TextFormatting.BLACK + "Level " + this.te.getSecurityLevel());
         text.add(TextFormatting.WHITE + "Intruder Detection Chance");
-        text.add(TextFormatting.BLACK.toString() + te.getDetectionChance() + "%%");
+        text.add(TextFormatting.BLACK.toString() + this.te.getDetectionChance() + "%%");
         text.add(TextFormatting.WHITE + "Security Range");
-        text.add(TextFormatting.BLACK.toString() + te.getSecurityRange() + "m (square)");
+        text.add(TextFormatting.BLACK.toString() + this.te.getSecurityRange() + "m (square)");
         return text;
     }
 
@@ -186,7 +186,7 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
         List<String> textList = new ArrayList<>();
         textList.add("                                      ");
         textList.add("");
-        for (GameProfile user : te.sharedUsers) {
+        for (GameProfile user : this.te.sharedUsers) {
             textList.add(TextFormatting.WHITE + "\u2022 " + user.getName());
         }
         return textList;
@@ -194,8 +194,8 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
 
     @Override
     public void actionPerformed(IGuiWidget widget) {
-        if (widget.getID() == 1 && !sharedUserTextField.getText().equals(""))
-            NetworkHandler.sendToServer(new PacketSecurityStationAddUser(te, sharedUserTextField.getText()));
+        if (widget.getID() == 1 && !this.sharedUserTextField.getText().equals(""))
+            NetworkHandler.sendToServer(new PacketSecurityStationAddUser(this.te, this.sharedUserTextField.getText()));
         super.actionPerformed(widget);
     }
 
@@ -206,9 +206,9 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
     @Override
     protected void actionPerformed(GuiButton button) {
         if (button.id == 2) {
-            te.rebootStation();
+            this.te.rebootStation();
         } else if (button.id == -1) {
-            te.showRangeLines();
+            this.te.showRangeLines();
         }
 
         super.actionPerformed(button);
@@ -216,25 +216,25 @@ public class GuiSecurityStationInventory extends GuiSecurityStationBase {
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        te.setText(0, sharedUserTextField.getText());
-        NetworkHandler.sendToServer(new PacketUpdateTextfield(te, 0));
+        this.te.setText(0, this.sharedUserTextField.getText());
+        NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, 0));
     }
 
     private void updateUserRemoveButtons() {
-        if (removeUserButtons != null) {
-            for (GuiButtonSpecial button : removeUserButtons) {
-                accessStat.removeWidget(button);
+        if (this.removeUserButtons != null) {
+            for (GuiButtonSpecial button : this.removeUserButtons) {
+                this.accessStat.removeWidget(button);
             }
         }
-        removeUserButtons = new ArrayList<>();
-        for (int i = 0; i < te.sharedUsers.size(); i++) {
-            Rectangle rect = accessStat.getButtonScaledRectangle(24, 30 + i * 10, fontRenderer.getStringWidth(te.sharedUsers.get(i).getName()), 8);
-            GuiButtonSpecial button = getInvisibleButtonFromRectangle(4 + i, rect);
+        this.removeUserButtons = new ArrayList<>();
+        for (int i = 0; i < this.te.sharedUsers.size(); i++) {
+            Rectangle rect = this.accessStat.getButtonScaledRectangle(24, 30 + i * 10, this.fontRenderer.getStringWidth(this.te.sharedUsers.get(i).getName()), 8);
+            GuiButtonSpecial button = this.getInvisibleButtonFromRectangle(4 + i, rect);
             button.setInvisibleHoverColor(0x44FF0000);
             button.setVisible(false);
-            accessStat.addWidget(button);
-            removeUserButtons.add(button);
-            if (te.sharedUsers.get(i).getName().equals(FMLClientHandler.instance().getClient().player.getGameProfile().getName())) {
+            this.accessStat.addWidget(button);
+            this.removeUserButtons.add(button);
+            if (this.te.sharedUsers.get(i).getName().equals(FMLClientHandler.instance().getClient().player.getGameProfile().getName())) {
                 button.visible = false;
             }
         }

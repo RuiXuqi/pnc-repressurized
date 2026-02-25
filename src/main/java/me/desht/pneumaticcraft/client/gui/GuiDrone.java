@@ -19,27 +19,27 @@ public class GuiDrone extends GuiPneumaticInventoryItem {
     public void initGui() {
         super.initGui();
 
-        if (!(itemStack.getItem() instanceof ItemDrone)) {
+        if (!(this.itemStack.getItem() instanceof ItemDrone)) {
             return; // should never happen...
         }
-        ItemDrone itemDrone = (ItemDrone) itemStack.getItem();
+        ItemDrone itemDrone = (ItemDrone) this.itemStack.getItem();
 
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.SPEED, false);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.DISPENSER, false);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.ITEM_LIFE, false);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.MAGNET, false);
-        addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tab.info.item.drone");
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.SECURITY, true);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.VOLUME, true);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.ENTITY_TRACKER, true);
-        maybeAddUpgradeTab(itemDrone, EnumUpgrade.RANGE, true);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.SPEED, false);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.DISPENSER, false);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.ITEM_LIFE, false);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.MAGNET, false);
+        this.addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tab.info.item.drone");
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.SECURITY, true);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.VOLUME, true);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.ENTITY_TRACKER, true);
+        this.maybeAddUpgradeTab(itemDrone, EnumUpgrade.RANGE, true);
 
     }
 
     private void maybeAddUpgradeTab(ItemDrone itemDrone, EnumUpgrade upgrade, boolean leftSided) {
         if (itemDrone.upgradeApplies(upgrade)) {
             ItemStack upgradeStack = CraftingRegistrator.getUpgrade(upgrade);
-            addAnimatedStat(upgradeStack.getDisplayName(), upgradeStack,
+            this.addAnimatedStat(upgradeStack.getDisplayName(), upgradeStack,
                     0xFF4040FF, leftSided).setText("gui.tab.info.item.drone." + upgrade.getName() + "Upgrade");
         }
     }

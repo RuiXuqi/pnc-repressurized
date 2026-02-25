@@ -29,31 +29,31 @@ public abstract class GuiPneumaticInventoryItem extends GuiPneumaticContainerBas
 
     public GuiPneumaticInventoryItem(ContainerChargingStationItemInventory container, TileEntityChargingStation te) {
         super(container, te, Textures.GUI_PNEUMATIC_ARMOR_LOCATION);
-        itemStack = te.getPrimaryInventory().getStackInSlot(TileEntityChargingStation.CHARGE_INVENTORY_INDEX);
+        this.itemStack = te.getPrimaryInventory().getStackInSlot(TileEntityChargingStation.CHARGE_INVENTORY_INDEX);
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        guiBackButton = new GuiButton(2, xStart + 90, yStart + 15, 25, 20, "\u2b05");
-        buttonList.add(guiBackButton);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        this.guiBackButton = new GuiButton(2, xStart + 90, yStart + 15, 25, 20, "\u2b05");
+        this.buttonList.add(this.guiBackButton);
     }
 
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         pressureStatText.add("\u00a77Current Pressure:");
-        ItemStack stack = te.getPrimaryInventory().getStackInSlot(TileEntityChargingStation.CHARGE_INVENTORY_INDEX);
-        float curPressure = te.chargingItemPressure;
-        int volume = UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, stack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + getDefaultVolume();
+        ItemStack stack = this.te.getPrimaryInventory().getStackInSlot(TileEntityChargingStation.CHARGE_INVENTORY_INDEX);
+        float curPressure = this.te.chargingItemPressure;
+        int volume = UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, stack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + this.getDefaultVolume();
         pressureStatText.add("\u00a70" + (double) Math.round(curPressure * 10) / 10 + " bar.");
         pressureStatText.add("\u00a77Current Air:");
         pressureStatText.add("\u00a70" + (double) Math.round(curPressure * volume) + " mL.");
         pressureStatText.add("\u00a77Volume:");
-        pressureStatText.add("\u00a70" + getDefaultVolume() + " mL.");
-        if (volume > getDefaultVolume()) {
-            pressureStatText.add("\u00a70" + (double) Math.round(volume - getDefaultVolume()) + " mL. (Volume Upgrades)");
+        pressureStatText.add("\u00a70" + this.getDefaultVolume() + " mL.");
+        if (volume > this.getDefaultVolume()) {
+            pressureStatText.add("\u00a70" + (double) Math.round(volume - this.getDefaultVolume()) + " mL. (Volume Upgrades)");
             pressureStatText.add("\u00a70--------+");
             pressureStatText.add("\u00a70" + (double) Math.round(volume) + " mL.");
         }
@@ -92,20 +92,20 @@ public abstract class GuiPneumaticInventoryItem extends GuiPneumaticContainerBas
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
-        String containerName = itemStack.getDisplayName();
-        fontRenderer.drawString(containerName, xSize / 2 - fontRenderer.getStringWidth(containerName) / 2, 4, 4210752);
-        fontRenderer.drawString(I18n.format("gui.tab.upgrades"), 36, 14, 4210752);
+        String containerName = this.itemStack.getDisplayName();
+        this.fontRenderer.drawString(containerName, this.xSize / 2 - this.fontRenderer.getStringWidth(containerName) / 2, 4, 4210752);
+        this.fontRenderer.drawString(I18n.format("gui.tab.upgrades"), 36, 14, 4210752);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float opacity, int x, int y) {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        IPressurizable p = (IPressurizable) itemStack.getItem();
-        GuiUtils.drawPressureGauge(fontRenderer, 0, p.maxPressure(itemStack), p.maxPressure(itemStack), 0,
-                te.chargingItemPressure, xStart + xSize * 3 / 4 + 8, yStart + ySize / 4 + 4, zLevel);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        IPressurizable p = (IPressurizable) this.itemStack.getItem();
+        GuiUtils.drawPressureGauge(this.fontRenderer, 0, p.maxPressure(this.itemStack), p.maxPressure(this.itemStack), 0,
+                this.te.chargingItemPressure, xStart + this.xSize * 3 / 4 + 8, yStart + this.ySize / 4 + 4, this.zLevel);
     }
 
     @Override
@@ -117,7 +117,7 @@ public abstract class GuiPneumaticInventoryItem extends GuiPneumaticContainerBas
     protected void keyTyped(char key, int keyCode) throws IOException {
         if (keyCode == Keyboard.KEY_ESCAPE) {
             // equivalent to pressing the Back button
-            actionPerformed(guiBackButton);
+            this.actionPerformed(this.guiBackButton);
         } else {
             super.keyTyped(key, keyCode);
         }

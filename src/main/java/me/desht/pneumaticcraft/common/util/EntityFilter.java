@@ -42,15 +42,15 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
     public EntityFilter(String filter) {
         if (filter.startsWith("!")) {
             filter = filter.substring(1);
-            sense = false;
+            this.sense = false;
         } else {
-            sense = true;
+            this.sense = true;
         }
 
-        rawFilter = filter;
+        this.rawFilter = filter;
 
         if (!filter.isEmpty()) {
-            Arrays.stream(ELEMENT_DIVIDER.split(filter)).map(EntityMatcher::new).forEach(matchers::add);
+            Arrays.stream(ELEMENT_DIVIDER.split(filter)).map(EntityMatcher::new).forEach(this.matchers::add);
         }
     }
 
@@ -90,22 +90,22 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
 
     @Override
     public String toString() {
-        return sense ? rawFilter : "!" + rawFilter;
+        return this.sense ? this.rawFilter : "!" + this.rawFilter;
     }
 
     @Override
     public boolean apply(@Nullable Entity input) {
-        return test(input);
+        return this.test(input);
     }
 
     @Override
     public boolean test(Entity entity) {
-        if (matchers.isEmpty()) return true;
+        if (this.matchers.isEmpty()) return true;
 
-        for (EntityMatcher m : matchers) {
-            if (m.test(entity)) return sense;
+        for (EntityMatcher m : this.matchers) {
+            if (m.test(entity)) return this.sense;
         }
-        return !sense;
+        return !this.sense;
     }
 
     private enum Modifier {
@@ -115,11 +115,11 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
         private final Set<String> vals;
 
         Modifier(ImmutableSet<String> v) {
-            vals = v;
+            this.vals = v;
         }
 
         boolean isValid(String s) {
-            return vals.contains(s);
+            return this.vals.contains(s);
         }
     }
 
@@ -127,7 +127,7 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
     private class EntityMatcher implements Predicate<Entity> {
         private final Pattern regex;
         private final Class<?> typeClass;
-        private final List<Pair<Modifier,String>> modifiers = new ArrayList<>();
+        private final List<Pair<Modifier, String>> modifiers = new ArrayList<>();
 
         private EntityMatcher(String element) {
 
@@ -141,11 +141,11 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
                 if (StringUtils.countMatches(element, "(") != StringUtils.countMatches(element, ")")) {
                     throw new IllegalArgumentException("Mismatched opening/closing braces");
                 }
-                typeClass = getClassFor(sub);
-                regex = null;
+                this.typeClass = this.getClassFor(sub);
+                this.regex = null;
             } else {
-                typeClass = null;
-                regex = Pattern.compile(wildcardToRegex(splits[0]), Pattern.CASE_INSENSITIVE);
+                this.typeClass = null;
+                this.regex = Pattern.compile(wildcardToRegex(splits[0]), Pattern.CASE_INSENSITIVE);
             }
 
             for (int i = 1; i < splits.length; i++) {
@@ -158,24 +158,24 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
                     throw new IllegalArgumentException("Unknown modifier: " + modifier[0]);
                 }
                 Validate.isTrue(m.isValid(modifier[1]), "'" + modifier[1] + "' is not a valid value for modifier '" + modifier[0] + "'.  Valid values are: " + Strings.join(m.vals, ","));
-                modifiers.add(Pair.of(m, modifier[1]));
+                this.modifiers.add(Pair.of(m, modifier[1]));
             }
         }
 
         @Override
         public boolean test(Entity entity) {
             boolean ok = false;
-            if (typeClass != null) {
-                ok = typeClass.isAssignableFrom(entity.getClass());
-            } else if (regex != null) {
-                Matcher m = regex.matcher(entity.getName());
+            if (this.typeClass != null) {
+                ok = this.typeClass.isAssignableFrom(entity.getClass());
+            } else if (this.regex != null) {
+                Matcher m = this.regex.matcher(entity.getName());
                 ok = m.matches();
             }
-            return ok && matchModifiers(entity);
+            return ok && this.matchModifiers(entity);
         }
 
         private boolean matchModifiers(Entity entity) {
-            for (Pair<Modifier,String> pair : modifiers) {
+            for (Pair<Modifier, String> pair : this.modifiers) {
                 Modifier modifier = pair.getLeft();
                 String val = pair.getRight();
                 boolean ret = false;
@@ -276,7 +276,7 @@ public class EntityFilter implements Predicate<Entity>, com.google.common.base.P
 
         @Override
         public boolean test(Entity entity) {
-            return allow;
+            return this.allow;
         }
     }
 }

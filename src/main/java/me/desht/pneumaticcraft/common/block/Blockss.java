@@ -176,7 +176,8 @@ public class Blockss {
         registerBlock(registry, new BlockRefinery());
         registerBlock(registry, new BlockThermopneumaticProcessingPlant());
         registerBlock(registry, new BlockKeroseneLamp());
-        if (!ConfigHandler.advanced.disableKeroseneLampFakeAirBlock) registerBlock(registry, new BlockKeroseneLampLight());
+        if (!ConfigHandler.advanced.disableKeroseneLampFakeAirBlock)
+            registerBlock(registry, new BlockKeroseneLampLight());
         registerBlock(registry, new BlockSentryTurret());
         registerBlock(registry, new BlockFluxCompressor());
         registerBlock(registry, new BlockPneumaticDynamo());

@@ -1,9 +1,9 @@
 package me.desht.pneumaticcraft.common.thirdparty.toughasnails;
 
 import me.desht.pneumaticcraft.api.item.IItemRegistry;
-import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import me.desht.pneumaticcraft.common.config.ConfigHandler;
 import me.desht.pneumaticcraft.common.network.NetworkHandler;
+import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -12,10 +12,12 @@ import net.minecraft.world.World;
 import toughasnails.api.temperature.*;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class TANModifierAirConditioning implements ITemperatureModifier {
-    private static Map<UUID, Integer> lastDelta = new HashMap<>();
+    private static final Map<UUID, Integer> lastDelta = new HashMap<>();
 
     @Override
     public Temperature applyEnvironmentModifiers(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull Temperature initialTemperature, @Nonnull IModifierMonitor monitor) {

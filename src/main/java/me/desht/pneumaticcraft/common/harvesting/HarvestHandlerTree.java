@@ -13,32 +13,32 @@ import net.minecraft.world.World;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class HarvestHandlerTree implements IHarvestHandler{
+public class HarvestHandlerTree implements IHarvestHandler {
 
     private final Predicate<IBlockState> blockChecker; //Either for logs or leaves
     private final Predicate<ItemStack> isSapling;
     private final IBlockState saplingState;
-    
-    public HarvestHandlerTree(Predicate<IBlockState> blockChecker, Predicate<ItemStack> isSapling, IBlockState saplingState){
+
+    public HarvestHandlerTree(Predicate<IBlockState> blockChecker, Predicate<ItemStack> isSapling, IBlockState saplingState) {
         this.blockChecker = blockChecker;
         this.isSapling = isSapling;
         this.saplingState = saplingState;
     }
-    
+
     @Override
-    public boolean canHarvest(World world, IBlockAccess chunkCache, BlockPos pos, IBlockState state, IDrone drone){
-        return blockChecker.test(state);
+    public boolean canHarvest(World world, IBlockAccess chunkCache, BlockPos pos, IBlockState state, IDrone drone) {
+        return this.blockChecker.test(state);
     }
-    
+
     @Override
-    public boolean harvestAndReplant(World world, IBlockAccess chunkCache, BlockPos pos, IBlockState state, IDrone drone){
-        harvest(world, chunkCache, pos, state, drone);
-        if(saplingState.getBlock().canPlaceBlockAt(world, pos)){ //If on dirt (probably)
+    public boolean harvestAndReplant(World world, IBlockAccess chunkCache, BlockPos pos, IBlockState state, IDrone drone) {
+        this.harvest(world, chunkCache, pos, state, drone);
+        if (this.saplingState.getBlock().canPlaceBlockAt(world, pos)) { //If on dirt (probably)
             int saplingPickRange = 8;
-            List<EntityItem> saplingItems = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos).grow(saplingPickRange, saplingPickRange, saplingPickRange), entityItem -> isSapling.test(entityItem.getItem()));
-            if(!saplingItems.isEmpty()){
+            List<EntityItem> saplingItems = world.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(pos).grow(saplingPickRange, saplingPickRange, saplingPickRange), entityItem -> this.isSapling.test(entityItem.getItem()));
+            if (!saplingItems.isEmpty()) {
                 saplingItems.get(0).getItem().shrink(1);//Use a sapling
-                world.setBlockState(pos, saplingState); //And plant it.
+                world.setBlockState(pos, this.saplingState); //And plant it.
                 return true;
             }
         }

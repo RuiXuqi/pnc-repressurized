@@ -120,7 +120,7 @@ public interface IDrone extends IPressurizable, ICapabilityProvider {
     /**
      * Make the drone emit redstone in the given direction from its current position.
      *
-     * @param orientation the direction to emit
+     * @param orientation      the direction to emit
      * @param emittingRedstone the redstone level
      */
     void setEmittingRedstone(EnumFacing orientation, int emittingRedstone);
@@ -158,7 +158,7 @@ public interface IDrone extends IPressurizable, ICapabilityProvider {
      * Called when a drone is picking up an item.
      *
      * @param curPickingUpEntity the item entity
-     * @param stackSize the size of the itemstack in the item entity
+     * @param stackSize          the size of the itemstack in the item entity
      */
     void onItemPickupEvent(EntityItem curPickingUpEntity, int stackSize);
 

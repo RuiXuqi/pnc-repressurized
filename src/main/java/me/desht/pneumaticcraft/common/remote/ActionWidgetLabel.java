@@ -17,18 +17,18 @@ public class ActionWidgetLabel extends ActionWidget<WidgetLabelVariable> impleme
     @Override
     public NBTTagCompound toNBT(int guiLeft, int guiTop) {
         NBTTagCompound tag = super.toNBT(guiLeft, guiTop);
-        tag.setString("text", widget.text);
-        tag.setInteger("x", widget.getBounds().x - guiLeft);
-        tag.setInteger("y", widget.getBounds().y - guiTop);
-        tag.setString("tooltip", widget.getTooltip());
+        tag.setString("text", this.widget.text);
+        tag.setInteger("x", this.widget.getBounds().x - guiLeft);
+        tag.setInteger("y", this.widget.getBounds().y - guiTop);
+        tag.setString("tooltip", this.widget.getTooltip());
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
         super.readFromNBT(tag, guiLeft, guiTop);
-        widget = new WidgetLabelVariable(tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, tag.getString("text"));
-        widget.setTooltipText(tag.getString("tooltip"));
+        this.widget = new WidgetLabelVariable(tag.getInteger("x") + guiLeft, tag.getInteger("y") + guiTop, tag.getString("text"));
+        this.widget.setTooltipText(tag.getString("tooltip"));
     }
 
     @Override
@@ -38,12 +38,12 @@ public class ActionWidgetLabel extends ActionWidget<WidgetLabelVariable> impleme
 
     @Override
     public void setText(String text) {
-        widget.text = text;
+        this.widget.text = text;
     }
 
     @Override
     public String getText() {
-        return widget.text;
+        return this.widget.text;
     }
 
     @Override
@@ -53,17 +53,17 @@ public class ActionWidgetLabel extends ActionWidget<WidgetLabelVariable> impleme
 
     @Override
     public void setWidgetPos(int x, int y) {
-        widget.x = x;
-        widget.y = y;
+        this.widget.x = x;
+        this.widget.y = y;
     }
 
     @Override
     public void setTooltip(String text) {
-        widget.setTooltipText(text);
+        this.widget.setTooltipText(text);
     }
 
     @Override
     public String getTooltip() {
-        return widget.getTooltip();
+        return this.widget.getTooltip();
     }
 }

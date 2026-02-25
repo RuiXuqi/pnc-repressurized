@@ -21,19 +21,19 @@ public abstract class AmadronOfferConfig extends JsonConfig {
     @Override
     protected final void writeToJson(JsonObject json) {
         JsonArray array = new JsonArray();
-        for (AmadronOffer offer : getOffers()) {
+        for (AmadronOffer offer : this.getOffers()) {
             array.add(offer.toJson());
         }
-        json.addProperty("description", getComment());
-        writeToJsonCustom(json);
+        json.addProperty("description", this.getComment());
+        this.writeToJsonCustom(json);
         json.add("offers", array);
     }
 
     @Override
     protected final void readFromJson(JsonObject json) {
-        readFromJsonCustom(json);
+        this.readFromJsonCustom(json);
         JsonArray array = (JsonArray) json.get("offers");
-        Collection<AmadronOffer> offers = getOffers();
+        Collection<AmadronOffer> offers = this.getOffers();
         offers.clear();
         for (JsonElement element : array) {
             AmadronOffer offer = ((JsonObject) element).has("inStock") ? AmadronOfferCustom.fromJson((JsonObject) element) : AmadronOffer.fromJson((JsonObject) element);

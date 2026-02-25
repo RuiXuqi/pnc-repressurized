@@ -35,27 +35,27 @@ public class GuiElevator extends GuiPneumaticContainerBase<TileEntityElevatorBas
     @Override
     public void initGui() {
         super.initGui();
-        statusStat = addAnimatedStat("Elevator Status", new ItemStack(Blockss.ELEVATOR_BASE), 0xFFFFAA00, false);
-        floorNameStat = addAnimatedStat("Floor Names", new ItemStack(Blockss.ELEVATOR_CALLER), 0xFF005500, false);
-        floorNameStat.setTextWithoutCuttingString(getFloorNameStat());
+        this.statusStat = this.addAnimatedStat("Elevator Status", new ItemStack(Blockss.ELEVATOR_BASE), 0xFFFFAA00, false);
+        this.floorNameStat = this.addAnimatedStat("Floor Names", new ItemStack(Blockss.ELEVATOR_CALLER), 0xFF005500, false);
+        this.floorNameStat.setTextWithoutCuttingString(this.getFloorNameStat());
 
-        Rectangle fieldRectangle = floorNameStat.getButtonScaledRectangle(6, 60, 160, 20);
-        floorNameField = getTextFieldFromRectangle(fieldRectangle);
-        floorNameField.setText(te.getFloorName(currentEditedFloor));
-        floorNameStat.addWidget(floorNameField);
+        Rectangle fieldRectangle = this.floorNameStat.getButtonScaledRectangle(6, 60, 160, 20);
+        this.floorNameField = this.getTextFieldFromRectangle(fieldRectangle);
+        this.floorNameField.setText(this.te.getFloorName(this.currentEditedFloor));
+        this.floorNameStat.addWidget(this.floorNameField);
 
-        Rectangle namePreviousRectangle = floorNameStat.getButtonScaledRectangle(5, 35, 20, 20);
-        floorNameStat.addWidget(getButtonFromRectangle(1, namePreviousRectangle, "\u27f5"));
+        Rectangle namePreviousRectangle = this.floorNameStat.getButtonScaledRectangle(5, 35, 20, 20);
+        this.floorNameStat.addWidget(this.getButtonFromRectangle(1, namePreviousRectangle, "\u27f5"));
 
-        Rectangle nameNextRectangle = floorNameStat.getButtonScaledRectangle(145, 35, 20, 20);
-        floorNameStat.addWidget(getButtonFromRectangle(2, nameNextRectangle, "\u27f6"));
+        Rectangle nameNextRectangle = this.floorNameStat.getButtonScaledRectangle(145, 35, 20, 20);
+        this.floorNameStat.addWidget(this.getButtonFromRectangle(2, nameNextRectangle, "\u27f6"));
 
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 28, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 28, 19, 4210752);
     }
 
     @Override
@@ -66,14 +66,14 @@ public class GuiElevator extends GuiPneumaticContainerBase<TileEntityElevatorBas
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
+        this.statusStat.setText(this.getStatusText());
     }
 
     private List<String> getFloorNameStat() {
         List<String> textList = new ArrayList<>();
         for (int i = 0; i < 3; i++)
             textList.add("");
-        textList.add(TextFormatting.GRAY + "         Floor " + (currentEditedFloor + 1) + "                   ");
+        textList.add(TextFormatting.GRAY + "         Floor " + (this.currentEditedFloor + 1) + "                   ");
         for (int i = 0; i < 3; i++)
             textList.add("");// create some space for the button
         return textList;
@@ -83,16 +83,16 @@ public class GuiElevator extends GuiPneumaticContainerBase<TileEntityElevatorBas
         List<String> text = new ArrayList<>();
 
         text.add(TextFormatting.GRAY + "Current Extension:");
-        text.add(TextFormatting.BLACK + PneumaticCraftUtils.roundNumberTo(te.extension, 1) + " meter");
+        text.add(TextFormatting.BLACK + PneumaticCraftUtils.roundNumberTo(this.te.extension, 1) + " meter");
         text.add(TextFormatting.GRAY + "Max Extension:");
-        text.add(TextFormatting.BLACK + PneumaticCraftUtils.roundNumberTo(te.getMaxElevatorHeight(), 1) + " meter");
+        text.add(TextFormatting.BLACK + PneumaticCraftUtils.roundNumberTo(this.te.getMaxElevatorHeight(), 1) + " meter");
         return text;
     }
 
     @Override
     protected void addWarnings(List<String> textList) {
         super.addWarnings(textList);
-        if (te.getMaxElevatorHeight() == te.extension) {
+        if (this.te.getMaxElevatorHeight() == this.te.extension) {
             textList.addAll(PneumaticCraftUtils.convertStringIntoList(TextFormatting.GRAY + "The elevator can't extend anymore.", GuiConstants.MAX_CHAR_PER_LINE_LEFT));
             textList.addAll(PneumaticCraftUtils.convertStringIntoList(TextFormatting.BLACK + "Add (more) Elevator Frames on top of the elevator", GuiConstants.MAX_CHAR_PER_LINE_LEFT));
         }
@@ -103,28 +103,28 @@ public class GuiElevator extends GuiPneumaticContainerBase<TileEntityElevatorBas
         super.actionPerformed(widget);
 
         if (widget.getID() == 1 || widget.getID() == 2) {
-            int[] floorHeights = te.floorHeights;
+            int[] floorHeights = this.te.floorHeights;
 
             if (widget.getID() == 1) {
-                currentEditedFloor--;
-                if (currentEditedFloor < 0) {
-                    currentEditedFloor = floorHeights.length - 1;
-                    if (floorHeights.length == 0) currentEditedFloor = 0;
+                this.currentEditedFloor--;
+                if (this.currentEditedFloor < 0) {
+                    this.currentEditedFloor = floorHeights.length - 1;
+                    if (floorHeights.length == 0) this.currentEditedFloor = 0;
                 }
             } else {
-                currentEditedFloor++;
-                if (currentEditedFloor >= floorHeights.length) {
-                    currentEditedFloor = 0;
+                this.currentEditedFloor++;
+                if (this.currentEditedFloor >= floorHeights.length) {
+                    this.currentEditedFloor = 0;
                 }
             }
-            floorNameField.setText(te.getFloorName(currentEditedFloor));
-            floorNameStat.setTextWithoutCuttingString(getFloorNameStat());
+            this.floorNameField.setText(this.te.getFloorName(this.currentEditedFloor));
+            this.floorNameStat.setTextWithoutCuttingString(this.getFloorNameStat());
         }
     }
 
     @Override
     public void onKeyTyped(IGuiWidget widget) {
-        te.setFloorName(currentEditedFloor, floorNameField.getText());
-        NetworkHandler.sendToServer(new PacketUpdateTextfield(te, currentEditedFloor));
+        this.te.setFloorName(this.currentEditedFloor, this.floorNameField.getText());
+        NetworkHandler.sendToServer(new PacketUpdateTextfield(this.te, this.currentEditedFloor));
     }
 }

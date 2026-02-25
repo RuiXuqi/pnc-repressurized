@@ -33,7 +33,7 @@ public class AirConUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleable
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] { Itemss.upgrades.get(EnumUpgrade.AIR_CONDITIONING) };
+        return new Item[]{Itemss.upgrades.get(EnumUpgrade.AIR_CONDITIONING)};
     }
 
     @Override
@@ -57,29 +57,29 @@ public class AirConUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleable
                 currentAC--;
         }
 
-        if (acStat.isClicked()) {
+        if (this.acStat.isClicked()) {
             int ac = MathHelper.clamp(currentAC, -MAX_AC, MAX_AC);
             String bar = (ac < 0 ? TextFormatting.BLUE : TextFormatting.GOLD)
                     + Strings.repeat("|", Math.abs(ac))
                     + TextFormatting.DARK_GRAY
                     + Strings.repeat("|", MAX_AC - Math.abs(ac));
-            acStat.setTitle(TextFormatting.YELLOW + "A/C: " + bar);
-            acStat.setBackGroundColor(ac < 0 ? 0x300080FF : (ac == 0 ? 0x3000AA00 : 0x30FFD000));
+            this.acStat.setTitle(TextFormatting.YELLOW + "A/C: " + bar);
+            this.acStat.setBackGroundColor(ac < 0 ? 0x300080FF : (ac == 0 ? 0x3000AA00 : 0x30FFD000));
         }
     }
 
     @Override
     public IGuiAnimatedStat getAnimatedStat() {
-        if (acStat == null) {
-            acStat = new GuiAnimatedStat(null, "", GuiAnimatedStat.StatIcon.NONE,
+        if (this.acStat == null) {
+            this.acStat = new GuiAnimatedStat(null, "", GuiAnimatedStat.StatIcon.NONE,
                     0x3000AA00, null, ArmorHUDLayout.INSTANCE.airConStat);
-            acStat.setMinDimensionsAndReset(0, 0);
+            this.acStat.setMinDimensionsAndReset(0, 0);
         }
-        return acStat;
+        return this.acStat;
     }
 
     @Override
     public void onResolutionChanged() {
-        acStat = null;
+        this.acStat = null;
     }
 }

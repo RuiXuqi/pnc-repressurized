@@ -21,9 +21,9 @@ import java.util.List;
 @ZenClass("mods.pneumaticcraft.assembly")
 @ZenRegister
 public class Assembly {
-	public static final String name = "PneumaticCraft Assembly";
-	private static final String nameLaser = "PneumaticCraft Assembly (Laser)";
-	private static final String nameDrill = "PneumaticCraft Assembly (Drill)";
+    public static final String name = "PneumaticCraft Assembly";
+    private static final String nameLaser = "PneumaticCraft Assembly (Laser)";
+    private static final String nameDrill = "PneumaticCraft Assembly (Drill)";
 
     @ZenMethod
     public static void addDrillRecipe(IItemStack input, IItemStack output) {
@@ -39,7 +39,7 @@ public class Assembly {
     public static void addDrillLaserRecipe(IItemStack input, IItemStack output) {
         Log.warning("addDrillLaserRecipe() does not do anything: drill/laser recipes are automatically calculated from drill and laser recipes. This call will be removed in the next major release.");
     }
-    
+
     @ZenMethod
     public static void removeDrillRecipe(IIngredient output) {
         removeRecipe(nameDrill, AssemblyRecipe.drillRecipes, output);
@@ -54,7 +54,7 @@ public class Assembly {
     public static void removeLaserRecipe(IIngredient output) {
         removeRecipe(nameLaser, AssemblyRecipe.laserRecipes, output);
     }
-    
+
     @ZenMethod
     public static void removeAllLaserRecipes() {
         CraftTweaker.REMOVALS.add(new RemoveAllRecipes<>(nameLaser, AssemblyRecipe.laserRecipes));
@@ -64,68 +64,68 @@ public class Assembly {
     public static void removeDrillLaserRecipe(IIngredient output) {
         Log.warning("removeDrillLaserRecipe() does not do anything: drill/laser recipes are automatically calculated from drill and laser recipes. This call will be removed in the next major release.");
     }
-    
+
     @ZenMethod
     public static void removeAllDrillLaserRecipes() {
         Log.warning("removeAllDrillLaserRecipe() does not do anything: drill/laser recipes are automatically calculated from drill and laser recipes. This call will be removed in the next major release.");
     }
-    
+
     @ZenMethod
     public static void removeAllRecipes() {
-    	removeAllDrillRecipes();
-    	removeAllLaserRecipes();
+        removeAllDrillRecipes();
+        removeAllLaserRecipes();
     }
-    
+
     public static void addRecipe(String name, IItemStack input, IItemStack output, List<AssemblyRecipe> list, ItemStack programStack) {
-        if(input == null || output == null) {
+        if (input == null || output == null) {
             Helper.logError(String.format("Required parameters missing for %s Recipe.", name));
             return;
         }
-        
+
         CraftTweaker.ADDITIONS.add(new Add(name, new AssemblyRecipe(Helper.toStack(input), Helper.toStack(output), programStack), list));
     }
-        
+
     public static void removeRecipe(String name, List<AssemblyRecipe> list, IIngredient output) {
         CraftTweaker.REMOVALS.add(new Remove(name, list, output));
     }
-    
+
     private static class Add extends ListAddition<AssemblyRecipe> {
         public Add(String name, AssemblyRecipe recipe, List<AssemblyRecipe> list) {
             super(name, list, recipe);
         }
     }
-    
+
     private static class Remove extends ListRemoval<AssemblyRecipe> {
-    	private final IIngredient output;
-    	
+        private final IIngredient output;
+
         public Remove(String name, List<AssemblyRecipe> list, IIngredient output) {
             super(name, list);
             this.output = output;
         }
-        
+
         @Override
         public void apply() {
-        	addRecipes();
-        	super.apply();
+            this.addRecipes();
+            super.apply();
         }
 
         private void addRecipes() {
-            for (AssemblyRecipe r : recipes) {
-                if (Helper.matches(output,  Helper.toIItemStack(r.getOutput()))) {
-                    entries.add(r);
+            for (AssemblyRecipe r : this.recipes) {
+                if (Helper.matches(this.output, Helper.toIItemStack(r.getOutput()))) {
+                    this.entries.add(r);
                 }
             }
-            
-            if(entries.isEmpty()) {
-            	Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", name, Helper.getStackDescription(output)));
+
+            if (this.entries.isEmpty()) {
+                Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", this.name, Helper.getStackDescription(this.output)));
             } else {
-            	Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", entries.size(), name, Helper.getStackDescription(output)));
+                Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", this.entries.size(), this.name, Helper.getStackDescription(this.output)));
             }
-		}
-		
-		@Override
-		public String describe() {
-			return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(output));
-		}
+        }
+
+        @Override
+        public String describe() {
+            return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(this.output));
+        }
     }
 }

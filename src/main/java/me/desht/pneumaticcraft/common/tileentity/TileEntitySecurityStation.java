@@ -64,57 +64,57 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
 
     public TileEntitySecurityStation() {
         super(4);
-        inventory = new SecurityStationHandler();
-        addApplicableUpgrade(EnumUpgrade.ENTITY_TRACKER, EnumUpgrade.SECURITY, EnumUpgrade.RANGE);
+        this.inventory = new SecurityStationHandler();
+        this.addApplicableUpgrade(EnumUpgrade.ENTITY_TRACKER, EnumUpgrade.SECURITY, EnumUpgrade.RANGE);
     }
-    
+
     @Override
-    public void invalidate(){
+    public void invalidate() {
         super.invalidate();
         GlobalTileEntityCacheManager.getInstance().securityStations.remove(this);
     }
-    
+
     @Override
-    public void validate(){
+    public void validate() {
         super.validate();
         GlobalTileEntityCacheManager.getInstance().securityStations.add(this);
-        rangeLineRenderer = new RenderRangeLines(0x33FF0000, getPos());
+        this.rangeLineRenderer = new RenderRangeLines(0x33FF0000, this.getPos());
     }
 
     @Override
     public void update() {
-        if (rebootTimer > 0) {
-            rebootTimer--;
-            if (!getWorld().isRemote) {
-                if (rebootTimer == 0) {
-                    hackedUsers.clear();
+        if (this.rebootTimer > 0) {
+            this.rebootTimer--;
+            if (!this.getWorld().isRemote) {
+                if (this.rebootTimer == 0) {
+                    this.hackedUsers.clear();
                 }
             }
         }
-        if (getWorld().isRemote && !firstRun) {
-            if (oldSecurityRange != getSecurityRange() || oldSecurityRange == 0) {
-                rangeLineRenderer.resetRendering(getSecurityRange());
-                oldSecurityRange = getSecurityRange();
+        if (this.getWorld().isRemote && !this.firstRun) {
+            if (this.oldSecurityRange != this.getSecurityRange() || this.oldSecurityRange == 0) {
+                this.rangeLineRenderer.resetRendering(this.getSecurityRange());
+                this.oldSecurityRange = this.getSecurityRange();
             }
-            rangeLineRenderer.update();
+            this.rangeLineRenderer.update();
         }
-        if (/* !getWorld().isRemote && */oldRedstoneStatus != shouldEmitRedstone()) {
-            oldRedstoneStatus = shouldEmitRedstone();
-            updateNeighbours();
+        if (/* !getWorld().isRemote && */this.oldRedstoneStatus != this.shouldEmitRedstone()) {
+            this.oldRedstoneStatus = this.shouldEmitRedstone();
+            this.updateNeighbours();
         }
 
-        securityRange = Math.min(2 + getUpgrades(EnumUpgrade.RANGE), TileEntityConstants.SECURITY_STATION_MAX_RANGE);
+        this.securityRange = Math.min(2 + this.getUpgrades(EnumUpgrade.RANGE), TileEntityConstants.SECURITY_STATION_MAX_RANGE);
 
         super.update();
 
     }
 
     public void rebootStation() {
-        rebootTimer = TileEntityConstants.SECURITY_STATION_REBOOT_TIME;
+        this.rebootTimer = TileEntityConstants.SECURITY_STATION_REBOOT_TIME;
     }
 
     public int getRebootTime() {
-        return rebootTimer;
+        return this.rebootTimer;
     }
 
     /**
@@ -122,62 +122,62 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
      */
     @Override
     public void showRangeLines() {
-        if (getWorld().isRemote) {
-            rangeLineRenderer.resetRendering(getSecurityRange());
+        if (this.getWorld().isRemote) {
+            this.rangeLineRenderer.resetRendering(this.getSecurityRange());
         } else {
-            NetworkHandler.sendToAllAround(new PacketRenderRangeLines(this), getWorld(), TileEntityConstants.PACKET_UPDATE_DISTANCE + getSecurityRange());
+            NetworkHandler.sendToAllAround(new PacketRenderRangeLines(this), this.getWorld(), TileEntityConstants.PACKET_UPDATE_DISTANCE + this.getSecurityRange());
         }
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @SideOnly(Side.CLIENT)
     public void renderRangeLines() {
-        rangeLineRenderer.render();
+        this.rangeLineRenderer.render();
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
-            updateNeighbours();
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
+            this.updateNeighbours();
         } else if (buttonID == 2) {
-            rebootStation();
+            this.rebootStation();
         } else if (buttonID == 3) {
-            if (!hasValidNetwork()) {
+            if (!this.hasValidNetwork()) {
                 player.sendStatusMessage(new TextComponentTranslation(TextFormatting.GREEN + "This Security Station is out of order: Its network hasn't been properly configured."), false);
             } else {
-                player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.HACKING.ordinal(), getWorld(), getPos().getX(), getPos().getY(), getPos().getZ());
+                player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.HACKING.ordinal(), this.getWorld(), this.getPos().getX(), this.getPos().getY(), this.getPos().getZ());
             }
-        } else if (buttonID > 3 && buttonID - 4 < sharedUsers.size()) {
-            sharedUsers.remove(buttonID - 4);
+        } else if (buttonID > 3 && buttonID - 4 < this.sharedUsers.size()) {
+            this.sharedUsers.remove(buttonID - 4);
         }
-        sendDescriptionPacket();
+        this.sendDescriptionPacket();
     }
 
     public void addSharedUser(GameProfile user) {
-        for (GameProfile sharedUser : sharedUsers) {
-            if (gameProfileEquals(sharedUser, user)) return;
+        for (GameProfile sharedUser : this.sharedUsers) {
+            if (this.gameProfileEquals(sharedUser, user)) return;
         }
-        sharedUsers.add(user);
-        sendDescriptionPacket();
+        this.sharedUsers.add(user);
+        this.sendDescriptionPacket();
     }
 
     public void addHacker(GameProfile user) {
-        for (GameProfile hackedUser : hackedUsers) {
-            if (gameProfileEquals(hackedUser, user)) {
+        for (GameProfile hackedUser : this.hackedUsers) {
+            if (this.gameProfileEquals(hackedUser, user)) {
                 return;
             }
         }
-        for (GameProfile sharedUser : sharedUsers) {
-            if (gameProfileEquals(sharedUser, user)) return;
+        for (GameProfile sharedUser : this.sharedUsers) {
+            if (this.gameProfileEquals(sharedUser, user)) return;
         }
-        hackedUsers.add(user);
-        sendDescriptionPacket();
+        this.hackedUsers.add(user);
+        this.sendDescriptionPacket();
     }
 
     private boolean gameProfileEquals(GameProfile profile1, GameProfile profile2) {
@@ -185,35 +185,35 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     }
 
     public boolean shouldEmitRedstone() {
-        switch (redstoneMode) {
+        switch (this.redstoneMode) {
             case 0:
                 return false;
             case 1:
-                return isHacked();
+                return this.isHacked();
             case 2:
-                return getRebootTime() <= 0;
+                return this.getRebootTime() <= 0;
         }
         return false;
     }
 
     public boolean isHacked() {
-        return hackedUsers.size() > 0;
+        return this.hackedUsers.size() > 0;
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        if (rangeLineRenderer == null || rangeLineRenderer.isIdle()) return super.getRenderBoundingBox();
-        return getAffectingAABB();
+        if (this.rangeLineRenderer == null || this.rangeLineRenderer.isIdle()) return super.getRenderBoundingBox();
+        return this.getAffectingAABB();
     }
-    
-    public AxisAlignedBB getAffectingAABB(){
-        int range = getSecurityRange();
-        return new AxisAlignedBB(getPos().getX() - range - 1, getPos().getY() - range - 1, getPos().getZ() - range - 1, getPos().getX() + 1 + range, getPos().getY() + 1 + range, getPos().getZ() + 1 + range);
+
+    public AxisAlignedBB getAffectingAABB() {
+        int range = this.getSecurityRange();
+        return new AxisAlignedBB(this.getPos().getX() - range - 1, this.getPos().getY() - range - 1, this.getPos().getZ() - range - 1, this.getPos().getX() + 1 + range, this.getPos().getY() + 1 + range, this.getPos().getZ() + 1 + range);
     }
 
     public int getSecurityRange() {
-        return securityRange;
+        return this.securityRange;
     }
 
     @Override
@@ -224,19 +224,19 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstoneMode = tag.getInteger("redstoneMode");
-        rebootTimer = tag.getInteger("startupTimer");
-        inventory = new SecurityStationHandler();
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
-        checkForNetworkValidity();
+        this.redstoneMode = tag.getInteger("redstoneMode");
+        this.rebootTimer = tag.getInteger("startupTimer");
+        this.inventory = new SecurityStationHandler();
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.checkForNetworkValidity();
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setInteger("startupTimer", rebootTimer);
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setInteger("startupTimer", this.rebootTimer);
+        tag.setTag("Items", this.inventory.serializeNBT());
         return tag;
     }
 
@@ -244,7 +244,7 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     public void writeToPacket(NBTTagCompound tag) {
         super.writeToPacket(tag);
         NBTTagList sharedList = new NBTTagList();
-        for (GameProfile sharedUser : sharedUsers) {
+        for (GameProfile sharedUser : this.sharedUsers) {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setString("name", sharedUser.getName());
             if (sharedUser.getId() != null)
@@ -254,7 +254,7 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
         tag.setTag("SharedUsers", sharedList);
 
         NBTTagList hackedList = new NBTTagList();
-        for (GameProfile hackedUser : hackedUsers) {
+        for (GameProfile hackedUser : this.hackedUsers) {
             NBTTagCompound tagCompound = new NBTTagCompound();
             tagCompound.setString("name", hackedUser.getName());
             if (hackedUser.getId() != null)
@@ -267,29 +267,29 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     @Override
     public void readFromPacket(NBTTagCompound tag) {
         super.readFromPacket(tag);
-        sharedUsers.clear();
+        this.sharedUsers.clear();
         NBTTagList sharedList = tag.getTagList("SharedUsers", 10);
         for (int i = 0; i < sharedList.tagCount(); ++i) {
             NBTTagCompound tagCompound = sharedList.getCompoundTagAt(i);
-            sharedUsers.add(new GameProfile(tagCompound.hasKey("uuid") ? UUID.fromString(tagCompound.getString("uuid")) : null, tagCompound.getString("name")));
+            this.sharedUsers.add(new GameProfile(tagCompound.hasKey("uuid") ? UUID.fromString(tagCompound.getString("uuid")) : null, tagCompound.getString("name")));
         }
 
-        hackedUsers.clear();
+        this.hackedUsers.clear();
         NBTTagList hackedList = tag.getTagList("HackedUsers", 10);
         for (int i = 0; i < hackedList.tagCount(); ++i) {
             NBTTagCompound tagCompound = hackedList.getCompoundTagAt(i);
-            hackedUsers.add(new GameProfile(tagCompound.hasKey("uuid") ? UUID.fromString(tagCompound.getString("uuid")) : null, tagCompound.getString("name")));
+            this.hackedUsers.add(new GameProfile(tagCompound.hasKey("uuid") ? UUID.fromString(tagCompound.getString("uuid")) : null, tagCompound.getString("name")));
         }
     }
 
     @Override
     public void setText(int textFieldID, String text) {
-        textFieldText = text;
+        this.textFieldText = text;
     }
 
     @Override
     public String getText(int textFieldID) {
-        return textFieldText;
+        return this.textFieldText;
     }
 
     /**
@@ -299,15 +299,15 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
      * @return
      */
     public boolean doesAllowPlayer(EntityPlayer player) {
-        return rebootTimer > 0 || isPlayerOnWhiteList(player) || hasPlayerHacked(player);
+        return this.rebootTimer > 0 || this.isPlayerOnWhiteList(player) || this.hasPlayerHacked(player);
     }
 
     public boolean isPlayerOnWhiteList(EntityPlayer player) {
-        for (int i = 0; i < sharedUsers.size(); i++) {
-            GameProfile user = sharedUsers.get(i);
-            if (gameProfileEquals(user, player.getGameProfile())) {
+        for (int i = 0; i < this.sharedUsers.size(); i++) {
+            GameProfile user = this.sharedUsers.get(i);
+            if (this.gameProfileEquals(user, player.getGameProfile())) {
                 if (user.getId() == null && player.getGameProfile().getId() != null) {
-                    sharedUsers.set(i, player.getGameProfile());
+                    this.sharedUsers.set(i, player.getGameProfile());
                     Log.info("Legacy conversion: Security Station shared username '" + player.getName() + "' is now using UUID '" + player.getGameProfile().getId() + "'.");
                 }
                 return true;
@@ -317,11 +317,11 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     }
 
     public boolean hasPlayerHacked(EntityPlayer player) {
-        for (int i = 0; i < hackedUsers.size(); i++) {
-            GameProfile user = hackedUsers.get(i);
-            if (gameProfileEquals(user, player.getGameProfile())) {
+        for (int i = 0; i < this.hackedUsers.size(); i++) {
+            GameProfile user = this.hackedUsers.get(i);
+            if (this.gameProfileEquals(user, player.getGameProfile())) {
                 if (user.getId() == null && player.getGameProfile().getId() != null) {
-                    hackedUsers.set(i, player.getGameProfile());
+                    this.hackedUsers.set(i, player.getGameProfile());
                     Log.info("Legacy conversion: Security Station hacked username '" + player.getName() + "' is now using UUID '" + player.getGameProfile().getId() + "'.");
                 }
                 return true;
@@ -339,7 +339,7 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
      */
     public boolean connects(int firstSlot, int secondSlot) {
         if (firstSlot < 0 || secondSlot < 0 || firstSlot >= 35 || secondSlot >= 35 || firstSlot == secondSlot
-                || inventory.getStackInSlot(firstSlot).isEmpty() || inventory.getStackInSlot(secondSlot).isEmpty())
+                || this.inventory.getStackInSlot(firstSlot).isEmpty() || this.inventory.getStackInSlot(secondSlot).isEmpty())
             return false;
 
         for (int column = -1; column <= 1; column++) {
@@ -354,7 +354,7 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     }
 
     public boolean hasValidNetwork() {
-        return validNetwork;
+        return this.validNetwork;
     }
 
     public enum EnumNetworkValidityProblem {
@@ -367,13 +367,13 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
      * @return optional problem enum
      */
     public EnumNetworkValidityProblem checkForNetworkValidity() {
-        validNetwork = false;
+        this.validNetwork = false;
         int ioPortSlot = -1;
         int registrySlot = -1;
         int subroutineSlot = -1;
         for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (!inventory.getStackInSlot(i).isEmpty()) {
-                switch (inventory.getStackInSlot(i).getItemDamage()) {
+            if (!this.inventory.getStackInSlot(i).isEmpty()) {
+                switch (this.inventory.getStackInSlot(i).getItemDamage()) {
                     case ItemNetworkComponents.DIAGNOSTIC_SUBROUTINE:
                         if (subroutineSlot != -1)
                             return EnumNetworkValidityProblem.TOO_MANY_SUBROUTINES; //only one subroutine per network
@@ -395,41 +395,41 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
         if (subroutineSlot == -1) return EnumNetworkValidityProblem.NO_SUBROUTINE;
         if (ioPortSlot == -1) return EnumNetworkValidityProblem.NO_IO_PORT;
         if (registrySlot == -1) return EnumNetworkValidityProblem.NO_REGISTRY;
-        if (!traceComponent(subroutineSlot, ioPortSlot, new boolean[INVENTORY_SIZE]))
+        if (!this.traceComponent(subroutineSlot, ioPortSlot, new boolean[INVENTORY_SIZE]))
             return EnumNetworkValidityProblem.NO_CONNECTION_SUB_AND_IO_PORT;//check if there's a valid route between the subroutine/ioPort
-        if (!traceComponent(ioPortSlot, registrySlot, new boolean[INVENTORY_SIZE]))
+        if (!this.traceComponent(ioPortSlot, registrySlot, new boolean[INVENTORY_SIZE]))
             return EnumNetworkValidityProblem.NO_CONNECTION_IO_PORT_AND_REGISTRY; // and ioPort/registry.
-        validNetwork = true;
+        this.validNetwork = true;
         return EnumNetworkValidityProblem.NONE;
     }
 
     private boolean traceComponent(int startSlot, int targetSlot, boolean[] slotsDone) {
         for (int i = 0; i < INVENTORY_SIZE; i++) {
-            if (!slotsDone[i] && connects(startSlot, i)) {
+            if (!slotsDone[i] && this.connects(startSlot, i)) {
                 if (i == targetSlot) return true;
                 slotsDone[i] = true;
-                if (traceComponent(i, targetSlot, slotsDone)) return true;
+                if (this.traceComponent(i, targetSlot, slotsDone)) return true;
             }
         }
         return false;
     }
 
     public int getDetectionChance() {
-        return Math.min(100, 20 + 20 * getUpgrades(EnumUpgrade.ENTITY_TRACKER));
+        return Math.min(100, 20 + 20 * this.getUpgrades(EnumUpgrade.ENTITY_TRACKER));
     }
 
     public int getSecurityLevel() {
-        return 1 + getUpgrades(EnumUpgrade.SECURITY);
+        return 1 + this.getUpgrades(EnumUpgrade.SECURITY);
     }
 
     @Override
     public boolean isGuiUseableByPlayer(EntityPlayer par1EntityPlayer) {
-        return getWorld().getTileEntity(getPos()) == this;
+        return this.getWorld().getTileEntity(this.getPos()) == this;
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
@@ -445,16 +445,16 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            checkForNetworkValidity();
+            TileEntitySecurityStation.this.checkForNetworkValidity();
         }
     }
 
     /**
      * Get a count of the number of security stations protecting the given blockpos from the given player.
      *
-     * @param world the world
-     * @param pos the blockpos whose protection is being checked
-     * @param player the player who is being protected from
+     * @param world          the world
+     * @param pos            the blockpos whose protection is being checked
+     * @param player         the player who is being protected from
      * @param showRangeLines whether to display the stations' range bounding boxes
      * @param placementRange true when trying to place a block, false when trying to interact with a block
      * @return the number of security stations preventing access
@@ -462,7 +462,7 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
     public static int getProtectingSecurityStations(World world, BlockPos pos, EntityPlayer player, boolean showRangeLines, boolean placementRange) {
         int blockingStations = 0;
         Iterator<TileEntitySecurityStation> iterator = getSecurityStations(world, pos, placementRange).iterator();
-        for (TileEntitySecurityStation station; iterator.hasNext();) {
+        for (TileEntitySecurityStation station; iterator.hasNext(); ) {
             station = iterator.next();
             if (!station.doesAllowPlayer(player)) {
                 blockingStations++;
@@ -479,10 +479,10 @@ public class TileEntitySecurityStation extends TileEntityTickableBase implements
                         && isValidAndInRange(pos, placementRange, station));
     }
 
-    private static boolean isValidAndInRange(BlockPos pos, boolean placementRange, TileEntitySecurityStation station){
+    private static boolean isValidAndInRange(BlockPos pos, boolean placementRange, TileEntitySecurityStation station) {
         if (!station.isInvalid() && station.getBlockType() == Blockss.SECURITY_STATION && station.hasValidNetwork()) {
             AxisAlignedBB aabb = station.getAffectingAABB();
-            if(placementRange) aabb = aabb.grow(16);
+            if (placementRange) aabb = aabb.grow(16);
             return aabb.contains(new Vec3d(pos));
         }
         return false;

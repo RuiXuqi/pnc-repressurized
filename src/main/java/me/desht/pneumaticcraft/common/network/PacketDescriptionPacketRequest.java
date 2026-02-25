@@ -23,19 +23,20 @@ public class PacketDescriptionPacketRequest extends LocationIntPacket<PacketDesc
     public void handleServerSide(PacketDescriptionPacketRequest message, EntityPlayer player) {
         TileEntity te = message.getTileEntity(player.world);
         if (te != null) {
-            forceLootGeneration(te);
+            this.forceLootGeneration(te);
             NetworkHandler.sendTo(new PacketSendNBTPacket(te), (EntityPlayerMP) player);
         }
     }
-    
+
     /**
      * Force loot generation, as this is required on the client side to peek inside inventories.
      * The client is not able to generate the loot.
+     *
      * @param te
      */
-    private void forceLootGeneration(TileEntity te){
-        if(te instanceof TileEntityLockableLoot){
-            TileEntityLockableLoot teLoot = (TileEntityLockableLoot)te;
+    private void forceLootGeneration(TileEntity te) {
+        if (te instanceof TileEntityLockableLoot) {
+            TileEntityLockableLoot teLoot = (TileEntityLockableLoot) te;
             teLoot.fillWithLoot(null);
         }
     }

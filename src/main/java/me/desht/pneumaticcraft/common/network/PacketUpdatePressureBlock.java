@@ -15,19 +15,19 @@ public class PacketUpdatePressureBlock extends LocationIntPacket<PacketUpdatePre
 
     public PacketUpdatePressureBlock(TileEntityPneumaticBase te) {
         super(te.getPos());
-        currentAir = te.getAirHandler(null).getAir();
+        this.currentAir = te.getAirHandler(null).getAir();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeInt(currentAir);
+        buf.writeInt(this.currentAir);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        currentAir = buf.readInt();
+        this.currentAir = buf.readInt();
     }
 
     @Override

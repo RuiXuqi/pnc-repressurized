@@ -15,7 +15,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 public class XPFluid {
     @ZenMethod
     public static void addXPFluid(ILiquidStack liquidInput, double xpRatio) {
-        CraftTweaker.ADDITIONS.add(new FluidXPAction(Helper.toFluid(liquidInput).getFluid(), (int)xpRatio));
+        CraftTweaker.ADDITIONS.add(new FluidXPAction(Helper.toFluid(liquidInput).getFluid(), (int) xpRatio));
     }
 
     @ZenMethod
@@ -25,15 +25,15 @@ public class XPFluid {
 
     @ZenMethod
     public static void removeAllXPFluids() {
-        CraftTweaker.REMOVALS.add(new IAction(){
+        CraftTweaker.REMOVALS.add(new IAction() {
             @Override
-            public void apply(){
+            public void apply() {
                 PneumaticCraftAPIHandler.getInstance().liquidXPs.clear();
                 PneumaticCraftAPIHandler.getInstance().availableLiquidXPs.clear();
             }
 
             @Override
-            public String describe(){
+            public String describe() {
                 return "Removing all XP fluid values.";
             }
         });
@@ -49,16 +49,16 @@ public class XPFluid {
         }
 
         @Override
-        public void apply(){
-            PneumaticCraftAPIHandler.getInstance().registerXPLiquid(fluid, xpRatio);
+        public void apply() {
+            PneumaticCraftAPIHandler.getInstance().registerXPLiquid(this.fluid, this.xpRatio);
         }
 
         @Override
         public String describe() {
-            if(xpRatio == 0){
-                return String.format("Removing XP value for fluid %s", fluid.getName());
-            }else{
-                return String.format("Registering XP value %d for fluid %s.", xpRatio, fluid.getName());
+            if (this.xpRatio == 0) {
+                return String.format("Removing XP value for fluid %s", this.fluid.getName());
+            } else {
+                return String.format("Registering XP value %d for fluid %s.", this.xpRatio, this.fluid.getName());
             }
         }
     }

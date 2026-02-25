@@ -17,69 +17,67 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass("mods.pneumaticcraft.heatframecooling")
 @ZenRegister
 public class HeatFrameCooling {
-	public static final String name = "PneumaticCraft Heat Frame Cooling";
-	
-	@ZenMethod
-	public static void addRecipe(IOreDictEntry input, IItemStack output) {
-		CraftTweaker.ADDITIONS.add(new Add(new HeatFrameCoolingRecipe(Helper.toItemIngredient(input), Helper.toStack(output))));
-	}
-	
+    public static final String name = "PneumaticCraft Heat Frame Cooling";
+
     @ZenMethod
-    public static void addRecipe(IItemStack input, IItemStack output)
-    {
-    	CraftTweaker.ADDITIONS.add(new Add(new HeatFrameCoolingRecipe(new ItemIngredient(Helper.toStack(input)), Helper.toStack(output))));
+    public static void addRecipe(IOreDictEntry input, IItemStack output) {
+        CraftTweaker.ADDITIONS.add(new Add(new HeatFrameCoolingRecipe(Helper.toItemIngredient(input), Helper.toStack(output))));
     }
-    
+
     @ZenMethod
-    public static void removeRecipe(IIngredient output)
-    {
-    	CraftTweaker.REMOVALS.add(new Remove(output));
+    public static void addRecipe(IItemStack input, IItemStack output) {
+        CraftTweaker.ADDITIONS.add(new Add(new HeatFrameCoolingRecipe(new ItemIngredient(Helper.toStack(input)), Helper.toStack(output))));
     }
-    
+
+    @ZenMethod
+    public static void removeRecipe(IIngredient output) {
+        CraftTweaker.REMOVALS.add(new Remove(output));
+    }
+
     @ZenMethod
     public static void removeAllRecipes() {
         CraftTweaker.REMOVALS.add(new RemoveAllRecipes<>(HeatFrameCooling.name, HeatFrameCoolingRecipe.recipes));
-    }   
+    }
 
     private static class Add extends ListAddition<HeatFrameCoolingRecipe> {
         public Add(HeatFrameCoolingRecipe recipe) {
             super(PressureChamber.name, HeatFrameCoolingRecipe.recipes, recipe);
         }
     }
-    
+
     private static class Remove extends ListRemoval<HeatFrameCoolingRecipe> {
-    	private final IIngredient output;
-    	
+        private final IIngredient output;
+
         public Remove(IIngredient output) {
             super(HeatFrameCooling.name, HeatFrameCoolingRecipe.recipes);
             this.output = output;
         }
-        
+
         @Override
         public void apply() {
-        	addRecipes();
-        	super.apply();
+            this.addRecipes();
+            super.apply();
         }
 
         private void addRecipes() {
-            for (HeatFrameCoolingRecipe r : recipes) {
-                if (Helper.matches(output,  Helper.toIItemStack(r.output))) {
-                    entries.add(r);
+            for (HeatFrameCoolingRecipe r : this.recipes) {
+                if (Helper.matches(this.output, Helper.toIItemStack(r.output))) {
+                    this.entries.add(r);
                 }
             }
-            
-            if(entries.isEmpty()) {
-            	Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", name, Helper.getStackDescription(output)));
-            } else {
-            	Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", entries.size(), name, Helper.getStackDescription(output)));
-            }
-		}
 
-		@Override
-		public String describe() {
-			return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(output));
-		}
+            if (this.entries.isEmpty()) {
+                Helper.logWarning(String.format("No %s Recipe found for %s. Command ignored!", this.name, Helper.getStackDescription(this.output)));
+            } else {
+                Helper.logInfo(String.format("Found %d %s Recipe(s) for %s.", this.entries.size(), this.name, Helper.getStackDescription(this.output)));
+            }
+        }
+
+        @Override
+        public String describe() {
+            return String.format("Removing %s Recipe(s) for %s", this.name, Helper.getStackDescription(this.output));
+        }
     }
 
-    
+
 }

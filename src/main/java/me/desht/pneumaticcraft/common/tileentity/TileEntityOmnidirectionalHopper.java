@@ -29,22 +29,22 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     EnumFacing inputDir = EnumFacing.UP;
     @DescSynced
     private EnumFacing outputDir = EnumFacing.UP;
-    private final ComparatorItemStackHandler inventory = new ComparatorItemStackHandler(this, getInvSize());
+    private final ComparatorItemStackHandler inventory = new ComparatorItemStackHandler(this, this.getInvSize());
     private int lastComparatorValue = -1;
     @GuiSynced
     public int redstoneMode;
     private int cooldown;
     @GuiSynced
     int leaveMaterialCount; // leave items/liquids (used as filter)
-    private int importSlot = 0;
+    private final int importSlot = 0;
     @DescSynced
     public boolean isCreative; // has a creative upgrade installed
 
     public TileEntityOmnidirectionalHopper() {
         super(4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
-        addApplicableUpgrade(EnumUpgrade.CREATIVE);
-        if (ConfigHandler.machineProperties.omniHopperDispenser) addApplicableUpgrade(EnumUpgrade.DISPENSER);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.CREATIVE);
+        if (ConfigHandler.machineProperties.omniHopperDispenser) this.addApplicableUpgrade(EnumUpgrade.DISPENSER);
     }
 
     protected int getInvSize() {
@@ -60,65 +60,65 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     protected void onFirstServerUpdate() {
         super.onFirstServerUpdate();
 
-        isCreative = getUpgrades(EnumUpgrade.CREATIVE) > 0;
+        this.isCreative = this.getUpgrades(EnumUpgrade.CREATIVE) > 0;
     }
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote && --cooldown <= 0 && redstoneAllows()) {
-            int maxItems = getMaxItems();
-            boolean success = doImport(maxItems);
-            success |= doExport(maxItems);
+        if (!this.getWorld().isRemote && --this.cooldown <= 0 && this.redstoneAllows()) {
+            int maxItems = this.getMaxItems();
+            boolean success = this.doImport(maxItems);
+            success |= this.doExport(maxItems);
 
             // If we couldn't pull or push, slow down a bit for performance reasons
-            cooldown = success ? getItemTransferInterval() : 8;
+            this.cooldown = success ? this.getItemTransferInterval() : 8;
 
-            if (lastComparatorValue != getComparatorValueInternal()) {
-                lastComparatorValue = getComparatorValueInternal();
-                updateNeighbours();
+            if (this.lastComparatorValue != this.getComparatorValueInternal()) {
+                this.lastComparatorValue = this.getComparatorValueInternal();
+                this.updateNeighbours();
             }
         }
     }
 
     protected int getComparatorValueInternal() {
-        return inventory.getComparatorValue();
+        return this.inventory.getComparatorValue();
     }
 
     protected boolean doExport(int maxItems) {
-        IItemHandler handler = IOHelper.getInventoryForTE(getCachedNeighbor(outputDir), outputDir.getOpposite());
+        IItemHandler handler = IOHelper.getInventoryForTE(this.getCachedNeighbor(this.outputDir), this.outputDir.getOpposite());
         if (handler != null) {
-            for (int i = 0; i < inventory.getSlots(); i++) {
-                ItemStack stack = inventory.getStackInSlot(i);
-                if (stack.getCount() > leaveMaterialCount) {
-                    ItemStack exportedStack = ItemHandlerHelper.copyStackWithSize(stack, Math.min(maxItems, stack.getCount() - leaveMaterialCount));
+            for (int i = 0; i < this.inventory.getSlots(); i++) {
+                ItemStack stack = this.inventory.getStackInSlot(i);
+                if (stack.getCount() > this.leaveMaterialCount) {
+                    ItemStack exportedStack = ItemHandlerHelper.copyStackWithSize(stack, Math.min(maxItems, stack.getCount() - this.leaveMaterialCount));
                     int toExport = exportedStack.getCount();
                     ItemStack excess = ItemHandlerHelper.insertItem(handler, exportedStack, false);
                     int exportedCount = toExport - excess.getCount();
-                    if (!isCreative) {
+                    if (!this.isCreative) {
                         stack.shrink(exportedCount);
-                        if (exportedCount > 0) inventory.invalidateComparatorValue();
+                        if (exportedCount > 0) this.inventory.invalidateComparatorValue();
                     }
                     maxItems -= exportedCount;
                     if (maxItems <= 0) return true;
                 }
             }
-        } else if (ConfigHandler.machineProperties.omniHopperDispenser && getUpgrades(EnumUpgrade.DISPENSER) > 0) {
-            BlockPos pos = getPos().offset(outputDir);
+        } else if (ConfigHandler.machineProperties.omniHopperDispenser && this.getUpgrades(EnumUpgrade.DISPENSER) > 0) {
+            BlockPos pos = this.getPos().offset(this.outputDir);
             int remaining = maxItems;
-            if (!world.isBlockFullCube(pos)) {
-                for (int i = 0; i < inventory.getSlots(); i++) {
-                    ItemStack inSlot = inventory.getStackInSlot(i);
-                    ItemStack stack = inventory.extractItem(i, Math.min(inSlot.getCount() - leaveMaterialCount, remaining), isCreative);
+            if (!this.world.isBlockFullCube(pos)) {
+                for (int i = 0; i < this.inventory.getSlots(); i++) {
+                    ItemStack inSlot = this.inventory.getStackInSlot(i);
+                    ItemStack stack = this.inventory.extractItem(i, Math.min(inSlot.getCount() - this.leaveMaterialCount, remaining), this.isCreative);
                     if (!stack.isEmpty()) {
                         remaining -= stack.getCount();
-                        PneumaticCraftUtils.dropItemOnGroundPrecisely(stack, getWorld(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
+                        PneumaticCraftUtils.dropItemOnGroundPrecisely(stack, this.getWorld(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5);
                         if (remaining <= 0) return true;
                     }
                 }
@@ -132,18 +132,18 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     protected boolean doImport(int maxItems) {
         boolean success = false;
 
-        if (isInventoryFull()) {
+        if (this.isInventoryFull()) {
             return false;
         }
 
         // Suck from input inventory
-        IItemHandler handler = IOHelper.getInventoryForTE(getCachedNeighbor(inputDir), inputDir.getOpposite());
+        IItemHandler handler = IOHelper.getInventoryForTE(this.getCachedNeighbor(this.inputDir), this.inputDir.getOpposite());
         if (handler != null) {
             int remaining = maxItems;
             for (int i = 0; i < handler.getSlots(); i++) {
                 if (handler.getStackInSlot(i).isEmpty()) continue;
                 ItemStack toExtract = handler.extractItem(i, remaining, true);
-                ItemStack excess = ItemHandlerHelper.insertItemStacked(inventory, toExtract, false);
+                ItemStack excess = ItemHandlerHelper.insertItemStacked(this.inventory, toExtract, false);
                 int transferred = toExtract.getCount() - excess.getCount();
                 if (transferred > 0) {
                     handler.extractItem(i, transferred, false);
@@ -157,7 +157,7 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
         }
 
         // Suck in item entities
-        for (EntityItem entity : getNeighborItems(this, inputDir)) {
+        for (EntityItem entity : getNeighborItems(this, this.inputDir)) {
             ItemStack remainder = IOHelper.insert(this, entity.getItem(), null, false);
             if (remainder.isEmpty()) {
                 entity.setDead();
@@ -173,8 +173,8 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     }
 
     private boolean isInventoryFull() {
-        for (int i = 0; i < inventory.getSlots(); i++) {
-            ItemStack stack = inventory.getStackInSlot(i);
+        for (int i = 0; i < this.inventory.getSlots(); i++) {
+            ItemStack stack = this.inventory.getStackInSlot(i);
             if (stack.isEmpty() || stack.getCount() < stack.getMaxStackSize()) {
                 return false;
             }
@@ -188,7 +188,7 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     }
 
     public int getMaxItems() {
-        int upgrades = getUpgrades(EnumUpgrade.SPEED);
+        int upgrades = this.getUpgrades(EnumUpgrade.SPEED);
         if (upgrades > 3) {
             return Math.min(1 << (upgrades - 3), 256);
         } else {
@@ -197,49 +197,49 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     }
 
     public int getItemTransferInterval() {
-        return 8 / (1 << getUpgrades(EnumUpgrade.SPEED));
+        return 8 / (1 << this.getUpgrades(EnumUpgrade.SPEED));
     }
 
     public void setInputDirection(EnumFacing dir) {
-        inputDir = dir;
+        this.inputDir = dir;
     }
 
     public EnumFacing getInputDirection() {
-        return inputDir;
+        return this.inputDir;
     }
 
     @Override
     public EnumFacing getRotation() {
-        return outputDir;
+        return this.outputDir;
     }
 
     public void setRotation(EnumFacing rotation) {
-        outputDir = rotation;
+        this.outputDir = rotation;
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("inputDir", inputDir.ordinal());
-        tag.setInteger("outputDir", outputDir.ordinal());
-        tag.setInteger("redstoneMode", redstoneMode);
-        tag.setInteger("leaveMaterialCount", leaveMaterialCount);
-        tag.setTag("Items", inventory.serializeNBT());
+        tag.setInteger("inputDir", this.inputDir.ordinal());
+        tag.setInteger("outputDir", this.outputDir.ordinal());
+        tag.setInteger("redstoneMode", this.redstoneMode);
+        tag.setInteger("leaveMaterialCount", this.leaveMaterialCount);
+        tag.setTag("Items", this.inventory.serializeNBT());
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        inputDir = EnumFacing.byIndex(tag.getInteger("inputDir"));
-        outputDir = EnumFacing.byIndex(tag.getInteger("outputDir"));
-        redstoneMode = tag.getInteger("redstoneMode");
+        this.inputDir = EnumFacing.byIndex(tag.getInteger("inputDir"));
+        this.outputDir = EnumFacing.byIndex(tag.getInteger("outputDir"));
+        this.redstoneMode = tag.getInteger("redstoneMode");
         if (tag.hasKey("leaveMaterial")) {
-            leaveMaterialCount = (byte)(tag.getBoolean("leaveMaterial") ? 1 : 0);
+            this.leaveMaterialCount = (byte) (tag.getBoolean("leaveMaterial") ? 1 : 0);
         } else {
-            leaveMaterialCount = tag.getInteger("leaveMaterialCount");
+            this.leaveMaterialCount = tag.getInteger("leaveMaterialCount");
         }
-        inventory.deserializeNBT(tag.getCompoundTag("Items"));
+        this.inventory.deserializeNBT(tag.getCompoundTag("Items"));
     }
 
     /**
@@ -253,35 +253,35 @@ public class TileEntityOmnidirectionalHopper extends TileEntityTickableBase impl
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         } else if (buttonID == 1) {
-            leaveMaterialCount = 0;
+            this.leaveMaterialCount = 0;
         } else if (buttonID == 2) {
-            leaveMaterialCount = 1;
+            this.leaveMaterialCount = 1;
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     public boolean doesLeaveMaterial() {
-        return leaveMaterialCount > 0;
+        return this.leaveMaterialCount > 0;
     }
 
     @Override
     public int getComparatorValue() {
-        return getComparatorValueInternal();
+        return this.getComparatorValueInternal();
     }
 
     @Override
     protected void onUpgradesChanged() {
         super.onUpgradesChanged();
 
-        if (world != null && !world.isRemote) {
-            isCreative = getUpgrades(EnumUpgrade.CREATIVE) > 0;
+        if (this.world != null && !this.world.isRemote) {
+            this.isCreative = this.getUpgrades(EnumUpgrade.CREATIVE) > 0;
         }
     }
 

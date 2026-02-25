@@ -41,47 +41,47 @@ public class TileEntityPneumaticDynamo extends TileEntityPneumaticBase implement
 
     public TileEntityPneumaticDynamo(float dangerPressure, float criticalPressure, int volume, int upgradeSlots) {
         super(dangerPressure, criticalPressure, volume, upgradeSlots);
-        addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
-        heatExchanger.setThermalCapacity(100);
+        this.addApplicableUpgrade(IItemRegistry.EnumUpgrade.SPEED);
+        this.heatExchanger.setThermalCapacity(100);
     }
 
     public int getEfficiency() {
-        return HeatUtil.getEfficiency(heatExchanger.getTemperatureAsInt());
+        return HeatUtil.getEfficiency(this.heatExchanger.getTemperatureAsInt());
     }
 
     @Override
     public void update() {
         super.update();
 
-        if (!world.isRemote) {
-            if (world.getTotalWorldTime() % 20 == 0) {
+        if (!this.world.isRemote) {
+            if (this.world.getTotalWorldTime() % 20 == 0) {
                 int efficiency = ConfigHandler.machineProperties.pneumaticDynamoEfficiency;
                 if (efficiency < 1) efficiency = 1;
-                airPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * 100 / efficiency);
-                rfPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * getEfficiency() / 100);
+                this.airPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * 100 / efficiency);
+                this.rfPerTick = (int) (40 * this.getSpeedUsageMultiplierFromUpgrades() * this.getEfficiency() / 100);
             }
 
             boolean newEnabled;
-            if (redstoneAllows() && getPressure() > PneumaticValues.MIN_PRESSURE_PNEUMATIC_DYNAMO && energy.getMaxEnergyStored() - energy.getEnergyStored() >= rfPerTick) {
-                this.addAir(-airPerTick);
-                heatExchanger.addHeat(airPerTick / 100D);
-                energy.receiveEnergy(rfPerTick, false);
+            if (this.redstoneAllows() && this.getPressure() > PneumaticValues.MIN_PRESSURE_PNEUMATIC_DYNAMO && this.energy.getMaxEnergyStored() - this.energy.getEnergyStored() >= this.rfPerTick) {
+                this.addAir(-this.airPerTick);
+                this.heatExchanger.addHeat(this.airPerTick / 100D);
+                this.energy.receiveEnergy(this.rfPerTick, false);
                 newEnabled = true;
             } else {
                 newEnabled = false;
             }
-            if (world.getTotalWorldTime() % 20 == 0 && newEnabled != isEnabled) {
-                isEnabled = newEnabled;
-                sendDescriptionPacket();
+            if (this.world.getTotalWorldTime() % 20 == 0 && newEnabled != this.isEnabled) {
+                this.isEnabled = newEnabled;
+                this.sendDescriptionPacket();
             }
 
-            TileEntity receiver = getTileCache()[getRotation().ordinal()].getTileEntity();
-            if (receiver != null && receiver.hasCapability(CapabilityEnergy.ENERGY, getRotation().getOpposite())) {
-                IEnergyStorage neighborStorage = receiver.getCapability(CapabilityEnergy.ENERGY, getRotation().getOpposite());
-                int extracted = energy.extractEnergy(rfPerTick * 2, true);
+            TileEntity receiver = this.getTileCache()[this.getRotation().ordinal()].getTileEntity();
+            if (receiver != null && receiver.hasCapability(CapabilityEnergy.ENERGY, this.getRotation().getOpposite())) {
+                IEnergyStorage neighborStorage = receiver.getCapability(CapabilityEnergy.ENERGY, this.getRotation().getOpposite());
+                int extracted = this.energy.extractEnergy(this.rfPerTick * 2, true);
                 int energyPushed = neighborStorage.receiveEnergy(extracted, true);
                 if (energyPushed > 0) {
-                    neighborStorage.receiveEnergy(energy.extractEnergy(energyPushed, false), false);
+                    neighborStorage.receiveEnergy(this.energy.extractEnergy(energyPushed, false), false);
                 }
             }
         }
@@ -93,13 +93,13 @@ public class TileEntityPneumaticDynamo extends TileEntityPneumaticBase implement
     }
 
     @Override
-    public int getRedstoneMode(){
-        return redstoneMode;
+    public int getRedstoneMode() {
+        return this.redstoneMode;
     }
 
     @Override
-    public void handleGUIButtonPress(int buttonID, EntityPlayer player){
-        if(buttonID == 0 && ++redstoneMode > 2) redstoneMode = 0;
+    public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
+        if (buttonID == 0 && ++this.redstoneMode > 2) this.redstoneMode = 0;
     }
 
     @Override
@@ -109,7 +109,7 @@ public class TileEntityPneumaticDynamo extends TileEntityPneumaticBase implement
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return side == getRotation().getOpposite();
+        return side == this.getRotation().getOpposite();
     }
 
     @Override
@@ -119,47 +119,47 @@ public class TileEntityPneumaticDynamo extends TileEntityPneumaticBase implement
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
-    public int getRFRate(){
-        return rfPerTick;
+    public int getRFRate() {
+        return this.rfPerTick;
     }
 
-    public int getAirRate(){
-        return airPerTick;
+    public int getAirRate() {
+        return this.airPerTick;
     }
 
     public int getInfoEnergyStored() {
-        return energy.getEnergyStored();
+        return this.energy.getEnergyStored();
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY && (facing == getRotation() || facing == null)
+        return capability == CapabilityEnergy.ENERGY && (facing == this.getRotation() || facing == null)
                 || super.hasCapability(capability, facing);
     }
 
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityEnergy.ENERGY && (facing == getRotation() || facing == null) ?
-                CapabilityEnergy.ENERGY.cast(energy) :
+        return capability == CapabilityEnergy.ENERGY && (facing == this.getRotation() || facing == null) ?
+                CapabilityEnergy.ENERGY.cast(this.energy) :
                 super.getCapability(capability, facing);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        energy.writeToNBT(tag);
-        tag.setByte("redstoneMode", (byte)redstoneMode);
+        this.energy.writeToNBT(tag);
+        tag.setByte("redstoneMode", (byte) this.redstoneMode);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        energy.readFromNBT(tag);
-        redstoneMode = tag.getByte("redstoneMode");
+        this.energy.readFromNBT(tag);
+        this.redstoneMode = tag.getByte("redstoneMode");
     }
 }

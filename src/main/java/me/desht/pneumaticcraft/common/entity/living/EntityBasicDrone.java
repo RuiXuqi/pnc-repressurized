@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * Base class for all pre-programmed (and not programmable) drones.
+ *
  * @author MineMaarten
  *
  */
@@ -33,29 +34,29 @@ public abstract class EntityBasicDrone extends EntityDrone {
     @Override
     protected ItemStack getDroppedStack() {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setFloat("currentAir", currentAir);
-        tag.setInteger("color", getDroneColor());
+        tag.setFloat("currentAir", this.currentAir);
+        tag.setInteger("color", this.getDroneColor());
         NBTTagCompound invTag = new NBTTagCompound();
-        writeEntityToNBT(invTag);
+        this.writeEntityToNBT(invTag);
         tag.setTag(ChargeableItemHandler.NBT_UPGRADE_TAG, invTag.getTag(ChargeableItemHandler.NBT_UPGRADE_TAG));
-        ItemStack drone = new ItemStack(getDroneItem());
+        ItemStack drone = new ItemStack(this.getDroneItem());
         drone.setTagCompound(tag);
         return drone;
     }
-    
+
     protected abstract Item getDroneItem();
-    
+
     public abstract void addProgram(BlockPos clickPos, EnumFacing facing, BlockPos pos, List<IProgWidget> widgets);
-    
+
     public void addBasicProgram(BlockPos pos, List<IProgWidget> widgets, IProgWidget mainProgram) {
         DroneProgramBuilder builder = new DroneProgramBuilder();
         builder.add(new ProgWidgetStart());
         builder.add(mainProgram, standard16x16x16Area(pos));
         widgets.addAll(builder.build());
     }
-    
-    protected static ProgWidgetArea standard16x16x16Area(BlockPos centerPos){
+
+    protected static ProgWidgetArea standard16x16x16Area(BlockPos centerPos) {
         return ProgWidgetArea.fromPositions(centerPos.add(-16, -16, -16), centerPos.add(16, 16, 16));
     }
-   
+
 }

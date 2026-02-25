@@ -23,18 +23,18 @@ public class PacketCommandGetGlobalVariableOutput extends AbstractPacket<PacketC
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        varName = ByteBufUtils.readUTF8String(buf);
-        pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-        stack = ByteBufUtils.readItemStack(buf);
+        this.varName = ByteBufUtils.readUTF8String(buf);
+        this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.stack = ByteBufUtils.readItemStack(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, varName);
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
-        ByteBufUtils.writeItemStack(buf, stack);
+        ByteBufUtils.writeUTF8String(buf, this.varName);
+        buf.writeInt(this.pos.getX());
+        buf.writeInt(this.pos.getY());
+        buf.writeInt(this.pos.getZ());
+        ByteBufUtils.writeItemStack(buf, this.stack);
     }
 
     @Override

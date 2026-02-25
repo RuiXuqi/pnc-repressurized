@@ -30,9 +30,9 @@ public class GuiJetBootsOptions extends IOptionPage.SimpleToggleableOptions impl
     public void initGui(IGuiScreen gui) {
         super.initGui(gui);
 
-        checkBox = new GuiKeybindCheckBox(0, 5, 45, 0xFFFFFFFF, "jetboots.module.builderMode");
-        ((GuiHelmetMainScreen) gui).addWidget(checkBox);
-        checkBox.setListener(this);
+        this.checkBox = new GuiKeybindCheckBox(0, 5, 45, 0xFFFFFFFF, "jetboots.module.builderMode");
+        ((GuiHelmetMainScreen) gui).addWidget(this.checkBox);
+        this.checkBox.setListener(this);
 
         gui.getButtonList().add(new GuiButton(10, 30, 128, 150, 20, "Move Stat Screen..."));
     }
@@ -40,7 +40,7 @@ public class GuiJetBootsOptions extends IOptionPage.SimpleToggleableOptions impl
     @Override
     public void updateScreen() {
         CommonArmorHandler handler = CommonArmorHandler.getHandlerForPlayer();
-        checkBox.enabled = handler.getUpgradeCount(EntityEquipmentSlot.FEET, IItemRegistry.EnumUpgrade.JET_BOOTS) >= 8;
+        this.checkBox.enabled = handler.getUpgradeCount(EntityEquipmentSlot.FEET, IItemRegistry.EnumUpgrade.JET_BOOTS) >= 8;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class GuiJetBootsOptions extends IOptionPage.SimpleToggleableOptions impl
                 tag.setBoolean(ItemPneumaticArmor.NBT_BUILDER_MODE, checked);
                 NetworkHandler.sendToServer(new PacketUpdateArmorExtraData(EntityEquipmentSlot.FEET, tag));
                 CommonArmorHandler.getHandlerForPlayer().onDataFieldUpdated(EntityEquipmentSlot.FEET, ItemPneumaticArmor.NBT_BUILDER_MODE, tag.getTag(ItemPneumaticArmor.NBT_BUILDER_MODE));
-                HUDHandler.instance().addFeatureToggleMessage(getRenderHandler(), checkBox.text, checked);
+                HUDHandler.instance().addFeatureToggleMessage(this.getRenderHandler(), this.checkBox.text, checked);
             }
         }
     }
@@ -66,7 +66,7 @@ public class GuiJetBootsOptions extends IOptionPage.SimpleToggleableOptions impl
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
             Minecraft.getMinecraft().player.closeScreen();
-            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(getRenderHandler(), ArmorHUDLayout.LayoutTypes.JET_BOOTS));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.getRenderHandler(), ArmorHUDLayout.LayoutTypes.JET_BOOTS));
         }
     }
 }

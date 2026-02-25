@@ -27,9 +27,9 @@ public class ShapedFluidRecipeFactory implements IRecipeFactory {
 
         ShapedPrimer primer = new ShapedPrimer();
         primer.width = recipe.getRecipeWidth();
-		primer.height = recipe.getRecipeHeight();
-		primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
-		primer.input = recipe.getIngredients();
+        primer.height = recipe.getRecipeHeight();
+        primer.mirrored = JsonUtils.getBoolean(json, "mirrored", true);
+        primer.input = recipe.getIngredients();
 
         return new ShapedFluidRecipe(RL("shaped_fluid"), recipe.getRecipeOutput(), primer);
     }

@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 
 public class HarvestRegistry implements IHarvestRegistry {
     private static final HarvestRegistry INSTANCE = new HarvestRegistry();
-    
+
     private final List<IHarvestHandler> harvestHandlers = new ArrayList<>();
     private final List<Pair<Predicate<ItemStack>, BiConsumer<ItemStack, EntityPlayer>>> hoeHandlers = new ArrayList<>();
 
@@ -35,85 +35,86 @@ public class HarvestRegistry implements IHarvestRegistry {
     public void init() {
         //Crops, harvest when fully grown
         ItemStack cocoaBean = new ItemStack(Items.DYE, 1, EnumDyeColor.BROWN.getDyeDamage());
-        registerHarvestHandler(new HarvestHandlerCrops());
-        registerHarvestHandlerCroplike(state -> state.getBlock() == Blocks.NETHER_WART, BlockNetherWart.AGE, stack -> stack.getItem() == Items.NETHER_WART);
-        registerHarvestHandlerCroplike(state -> state.getBlock() == Blocks.COCOA, BlockCocoa.AGE, stack -> stack.isItemEqual(cocoaBean));
+        this.registerHarvestHandler(new HarvestHandlerCrops());
+        this.registerHarvestHandlerCroplike(state -> state.getBlock() == Blocks.NETHER_WART, BlockNetherWart.AGE, stack -> stack.getItem() == Items.NETHER_WART);
+        this.registerHarvestHandlerCroplike(state -> state.getBlock() == Blocks.COCOA, BlockCocoa.AGE, stack -> stack.isItemEqual(cocoaBean));
 
         //Cactus like, harvest when a block below.
-        registerHarvestHandlerCactuslike(state -> state.getBlock() == Blocks.CACTUS);
-        registerHarvestHandlerCactuslike(state -> state.getBlock() == Blocks.REEDS);
-        
+        this.registerHarvestHandlerCactuslike(state -> state.getBlock() == Blocks.CACTUS);
+        this.registerHarvestHandlerCactuslike(state -> state.getBlock() == Blocks.REEDS);
+
         //Melons/Pumpkins, just harvest the block when found
-        registerHarvestHandler((w, c, p, state, drone) -> state.getBlock() == Blocks.PUMPKIN ||
-                                                   state.getBlock() == Blocks.MELON_BLOCK);
-        
+        this.registerHarvestHandler((w, c, p, state, drone) -> state.getBlock() == Blocks.PUMPKIN ||
+                state.getBlock() == Blocks.MELON_BLOCK);
+
         //Trees
-        registerHarvestHandler(new HarvestHandlerLeaves()); //Handle all leaves in one go, as we do not replant after removing leaves, only after removing logs.
-        
-        for(BlockPlanks.EnumType treeType : BlockPlanks.EnumType.values()){
+        this.registerHarvestHandler(new HarvestHandlerLeaves()); //Handle all leaves in one go, as we do not replant after removing leaves, only after removing logs.
+
+        for (BlockPlanks.EnumType treeType : BlockPlanks.EnumType.values()) {
             Predicate<IBlockState> isOldLog = state -> state.getBlock() == Blocks.LOG && state.getValue(BlockOldLog.VARIANT) == treeType;
             Predicate<IBlockState> isNewLog = state -> state.getBlock() == Blocks.LOG2 && state.getValue(BlockNewLog.VARIANT) == treeType;
             Predicate<IBlockState> blockChecker = isOldLog.or(isNewLog);
-           
+
             Predicate<ItemStack> isSapling = item -> item.getItem() == Item.getItemFromBlock(Blocks.SAPLING) && item.getMetadata() == treeType.getMetadata();
             @SuppressWarnings("deprecation")
             IBlockState saplingState = Blocks.SAPLING.getStateFromMeta(treeType.getMetadata()); //Will have to replaced in 1.13 by individual blocks
-            
-            registerHarvestHandlerTreelike(blockChecker, isSapling, saplingState);
+
+            this.registerHarvestHandlerTreelike(blockChecker, isSapling, saplingState);
         }
-        
+
         //Register hoe
-        registerHoe(item -> item.getItem() instanceof ItemHoe, (stack, player) -> stack.damageItem(1, player));
+        this.registerHoe(item -> item.getItem() instanceof ItemHoe, (stack, player) -> stack.damageItem(1, player));
     }
-    
-    public List<IHarvestHandler> getHarvestHandlers(){
-        return harvestHandlers;
+
+    public List<IHarvestHandler> getHarvestHandlers() {
+        return this.harvestHandlers;
     }
-    
+
     /**
      * Returns a durability use function when a hoe is found.
+     *
      * @param stack
      * @return
      */
-    public BiConsumer<ItemStack, EntityPlayer> getDamageableHoe(ItemStack stack){
-        return hoeHandlers.stream().filter(handler -> handler.getLeft().test(stack))
-                                   .map(Pair::getRight)
-                                   .findFirst()
-                                   .orElse(null);
-    }
-    
-    @Override
-    public void registerHarvestHandler(IHarvestHandler harvestHandler){
-        Validate.notNull(harvestHandler);
-        harvestHandlers.add(harvestHandler);
-    }
-    
-    @Override
-    public void registerHarvestHandlerCactuslike(Predicate<IBlockState> blockChecker){
-        Validate.notNull(blockChecker);
-        registerHarvestHandler(new HarvestHandlerCactusLike(blockChecker));
+    public BiConsumer<ItemStack, EntityPlayer> getDamageableHoe(ItemStack stack) {
+        return this.hoeHandlers.stream().filter(handler -> handler.getLeft().test(stack))
+                .map(Pair::getRight)
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
-    public void registerHarvestHandlerCroplike(Predicate<IBlockState> blockChecker, PropertyInteger ageProperty, Predicate<ItemStack> isSeed){
+    public void registerHarvestHandler(IHarvestHandler harvestHandler) {
+        Validate.notNull(harvestHandler);
+        this.harvestHandlers.add(harvestHandler);
+    }
+
+    @Override
+    public void registerHarvestHandlerCactuslike(Predicate<IBlockState> blockChecker) {
+        Validate.notNull(blockChecker);
+        this.registerHarvestHandler(new HarvestHandlerCactusLike(blockChecker));
+    }
+
+    @Override
+    public void registerHarvestHandlerCroplike(Predicate<IBlockState> blockChecker, PropertyInteger ageProperty, Predicate<ItemStack> isSeed) {
         Validate.notNull(blockChecker);
         Validate.notNull(ageProperty);
         Validate.notNull(isSeed);
-        registerHarvestHandler(new HarvestHandlerCropLike(blockChecker, ageProperty, isSeed));
-    }
-    
-    @Override
-    public void registerHarvestHandlerTreelike(Predicate<IBlockState> blockChecker, Predicate<ItemStack> isSapling, IBlockState saplingState){
-        Validate.notNull(blockChecker);
-        Validate.notNull(isSapling);
-        Validate.notNull(saplingState);
-        registerHarvestHandler(new HarvestHandlerTree(blockChecker, isSapling, saplingState));
+        this.registerHarvestHandler(new HarvestHandlerCropLike(blockChecker, ageProperty, isSeed));
     }
 
     @Override
-    public void registerHoe(Predicate<ItemStack> isHoeWithDurability, BiConsumer<ItemStack, EntityPlayer> useDurability){
+    public void registerHarvestHandlerTreelike(Predicate<IBlockState> blockChecker, Predicate<ItemStack> isSapling, IBlockState saplingState) {
+        Validate.notNull(blockChecker);
+        Validate.notNull(isSapling);
+        Validate.notNull(saplingState);
+        this.registerHarvestHandler(new HarvestHandlerTree(blockChecker, isSapling, saplingState));
+    }
+
+    @Override
+    public void registerHoe(Predicate<ItemStack> isHoeWithDurability, BiConsumer<ItemStack, EntityPlayer> useDurability) {
         Validate.notNull(isHoeWithDurability);
         Validate.notNull(useDurability);
-        hoeHandlers.add(new ImmutablePair<>(isHoeWithDurability, useDurability));
+        this.hoeHandlers.add(new ImmutablePair<>(isHoeWithDurability, useDurability));
     }
 }

@@ -77,7 +77,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     public Set<BlockPos> getInterfaceArea() {
         Set<BlockPos> area = new HashSet<>();
-        getArea(area, (ProgWidgetArea) getConnectedParameters()[0], (ProgWidgetArea) getConnectedParameters()[1]);
+        getArea(area, (ProgWidgetArea) this.getConnectedParameters()[0], (ProgWidgetArea) this.getConnectedParameters()[1]);
         return area;
     }
 
@@ -88,7 +88,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public EnumOrder getOrder() {
-        return order;
+        return this.order;
     }
 
     public String[] getAreaTypes() {
@@ -100,28 +100,28 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
     }
 
     public synchronized void addArea(int x, int y, int z) {
-        area.add(new BlockPos(x, y, z));
-        invalidateAreaCache();
+        this.area.add(new BlockPos(x, y, z));
+        this.invalidateAreaCache();
     }
 
     public synchronized void addArea(int x1, int y1, int z1, int x2, int y2, int z2, String areaType) throws IllegalArgumentException {
-        area.addAll(getArea(x1, y1, z1, x2, y2, z2, areaType));
-        invalidateAreaCache();
+        this.area.addAll(this.getArea(x1, y1, z1, x2, y2, z2, areaType));
+        this.invalidateAreaCache();
     }
 
     public synchronized void removeArea(int x, int y, int z) {
-        area.remove(new BlockPos(x, y, z));
-        invalidateAreaCache();
+        this.area.remove(new BlockPos(x, y, z));
+        this.invalidateAreaCache();
     }
 
     public synchronized void removeArea(int x1, int y1, int z1, int x2, int y2, int z2, String areaType) throws IllegalArgumentException {
-        area.removeAll(getArea(x1, y1, z1, x2, y2, z2, areaType));
-        invalidateAreaCache();
+        this.area.removeAll(this.getArea(x1, y1, z1, x2, y2, z2, areaType));
+        this.invalidateAreaCache();
     }
 
     public synchronized void clearArea() {
-        area.clear();
-        invalidateAreaCache();
+        this.area.clear();
+        this.invalidateAreaCache();
     }
 
     @Override
@@ -153,28 +153,28 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public synchronized boolean isItemValidForFilters(ItemStack item, IBlockState blockMetadata) {
-        return ProgWidgetItemFilter.isItemValidForFilters(item, itemWhitelist, itemBlacklist, blockMetadata);
+        return ProgWidgetItemFilter.isItemValidForFilters(item, this.itemWhitelist, this.itemBlacklist, blockMetadata);
     }
 
     @Override
     public boolean isItemFilterEmpty() {
-        return itemWhitelist.isEmpty() && itemBlacklist.isEmpty();
+        return this.itemWhitelist.isEmpty() && this.itemBlacklist.isEmpty();
     }
 
     public synchronized void addWhitelistItemFilter(String itemName, int damage, boolean useMetadata, boolean useNBT, boolean useOreDict, boolean useModSimilarity) throws IllegalArgumentException {
-        itemWhitelist.add(getItemFilter(itemName, damage, useMetadata, useNBT, useOreDict, useModSimilarity));
+        this.itemWhitelist.add(this.getItemFilter(itemName, damage, useMetadata, useNBT, useOreDict, useModSimilarity));
     }
 
     public synchronized void addBlacklistItemFilter(String itemName, int damage, boolean useMetadata, boolean useNBT, boolean useOreDict, boolean useModSimilarity) throws IllegalArgumentException {
-        itemBlacklist.add(getItemFilter(itemName, damage, useMetadata, useNBT, useOreDict, useModSimilarity));
+        this.itemBlacklist.add(this.getItemFilter(itemName, damage, useMetadata, useNBT, useOreDict, useModSimilarity));
     }
 
     public synchronized void clearItemWhitelist() {
-        itemWhitelist.clear();
+        this.itemWhitelist.clear();
     }
 
     public synchronized void clearItemBlacklist() {
-        itemBlacklist.clear();
+        this.itemBlacklist.clear();
     }
 
     private ProgWidgetItemFilter getItemFilter(String itemName, int damage, boolean useMetadata, boolean useNBT, boolean useOreDict, boolean useModSimilarity) throws IllegalArgumentException {
@@ -192,21 +192,21 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
     }
 
     public synchronized void addWhitelistText(String text) {
-        if (whitelistFilter == null) whitelistFilter = new StringFilterEntitySelector();
-        whitelistFilter.addEntry(text);
+        if (this.whitelistFilter == null) this.whitelistFilter = new StringFilterEntitySelector();
+        this.whitelistFilter.addEntry(text);
     }
 
     public synchronized void addBlacklistText(String text) {
-        if (blacklistFilter == null) blacklistFilter = new StringFilterEntitySelector();
-        blacklistFilter.addEntry(text);
+        if (this.blacklistFilter == null) this.blacklistFilter = new StringFilterEntitySelector();
+        this.blacklistFilter.addEntry(text);
     }
 
     public synchronized void clearWhitelistText() {
-        whitelistFilter = null;
+        this.whitelistFilter = null;
     }
 
     public synchronized void clearBlacklistText() {
-        blacklistFilter = null;
+        this.blacklistFilter = null;
     }
 
     @Override
@@ -216,13 +216,13 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public synchronized List<Entity> getValidEntities(World world) {
-        return ProgWidgetAreaItemBase.getEntitiesInArea(getEntityAreaWidget(), null, world, whitelistFilter, blacklistFilter);
+        return ProgWidgetAreaItemBase.getEntitiesInArea(this.getEntityAreaWidget(), null, world, this.whitelistFilter, this.blacklistFilter);
     }
 
     private ProgWidgetArea getEntityAreaWidget() {
         ProgWidgetArea widget = new ProgWidgetArea();
-        BlockPos minPos = getMinPos();
-        BlockPos maxPos = getMaxPos();
+        BlockPos minPos = this.getMinPos();
+        BlockPos maxPos = this.getMaxPos();
         widget.x1 = minPos.getX();
         widget.y1 = minPos.getY();
         widget.z1 = minPos.getZ();
@@ -234,19 +234,19 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public synchronized List<Entity> getEntitiesInArea(World world, Predicate<? super Entity> filter) {
-        return ProgWidgetAreaItemBase.getEntitiesInArea(getEntityAreaWidget(), null, world, filter, null);
+        return ProgWidgetAreaItemBase.getEntitiesInArea(this.getEntityAreaWidget(), null, world, filter, null);
     }
 
     @Override
     public boolean isEntityValid(Entity entity) {
-        return (whitelistFilter == null || whitelistFilter.apply(entity)) && (blacklistFilter == null || !blacklistFilter.apply(entity));
+        return (this.whitelistFilter == null || this.whitelistFilter.apply(entity)) && (this.blacklistFilter == null || !this.blacklistFilter.apply(entity));
     }
 
     private BlockPos getMinPos() {
         int x = Integer.MAX_VALUE;
         int y = Integer.MAX_VALUE;
         int z = Integer.MAX_VALUE;
-        for (BlockPos p : area) {
+        for (BlockPos p : this.area) {
             x = Math.min(p.getX(), x);
             y = Math.min(p.getY(), y);
             z = Math.min(p.getZ(), z);
@@ -258,7 +258,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
         int x = Integer.MIN_VALUE;
         int y = Integer.MIN_VALUE;
         int z = Integer.MIN_VALUE;
-        for (BlockPos p : area) {
+        for (BlockPos p : this.area) {
             x = Math.max(p.getX(), x);
             y = Math.max(p.getY(), y);
             z = Math.max(p.getZ(), z);
@@ -282,7 +282,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public synchronized boolean[] getSides() {
-        return sides;
+        return this.sides;
     }
 
     @Override
@@ -297,28 +297,28 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
     }
 
     public void setEmittingRedstone(int redstone) {
-        emittingRedstone = redstone;
+        this.emittingRedstone = redstone;
     }
 
     @Override
     public int getEmittingRedstone() {
-        return emittingRedstone;
+        return this.emittingRedstone;
     }
 
     public synchronized void addWhitelistLiquidFilter(String fluidName) throws IllegalArgumentException {
-        liquidWhitelist.add(getFilterForArgs(fluidName));
+        this.liquidWhitelist.add(this.getFilterForArgs(fluidName));
     }
 
     public synchronized void addBlacklistLiquidFilter(String fluidName) throws IllegalArgumentException {
-        liquidBlacklist.add(getFilterForArgs(fluidName));
+        this.liquidBlacklist.add(this.getFilterForArgs(fluidName));
     }
 
     public synchronized void clearLiquidWhitelist() {
-        liquidWhitelist.clear();
+        this.liquidWhitelist.clear();
     }
 
     public synchronized void clearLiquidBlacklist() {
-        liquidBlacklist.clear();
+        this.liquidBlacklist.clear();
     }
 
     private ProgWidgetLiquidFilter getFilterForArgs(String fluidName) throws IllegalArgumentException {
@@ -331,22 +331,22 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public synchronized boolean isFluidValid(Fluid fluid) {
-        return ProgWidgetLiquidFilter.isLiquidValid(fluid, liquidWhitelist, liquidBlacklist);
+        return ProgWidgetLiquidFilter.isLiquidValid(fluid, this.liquidWhitelist, this.liquidBlacklist);
     }
 
     @Override
     public boolean dropStraight() {
-        return dropItemStraight;
+        return this.dropItemStraight;
     }
 
     @Override
     public void setDropStraight(boolean dropStraight) {
-        dropItemStraight = true;
+        this.dropItemStraight = true;
     }
 
     @Override
     public boolean useCount() {
-        return useCount;
+        return this.useCount;
     }
 
     @Override
@@ -356,7 +356,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public int getCount() {
-        return count;
+        return this.count;
     }
 
     @Override
@@ -366,7 +366,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public boolean isAndFunction() {
-        return isAndFunction;
+        return this.isAndFunction;
     }
 
     @Override
@@ -376,7 +376,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public int getRequiredCount() {
-        return count;
+        return this.count;
     }
 
     @Override
@@ -386,7 +386,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public Operator getOperator() {
-        return operator;
+        return this.operator;
     }
 
     @Override
@@ -397,7 +397,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
     public synchronized void setOperator(String operator) throws IllegalArgumentException {
         for (Operator op : Operator.values()) {
             if (op.toString().equals(operator)) {
-                setOperator(op);
+                this.setOperator(op);
                 return;
             }
         }
@@ -410,12 +410,12 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
     }
 
     public void setNewName(String name) {
-        renamingName = name;
+        this.renamingName = name;
     }
 
     @Override
     public String getNewName() {
-        return renamingName;
+        return this.renamingName;
     }
 
     public void setCraftingGrid(String[] stackStrings) {
@@ -423,9 +423,9 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
         Arrays.fill(grid, ItemStack.EMPTY);
         for (int i = 0; i < 9; i++) {
             if (stackStrings[i] != null)
-                grid[i] = getItemFilter(stackStrings[i], 0, false, false, false, false).getFilter();
+                grid[i] = this.getItemFilter(stackStrings[i], 0, false, false, false, false).getFilter();
         }
-        craftingGrid = grid;
+        this.craftingGrid = grid;
     }
 
     @Override
@@ -437,7 +437,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
             }
         }, 3, 3);
         for (int i = 0; i < 9; i++)
-            invCrafting.setInventorySlotContents(i, craftingGrid[i]);
+            invCrafting.setInventorySlotContents(i, this.craftingGrid[i]);
         return invCrafting;
     }
 
@@ -448,7 +448,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public int getMaxActions() {
-        return maxActions;
+        return this.maxActions;
     }
 
     @Override
@@ -458,7 +458,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public boolean useMaxActions() {
-        return useMaxActions;
+        return this.useMaxActions;
     }
 
     public void setSneaking(boolean sneaking) {
@@ -467,7 +467,7 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public boolean isSneaking() {
-        return sneaking;
+        return this.sneaking;
     }
 
     @Override
@@ -477,21 +477,21 @@ public class ProgWidgetCC extends ProgWidgetAreaItemBase implements IBlockOrdere
 
     @Override
     public boolean isPlacingFluidBlocks() {
-        return placeFluidBlocks;
+        return this.placeFluidBlocks;
     }
 
     @Override
     public String[] getLines() {
-        return signText;
+        return this.signText;
     }
 
     @Override
-    public boolean requiresTool(){
-        return requiresTool;
+    public boolean requiresTool() {
+        return this.requiresTool;
     }
 
     @Override
-    public void setRequiresTool(boolean requiresTool){
+    public void setRequiresTool(boolean requiresTool) {
         this.requiresTool = requiresTool;
     }
 

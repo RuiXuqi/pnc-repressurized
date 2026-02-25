@@ -14,7 +14,7 @@ public class ScubaUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleableR
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] {Itemss.upgrades.get(IItemRegistry.EnumUpgrade.SCUBA)};
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.SCUBA)};
     }
 
     @Override

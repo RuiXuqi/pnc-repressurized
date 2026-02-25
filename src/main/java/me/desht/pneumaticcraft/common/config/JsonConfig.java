@@ -18,45 +18,45 @@ public abstract class JsonConfig implements ISubConfig {
     @Override
     public void preInit(File file) throws IOException {
         this.file = file;
-        if (inPreInit) {
-            processFile();
+        if (this.inPreInit) {
+            this.processFile();
         }
     }
 
     @Override
     public void postInit() throws IOException {
-        if (!inPreInit) {
-            processFile();
+        if (!this.inPreInit) {
+            this.processFile();
         }
     }
 
     private void processFile() throws IOException {
-        if (file.exists()) {
-            readFromFile();
-            writeToFile();
+        if (this.file.exists()) {
+            this.readFromFile();
+            this.writeToFile();
         } else {
-            if (file.createNewFile()) {
-                writeToFile();
+            if (this.file.createNewFile()) {
+                this.writeToFile();
             }
         }
     }
 
     public void writeToFile() throws IOException {
         JsonObject root = new JsonObject();
-        writeToJson(root);
+        this.writeToJson(root);
         String jsonString = root.toString();
 
         JsonParser parser = new JsonParser();
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
         JsonElement el = parser.parse(jsonString);
-        FileUtils.write(file, gson.toJson(el), Charsets.UTF_8);
+        FileUtils.write(this.file, gson.toJson(el), Charsets.UTF_8);
     }
 
     protected void readFromFile() throws IOException {
         JsonParser parser = new JsonParser();
-        JsonObject root = (JsonObject) parser.parse(FileUtils.readFileToString(file, Charsets.UTF_8));
-        readFromJson(root);
+        JsonObject root = (JsonObject) parser.parse(FileUtils.readFileToString(this.file, Charsets.UTF_8));
+        this.readFromJson(root);
     }
 
     protected abstract void writeToJson(JsonObject json);

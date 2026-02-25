@@ -95,16 +95,16 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
 
     protected void addApplicableUpgrade(IItemRegistry.EnumUpgrade... upgrades) {
         for (IItemRegistry.EnumUpgrade upgrade : upgrades)
-            addApplicableUpgrade(Itemss.upgrades.get(upgrade));
+            this.addApplicableUpgrade(Itemss.upgrades.get(upgrade));
     }
 
     protected void addApplicableUpgrade(Item upgrade) {
-        applicableUpgrades.add(upgrade);
+        this.applicableUpgrades.add(upgrade);
     }
 
     protected void addApplicableCustomUpgrade(ItemStack... upgrades) {
         for (ItemStack upgrade : upgrades) {
-            applicableCustomUpgrades.add(makeUpgradeKey(upgrade));
+            this.applicableCustomUpgrades.add(makeUpgradeKey(upgrade));
         }
     }
 
@@ -124,39 +124,39 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     /***********
-       We don't override getUpdatePacket() or onDataPacket() because TE sync'ing is all handled
-       by our custom PacketDescription and the @DescSynced system
+     We don't override getUpdatePacket() or onDataPacket() because TE sync'ing is all handled
+     by our custom PacketDescription and the @DescSynced system
      ***********/
 
     @Override
     public BlockPos getPosition() {
-        return getPos();
+        return this.getPos();
     }
 
     @Override
     public List<SyncedField> getDescriptionFields() {
-        if (descriptionFields == null) {
-            descriptionFields = NetworkUtils.getSyncedFields(this, DescSynced.class);
-            for (SyncedField field : descriptionFields) {
+        if (this.descriptionFields == null) {
+            this.descriptionFields = NetworkUtils.getSyncedFields(this, DescSynced.class);
+            for (SyncedField field : this.descriptionFields) {
                 field.update();
             }
         }
-        return descriptionFields;
+        return this.descriptionFields;
     }
 
     public void sendDescriptionPacket() {
-        sendDescriptionPacket(256);
+        this.sendDescriptionPacket(256);
     }
 
     void sendDescriptionPacket(double maxPacketDistance) {
-        NetworkHandler.sendToAllAround(new PacketDescription(this), world, maxPacketDistance);
+        NetworkHandler.sendToAllAround(new PacketDescription(this), this.world, maxPacketDistance);
     }
 
     /**
      * A way to safely mark a block for an update from another thread (like the CC Lua thread).
      */
     void scheduleDescriptionPacket() {
-        descriptionPacketScheduled = true;
+        this.descriptionPacketScheduled = true;
     }
 
     /**
@@ -173,47 +173,47 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
      * which extend non-tickable subclasses might need it (e.g. TileEntityPressureChamberInterface)
      */
     void updateImpl() {
-        if (firstRun && !world.isRemote) {
-            onFirstServerUpdate();
-            onNeighborTileUpdate();
-            onNeighborBlockUpdate();
+        if (this.firstRun && !this.world.isRemote) {
+            this.onFirstServerUpdate();
+            this.onNeighborTileUpdate();
+            this.onNeighborBlockUpdate();
         }
-        firstRun = false;
+        this.firstRun = false;
 
-        upgradeCache.validate();
+        this.upgradeCache.validate();
 
-        if (!world.isRemote) {
+        if (!this.world.isRemote) {
             if (this instanceof IHeatExchanger) {
                 ((IHeatExchanger) this).getHeatExchangerLogic(null).update();
                 for (IHeatDisperser disperser : moddedDispersers) {
-                    disperser.disperseHeat(this, tileCache);
+                    disperser.disperseHeat(this, this.tileCache);
                 }
             }
 
-            if (this instanceof IAutoFluidEjecting && getUpgrades(IItemRegistry.EnumUpgrade.DISPENSER) > 0) {
+            if (this instanceof IAutoFluidEjecting && this.getUpgrades(IItemRegistry.EnumUpgrade.DISPENSER) > 0) {
                 ((IAutoFluidEjecting) this).autoExportFluid(this);
             }
 
-            if (descriptionFields == null) descriptionPacketScheduled = true;
-            for (SyncedField field : getDescriptionFields()) {
+            if (this.descriptionFields == null) this.descriptionPacketScheduled = true;
+            for (SyncedField field : this.getDescriptionFields()) {
                 if (field.update()) {
-                    descriptionPacketScheduled = true;
+                    this.descriptionPacketScheduled = true;
                 }
             }
 
-            if (descriptionPacketScheduled) {
-                descriptionPacketScheduled = false;
-                sendDescriptionPacket();
+            if (this.descriptionPacketScheduled) {
+                this.descriptionPacketScheduled = false;
+                this.sendDescriptionPacket();
             }
         }
     }
 
     protected void onFirstServerUpdate() {
-        initializeIfHeatExchanger();
+        this.initializeIfHeatExchanger();
     }
 
     protected void updateNeighbours() {
-        world.notifyNeighborsOfStateChange(getPos(), getBlockType(), true);
+        this.world.notifyNeighborsOfStateChange(this.getPos(), this.getBlockType(), true);
     }
 
     public void onBlockRotated() {
@@ -225,7 +225,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     void rerenderTileEntity() {
-        world.markBlockRangeForRenderUpdate(getPos(), getPos());
+        this.world.markBlockRangeForRenderUpdate(this.getPos(), this.getPos());
     }
 
     protected boolean shouldRerenderChunkOnDescUpdate() {
@@ -234,7 +234,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
 
     /**
      * Encoded into the description packet. Also included in saved data written by writeToNBT().
-     *
+     * <p>
      * Prefer to use @DescSynced - only use this for complex fields not handled by @DescSynced,
      * or for non-ticking tile entities.
      *
@@ -253,7 +253,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
 
     /**
      * Encoded into the description packet. Also included in saved data read by readFromNBT().
-     *
+     * <p>
      * Prefer to use @DescSynced - only use this for complex fields not handled by @DescSynced,
      * or for non-ticking tile entities.
      *
@@ -272,10 +272,10 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (upgradeHandler != null && upgradeHandler.getSlots() > 0) {
-            tag.setTag("Upgrades", upgradeHandler.serializeNBT());
+        if (this.upgradeHandler != null && this.upgradeHandler.getSlots() > 0) {
+            tag.setTag("Upgrades", this.upgradeHandler.serializeNBT());
         }
-        writeToPacket(tag);
+        this.writeToPacket(tag);
         if (this instanceof IHeatExchanger) {
             ((IHeatExchanger) this).getHeatExchangerLogic(null).writeToNBT(tag);
         }
@@ -285,12 +285,12 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        if (tag.hasKey("Upgrades") && upgradeHandler != null) {
-            upgradeHandler = new UpgradeHandler(upgradeHandler.getSlots());
-            upgradeHandler.deserializeNBT(tag.getCompoundTag("Upgrades"));
-            upgradeCache.validate();
+        if (tag.hasKey("Upgrades") && this.upgradeHandler != null) {
+            this.upgradeHandler = new UpgradeHandler(this.upgradeHandler.getSlots());
+            this.upgradeHandler.deserializeNBT(tag.getCompoundTag("Upgrades"));
+            this.upgradeCache.validate();
         }
-        readFromPacket(tag);
+        this.readFromPacket(tag);
         if (this instanceof IHeatExchanger) {
             ((IHeatExchanger) this).getHeatExchangerLogic(null).readFromNBT(tag);
         }
@@ -299,13 +299,13 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     @Override
     public void validate() {
         super.validate();
-        scheduleDescriptionPacket();
+        this.scheduleDescriptionPacket();
     }
 
     @Override
     public void onDescUpdate() {
-        if (shouldRerenderChunkOnDescUpdate()) {
-            rerenderTileEntity();
+        if (this.shouldRerenderChunkOnDescUpdate()) {
+            this.rerenderTileEntity();
         }
     }
 
@@ -316,22 +316,22 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     public EnumFacing getRotation() {
-        if (cachedBlockState == null) {
-            cachedBlockState = world.getBlockState(getPos());
+        if (this.cachedBlockState == null) {
+            this.cachedBlockState = this.world.getBlockState(this.getPos());
         }
-        return cachedBlockState.getValue(BlockPneumaticCraft.ROTATION);
+        return this.cachedBlockState.getValue(BlockPneumaticCraft.ROTATION);
     }
 
     @Override
     public void updateContainingBlockInfo() {
-        cachedBlockState = null;
+        this.cachedBlockState = null;
         super.updateContainingBlockInfo();
     }
 
     public int getUpgrades(Item upgrade) {
         int upgrades = 0;
-        for (int i = 0; i < upgradeHandler.getSlots(); i++) {
-            ItemStack stack = upgradeHandler.getStackInSlot(i);
+        for (int i = 0; i < this.upgradeHandler.getSlots(); i++) {
+            ItemStack stack = this.upgradeHandler.getStackInSlot(i);
             if (stack.getItem() == upgrade) {
                 upgrades += stack.getCount();
             }
@@ -340,19 +340,19 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     public int getUpgrades(IItemRegistry.EnumUpgrade upgrade) {
-        return upgradeCache.getUpgrades(upgrade);
+        return this.upgradeCache.getUpgrades(upgrade);
     }
 
     protected int getCustomUpgrades(ItemStack upgradeStack) {
-        return upgradeCache.getUpgrades(upgradeStack);
+        return this.upgradeCache.getUpgrades(upgradeStack);
     }
 
     public float getSpeedMultiplierFromUpgrades() {
-        return actualSpeedMult;
+        return this.actualSpeedMult;
     }
 
     public float getSpeedUsageMultiplierFromUpgrades() {
-        return actualUsageMult;
+        return this.actualUsageMult;
     }
 
     @Override
@@ -360,54 +360,54 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     public boolean isGuiUseableByPlayer(EntityPlayer player) {
-        return getWorld().getTileEntity(getPos()) == this && player.getDistanceSq(getPos().getX() + 0.5D, getPos().getY() + 0.5D, getPos().getZ() + 0.5D) <= 64.0D;
+        return this.getWorld().getTileEntity(this.getPos()) == this && player.getDistanceSq(this.getPos().getX() + 0.5D, this.getPos().getY() + 0.5D, this.getPos().getZ() + 0.5D) <= 64.0D;
     }
 
     public void onNeighborTileUpdate() {
-        initializeIfHeatExchanger();
-        for (TileEntityCache cache : getTileCache()) {
+        this.initializeIfHeatExchanger();
+        for (TileEntityCache cache : this.getTileCache()) {
             cache.update();
         }
     }
 
     public TileEntityCache[] getTileCache() {
-        if (tileCache == null) tileCache = TileEntityCache.getDefaultCache(getWorld(), getPos());
-        return tileCache;
+        if (this.tileCache == null) this.tileCache = TileEntityCache.getDefaultCache(this.getWorld(), this.getPos());
+        return this.tileCache;
     }
 
     TileEntity getCachedNeighbor(EnumFacing dir) {
-        return getTileCache()[dir.getIndex()].getTileEntity();
+        return this.getTileCache()[dir.getIndex()].getTileEntity();
     }
 
     public void onNeighborBlockUpdate() {
-        poweredRedstone = PneumaticCraftUtils.getRedstoneLevel(getWorld(), getPos());
-        initializeIfHeatExchanger();
-        for (TileEntityCache cache : getTileCache()) {
+        this.poweredRedstone = PneumaticCraftUtils.getRedstoneLevel(this.getWorld(), this.getPos());
+        this.initializeIfHeatExchanger();
+        for (TileEntityCache cache : this.getTileCache()) {
             cache.update();
         }
     }
 
     public boolean redstoneAllows() {
-        if (getWorld().isRemote) onNeighborBlockUpdate();
+        if (this.getWorld().isRemote) this.onNeighborBlockUpdate();
         switch (((IRedstoneControl) this).getRedstoneMode()) {
             case 0:
                 return true;
             case 1:
-                return poweredRedstone > 0;
+                return this.poweredRedstone > 0;
             case 2:
-                return poweredRedstone == 0;
+                return this.poweredRedstone == 0;
         }
         return false;
     }
 
     protected void initializeIfHeatExchanger() {
         if (this instanceof IHeatExchanger) {
-            initializeHeatExchanger(((IHeatExchanger) this).getHeatExchangerLogic(null), getConnectedHeatExchangerSides());
+            this.initializeHeatExchanger(((IHeatExchanger) this).getHeatExchangerLogic(null), this.getConnectedHeatExchangerSides());
         }
     }
 
     void initializeHeatExchanger(IHeatExchangerLogic heatExchanger, EnumFacing... connectedSides) {
-        heatExchanger.initializeAsHull(getWorld(), getPos(), connectedSides);
+        heatExchanger.initializeAsHull(this.getWorld(), this.getPos(), connectedSides);
     }
 
     /**
@@ -428,14 +428,14 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
      * Take a fluid-containing from the input slot, use it to fill the primary input tank of the tile entity,
      * and place the resulting emptied container in the output slot.
      *
-     * @param inputSlot input slot
+     * @param inputSlot  input slot
      * @param outputSlot output slot
      */
     void processFluidItem(int inputSlot, int outputSlot) {
-        if (!hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
-                || !hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
+        if (!this.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null)
+                || !this.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null))
             return;
-        IItemHandler itemHandler = getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IItemHandler itemHandler = this.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
         ItemStack fluidContainer = itemHandler.getStackInSlot(inputSlot);
         IFluidHandlerItem fluidHandlerItem = FluidUtil.getFluidHandler(fluidContainer);
@@ -455,7 +455,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
             }
         }
 
-        IFluidHandler fluidHandler = getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+        IFluidHandler fluidHandler = this.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
 
         FluidStack itemContents = fluidHandlerItem.drain(1000, false);
         if (itemContents != null && itemContents.amount > 0) {
@@ -482,12 +482,12 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
 
     @Override
     public ITextComponent getDisplayName() {
-        return getName() == null ? new TextComponentString("???") : new TextComponentTranslation(getName());
+        return this.getName() == null ? new TextComponentString("???") : new TextComponentTranslation(this.getName());
     }
 
     @Override
     public Set<Item> getApplicableUpgrades() {
-        return applicableUpgrades;
+        return this.applicableUpgrades;
     }
 
     @Override
@@ -506,11 +506,11 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
             registry.registerLuaMethod(new LuaMethod("getTemperature") {
                 @Override
                 public Object[] call(Object[] args) {
-                    requireArgs(args, 0, 1, "face? (down/up/north/south/west/east)");
+                    this.requireArgs(args, 0, 1, "face? (down/up/north/south/west/east)");
                     if (args.length == 0) {
                         return new Object[]{exchanger.getHeatExchangerLogic(null).getTemperature()};
-                    } else  {
-                        IHeatExchangerLogic logic = exchanger.getHeatExchangerLogic(getDirForString((String) args[0]));
+                    } else {
+                        IHeatExchangerLogic logic = exchanger.getHeatExchangerLogic(this.getDirForString((String) args[0]));
                         return new Object[]{logic != null ? logic.getTemperature() : 0};
                     }
                 }
@@ -519,32 +519,32 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     private LuaMethodRegistry getLuaMethodRegistry() {
-        if (luaMethodRegistry == null) {
-            luaMethodRegistry = new LuaMethodRegistry();
-            addLuaMethods(luaMethodRegistry);
+        if (this.luaMethodRegistry == null) {
+            this.luaMethodRegistry = new LuaMethodRegistry();
+            this.addLuaMethods(this.luaMethodRegistry);
         }
-        return luaMethodRegistry;
+        return this.luaMethodRegistry;
     }
 
     @Override
     public String getType() {
-        return getBlockType().getTranslationKey().substring(5);
+        return this.getBlockType().getTranslationKey().substring(5);
     }
 
     @Override
     public String[] getMethodNames() {
-        return getLuaMethodRegistry().getMethodNames();
+        return this.getLuaMethodRegistry().getMethodNames();
     }
 
     public Object[] callLuaMethod(String methodName, Object... args) throws Exception {
-        return getLuaMethodRegistry().getMethod(methodName).call(args);
+        return this.getLuaMethodRegistry().getMethod(methodName).call(args);
     }
 
     @Override
     @Optional.Method(modid = ModIds.COMPUTERCRAFT)
     public Object[] callMethod(IComputerAccess computer, ILuaContext context, int method, Object[] arguments) throws LuaException {
         try {
-            return getLuaMethodRegistry().getMethod(method).call(arguments);
+            return this.getLuaMethodRegistry().getMethod(method).call(arguments);
         } catch (Exception e) {
             throw new LuaException(e.getMessage());
         }
@@ -571,7 +571,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
         }
         if (other instanceof TileEntity) {
             TileEntity otherTE = (TileEntity) other;
-            return otherTE.getWorld().equals(getWorld()) && otherTE.getPos().equals(getPos());
+            return otherTE.getWorld().equals(this.getWorld()) && otherTE.getPos().equals(this.getPos());
         }
 
         return false;
@@ -582,13 +582,13 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     public UpgradeHandler getUpgradesInventory() {
-        return upgradeHandler;
+        return this.upgradeHandler;
     }
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return getPrimaryInventory() != null;
+            return this.getPrimaryInventory() != null;
         } else if (capability == Mekanism.CAPABILITY_HEAT_TRANSFER && ConfigHandler.integration.mekHeatEfficiency > 0) {
             return this instanceof IHeatExchanger && ((IHeatExchanger) this).getHeatExchangerLogic(facing) != null;
         } else {
@@ -599,8 +599,8 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     @Nullable
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && getPrimaryInventory() != null) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(getPrimaryInventory());
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && this.getPrimaryInventory() != null) {
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.getPrimaryInventory());
         } else if (capability == Mekanism.CAPABILITY_HEAT_TRANSFER && this instanceof IHeatExchanger) {
             return Mekanism.CAPABILITY_HEAT_TRANSFER.cast(Mekanism.getHeatAdapter(this, facing));
         }
@@ -614,14 +614,14 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
      * @param drops list in which to collect dropped items
      */
     public void getContentsToDrop(NonNullList<ItemStack> drops) {
-        if (getPrimaryInventory() != null) {
-            for (int i = 0; i < getPrimaryInventory().getSlots(); i++) {
-                drops.add(getPrimaryInventory().getStackInSlot(i));
+        if (this.getPrimaryInventory() != null) {
+            for (int i = 0; i < this.getPrimaryInventory().getSlots(); i++) {
+                drops.add(this.getPrimaryInventory().getStackInSlot(i));
             }
         }
 
-        if (!shouldPreserveStateOnBreak()) {
-            IItemHandler upgrades = getUpgradesInventory();
+        if (!this.shouldPreserveStateOnBreak()) {
+            IItemHandler upgrades = this.getUpgradesInventory();
             if (upgrades != null) {
                 for (int i = 0; i < upgrades.getSlots(); i++) {
                     if (!upgrades.getStackInSlot(i).isEmpty()) {
@@ -647,7 +647,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
 
     public final String getRedstoneButtonText(int mode) {
         try {
-            return getRedstoneButtonLabels().get(mode);
+            return this.getRedstoneButtonLabels().get(mode);
         } catch (ArrayIndexOutOfBoundsException e) {
             return "<ERROR>";
         }
@@ -658,7 +658,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
     }
 
     public int getRedstoneModeCount() {
-        return getRedstoneButtonLabels().size();
+        return this.getRedstoneButtonLabels().size();
     }
 
     public String getRedstoneTabTitle() {
@@ -672,7 +672,7 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
      * @return true if state should be preserved, false otherwise
      */
     public boolean shouldPreserveStateOnBreak() {
-        return preserveStateOnBreak;
+        return this.preserveStateOnBreak;
     }
 
     public void setPreserveStateOnBreak(boolean preserveStateOnBreak) {
@@ -685,12 +685,12 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
      * remember to call the super method!
      */
     protected void onUpgradesChanged() {
-        actualSpeedMult = (float) Math.pow(ConfigHandler.machineProperties.speedUpgradeSpeedMultiplier, Math.min(10, getUpgrades(IItemRegistry.EnumUpgrade.SPEED)));
-        actualUsageMult = (float) Math.pow(ConfigHandler.machineProperties.speedUpgradeUsageMultiplier, Math.min(10, getUpgrades(IItemRegistry.EnumUpgrade.SPEED)));
+        this.actualSpeedMult = (float) Math.pow(ConfigHandler.machineProperties.speedUpgradeSpeedMultiplier, Math.min(10, this.getUpgrades(IItemRegistry.EnumUpgrade.SPEED)));
+        this.actualUsageMult = (float) Math.pow(ConfigHandler.machineProperties.speedUpgradeUsageMultiplier, Math.min(10, this.getUpgrades(IItemRegistry.EnumUpgrade.SPEED)));
     }
 
     public UpgradeCache getUpgradeCache() {
-        return upgradeCache;
+        return this.upgradeCache;
     }
 
     public class UpgradeHandler extends BaseItemStackHandler {
@@ -701,19 +701,19 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
         @Override
         public boolean isItemValid(int slot, ItemStack itemStack) {
             return itemStack.isEmpty()
-                    || applicableUpgrades.contains(itemStack.getItem())
-                    || applicableCustomUpgrades.contains(makeUpgradeKey(itemStack));
+                    || TileEntityBase.this.applicableUpgrades.contains(itemStack.getItem())
+                    || TileEntityBase.this.applicableCustomUpgrades.contains(makeUpgradeKey(itemStack));
         }
 
         @Override
         protected void onContentsChanged(int slot) {
-            upgradeCache.invalidate();
+            TileEntityBase.this.upgradeCache.invalidate();
         }
     }
 
     public class UpgradeCache {
         private final int[] upgradeCount = new int[IItemRegistry.EnumUpgrade.values().length];
-        private Map<String,Integer> customUpgradeCount;
+        private Map<String, Integer> customUpgradeCount;
         private final TileEntityBase te;
         private boolean isValid = false;
         private EnumFacing ejectDirection;
@@ -723,50 +723,50 @@ public class TileEntityBase extends TileEntity implements IGUIButtonSensitive, I
         }
 
         void validate() {
-            if (isValid) return;
+            if (this.isValid) return;
 
-            Arrays.fill(upgradeCount, 0);
-            customUpgradeCount = null;
-            ejectDirection = null;
-            IItemHandler inv = te.getUpgradesInventory();
+            Arrays.fill(this.upgradeCount, 0);
+            this.customUpgradeCount = null;
+            this.ejectDirection = null;
+            IItemHandler inv = this.te.getUpgradesInventory();
             for (int i = 0; i < inv.getSlots(); i++) {
                 ItemStack stack = inv.getStackInSlot(i);
                 if (stack.getItem() instanceof ItemMachineUpgrade) {
                     // native upgrade
                     IItemRegistry.EnumUpgrade type = ((ItemMachineUpgrade) stack.getItem()).getUpgradeType();
-                    upgradeCount[type.ordinal()] += inv.getStackInSlot(i).getCount();
+                    this.upgradeCount[type.ordinal()] += inv.getStackInSlot(i).getCount();
                     if (type == IItemRegistry.EnumUpgrade.DISPENSER && stack.hasTagCompound()) {
-                        ejectDirection = EnumFacing.byName(NBTUtil.getString(stack, ItemMachineUpgrade.NBT_DIRECTION));
+                        this.ejectDirection = EnumFacing.byName(NBTUtil.getString(stack, ItemMachineUpgrade.NBT_DIRECTION));
                     }
                 } else if (!inv.getStackInSlot(i).isEmpty()) {
                     // custom upgrade from another mod
-                    if (customUpgradeCount == null)
-                        customUpgradeCount = Maps.newHashMap();
+                    if (this.customUpgradeCount == null)
+                        this.customUpgradeCount = Maps.newHashMap();
                     String key = makeUpgradeKey(stack);
-                    customUpgradeCount.put(key, customUpgradeCount.getOrDefault(key, 0) + stack.getCount());
+                    this.customUpgradeCount.put(key, this.customUpgradeCount.getOrDefault(key, 0) + stack.getCount());
                 }
             }
-            te.onUpgradesChanged();
-            isValid = true;
+            this.te.onUpgradesChanged();
+            this.isValid = true;
         }
 
         /**
          * Mark the upgrade cache as invalid.  It will be revalidated at the start of the next update tick for the TE.
          */
         public void invalidate() {
-            isValid = false;
+            this.isValid = false;
         }
 
         public int getUpgrades(IItemRegistry.EnumUpgrade type) {
-            return upgradeCount[type.ordinal()];
+            return this.upgradeCount[type.ordinal()];
         }
 
         public int getUpgrades(ItemStack stack) {
-            return customUpgradeCount == null ? 0 : customUpgradeCount.getOrDefault(makeUpgradeKey(stack), 0);
+            return this.customUpgradeCount == null ? 0 : this.customUpgradeCount.getOrDefault(makeUpgradeKey(stack), 0);
         }
 
         EnumFacing getEjectDirection() {
-            return ejectDirection;
+            return this.ejectDirection;
         }
     }
 }

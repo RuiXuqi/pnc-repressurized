@@ -2,8 +2,8 @@ package me.desht.pneumaticcraft.common.network;
 
 import io.netty.buffer.ByteBuf;
 import me.desht.pneumaticcraft.api.item.IItemRegistry;
-import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import me.desht.pneumaticcraft.common.item.ItemPneumaticArmor;
+import me.desht.pneumaticcraft.common.pneumatic_armor.CommonArmorHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 
@@ -39,11 +39,11 @@ public class PacketJetBootsActivate extends AbstractPacket<PacketJetBootsActivat
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        state = buf.readBoolean();
+        this.state = buf.readBoolean();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeBoolean(state);
+        buf.writeBoolean(this.state);
     }
 }

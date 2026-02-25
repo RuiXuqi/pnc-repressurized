@@ -24,7 +24,7 @@ public class GuiAirConditionerOptions extends IOptionPage.SimpleToggleableOption
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
             Minecraft.getMinecraft().player.closeScreen();
-            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(getRenderHandler(), ArmorHUDLayout.LayoutTypes.AIR_CON));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.getRenderHandler(), ArmorHUDLayout.LayoutTypes.AIR_CON));
         }
     }
 

@@ -24,24 +24,24 @@ public class PacketAmadronTradeNotifyDeal extends PacketAbstractAmadronTrade<Pac
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        offerAmount = buf.readInt();
-        buyingPlayer = ByteBufUtils.readUTF8String(buf);
+        this.offerAmount = buf.readInt();
+        this.buyingPlayer = ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeInt(offerAmount);
-        ByteBufUtils.writeUTF8String(buf, buyingPlayer);
+        buf.writeInt(this.offerAmount);
+        ByteBufUtils.writeUTF8String(buf, this.buyingPlayer);
     }
 
     @Override
     public void handleClientSide(PacketAmadronTradeNotifyDeal message, EntityPlayer player) {
         if (AmadronOfferSettings.notifyOfDealMade)
             player.sendStatusMessage(new TextComponentTranslation("message.amadron.playerBought",
-                    message.buyingPlayer,
-                    WidgetAmadronOffer.getStringForObject(message.getOffer().getOutput(), message.offerAmount),
-                    WidgetAmadronOffer.getStringForObject(message.getOffer().getInput(), message.offerAmount)),
+                            message.buyingPlayer,
+                            WidgetAmadronOffer.getStringForObject(message.getOffer().getOutput(), message.offerAmount),
+                            WidgetAmadronOffer.getStringForObject(message.getOffer().getInput(), message.offerAmount)),
                     false);
     }
 

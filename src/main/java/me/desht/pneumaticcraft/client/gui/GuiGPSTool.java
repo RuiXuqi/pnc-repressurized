@@ -22,11 +22,11 @@ public class GuiGPSTool extends GuiPneumaticScreenBase {
     private final int metadata;
 
     public GuiGPSTool(BlockPos gpsLoc, String oldVarName, int metadata) {
-        oldGPSLoc = gpsLoc;
+        this.oldGPSLoc = gpsLoc;
         this.oldVarName = oldVarName;
         this.metadata = metadata;
     }
-    
+
     public GuiGPSTool(BlockPos gpsLoc, String oldVarName) {
         this(gpsLoc, oldVarName, -1);
     }
@@ -35,66 +35,66 @@ public class GuiGPSTool extends GuiPneumaticScreenBase {
     public void initGui() {
         super.initGui();
         int[] oldText = new int[3];
-        if (textFields[0] == null) {
-            oldText[0] = oldGPSLoc.getX();
-            oldText[1] = oldGPSLoc.getY();
-            oldText[2] = oldGPSLoc.getZ();
+        if (this.textFields[0] == null) {
+            oldText[0] = this.oldGPSLoc.getX();
+            oldText[1] = this.oldGPSLoc.getY();
+            oldText[2] = this.oldGPSLoc.getZ();
         } else {
             for (int i = 0; i < 3; i++)
-                oldText[i] = textFields[i].getValue();
+                oldText[i] = this.textFields[i].getValue();
         }
-        int xMiddle = width / 2;
-        int yMiddle = height / 2;
+        int xMiddle = this.width / 2;
+        int yMiddle = this.height / 2;
         for (int i = 0; i < 3; i++) {
-            textFields[i] = new WidgetTextFieldNumber(fontRenderer, xMiddle - TEXTFIELD_WIDTH / 2, yMiddle - 27 + i * 22, TEXTFIELD_WIDTH, fontRenderer.FONT_HEIGHT);
-            textFields[i].setValue(oldText[i]);
+            this.textFields[i] = new WidgetTextFieldNumber(this.fontRenderer, xMiddle - TEXTFIELD_WIDTH / 2, yMiddle - 27 + i * 22, TEXTFIELD_WIDTH, this.fontRenderer.FONT_HEIGHT);
+            this.textFields[i].setValue(oldText[i]);
             if (i == 1) {
-                textFields[i].minValue = 0;
-                textFields[i].maxValue = 255;
+                this.textFields[i].minValue = 0;
+                this.textFields[i].maxValue = 255;
             }
-            addWidget(textFields[i]);
+            this.addWidget(this.textFields[i]);
         }
 
         for (int i = 0; i < 3; i++) {
-            buttonList.add(new GuiButton(    i * 4, xMiddle - 49 - TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "-10"));
-            buttonList.add(new GuiButton(1 + i * 4, xMiddle - 25 - TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "-1"));
-            buttonList.add(new GuiButton(2 + i * 4, xMiddle + 3 + TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "+1"));
-            buttonList.add(new GuiButton(3 + i * 4, xMiddle + 27 + TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "+10"));
+            this.buttonList.add(new GuiButton(i * 4, xMiddle - 49 - TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "-10"));
+            this.buttonList.add(new GuiButton(1 + i * 4, xMiddle - 25 - TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "-1"));
+            this.buttonList.add(new GuiButton(2 + i * 4, xMiddle + 3 + TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "+1"));
+            this.buttonList.add(new GuiButton(3 + i * 4, xMiddle + 27 + TEXTFIELD_WIDTH / 2, yMiddle - 32 + i * 22, 22, 20, "+10"));
         }
 
-        if (variableField != null) oldVarName = variableField.getText();
-        variableField = new WidgetTextField(fontRenderer, xMiddle - 50, yMiddle + 60, 100, fontRenderer.FONT_HEIGHT);
-        variableField.setText(oldVarName);
-        addWidget(variableField);
+        if (this.variableField != null) this.oldVarName = this.variableField.getText();
+        this.variableField = new WidgetTextField(this.fontRenderer, xMiddle - 50, yMiddle + 60, 100, this.fontRenderer.FONT_HEIGHT);
+        this.variableField.setText(this.oldVarName);
+        this.addWidget(this.variableField);
 
         String var = I18n.format("gui.progWidget.coordinate.variable");
-        addLabel(var, xMiddle - 62 - fontRenderer.getStringWidth(var), yMiddle + 61);
-        addLabel("#", xMiddle - 60, yMiddle + 61);
+        this.addLabel(var, xMiddle - 62 - this.fontRenderer.getStringWidth(var), yMiddle + 61);
+        this.addLabel("#", xMiddle - 60, yMiddle + 61);
     }
 
     @Override
     protected void actionPerformed(GuiButton button) {
-        textFields[button.id / 4].setValue(textFields[button.id / 4].getValue() + BUTTON_ACTIONS[button.id % 4]);
+        this.textFields[button.id / 4].setValue(this.textFields[button.id / 4].getValue() + BUTTON_ACTIONS[button.id % 4]);
     }
 
     @Override
     public void drawScreen(int par1, int par2, float par3) {
-        drawDefaultBackground();
+        this.drawDefaultBackground();
         super.drawScreen(par1, par2, par3);
 
-        int xMiddle = width / 2;
-        int yMiddle = height / 2;
+        int xMiddle = this.width / 2;
+        int yMiddle = this.height / 2;
         int stringX = xMiddle - 60 - TEXTFIELD_WIDTH / 2;
-        drawCenteredString(fontRenderer, new ItemStack(Itemss.GPS_TOOL).getDisplayName(), xMiddle, yMiddle - 44, 0xFFFFFFFF);
-        drawString(fontRenderer, "X:", stringX, yMiddle - 22 - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
-        drawString(fontRenderer, "Y:", stringX, yMiddle - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
-        drawString(fontRenderer, "Z:", stringX, yMiddle + 22 - fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
+        this.drawCenteredString(this.fontRenderer, new ItemStack(Itemss.GPS_TOOL).getDisplayName(), xMiddle, yMiddle - 44, 0xFFFFFFFF);
+        this.drawString(this.fontRenderer, "X:", stringX, yMiddle - 22 - this.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
+        this.drawString(this.fontRenderer, "Y:", stringX, yMiddle - this.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
+        this.drawString(this.fontRenderer, "Z:", stringX, yMiddle + 22 - this.fontRenderer.FONT_HEIGHT / 2, 0xFFFFFFFF);
     }
 
     @Override
     public void onGuiClosed() {
-        BlockPos newPos = new BlockPos(textFields[0].getValue(), textFields[1].getValue(), textFields[2].getValue());
-        NetworkHandler.sendToServer(new PacketChangeGPSToolCoordinate(newPos.equals(oldGPSLoc) ? new BlockPos(-1, -1, -1) : newPos, variableField.getText(), metadata));
+        BlockPos newPos = new BlockPos(this.textFields[0].getValue(), this.textFields[1].getValue(), this.textFields[2].getValue());
+        NetworkHandler.sendToServer(new PacketChangeGPSToolCoordinate(newPos.equals(this.oldGPSLoc) ? new BlockPos(-1, -1, -1) : newPos, this.variableField.getText(), this.metadata));
     }
 
     @Override

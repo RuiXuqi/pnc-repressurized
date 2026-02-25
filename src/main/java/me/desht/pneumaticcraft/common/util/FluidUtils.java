@@ -22,8 +22,8 @@ public class FluidUtils {
     /**
      * Attempt to extract fluid from the given fluid handler into the given fluid-containing item.
      *
-     * @param srcHandler fluid handler into which to place the fluid
-     * @param destStack the fluid container item to extract from
+     * @param srcHandler    fluid handler into which to place the fluid
+     * @param destStack     the fluid container item to extract from
      * @param returnedItems the modified fluid container after extraction
      * @return true if any fluid was moved, false otherwise
      */
@@ -41,8 +41,8 @@ public class FluidUtils {
     /**
      * Attempt to insert fluid into the given fluid handler from the given fluid container item.
      *
-     * @param handler the handler to extract from
-     * @param srcStack the fluid container item to insert to
+     * @param handler       the handler to extract from
+     * @param srcStack      the fluid container item to insert to
      * @param returnedItems the modified fluid container after insertion
      * @return true if any fluid was moved, false otherwise
      */
@@ -61,10 +61,10 @@ public class FluidUtils {
      * Have the player attempt to insert liquid into a tile entity, which must support FLUID_HANDLER_CAPABILITY.
      * The player's held item will be updated if any fluid was inserted.
      *
-     * @param te the tile entity to insert into
-     * @param face the face of the tile entity's block to insert to
+     * @param te     the tile entity to insert into
+     * @param face   the face of the tile entity's block to insert to
      * @param player the player
-     * @param hand the hand being used
+     * @param hand   the hand being used
      * @return true if any fluid was inserted, false otherwise
      */
     public static boolean tryFluidInsertion(TileEntity te, EnumFacing face, EntityPlayer player, EnumHand hand) {
@@ -75,10 +75,10 @@ public class FluidUtils {
      * Have the player attempt to extract liquid from a tile entity, which must support FLUID_HANDLER_CAPABILITY.
      * The player's held item will be updated if any fluid was extracted.
      *
-     * @param te the tile entity to extract from
-     * @param face the face of the tile entity's block to extract from
+     * @param te     the tile entity to extract from
+     * @param face   the face of the tile entity's block to extract from
      * @param player the player
-     * @param hand the hand being used
+     * @param hand   the hand being used
      * @return true if any fluid was extracted, false otherwise
      */
     public static boolean tryFluidExtraction(TileEntity te, EnumFacing face, EntityPlayer player, EnumHand hand) {
@@ -109,7 +109,7 @@ public class FluidUtils {
      * Check if the given blockpos contains a fluid source block.
      *
      * @param world the world
-     * @param pos the blockpos
+     * @param pos   the blockpos
      * @return true if there is a fluid source block at the given blockpos, false otherwise
      */
     public static boolean isSourceBlock(World world, BlockPos pos) {
@@ -120,7 +120,7 @@ public class FluidUtils {
      * Check if the given blockpos contains a fluid source block of a certain fluid (os possibly any fluid)
      *
      * @param world the world
-     * @param pos the blockpos
+     * @param pos   the blockpos
      * @param fluid the fluid, may be null to match any fluid
      * @return true if there is a fluid source block of the right fluid at the given blockpos, false otherwise
      */
@@ -136,8 +136,8 @@ public class FluidUtils {
     /**
      * Get a fluidstack for the fluid at the given position, possibly also draining it.
      *
-     * @param world the world
-     * @param pos the blockpos
+     * @param world   the world
+     * @param pos     the blockpos
      * @param doDrain true if the fluid at the position should be drained
      * @return a fluidstack of the fluid, or null if no fluid could be drained
      */

@@ -27,12 +27,12 @@ public class ProgWidgetPlace extends ProgWidgetDigAndPlace implements ISidedWidg
 
     @Override
     public void setSides(boolean[] sides) {
-        placeDir = getDirForSides(sides);
+        this.placeDir = getDirForSides(sides);
     }
 
     @Override
     public boolean[] getSides() {
-        return getSidesFromDir(placeDir);
+        return getSidesFromDir(this.placeDir);
     }
 
     public static EnumFacing getDirForSides(boolean[] sides) {
@@ -54,7 +54,7 @@ public class ProgWidgetPlace extends ProgWidgetDigAndPlace implements ISidedWidg
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Placing direction: " + PneumaticCraftUtils.getOrientationName(placeDir));
+        curTooltip.add("Placing direction: " + PneumaticCraftUtils.getOrientationName(this.placeDir));
     }
 
     @Override
@@ -75,19 +75,19 @@ public class ProgWidgetPlace extends ProgWidgetDigAndPlace implements ISidedWidg
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        return setupMaxActions(new DroneAIPlace(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
+        return this.setupMaxActions(new DroneAIPlace(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("dir", placeDir.ordinal());
+        tag.setInteger("dir", this.placeDir.ordinal());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        placeDir = EnumFacing.byIndex(tag.getInteger("dir"));
+        this.placeDir = EnumFacing.byIndex(tag.getInteger("dir"));
     }
 
     @Override

@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
  * MineChess
  *
  * @author MineMaarten
- *         www.minemaarten.com
+ * www.minemaarten.com
  * @license Lesser GNU Public License v3 (http://www.gnu.org/licenses/lgpl.html)
  */
 
@@ -28,19 +28,19 @@ public abstract class LocationDoublePacket<REQ extends AbstractPacket<REQ>> exte
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeDouble(x);
-        buf.writeDouble(y);
-        buf.writeDouble(z);
+        buf.writeDouble(this.x);
+        buf.writeDouble(this.y);
+        buf.writeDouble(this.z);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        x = buf.readDouble();
-        y = buf.readDouble();
-        z = buf.readDouble();
+        this.x = buf.readDouble();
+        this.y = buf.readDouble();
+        this.z = buf.readDouble();
     }
 
     NetworkRegistry.TargetPoint getTargetPoint(World world) {
-        return new NetworkRegistry.TargetPoint(world.provider.getDimension(), x, y, z, TileEntityConstants.PACKET_UPDATE_DISTANCE);
+        return new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.x, this.y, this.z, TileEntityConstants.PACKET_UPDATE_DISTANCE);
     }
 }

@@ -45,7 +45,7 @@ import static me.desht.pneumaticcraft.common.item.ItemPneumaticArmor.isPneumatic
 public class EventHandlerPneumaticArmor {
     private static final Map<Integer, Integer> targetingTracker = new HashMap<>();
 
-    private static final Map<UUID,Long> armorJumping = new HashMap<>();
+    private static final Map<UUID, Long> armorJumping = new HashMap<>();
 
     @SubscribeEvent
     public void onMobTargetSet(LivingSetAttackTargetEvent event) {
@@ -61,7 +61,7 @@ public class EventHandlerPneumaticArmor {
                     CommonArmorHandler handler = CommonArmorHandler.getHandlerForPlayer(player);
                     if (handler.isArmorReady(EntityEquipmentSlot.HEAD) && handler.getArmorPressure(EntityEquipmentSlot.HEAD) > 0 && handler.isEntityTrackerEnabled()) {
                         NetworkHandler.sendTo(new PacketSendArmorHUDMessage(
-                                "pneumaticHelmet.message.targetWarning", 60, 0x70FF4000, event.getEntityLiving().getName()),
+                                        "pneumaticHelmet.message.targetWarning", 60, 0x70FF4000, event.getEntityLiving().getName()),
                                 player
                         );
                     }
@@ -144,7 +144,7 @@ public class EventHandlerPneumaticArmor {
                         }
                         if ((player.ticksExisted & 0xf) == 0) {
                             NetworkHandler.sendToAllAround(new PacketPlaySound(Sounds.LEAKING_GAS_SOUND, SoundCategory.PLAYERS, player.posX, player.posY, player.posZ, 0.5f, 0.7f, false), player.world);
-                            tryExtinguish(player);
+                            this.tryExtinguish(player);
                         }
                     }
                 }
@@ -205,8 +205,8 @@ public class EventHandlerPneumaticArmor {
                 player.motionY += actualBoost * 0.15f;
                 float rotRad = player.rotationYaw * 0.017453292f;  // deg2rad
                 float scale = player.isSprinting() ? 0.25f * actualBoost : 0.15f * actualBoost;
-                if (player.motionX != 0) player.motionX -= (double)(MathHelper.sin(rotRad) * scale);
-                if (player.motionZ != 0) player.motionZ += (double)(MathHelper.cos(rotRad) * scale);
+                if (player.motionX != 0) player.motionX -= MathHelper.sin(rotRad) * scale;
+                if (player.motionZ != 0) player.motionZ += MathHelper.cos(rotRad) * scale;
                 armorJumping.put(player.getUniqueID(), player.world.getTotalWorldTime());
                 int airUsed = (int) Math.ceil(PneumaticValues.PNEUMATIC_ARMOR_JUMP_USAGE * actualBoost * (player.isSprinting() ? 2 : 1));
                 handler.addAir(EntityEquipmentSlot.LEGS, -airUsed);
@@ -269,7 +269,7 @@ public class EventHandlerPneumaticArmor {
                     if (state != null && state.isEnabled()) {
                         int nParticles = state.isActive() ? 5 : 1;
                         Vec3d jetVec = state.shouldRotatePlayer() ? player.getLookVec().scale(-0.5) : IDLE_VEC;
-                        Vec3d feet = getFeetPos(player, state.shouldRotatePlayer());
+                        Vec3d feet = this.getFeetPos(player, state.shouldRotatePlayer());
                         for (int i = 0; i < nParticles; i++) {
                             PneumaticCraftRepressurized.proxy.playCustomParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, player.world,
                                     feet.x, feet.y, feet.z, jetVec.x, jetVec.y, jetVec.z);
@@ -307,7 +307,8 @@ public class EventHandlerPneumaticArmor {
             // inform the other players of the new player's state if necessary
             if (isPneumaticArmorPiece(newPlayer, EntityEquipmentSlot.FEET)) {
                 JetBootsStateTracker.JetBootsState state = tracker.getJetBootsState(newPlayer);
-                if (state != null) NetworkHandler.sendToDimension(new PacketJetBootsStateSync(newPlayer, state), event.getWorld().provider.getDimension());
+                if (state != null)
+                    NetworkHandler.sendToDimension(new PacketJetBootsStateSync(newPlayer, state), event.getWorld().provider.getDimension());
             }
         }
     }

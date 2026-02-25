@@ -64,7 +64,7 @@ public class ProgWidgetRename extends ProgWidget implements IRenamingWidget, IVa
 
         @Override
         public boolean shouldExecute() {
-            drone.setName(widget.getNewName() != null ? widget.getNewName() : "Drone");
+            this.drone.setName(this.widget.getNewName() != null ? this.widget.getNewName() : "Drone");
             return false;
         }
 
@@ -72,7 +72,7 @@ public class ProgWidgetRename extends ProgWidget implements IRenamingWidget, IVa
 
     @Override
     public String getNewName() {
-        return getConnectedParameters()[0] != null ? new TextVariableParser(((ProgWidgetString) getConnectedParameters()[0]).string, aiManager).parse() : null;
+        return this.getConnectedParameters()[0] != null ? new TextVariableParser(((ProgWidgetString) this.getConnectedParameters()[0]).string, this.aiManager).parse() : null;
     }
 
     @Override

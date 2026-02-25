@@ -17,15 +17,15 @@ public class PacketSendNBTPacket extends LocationIntPacket<PacketSendNBTPacket> 
 
     public PacketSendNBTPacket(TileEntity te) {
         super(te.getPos());
-        tag = new NBTTagCompound();
-        te.writeToNBT(tag);
+        this.tag = new NBTTagCompound();
+        te.writeToNBT(this.tag);
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
         super.toBytes(buffer);
         try {
-            new PacketBuffer(buffer).writeCompoundTag(tag);
+            new PacketBuffer(buffer).writeCompoundTag(this.tag);
         } catch (Exception e) {
             Log.error("An exception occured when trying to encode a Send NBT Packet.");
             e.printStackTrace();
@@ -36,7 +36,7 @@ public class PacketSendNBTPacket extends LocationIntPacket<PacketSendNBTPacket> 
     public void fromBytes(ByteBuf buffer) {
         super.fromBytes(buffer);
         try {
-            tag = new PacketBuffer(buffer).readCompoundTag();
+            this.tag = new PacketBuffer(buffer).readCompoundTag();
         } catch (Exception e) {
             Log.error("An exception occured when trying to decode a Send NBT Packet.");
             e.printStackTrace();

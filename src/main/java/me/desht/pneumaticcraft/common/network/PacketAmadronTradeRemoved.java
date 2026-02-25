@@ -19,9 +19,9 @@ public class PacketAmadronTradeRemoved extends PacketAbstractAmadronTrade<Packet
     public void handleClientSide(PacketAmadronTradeRemoved message, EntityPlayer player) {
         if (AmadronOfferSettings.notifyOfTradeRemoval)
             player.sendStatusMessage(new TextComponentTranslation("message.amadron.playerRemovedTrade",
-                    message.getOffer().getVendor(),
-                    WidgetAmadronOffer.getStringForObject(message.getOffer().getInput()),
-                    WidgetAmadronOffer.getStringForObject(message.getOffer().getOutput())),
+                            message.getOffer().getVendor(),
+                            WidgetAmadronOffer.getStringForObject(message.getOffer().getInput()),
+                            WidgetAmadronOffer.getStringForObject(message.getOffer().getOutput())),
                     false);
     }
 

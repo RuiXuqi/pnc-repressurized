@@ -21,16 +21,16 @@ public interface ISerializableTanks {
      * @return a map of tag names to tanks
      */
     @Nonnull
-    Map<String,FluidTank> getSerializableTanks();
+    Map<String, FluidTank> getSerializableTanks();
 
     default void deserializeTanks(NBTTagCompound tag) {
-        for (Map.Entry<String,FluidTank> entry : getSerializableTanks().entrySet()) {
+        for (Map.Entry<String, FluidTank> entry : this.getSerializableTanks().entrySet()) {
             entry.getValue().readFromNBT(tag.getCompoundTag(entry.getKey()));
         }
     }
 
     default void serializeTanks(ItemStack customDrop) {
-        for (Map.Entry<String,FluidTank> entry : getSerializableTanks().entrySet()) {
+        for (Map.Entry<String, FluidTank> entry : this.getSerializableTanks().entrySet()) {
             serializeTank(entry.getValue(), customDrop, entry.getKey());
         }
     }
@@ -40,30 +40,30 @@ public interface ISerializableTanks {
      * the block, or when using the item's fluid handler capability.  If the tank is empty, it will be removed
      * from the stack's NBT.
      *
-     * @param tank the fluid tank
-     * @param stack the itemstack to save to
+     * @param tank    the fluid tank
+     * @param stack   the itemstack to save to
      * @param tagName name of the subtag in the itemstack's NBT to store the tank data
      */
-     static void serializeTank(FluidTank tank, ItemStack stack, String tagName) {
-         NBTTagCompound subTag = NBTUtil.getCompoundTag(stack, NBT_SAVED_TANKS);
-         if (tank.getFluid() != null && tank.getFluid().amount > 0) {
-             subTag.setTag(tagName, tank.writeToNBT(new NBTTagCompound()));
-         } else {
-             subTag.removeTag(tagName);
-         }
-         if (!subTag.isEmpty()) {
-             NBTUtil.setCompoundTag(stack, NBT_SAVED_TANKS, subTag);
-         } else {
-             NBTUtil.removeTag(stack, NBT_SAVED_TANKS);
-         }
+    static void serializeTank(FluidTank tank, ItemStack stack, String tagName) {
+        NBTTagCompound subTag = NBTUtil.getCompoundTag(stack, NBT_SAVED_TANKS);
+        if (tank.getFluid() != null && tank.getFluid().amount > 0) {
+            subTag.setTag(tagName, tank.writeToNBT(new NBTTagCompound()));
+        } else {
+            subTag.removeTag(tagName);
+        }
+        if (!subTag.isEmpty()) {
+            NBTUtil.setCompoundTag(stack, NBT_SAVED_TANKS, subTag);
+        } else {
+            NBTUtil.removeTag(stack, NBT_SAVED_TANKS);
+        }
     }
 
     /**
      * Deserialize some fluid tank data from an ItemStack into a fluid tank.  Useful when using the
      * item's fluid handler capability.
      *
-     * @param stack the itemstack to load from
-     * @param tagName name of the subtag in the itemstack's NBT which holds the saved tank data
+     * @param stack    the itemstack to load from
+     * @param tagName  name of the subtag in the itemstack's NBT which holds the saved tank data
      * @param capacity capacity of the created tank
      * @return the deserialized tank, or null
      */

@@ -26,12 +26,12 @@ public abstract class EntityDroneBase extends EntityCreature {
     }
 
     public void renderExtras(double x, double y, double z, float partialTicks) {
-        BlockPos diggingPos = getDugBlock();
+        BlockPos diggingPos = this.getDugBlock();
         if (diggingPos != null) {
-            if (digLaser == null) {
-                digLaser = new RenderLaser(0xFF000000 | getLaserColor());
+            if (this.digLaser == null) {
+                this.digLaser = new RenderLaser(0xFF000000 | this.getLaserColor());
             }
-            digLaser.render(partialTicks, 0, getLaserOffsetY(), 0, diggingPos.getX() + 0.5 - posX, diggingPos.getY() + 0.45 - posY, diggingPos.getZ() + 0.5 - posZ);
+            this.digLaser.render(partialTicks, 0, this.getLaserOffsetY(), 0, diggingPos.getX() + 0.5 - this.posX, diggingPos.getY() + 0.45 - this.posY, diggingPos.getZ() + 0.5 - this.posZ);
         }
     }
 

@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasicThermopneumaticProcessingPlantRecipe implements IThermopneumaticProcessingPlantRecipe {
-	public static final List<IThermopneumaticProcessingPlantRecipe> recipes = new ArrayList<>();
-	
+    public static final List<IThermopneumaticProcessingPlantRecipe> recipes = new ArrayList<>();
+
     private final FluidStack inputLiquid, outputLiquid;
     private final ItemStack inputItem;
     private final float requiredPressure;
@@ -32,10 +32,10 @@ public class BasicThermopneumaticProcessingPlantRecipe implements IThermopneumat
 
     @Override
     public boolean isValidRecipe(FluidStack fluidStack, @Nonnull ItemStack inputItem) {
-        if (inputLiquid != null) {
+        if (this.inputLiquid != null) {
             if (fluidStack == null) return false;
-            if (!Fluids.areFluidsEqual(fluidStack.getFluid(), inputLiquid.getFluid())) return false;
-            if (fluidStack.amount < inputLiquid.amount) return false;
+            if (!Fluids.areFluidsEqual(fluidStack.getFluid(), this.inputLiquid.getFluid())) return false;
+            if (fluidStack.amount < this.inputLiquid.amount) return false;
         }
         if (!this.inputItem.isEmpty()) {
             if (inputItem.isEmpty()) return false;
@@ -45,64 +45,64 @@ public class BasicThermopneumaticProcessingPlantRecipe implements IThermopneumat
         }
         return true;
     }
-    
+
     @Override
-    public boolean isValidInput(FluidStack inputFluid){
-        return inputLiquid != null && Fluids.areFluidsEqual(inputFluid.getFluid(), inputLiquid.getFluid());
+    public boolean isValidInput(FluidStack inputFluid) {
+        return this.inputLiquid != null && Fluids.areFluidsEqual(inputFluid.getFluid(), this.inputLiquid.getFluid());
     }
-    
+
     @Override
-    public boolean isValidInput(ItemStack inputItem){
+    public boolean isValidInput(ItemStack inputItem) {
         return !this.inputItem.isEmpty() && inputItem.isItemEqual(this.inputItem) || PneumaticCraftUtils.isSameOreDictStack(inputItem, this.inputItem);
     }
 
     @Override
     public FluidStack getRecipeOutput(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        return outputLiquid;
+        return this.outputLiquid;
     }
 
     @Override
     public void useRecipeItems(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        if (inputLiquid != null) inputTank.amount -= inputLiquid.amount;
+        if (this.inputLiquid != null) inputTank.amount -= this.inputLiquid.amount;
         if (!this.inputItem.isEmpty()) inputItem.shrink(this.inputItem.getCount());
     }
 
     @Override
     public void useResources(IFluidHandler fluidHandler, IItemHandler itemHandler) {
-        if (inputLiquid != null) fluidHandler.drain(inputLiquid.amount, true);
-        itemHandler.extractItem(0, inputItem.getCount(), false);
+        if (this.inputLiquid != null) fluidHandler.drain(this.inputLiquid.amount, true);
+        itemHandler.extractItem(0, this.inputItem.getCount(), false);
     }
 
     @Override
     public double getRequiredTemperature(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        return requiredTemperature;
+        return this.requiredTemperature;
     }
 
     @Override
     public float getRequiredPressure(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        return requiredPressure;
+        return this.requiredPressure;
     }
 
     @Override
     public double heatUsed(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        return (requiredTemperature - HeatExchangerLogicAmbient.BASE_AMBIENT_TEMP) / 10D;
+        return (this.requiredTemperature - HeatExchangerLogicAmbient.BASE_AMBIENT_TEMP) / 10D;
     }
 
     @Override
     public int airUsed(FluidStack inputTank, @Nonnull ItemStack inputItem) {
-        return (int) (requiredPressure * 50);
+        return (int) (this.requiredPressure * 50);
     }
 
     public FluidStack getInputLiquid() {
-        return inputLiquid;
+        return this.inputLiquid;
     }
 
     public FluidStack getOutputLiquid() {
-        return outputLiquid;
+        return this.outputLiquid;
     }
 
     @Nonnull
     public ItemStack getInputItem() {
-        return inputItem;
+        return this.inputItem;
     }
 }

@@ -19,8 +19,8 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
     @Override
     public void renderTileEntityFast(T te, double x, double y, double z, float partialTicks, int destroyStage, float partial, BufferBuilder buffer) {
         if (!te.getWorld().getChunkProvider().provideChunk(te.getPos().getX() >> 4, te.getPos().getZ() >> 4).isEmpty()) {
-            for (TankRenderInfo tankRenderInfo : getTanksToRender(te)) {
-                doRender(te, x, y, z, buffer, tankRenderInfo);
+            for (TankRenderInfo tankRenderInfo : this.getTanksToRender(te)) {
+                this.doRender(te, x, y, z, buffer, tankRenderInfo);
             }
         }
     }
@@ -33,12 +33,12 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         TextureAtlasSprite still = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(f.getStill().toString());
         float u1 = still.getMinU(), v1 = still.getMinV(), u2 = still.getMaxU(), v2 = still.getMaxV();
 
-        buffer.setTranslation(x,y,z);
+        buffer.setTranslation(x, y, z);
 
-        AxisAlignedBB bounds = getRenderBounds(tank, tankRenderInfo.bounds);
+        AxisAlignedBB bounds = this.getRenderBounds(tank, tankRenderInfo.bounds);
 
         if (tankRenderInfo.shouldRender(EnumFacing.DOWN)) {
-            int downCombined = getWorld().getCombinedLight(te.getPos().down(), 0);
+            int downCombined = this.getWorld().getCombinedLight(te.getPos().down(), 0);
             int downLMa = downCombined >> 16 & 65535;
             int downLMb = downCombined & 65535;
             buffer.pos(bounds.minX, bounds.minY, bounds.maxZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u1, v2).lightmap(downLMa, downLMb).endVertex();
@@ -48,7 +48,7 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         }
 
         if (tankRenderInfo.shouldRender(EnumFacing.UP)) {
-            int upCombined = getWorld().getCombinedLight(te.getPos().up(), 0);
+            int upCombined = this.getWorld().getCombinedLight(te.getPos().up(), 0);
             int upLMa = upCombined >> 16 & 65535;
             int upLMb = upCombined & 65535;
             buffer.pos(bounds.minX, bounds.maxY, bounds.maxZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u1, v2).lightmap(upLMa, upLMb).endVertex();
@@ -58,7 +58,7 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         }
 
         if (tankRenderInfo.shouldRender(EnumFacing.NORTH)) {
-            int northCombined = getWorld().getCombinedLight(te.getPos().north(), 0);
+            int northCombined = this.getWorld().getCombinedLight(te.getPos().north(), 0);
             int northLMa = northCombined >> 16 & 65535;
             int northLMb = northCombined & 65535;
             buffer.pos(bounds.minX, bounds.minY, bounds.minZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u1, v1).lightmap(northLMa, northLMb).endVertex();
@@ -68,7 +68,7 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         }
 
         if (tankRenderInfo.shouldRender(EnumFacing.SOUTH)) {
-            int southCombined = getWorld().getCombinedLight(te.getPos().south(), 0);
+            int southCombined = this.getWorld().getCombinedLight(te.getPos().south(), 0);
             int southLMa = southCombined >> 16 & 65535;
             int southLMb = southCombined & 65535;
             buffer.pos(bounds.maxX, bounds.minY, bounds.maxZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u2, v1).lightmap(southLMa, southLMb).endVertex();
@@ -78,7 +78,7 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         }
 
         if (tankRenderInfo.shouldRender(EnumFacing.WEST)) {
-            int westCombined = getWorld().getCombinedLight(te.getPos().west(), 0);
+            int westCombined = this.getWorld().getCombinedLight(te.getPos().west(), 0);
             int westLMa = westCombined >> 16 & 65535;
             int westLMb = westCombined & 65535;
             buffer.pos(bounds.minX, bounds.minY, bounds.maxZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u1, v2).lightmap(westLMa, westLMb).endVertex();
@@ -88,7 +88,7 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         }
 
         if (tankRenderInfo.shouldRender(EnumFacing.EAST)) {
-            int eastCombined = getWorld().getCombinedLight(te.getPos().east(), 0);
+            int eastCombined = this.getWorld().getCombinedLight(te.getPos().east(), 0);
             int eastLMa = eastCombined >> 16 & 65535;
             int eastLMb = eastCombined & 65535;
             buffer.pos(bounds.maxX, bounds.minY, bounds.minZ).color(1.0f, 1.0f, 1.0f, FLUID_ALPHA).tex(u1, v1).lightmap(eastLMa, eastLMb).endVertex();
@@ -105,7 +105,8 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
         double y1 = tankBounds.minY, y2 = (tankBounds.minY + (tankHeight * percent));
         if (tank.getFluid().getFluid().getDensity() < 0) {
             double yOff = tankBounds.maxY - y2;  // lighter than air fluids move to the top of the tank
-            y1 += yOff; y2 += yOff;
+            y1 += yOff;
+            y2 += yOff;
         }
         return new AxisAlignedBB(tankBounds.minX, y1, tankBounds.minZ, tankBounds.maxX, y2, tankBounds.maxZ);
     }
@@ -113,10 +114,14 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
     static AxisAlignedBB rotateY(AxisAlignedBB in, int rot) {
         // clockwise rotation about the Y axis
         switch (rot) {
-            case 90: return new AxisAlignedBB(1 - in.minZ, in.minY, in.minX, 1 - in.maxZ, in.maxY, in.maxX);
-            case 180: return new AxisAlignedBB(1 - in.minX, in.minY, 1 - in.minZ, 1 - in.maxX, in.maxY, 1 - in.maxZ);
-            case 270: return new AxisAlignedBB(in.minZ, in.minY, 1 - in.minX, in.maxZ, in.maxY, 1 - in.maxX);
-            default: throw new IllegalArgumentException("rot must be 90, 180 or 270");
+            case 90:
+                return new AxisAlignedBB(1 - in.minZ, in.minY, in.minX, 1 - in.maxZ, in.maxY, in.maxX);
+            case 180:
+                return new AxisAlignedBB(1 - in.minX, in.minY, 1 - in.minZ, 1 - in.maxX, in.maxY, 1 - in.maxZ);
+            case 270:
+                return new AxisAlignedBB(in.minZ, in.minY, 1 - in.minX, in.maxZ, in.maxY, 1 - in.maxX);
+            default:
+                throw new IllegalArgumentException("rot must be 90, 180 or 270");
         }
     }
 
@@ -131,21 +136,21 @@ public abstract class FastFluidTESR<T extends TileEntityBase> extends FastTESR<T
             this.tank = tank;
             this.bounds = bounds;
             if (renderFaces.length == 0) {
-                faces.set(0, 6, true);
+                this.faces.set(0, 6, true);
             } else {
                 for (EnumFacing face : renderFaces) {
-                    faces.set(face.getIndex(), true);
+                    this.faces.set(face.getIndex(), true);
                 }
             }
         }
 
         TankRenderInfo without(EnumFacing face) {
-            faces.clear(face.getIndex());
+            this.faces.clear(face.getIndex());
             return this;
         }
 
         boolean shouldRender(EnumFacing face) {
-            return faces.get(face.getIndex());
+            return this.faces.get(face.getIndex());
         }
     }
 }

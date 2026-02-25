@@ -44,7 +44,7 @@ public class JEIPressureChamberRecipeCategory extends PneumaticCraftCategory<JEI
                         .setTooltipKey(IPressureChamberRecipe.getTooltipKey(stack));
                 this.addOutput(pStack);
             }
-            setUsedPressure(120, 27, recipe.getCraftingPressure(), PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE);
+            this.setUsedPressure(120, 27, recipe.getCraftingPressure(), PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE);
         }
     }
 }

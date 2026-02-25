@@ -31,15 +31,15 @@ public class GuiCoordinateTrackerOptions implements IOptionPage {
     public void initGui(IGuiScreen gui) {
         gui.getButtonList().add(new GuiButton(10, 30, 40, 150, 20, "Select Target..."));
         gui.getButtonList().add(new GuiButton(11, 30, 62, 150, 20, "Navigate to Surface..."));
-        pathEnabled = new GuiButton(12, 30, 128, 150, 20, "");
-        wirePath = new GuiButton(13, 30, 150, 150, 20, "");
-        xRayEnabled = new GuiButton(14, 30, 172, 150, 20, "");
-        pathUpdateRate = new GuiButton(15, 30, 194, 150, 20, "");
-        gui.getButtonList().add(pathEnabled);
-        gui.getButtonList().add(wirePath);
-        gui.getButtonList().add(xRayEnabled);
-        gui.getButtonList().add(pathUpdateRate);
-        updateButtonTexts();
+        this.pathEnabled = new GuiButton(12, 30, 128, 150, 20, "");
+        this.wirePath = new GuiButton(13, 30, 150, 150, 20, "");
+        this.xRayEnabled = new GuiButton(14, 30, 172, 150, 20, "");
+        this.pathUpdateRate = new GuiButton(15, 30, 194, 150, 20, "");
+        gui.getButtonList().add(this.pathEnabled);
+        gui.getButtonList().add(this.wirePath);
+        gui.getButtonList().add(this.xRayEnabled);
+        gui.getButtonList().add(this.pathUpdateRate);
+        this.updateButtonTexts();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class GuiCoordinateTrackerOptions implements IOptionPage {
                 }
                 break;
         }
-        updateButtonTexts();
+        this.updateButtonTexts();
         coordHandler.saveToConfig();
     }
 
@@ -99,23 +99,23 @@ public class GuiCoordinateTrackerOptions implements IOptionPage {
 
     private void updateButtonTexts() {
         CoordTrackUpgradeHandler coordHandler = HUDHandler.instance().getSpecificRenderer(CoordTrackUpgradeHandler.class);
-        pathEnabled.displayString = coordHandler.pathEnabled ? "Navigation Enabled" : "Navigation Disabled";
-        wirePath.displayString = coordHandler.wirePath ? "Wire Navigation" : "Tile Navigation";
-        xRayEnabled.displayString = coordHandler.xRayEnabled ? "X-Ray Enabled" : "X-Ray Disabled";
+        this.pathEnabled.displayString = coordHandler.pathEnabled ? "Navigation Enabled" : "Navigation Disabled";
+        this.wirePath.displayString = coordHandler.wirePath ? "Wire Navigation" : "Tile Navigation";
+        this.xRayEnabled.displayString = coordHandler.xRayEnabled ? "X-Ray Enabled" : "X-Ray Disabled";
         switch (coordHandler.pathUpdateSetting) {
             case 0:
-                pathUpdateRate.displayString = "Path update rate: Low";
+                this.pathUpdateRate.displayString = "Path update rate: Low";
                 break;
             case 1:
-                pathUpdateRate.displayString = "Path update rate: Normal";
+                this.pathUpdateRate.displayString = "Path update rate: Normal";
                 break;
             case 2:
-                pathUpdateRate.displayString = "Path update rate: Fast";
+                this.pathUpdateRate.displayString = "Path update rate: Fast";
                 break;
         }
-        wirePath.enabled = coordHandler.pathEnabled;
-        xRayEnabled.enabled = coordHandler.pathEnabled;
-        pathUpdateRate.enabled = coordHandler.pathEnabled;
+        this.wirePath.enabled = coordHandler.pathEnabled;
+        this.xRayEnabled.enabled = coordHandler.pathEnabled;
+        this.pathUpdateRate.enabled = coordHandler.pathEnabled;
     }
 
     @Override

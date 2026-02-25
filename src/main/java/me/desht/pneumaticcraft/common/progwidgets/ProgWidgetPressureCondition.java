@@ -28,16 +28,16 @@ public class ProgWidgetPressureCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                TileEntity te = drone.world().getTileEntity(pos);
+                TileEntity te = this.drone.world().getTileEntity(pos);
                 if (te instanceof IPneumaticMachine) {
                     float pressure = Float.MIN_VALUE;
                     for (EnumFacing d : EnumFacing.VALUES) {
-                        if (getSides()[d.ordinal()]) {
+                        if (ProgWidgetPressureCondition.this.getSides()[d.ordinal()]) {
                             IAirHandler airHandler = ((IPneumaticMachine) te).getAirHandler(d);
                             if (airHandler != null) pressure = Math.max(airHandler.getPressure(), pressure);
                         }
                     }
-                    return ((ICondition) widget).getOperator().evaluate(pressure, ((ICondition) widget).getRequiredCount());
+                    return ((ICondition) this.widget).getOperator().evaluate(pressure, ((ICondition) this.widget).getRequiredCount());
                 }
                 return false;
             }

@@ -34,7 +34,7 @@ public class ProgWidgetBlockRightClick extends ProgWidgetPlace implements IBlock
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        return setupMaxActions(new DroneAIBlockInteract(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
+        return this.setupMaxActions(new DroneAIBlockInteract(drone, (ProgWidgetAreaItemBase) widget), (IMaxActions) widget);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ProgWidgetBlockRightClick extends ProgWidgetPlace implements IBlock
 
     @Override
     public boolean isSneaking() {
-        return sneaking;
+        return this.sneaking;
     }
 
     public void setSneaking(boolean sneaking) {
@@ -55,13 +55,13 @@ public class ProgWidgetBlockRightClick extends ProgWidgetPlace implements IBlock
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("sneaking", sneaking);
+        tag.setBoolean("sneaking", this.sneaking);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        sneaking = tag.getBoolean("sneaking");
+        this.sneaking = tag.getBoolean("sneaking");
     }
 
 }

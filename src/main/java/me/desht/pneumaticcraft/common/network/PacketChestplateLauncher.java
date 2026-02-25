@@ -36,7 +36,7 @@ public class PacketChestplateLauncher extends AbstractPacket<PacketChestplateLau
 
         if (handler.getArmorPressure(EntityEquipmentSlot.CHEST) > 0.1f && handler.isArmorReady(EntityEquipmentSlot.CHEST) && upgrades > 0 && !stack.isEmpty()) {
             ItemStack toFire = player.capabilities.isCreativeMode ? ItemHandlerHelper.copyStackWithSize(stack, 1) : stack.splitStack(1);
-            Entity launchedEntity = TileEntityAirCannon.getEntityToLaunch(player.getEntityWorld(), toFire, player,true, true);
+            Entity launchedEntity = TileEntityAirCannon.getEntityToLaunch(player.getEntityWorld(), toFire, player, true, true);
 
             if (launchedEntity instanceof EntityArrow) {
                 EntityArrow arrow = (EntityArrow) launchedEntity;
@@ -56,11 +56,11 @@ public class PacketChestplateLauncher extends AbstractPacket<PacketChestplateLau
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        amount = buf.readFloat();
+        this.amount = buf.readFloat();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeFloat(amount);
+        buf.writeFloat(this.amount);
     }
 }

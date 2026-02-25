@@ -26,7 +26,7 @@ public class RenderBlockHighlight {
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.disableTexture2D();
-        RenderUtils.renderFrame(aabb, 1/64f);
+        RenderUtils.renderFrame(aabb, 1 / 64f);
         GlStateManager.enableTexture2D();
         GlStateManager.disableBlend();
         GlStateManager.popMatrix();

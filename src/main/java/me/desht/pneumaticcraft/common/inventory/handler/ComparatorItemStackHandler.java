@@ -18,13 +18,13 @@ public class ComparatorItemStackHandler extends BaseItemStackHandler {
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
-        signalLevel = -1;
+        this.signalLevel = -1;
     }
 
     @Override
     public void deserializeNBT(NBTTagCompound nbt) {
         super.deserializeNBT(nbt);
-        signalLevel = -1;
+        this.signalLevel = -1;
     }
 
     /**
@@ -33,10 +33,10 @@ public class ComparatorItemStackHandler extends BaseItemStackHandler {
      * @return a redstone signal level based on the inventory fullness
      */
     public int getComparatorValue() {
-        if (signalLevel < 0) {
-            signalLevel = ItemHandlerHelper.calcRedstoneFromInventory(this);
+        if (this.signalLevel < 0) {
+            this.signalLevel = ItemHandlerHelper.calcRedstoneFromInventory(this);
         }
-        return signalLevel;
+        return this.signalLevel;
     }
 
     /**
@@ -45,6 +45,6 @@ public class ComparatorItemStackHandler extends BaseItemStackHandler {
      * indirectly, e.g. by modifying an ItemStack returned from getStackInSlot().
      */
     public void invalidateComparatorValue() {
-        signalLevel = -1;
+        this.signalLevel = -1;
     }
 }

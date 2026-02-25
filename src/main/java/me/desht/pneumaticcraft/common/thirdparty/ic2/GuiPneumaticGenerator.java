@@ -26,39 +26,39 @@ public class GuiPneumaticGenerator extends GuiPneumaticContainerBase<TileEntityP
     @Override
     public void initGui() {
         super.initGui();
-        outputStat = addAnimatedStat("Output", IC2.glassFibreCable, 0xFF555555, false);
-        addWidget(new WidgetTemperature(0, guiLeft + 87, guiTop + 20, 273, 675,
-                te.getHeatExchangerLogic(null), 325, 625));
+        this.outputStat = this.addAnimatedStat("Output", IC2.glassFibreCable, 0xFF555555, false);
+        this.addWidget(new WidgetTemperature(0, this.guiLeft + 87, this.guiTop + 20, 273, 675,
+                this.te.getHeatExchangerLogic(null), 325, 625));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString("Upgr.", 53, 19, 0xFF404040);
+        this.fontRenderer.drawString("Upgr.", 53, 19, 0xFF404040);
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        outputStat.setText(getOutputStat());
+        this.outputStat.setText(this.getOutputStat());
     }
 
     private List<String> getOutputStat() {
         List<String> textList = new ArrayList<>();
         textList.add(TextFormatting.GRAY + "Output configuration");
-        textList.add(TextFormatting.BLACK.toString() + te.getEnergyPacketSize() + " EU/tick");
+        textList.add(TextFormatting.BLACK.toString() + this.te.getEnergyPacketSize() + " EU/tick");
         textList.add("\u00a77Currently producing:");
-        textList.add("\u00a70" + te.curEnergyProduction + " EU/tick.");
+        textList.add("\u00a70" + this.te.curEnergyProduction + " EU/tick.");
         return textList;
     }
 
     @Override
     public void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
-        if (te.getEfficiency() < 100) {
-            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", te.getEfficiency() + "%%"));
+        if (this.te.getEfficiency() < 100) {
+            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", this.te.getEfficiency() + "%%"));
         }
-        if (te.getPressure() < PneumaticValues.MIN_PRESSURE_PNEUMATIC_GENERATOR) {
+        if (this.te.getPressure() < PneumaticValues.MIN_PRESSURE_PNEUMATIC_GENERATOR) {
             curInfo.add(I18n.format("gui.tab.problems.notEnoughPressure"));
             curInfo.add(I18n.format("gui.tab.problems.applyPressure", PneumaticValues.MIN_PRESSURE_PNEUMATIC_GENERATOR));
         }

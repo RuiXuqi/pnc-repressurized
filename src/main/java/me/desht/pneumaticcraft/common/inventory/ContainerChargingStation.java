@@ -16,24 +16,24 @@ public class ContainerChargingStation extends ContainerPneumaticBase<TileEntityC
     public ContainerChargingStation(InventoryPlayer inventoryPlayer, TileEntityChargingStation te) {
         super(te);
 
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 91, 39) {
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 91, 39) {
             @Override
             public int getSlotStackLimit() {
                 return 1;
             }
         });
 
-        addUpgradeSlots(42, 29);
+        this.addUpgradeSlots(42, 29);
 
-        addArmorSlots(inventoryPlayer, 9, 8);
+        this.addArmorSlots(inventoryPlayer, 9, 8);
 
-        addPlayerSlots(inventoryPlayer, 94);
+        this.addPlayerSlots(inventoryPlayer, 94);
     }
 
     @Override
     @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-        Slot srcSlot = inventorySlots.get(slot);
+        Slot srcSlot = this.inventorySlots.get(slot);
         if (srcSlot == null || !srcSlot.getHasStack()) {
             return ItemStack.EMPTY;
         }
@@ -42,19 +42,19 @@ public class ContainerChargingStation extends ContainerPneumaticBase<TileEntityC
 
         if (slot == 0 && srcStack.getItem() instanceof ItemArmor) {
             // chargeable slot - move to armor if appropriate, player inv otherwise
-            if (!mergeItemStack(srcStack, 5, 9, false)
-                    && !mergeItemStack(srcStack, playerSlotsStart, playerSlotsStart + 36, false))
+            if (!this.mergeItemStack(srcStack, 5, 9, false)
+                    && !this.mergeItemStack(srcStack, this.playerSlotsStart, this.playerSlotsStart + 36, false))
                 return ItemStack.EMPTY;
         } else if (slot >= 5 && slot < 9 && srcStack.getItem() instanceof IPressurizable) {
             // armor slots - try to move to the charging slot if possible
-            if (!mergeItemStack(srcStack, 0, 1, false)
-                    && !mergeItemStack(srcStack, playerSlotsStart, playerSlotsStart + 36, false))
+            if (!this.mergeItemStack(srcStack, 0, 1, false)
+                    && !this.mergeItemStack(srcStack, this.playerSlotsStart, this.playerSlotsStart + 36, false))
                 return ItemStack.EMPTY;
-        } else if (slot < playerSlotsStart) {
-            if (!mergeItemStack(srcStack, playerSlotsStart, playerSlotsStart + 36, false))
+        } else if (slot < this.playerSlotsStart) {
+            if (!this.mergeItemStack(srcStack, this.playerSlotsStart, this.playerSlotsStart + 36, false))
                 return ItemStack.EMPTY;
         } else {
-            if (!mergeItemStack(srcStack, 0, playerSlotsStart, false))
+            if (!this.mergeItemStack(srcStack, 0, this.playerSlotsStart, false))
                 return ItemStack.EMPTY;
         }
 

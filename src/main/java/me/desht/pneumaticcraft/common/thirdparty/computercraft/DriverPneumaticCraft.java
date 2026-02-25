@@ -34,12 +34,12 @@ public class DriverPneumaticCraft extends DriverSidedTileEntity {
 
         InternalManagedEnvironment(TileEntityBase tile) {
             this.tile = tile;
-            setNode(Network.newNode(this, Visibility.Network).withComponent(this.tile.getType(), Visibility.Network).create());
+            this.setNode(Network.newNode(this, Visibility.Network).withComponent(this.tile.getType(), Visibility.Network).create());
         }
 
         @Override
         public String preferredName() {
-            return tile.getType();
+            return this.tile.getType();
         }
 
         @Override
@@ -49,7 +49,7 @@ public class DriverPneumaticCraft extends DriverSidedTileEntity {
 
         @Override
         public String[] methods() {
-            return tile.getMethodNames();
+            return this.tile.getMethodNames();
         }
 
         @Override
@@ -57,7 +57,7 @@ public class DriverPneumaticCraft extends DriverSidedTileEntity {
             if ("greet".equals(method)) {
                 return new Object[]{String.format("Hello, %s!", args.checkString(0))};
             }
-            return tile.callLuaMethod(method, args.toArray());
+            return this.tile.callLuaMethod(method, args.toArray());
         }
     }
 

@@ -20,29 +20,29 @@ public class TileEntityAssemblyLaser extends TileEntityAssemblyRobot {
     @Override
     public void update() {
         super.update();
-        if (laserStep > 0) {
-            EnumFacing[] platformDirection = getPlatformDirection();
+        if (this.laserStep > 0) {
+            EnumFacing[] platformDirection = this.getPlatformDirection();
             if (platformDirection == null) {
-                laserStep = 105;
+                this.laserStep = 105;
             }
-            switch (laserStep) {
+            switch (this.laserStep) {
                 case 1:
                     //                    isLaserOn = false;
-                    slowMode = false;
+                    this.slowMode = false;
                     //                    gotoHomePosition();
                     break;
                 case 2:
-                    hoverOverNeighbour(platformDirection[0], platformDirection[1]);
+                    this.hoverOverNeighbour(platformDirection[0], platformDirection[1]);
                     break;
                 case 3:
-                    slowMode = true;
-                    gotoNeighbour(platformDirection[0], platformDirection[1]);
+                    this.slowMode = true;
+                    this.gotoNeighbour(platformDirection[0], platformDirection[1]);
                     break;
                 case 104:
-                    hoverOverNeighbour(platformDirection[0], platformDirection[1]);
-                    isLaserOn = false;
-                    slowMode = true;
-                    TileEntity te = getTileEntityForCurrentDirection();
+                    this.hoverOverNeighbour(platformDirection[0], platformDirection[1]);
+                    this.isLaserOn = false;
+                    this.slowMode = true;
+                    TileEntity te = this.getTileEntityForCurrentDirection();
                     if (te instanceof TileEntityAssemblyPlatform) {
                         TileEntityAssemblyPlatform platform = (TileEntityAssemblyPlatform) te;
                         ItemStack output = getLaseredOutputForItem(platform.getHeldStack());
@@ -52,36 +52,36 @@ public class TileEntityAssemblyLaser extends TileEntityAssemblyRobot {
                     }
                     break;
                 case 105:
-                    slowMode = false;
-                    isLaserOn = false;
-                    gotoHomePosition();
+                    this.slowMode = false;
+                    this.isLaserOn = false;
+                    this.gotoHomePosition();
                     break;
                 default: //4-103
-                    isLaserOn = true;
-                    slowMode = false;
-                    targetAngles[EnumAngles.BASE.ordinal()] = 100F - (float) PneumaticCraftUtils.sin[(laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE;
-                    targetAngles[EnumAngles.MIDDLE.ordinal()] = -10F + (float) PneumaticCraftUtils.sin[(laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE;
-                    targetAngles[EnumAngles.TAIL.ordinal()] = 0F;
-                    targetAngles[EnumAngles.TURN.ordinal()] += (float) PneumaticCraftUtils.sin[(laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE * 0.03D;
+                    this.isLaserOn = true;
+                    this.slowMode = false;
+                    this.targetAngles[EnumAngles.BASE.ordinal()] = 100F - (float) PneumaticCraftUtils.sin[(this.laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE;
+                    this.targetAngles[EnumAngles.MIDDLE.ordinal()] = -10F + (float) PneumaticCraftUtils.sin[(this.laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE;
+                    this.targetAngles[EnumAngles.TAIL.ordinal()] = 0F;
+                    this.targetAngles[EnumAngles.TURN.ordinal()] += (float) PneumaticCraftUtils.sin[(this.laserStep - 4) * PneumaticCraftUtils.CIRCLE_POINTS / 100] * ITEM_SIZE * 0.03D;
                     break;
             }
-            if (isDoneInternal() || laserStep >= 4 && laserStep <= 103) {
-                laserStep++;
-                if (laserStep > 105) laserStep = 0;
+            if (this.isDoneInternal() || this.laserStep >= 4 && this.laserStep <= 103) {
+                this.laserStep++;
+                if (this.laserStep > 105) this.laserStep = 0;
             }
         }
     }
 
     public void startLasering() {
-        if (laserStep == 0) {
-            laserStep = 1;
+        if (this.laserStep == 0) {
+            this.laserStep = 1;
         }
     }
 
     @Override
     public boolean gotoNeighbour(EnumFacing primaryDir, EnumFacing secondaryDir) {
         boolean diagonal = super.gotoNeighbour(primaryDir, secondaryDir);
-        targetAngles[EnumAngles.TURN.ordinal()] -= ITEM_SIZE * 0.45D;
+        this.targetAngles[EnumAngles.TURN.ordinal()] -= ITEM_SIZE * 0.45D;
         return diagonal;
     }
 
@@ -91,7 +91,7 @@ public class TileEntityAssemblyLaser extends TileEntityAssemblyRobot {
 
     @Override
     public boolean isIdle() {
-        return laserStep == 0 && isDoneInternal();
+        return this.laserStep == 0 && this.isDoneInternal();
     }
 
     @Override
@@ -102,16 +102,16 @@ public class TileEntityAssemblyLaser extends TileEntityAssemblyRobot {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("laser", isLaserOn);
-        tag.setInteger("laserStep", laserStep);
+        tag.setBoolean("laser", this.isLaserOn);
+        tag.setInteger("laserStep", this.laserStep);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        isLaserOn = tag.getBoolean("laser");
-        laserStep = tag.getInteger("laserStep");
+        this.isLaserOn = tag.getBoolean("laser");
+        this.laserStep = tag.getInteger("laserStep");
     }
 
     @Override
@@ -129,11 +129,11 @@ public class TileEntityAssemblyLaser extends TileEntityAssemblyRobot {
 
     @Override
     public boolean reset() {
-        if (isIdle()) {
+        if (this.isIdle()) {
             return true;
         } else {
-            isLaserOn = false;
-            laserStep = 105;
+            this.isLaserOn = false;
+            this.laserStep = 105;
             return false;
         }
     }

@@ -23,14 +23,14 @@ public class PacketUseItem extends AbstractPacket<PacketUseItem> {
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        ByteBufUtils.writeItemStack(buffer, new ItemStack(item, amount, 0));
+        ByteBufUtils.writeItemStack(buffer, new ItemStack(this.item, this.amount, 0));
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
         ItemStack stack = ByteBufUtils.readItemStack(buffer);
-        item = stack.getItem();
-        amount = stack.getCount();
+        this.item = stack.getItem();
+        this.amount = stack.getCount();
     }
 
     @Override

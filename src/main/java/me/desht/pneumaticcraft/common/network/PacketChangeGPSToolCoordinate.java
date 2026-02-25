@@ -26,15 +26,15 @@ public class PacketChangeGPSToolCoordinate extends LocationIntPacket<PacketChang
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        ByteBufUtils.writeUTF8String(buf, variable);
-        buf.writeInt(metadata);
+        ByteBufUtils.writeUTF8String(buf, this.variable);
+        buf.writeInt(this.metadata);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
-        variable = ByteBufUtils.readUTF8String(buf);
-        metadata = buf.readInt();
+        this.variable = ByteBufUtils.readUTF8String(buf);
+        this.metadata = buf.readInt();
     }
 
     @Override
@@ -49,9 +49,9 @@ public class PacketChangeGPSToolCoordinate extends LocationIntPacket<PacketChang
             if (message.pos.getY() >= 0) {
                 playerStack.getItem().onItemUse(player, player.world, message.pos, EnumHand.MAIN_HAND, null, 0, 0, 0);
             }
-        }else if(playerStack.getItem() == Itemss.GPS_AREA_TOOL){
+        } else if (playerStack.getItem() == Itemss.GPS_AREA_TOOL) {
             ItemGPSAreaTool.setVariable(playerStack, message.variable, message.metadata);
-            if(message.pos.getY() >= 0){
+            if (message.pos.getY() >= 0) {
                 ItemGPSAreaTool.setGPSPosAndNotify(player, message.pos, message.metadata);
             }
         }

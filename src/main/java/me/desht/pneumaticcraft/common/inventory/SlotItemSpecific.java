@@ -34,14 +34,14 @@ class SlotItemSpecific extends SlotItemHandler {
      */
     @Override
     public boolean isItemValid(@Nonnull ItemStack stack) {
-        if (itemAllowed != null) {
+        if (this.itemAllowed != null) {
             Item item = stack.isEmpty() ? null : stack.getItem();
-            return item == itemAllowed;
+            return item == this.itemAllowed;
         } else {
             int[] ids = OreDictionary.getOreIDs(stack);
             for (int id : ids) {
-                if (id == oreDictEntry) return true;
-                if (dye && DyeUtils.dyeDamageFromStack(stack).isPresent()) return true;
+                if (id == this.oreDictEntry) return true;
+                if (this.dye && DyeUtils.dyeDamageFromStack(stack).isPresent()) return true;
             }
             return false;
         }

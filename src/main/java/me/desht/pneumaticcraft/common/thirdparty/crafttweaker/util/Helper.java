@@ -22,16 +22,19 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class Helper {
-	private Helper() {}
-	
-	public static Pair<String, Integer> toPair(IOreDictEntry entry) {
-		return Pair.of(entry.getName(), entry.getAmount());
-	}
+    private Helper() {
+    }
 
-	public static ItemIngredient toItemIngredient(IOreDictEntry entry) { return new ItemIngredient(entry.getName(), entry.getAmount()); }
+    public static Pair<String, Integer> toPair(IOreDictEntry entry) {
+        return Pair.of(entry.getName(), entry.getAmount());
+    }
 
-	public static ItemIngredient[] toItemIngredients(IIngredient[] input) {
-	    List<ItemIngredient> res = new ArrayList<>();
+    public static ItemIngredient toItemIngredient(IOreDictEntry entry) {
+        return new ItemIngredient(entry.getName(), entry.getAmount());
+    }
+
+    public static ItemIngredient[] toItemIngredients(IIngredient[] input) {
+        List<ItemIngredient> res = new ArrayList<>();
         for (IIngredient anInput : input) {
             if (anInput instanceof IOreDictEntry) {
                 res.add(toItemIngredient((IOreDictEntry) anInput));
@@ -42,10 +45,10 @@ public class Helper {
         return res.toArray(new ItemIngredient[0]);
     }
 
-	@SuppressWarnings("unchecked")
-	public static Object[] toInput(IIngredient[] input) {
-		@SuppressWarnings("rawtypes")
-		List inputs = new ArrayList();
+    @SuppressWarnings("unchecked")
+    public static Object[] toInput(IIngredient[] input) {
+        @SuppressWarnings("rawtypes")
+        List inputs = new ArrayList();
 
         for (IIngredient anInput : input) {
             if (anInput instanceof IOreDictEntry) {
@@ -54,28 +57,28 @@ public class Helper {
                 inputs.add(toStack((IItemStack) anInput));
             }
         }
-		
-		return inputs.toArray(new Object[0]);
-	}
-	
+
+        return inputs.toArray(new Object[0]);
+    }
+
     public static void logError(String message) {
         CraftTweakerAPI.logError(message);
     }
-    
+
     public static void logError(String message, Throwable exception) {
         CraftTweakerAPI.logError(message, exception);
     }
-    
+
     public static void logWarning(String message) {
         CraftTweakerAPI.logWarning(message);
     }
-    
+
     public static void logInfo(String message) {
         CraftTweakerAPI.logInfo(message);
     }
-    
+
     public static ItemStack toStack(IItemStack iStack) {
-        if(iStack == null) {
+        if (iStack == null) {
             return ItemStack.EMPTY;
         } else {
             Object internal = iStack.getInternal();
@@ -86,102 +89,102 @@ public class Helper {
             return (ItemStack) internal;
         }
     }
-    
+
     public static IItemStack[] toStacks(IIngredient[] iIngredient) {
-    	return Stream.of(iIngredient).map(IIngredient::getItems).flatMap(List::stream).toArray(IItemStack[]::new);
+        return Stream.of(iIngredient).map(IIngredient::getItems).flatMap(List::stream).toArray(IItemStack[]::new);
     }
-    
+
     public static ItemStack[] toStacks(IItemStack[] iStack) {
-    	return Stream.of(iStack).map(Helper::toStack).toArray(ItemStack[]::new);
+        return Stream.of(iStack).map(Helper::toStack).toArray(ItemStack[]::new);
     }
-    
+
     public static FluidStack toFluid(ILiquidStack iStack) {
-        if(iStack == null) {
+        if (iStack == null) {
             return null;
         } else
             return FluidRegistry.getFluidStack(iStack.getName(), iStack.getAmount());
     }
-    
+
     public static ILiquidStack toILiquidStack(FluidStack stack) {
-        if(stack == null) {
+        if (stack == null) {
             return null;
         }
-        
+
         return new MCLiquidStack(stack);
     }
-    
+
     /**
      * Returns a string representation of the item which can also be used in scripts
      */
     @SuppressWarnings("rawtypes")
     public static String getStackDescription(Object object) {
-        if(object instanceof IIngredient) {
+        if (object instanceof IIngredient) {
             return getStackDescription((IIngredient) object);
-        } else if(object instanceof ItemStack) {
+        } else if (object instanceof ItemStack) {
             return toIItemStack((ItemStack) object).toString();
-        } else if(object instanceof FluidStack) {
+        } else if (object instanceof FluidStack) {
             return getStackDescription((FluidStack) object);
-        } else if(object instanceof Block) {
+        } else if (object instanceof Block) {
             return toIItemStack(new ItemStack((Block) object, 1, 0)).toString();
-        } else if(object instanceof String) {
+        } else if (object instanceof String) {
             // Check if string specifies an oredict entry
             List<ItemStack> ores = OreDictionary.getOres((String) object);
-            
-            if(!ores.isEmpty()) {
+
+            if (!ores.isEmpty()) {
                 return "<ore:" + object + ">";
             } else {
                 return "\"" + object + "\"";
             }
-        } else if(object instanceof List) {
+        } else if (object instanceof List) {
             return getListDescription((List) object);
-        } else if(object instanceof Object[]) {
+        } else if (object instanceof Object[]) {
             return getListDescription(Arrays.asList((Object[]) object));
-        } else if(object != null) {
-            return "\"" + object.toString() + "\"";
-        } else if(object instanceof Ingredient && !((Ingredient) object).apply(ItemStack.EMPTY) && ((Ingredient) object).getMatchingStacks().length > 0) {
+        } else if (object != null) {
+            return "\"" + object + "\"";
+        } else if (object instanceof Ingredient && !((Ingredient) object).apply(ItemStack.EMPTY) && ((Ingredient) object).getMatchingStacks().length > 0) {
             return getStackDescription(((Ingredient) object).getMatchingStacks()[0]);
         } else {
             return "null";
         }
     }
-    
+
     public static String getStackDescription(IIngredient stack) {
         Object internalObject = stack.getInternal();
-        
-        if(internalObject instanceof ItemStack) {
+
+        if (internalObject instanceof ItemStack) {
             return getStackDescription(internalObject);
-        } else if(internalObject instanceof FluidStack) {
+        } else if (internalObject instanceof FluidStack) {
             return getStackDescription((FluidStack) internalObject);
-        } else if(internalObject instanceof IOreDictEntry) {
+        } else if (internalObject instanceof IOreDictEntry) {
             return getStackDescription(((IOreDictEntry) internalObject).getName());
         } else {
             return "null";
         }
     }
-    
+
     public static String getStackDescription(FluidStack stack) {
         StringBuilder sb = new StringBuilder();
-        
+
         sb.append("<liquid:").append(stack.getFluid().getName()).append('>');
-        
-        if(stack.amount > 1) {
+
+        if (stack.amount > 1) {
             sb.append(" * ").append(stack.amount);
         }
-        
+
         return sb.toString();
     }
-    
+
     public static String getListDescription(List<?> objects) {
         StringBuilder sb = new StringBuilder();
-        
-        if(objects.isEmpty()) {
+
+        if (objects.isEmpty()) {
             sb.append("[]");
         } else {
             sb.append('[');
-            for(Object object : objects) {
-                if(object instanceof List) {
+            for (Object object : objects) {
+                if (object instanceof List) {
                     sb.append(getListDescription((List) object)).append(", ");
-                } else if(object instanceof Object[]) {
+                } else if (object instanceof Object[]) {
                     sb.append(getListDescription(Arrays.asList((Object[]) object))).append(", ");
                 } else {
                     sb.append(getStackDescription(object)).append(", ");
@@ -190,74 +193,74 @@ public class Helper {
             sb.setLength(sb.length() - 2);
             sb.append(']');
         }
-        
+
         return sb.toString();
     }
-    
+
     public static IItemStack toIItemStack(ItemStack stack) {
-        if(stack.isEmpty()) {
+        if (stack.isEmpty()) {
             return null;
         }
-        
+
         return new MCItemStack(stack);
     }
-    
+
     public static FluidStack[] toFluids(ILiquidStack[] iStack) {
-    	return Stream.of(iStack).map(Helper::toFluid).toArray(FluidStack[]::new);
+        return Stream.of(iStack).map(Helper::toFluid).toArray(FluidStack[]::new);
     }
-    
+
     public static boolean matches(IIngredient ingredient, IItemStack itemStack) {
-        if(ingredient == null) {
+        if (ingredient == null) {
             return false;
         }
-        
+
         return ingredient.matches(itemStack);
     }
 
 
     public static boolean matches(IIngredient ingredient, IItemStack[] itemStack) {
-        if(ingredient == null) {
+        if (ingredient == null) {
             return false;
         }
-        
+
         return Stream.of(itemStack).allMatch(ingredient::matches);
     }
-    
+
     public static boolean matches(IIngredient ingredient, ILiquidStack liquidStack) {
-        if(ingredient == null) {
+        if (ingredient == null) {
             return false;
         }
 
         // Do we have a wildcard (<*>) ?
-        if(ingredient.matches(liquidStack)) {
+        if (ingredient.matches(liquidStack)) {
             return true;
         }
-        
+
         // Does ingredient reference liquids?
-        if(ingredient.getLiquids() != null) {
+        if (ingredient.getLiquids() != null) {
             for (ILiquidStack liquid : ingredient.getLiquids()) {
-                if(toFluid(liquid).isFluidEqual(toFluid(liquidStack))) {
+                if (toFluid(liquid).isFluidEqual(toFluid(liquidStack))) {
                     return true;
                 }
             }
         }
-        
+
         return false;
     }
-    
-	public static boolean areEqual(ItemStack stack1, ItemStack stack2) {
-		if (stack1.isEmpty() || stack2.isEmpty()) {
-			return false;
-		}  else {
-			return stack1.isItemEqual(stack2);
-		}
-	}
-	
-	public static boolean areEqual(FluidStack stack1, FluidStack stack2) {
-	    if(stack1 == null || stack2 == null) {
-	        return false;
-	    }
-	    
-	    return stack1.isFluidEqual(stack2);
-	}
+
+    public static boolean areEqual(ItemStack stack1, ItemStack stack2) {
+        if (stack1.isEmpty() || stack2.isEmpty()) {
+            return false;
+        } else {
+            return stack1.isItemEqual(stack2);
+        }
+    }
+
+    public static boolean areEqual(FluidStack stack1, FluidStack stack2) {
+        if (stack1 == null || stack2 == null) {
+            return false;
+        }
+
+        return stack1.isFluidEqual(stack2);
+    }
 }

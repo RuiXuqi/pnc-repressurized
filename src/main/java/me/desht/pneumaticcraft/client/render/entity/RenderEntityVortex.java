@@ -32,7 +32,7 @@ public class RenderEntityVortex extends RenderEntity {
 
     private void renderVortex(EntityVortex entity, double x, double y, double z, float var1, float partialTicks) {
         if (!entity.hasRenderOffsetX()) {
-            entity.setRenderOffsetX(calculateXoffset());
+            entity.setRenderOffsetX(this.calculateXoffset());
         }
 
         int circlePoints = 200;
@@ -52,7 +52,7 @@ public class RenderEntityVortex extends RenderEntity {
             float angleRadians = (float) i / (float) circlePoints * 2F * (float) Math.PI;
             GlStateManager.pushMatrix();
             GlStateManager.translate(radius * Math.sin(angleRadians), radius * Math.cos(angleRadians), 0);
-            renderGust(entity.getRenderOffsetX());
+            this.renderGust(entity.getRenderOffsetX());
             GlStateManager.popMatrix();
         }
 
@@ -134,7 +134,7 @@ public class RenderEntityVortex extends RenderEntity {
 
     @Override
     public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9) {
-        renderVortex((EntityVortex) par1Entity, par2, par4, par6, par8, par9);
+        this.renderVortex((EntityVortex) par1Entity, par2, par4, par6, par8, par9);
     }
 
     @Override

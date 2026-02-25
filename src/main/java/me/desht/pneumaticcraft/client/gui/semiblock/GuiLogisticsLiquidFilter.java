@@ -16,18 +16,18 @@ public class GuiLogisticsLiquidFilter extends GuiProgWidgetLiquidFilter {
     }
 
     public Fluid getFilter() {
-        return widget.getFluid();
+        return this.widget.getFluid();
     }
 
     public void setFilter(Fluid fluid) {
-        widget.setFluid(fluid);
+        this.widget.setFluid(fluid);
     }
 
     @Override
     public void keyTyped(char key, int keyCode) throws IOException {
         super.keyTyped(key, keyCode);
         if (keyCode == 1) {
-            mc.displayGuiScreen(parentScreen);
+            this.mc.displayGuiScreen(this.parentScreen);
         }
     }
 }

@@ -57,6 +57,7 @@ public class IOHelper {
             return null;
         }
     }
+
     public static IItemHandler getInventoryForTE(TileEntity te) {
         return getInventoryForTE(te, null);
     }
@@ -64,12 +65,11 @@ public class IOHelper {
     /**
      * Extract a specific number of the given item from the given item handler
      *
-     * @param handler the item handler
+     * @param handler        the item handler
      * @param requestedStack the item to search for, including the number of items; this stack is not modified
-     * @param countType how to interpret the item count of requestedStack
-     * @param simulate true if extraction should only be simulated
-     * @param fuzzyMeta true if item meta should be ignored when searching
-     *
+     * @param countType      how to interpret the item count of requestedStack
+     * @param simulate       true if extraction should only be simulated
+     * @param fuzzyMeta      true if item meta should be ignored when searching
      * @return the extracted item stack, or ItemStack.EMPTY if nothing was extracted
      */
     public static ItemStack extract(IItemHandler handler, ItemStack requestedStack, ExtractCount countType, boolean simulate, boolean fuzzyMeta) {
@@ -142,11 +142,11 @@ public class IOHelper {
         }
         return ItemStack.EMPTY;
     }
-    
+
     /**
      * Try to transfer a single item between two item handlers
      *
-     * @param input the input handler
+     * @param input  the input handler
      * @param output the output handler
      * @return true if an item was transferred
      */

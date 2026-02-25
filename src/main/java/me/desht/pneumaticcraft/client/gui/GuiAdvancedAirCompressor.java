@@ -19,7 +19,7 @@ public class GuiAdvancedAirCompressor extends GuiAirCompressor {
     @Override
     public void initGui() {
         super.initGui();
-        addWidget(new WidgetTemperature(0, guiLeft + 87, guiTop + 20, 273, 675, ((IHeatExchanger) te).getHeatExchangerLogic(null), 325, 625));
+        this.addWidget(new WidgetTemperature(0, this.guiLeft + 87, this.guiTop + 20, 273, 675, ((IHeatExchanger) this.te).getHeatExchangerLogic(null), 325, 625));
     }
 
     @Override
@@ -30,8 +30,8 @@ public class GuiAdvancedAirCompressor extends GuiAirCompressor {
     @Override
     public void addWarnings(List<String> curInfo) {
         super.addWarnings(curInfo);
-        if (te.getEfficiency() < 100) {
-            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", te.getEfficiency() + "%%"));
+        if (this.te.getEfficiency() < 100) {
+            curInfo.add(I18n.format("gui.tab.problems.advancedAirCompressor.efficiency", this.te.getEfficiency() + "%%"));
         }
     }
 }

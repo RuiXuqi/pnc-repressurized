@@ -21,12 +21,12 @@ public class GuiCreativeCompressor extends GuiPneumaticContainerBase<TileEntityC
     @Override
     public void initGui() {
         super.initGui();
-        int y = height / 2 - 5;
-        int x = width / 2;
-        buttonList.add(new GuiButton(0, x - 90, y, 30, 20, "-1"));
-        buttonList.add(new GuiButton(1, x - 58, y, 30, 20, "-0.1"));
-        buttonList.add(new GuiButton(2, x + 28, y, 30, 20, "+0.1"));
-        buttonList.add(new GuiButton(3, x + 60, y, 30, 20, "+1"));
+        int y = this.height / 2 - 5;
+        int x = this.width / 2;
+        this.buttonList.add(new GuiButton(0, x - 90, y, 30, 20, "-1"));
+        this.buttonList.add(new GuiButton(1, x - 58, y, 30, 20, "-0.1"));
+        this.buttonList.add(new GuiButton(2, x + 28, y, 30, 20, "+0.1"));
+        this.buttonList.add(new GuiButton(3, x + 60, y, 30, 20, "+1"));
     }
 
     @Override
@@ -43,26 +43,26 @@ public class GuiCreativeCompressor extends GuiPneumaticContainerBase<TileEntityC
     protected boolean shouldAddProblemTab() {
         return false;
     }
-    
+
     @Override
-    protected boolean shouldAddInfoTab(){
+    protected boolean shouldAddInfoTab() {
         return false;
     }
-    
+
     @Override
-    protected boolean shouldAddUpgradeTab(){
+    protected boolean shouldAddUpgradeTab() {
         return false;
     }
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
         super.drawScreen(x, y, partialTicks);
-        drawCenteredString(fontRenderer, PneumaticCraftUtils.roundNumberTo(te.getPressure(), 1) + " bar", width / 2, height / 2, 0xFFFFFF);
+        this.drawCenteredString(this.fontRenderer, PneumaticCraftUtils.roundNumberTo(this.te.getPressure(), 1) + " bar", this.width / 2, this.height / 2, 0xFFFFFF);
     }
-    
+
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int i, int j){
-        drawDefaultBackground();
+    protected void drawGuiContainerBackgroundLayer(float partialTicks, int i, int j) {
+        this.drawDefaultBackground();
         super.drawGuiContainerBackgroundLayer(partialTicks, i, j);
     }
 

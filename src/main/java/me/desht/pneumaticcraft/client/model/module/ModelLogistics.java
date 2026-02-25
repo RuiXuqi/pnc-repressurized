@@ -19,88 +19,88 @@ public class ModelLogistics extends ModelModuleBase {
 
     public ModelLogistics(ModuleLogistics module) {
         this.module = module;
-        textureWidth = 128;
-        textureHeight = 128;
+        this.textureWidth = 128;
+        this.textureHeight = 128;
 
-        notPowered = new ModelRenderer(this, 72, 0);
-        notPowered.addBox(0F, 0F, 0F, 6, 2, 6);
-        notPowered.setRotationPoint(-3F, 13F, 4F);
-        notPowered.setTextureSize(128, 128);
-        notPowered.mirror = true;
-        setRotation(notPowered, -1.570796F, 0F, 0F);
-        powered = new ModelRenderer(this, 48, 0);
-        powered.addBox(0F, 0F, 0F, 6, 2, 6);
-        powered.setRotationPoint(-3F, 13F, 4F);
-        powered.setTextureSize(128, 128);
-        powered.mirror = true;
-        setRotation(powered, -1.570796F, 0F, 0F);
-        action = new ModelRenderer(this, 24, 0);
-        action.addBox(0F, 0F, 0F, 6, 2, 6);
-        action.setRotationPoint(-3F, 13F, 4F);
-        action.setTextureSize(128, 128);
-        action.mirror = true;
-        setRotation(action, -1.570796F, 0F, 0F);
-        notEnoughAir = new ModelRenderer(this, 0, 0);
-        notEnoughAir.addBox(0F, 0F, 0F, 6, 2, 6);
-        notEnoughAir.setRotationPoint(-3F, 13F, 4F);
-        notEnoughAir.setTextureSize(128, 128);
-        notEnoughAir.mirror = true;
-        setRotation(notEnoughAir, -1.570796F, 0F, 0F);
+        this.notPowered = new ModelRenderer(this, 72, 0);
+        this.notPowered.addBox(0F, 0F, 0F, 6, 2, 6);
+        this.notPowered.setRotationPoint(-3F, 13F, 4F);
+        this.notPowered.setTextureSize(128, 128);
+        this.notPowered.mirror = true;
+        this.setRotation(this.notPowered, -1.570796F, 0F, 0F);
+        this.powered = new ModelRenderer(this, 48, 0);
+        this.powered.addBox(0F, 0F, 0F, 6, 2, 6);
+        this.powered.setRotationPoint(-3F, 13F, 4F);
+        this.powered.setTextureSize(128, 128);
+        this.powered.mirror = true;
+        this.setRotation(this.powered, -1.570796F, 0F, 0F);
+        this.action = new ModelRenderer(this, 24, 0);
+        this.action.addBox(0F, 0F, 0F, 6, 2, 6);
+        this.action.setRotationPoint(-3F, 13F, 4F);
+        this.action.setTextureSize(128, 128);
+        this.action.mirror = true;
+        this.setRotation(this.action, -1.570796F, 0F, 0F);
+        this.notEnoughAir = new ModelRenderer(this, 0, 0);
+        this.notEnoughAir.addBox(0F, 0F, 0F, 6, 2, 6);
+        this.notEnoughAir.setRotationPoint(-3F, 13F, 4F);
+        this.notEnoughAir.setTextureSize(128, 128);
+        this.notEnoughAir.mirror = true;
+        this.setRotation(this.notEnoughAir, -1.570796F, 0F, 0F);
 
-        base2 = new ModelRenderer(this, 0, 25);
-        base2.addBox(0F, 0F, 0F, 12, 2, 12);
-        base2.setRotationPoint(-6F, 10F, 6F);
-        base2.setTextureSize(128, 128);
-        base2.mirror = true;
-        setRotation(base2, -1.570796F, 0F, 0F);
-        shape1 = new ModelRenderer(this, 0, 39);
-        shape1.addBox(0F, 0F, 0F, 1, 13, 1);
-        shape1.setRotationPoint(5.5F, 9.5F, 5.5F);
-        shape1.setTextureSize(128, 128);
-        shape1.mirror = true;
-        setRotation(shape1, 0F, 0F, 0F);
-        shape2 = new ModelRenderer(this, 4, 39);
-        shape2.addBox(0F, 0F, 0F, 1, 13, 1);
-        shape2.setRotationPoint(-6.5F, 9.5F, 5.5F);
-        shape2.setTextureSize(128, 128);
-        shape2.mirror = true;
-        setRotation(shape2, 0F, 0F, 0F);
-        shape3 = new ModelRenderer(this, 8, 39);
-        shape3.addBox(0F, 0F, 0F, 11, 1, 1);
-        shape3.setRotationPoint(-5.5F, 9.5F, 5.5F);
-        shape3.setTextureSize(128, 128);
-        shape3.mirror = true;
-        setRotation(shape3, 0F, 0F, 0F);
-        shape4 = new ModelRenderer(this, 8, 41);
-        shape4.addBox(0F, 0F, 0F, 11, 1, 1);
-        shape4.setRotationPoint(-5.5F, 21.5F, 5.5F);
-        shape4.setTextureSize(128, 128);
-        shape4.mirror = true;
-        setRotation(shape4, 0F, 0F, 0F);
+        this.base2 = new ModelRenderer(this, 0, 25);
+        this.base2.addBox(0F, 0F, 0F, 12, 2, 12);
+        this.base2.setRotationPoint(-6F, 10F, 6F);
+        this.base2.setTextureSize(128, 128);
+        this.base2.mirror = true;
+        this.setRotation(this.base2, -1.570796F, 0F, 0F);
+        this.shape1 = new ModelRenderer(this, 0, 39);
+        this.shape1.addBox(0F, 0F, 0F, 1, 13, 1);
+        this.shape1.setRotationPoint(5.5F, 9.5F, 5.5F);
+        this.shape1.setTextureSize(128, 128);
+        this.shape1.mirror = true;
+        this.setRotation(this.shape1, 0F, 0F, 0F);
+        this.shape2 = new ModelRenderer(this, 4, 39);
+        this.shape2.addBox(0F, 0F, 0F, 1, 13, 1);
+        this.shape2.setRotationPoint(-6.5F, 9.5F, 5.5F);
+        this.shape2.setTextureSize(128, 128);
+        this.shape2.mirror = true;
+        this.setRotation(this.shape2, 0F, 0F, 0F);
+        this.shape3 = new ModelRenderer(this, 8, 39);
+        this.shape3.addBox(0F, 0F, 0F, 11, 1, 1);
+        this.shape3.setRotationPoint(-5.5F, 9.5F, 5.5F);
+        this.shape3.setTextureSize(128, 128);
+        this.shape3.mirror = true;
+        this.setRotation(this.shape3, 0F, 0F, 0F);
+        this.shape4 = new ModelRenderer(this, 8, 41);
+        this.shape4.addBox(0F, 0F, 0F, 11, 1, 1);
+        this.shape4.setRotationPoint(-5.5F, 21.5F, 5.5F);
+        this.shape4.setTextureSize(128, 128);
+        this.shape4.mirror = true;
+        this.setRotation(this.shape4, 0F, 0F, 0F);
     }
 
     private void renderChannelColorFrame(float size) {
-        RenderUtils.glColorHex(0xFF000000 | ItemDye.DYE_COLORS[module.getColorChannel()]);
-        shape1.render(size);
-        shape2.render(size);
-        shape3.render(size);
-        shape4.render(size);
+        RenderUtils.glColorHex(0xFF000000 | ItemDye.DYE_COLORS[this.module.getColorChannel()]);
+        this.shape1.render(size);
+        this.shape2.render(size);
+        this.shape3.render(size);
+        this.shape4.render(size);
         GlStateManager.color(1, 1, 1, 1);
     }
 
     @Override
     protected void renderDynamic(float scale, float partialTicks) {
         ModelRenderer base;
-        if (module.getTicksSinceAction() >= 0) {
-            base = action;
-        } else if (module.getTicksSinceNotEnoughAir() >= 0) {
-            base = notEnoughAir;
+        if (this.module.getTicksSinceAction() >= 0) {
+            base = this.action;
+        } else if (this.module.getTicksSinceNotEnoughAir() >= 0) {
+            base = this.notEnoughAir;
         } else {
-            base = module.hasPower() ? powered : notPowered;
+            base = this.module.hasPower() ? this.powered : this.notPowered;
         }
         base.render(scale);
-        base2.render(scale);
-        renderChannelColorFrame(scale);
+        this.base2.render(scale);
+        this.renderChannelColorFrame(scale);
     }
 
     @Override

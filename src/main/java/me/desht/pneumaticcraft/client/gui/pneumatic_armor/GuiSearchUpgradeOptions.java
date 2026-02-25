@@ -25,7 +25,7 @@ public class GuiSearchUpgradeOptions implements IOptionPage {
     private final EntityPlayer player = FMLClientHandler.instance().getClient().player;
 
     public GuiSearchUpgradeOptions(SearchUpgradeHandler searchUpgradeHandler) {
-        renderHandler = searchUpgradeHandler;
+        this.renderHandler = searchUpgradeHandler;
     }
 
     @Override
@@ -37,12 +37,12 @@ public class GuiSearchUpgradeOptions implements IOptionPage {
     public void initGui(IGuiScreen gui) {
         gui.getButtonList().add(new GuiButton(10, 30, 40, 150, 20, "Search for item..."));
         gui.getButtonList().add(new GuiButton(11, 30, 128, 150, 20, "Move Stat Screen..."));
-        if (searchGui != null && !player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
+        if (searchGui != null && !this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
             ItemStack searchStack = searchGui.getSearchStack();
-            ItemStack helmetStack = ItemPneumaticArmor.getSearchedStack(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD));
+            ItemStack helmetStack = ItemPneumaticArmor.getSearchedStack(this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD));
             if (searchStack.isEmpty() && !helmetStack.isEmpty() || !searchStack.isEmpty() && helmetStack.isEmpty() || !searchStack.isEmpty() && !helmetStack.isEmpty() && !searchStack.isItemEqual(helmetStack)) {
                 NetworkHandler.sendToServer(new PacketUpdateSearchStack(searchStack));
-                NBTTagCompound tag = NBTUtil.getCompoundTag(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ItemPneumaticArmor.NBT_SEARCH_STACK);
+                NBTTagCompound tag = NBTUtil.getCompoundTag(this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD), ItemPneumaticArmor.NBT_SEARCH_STACK);
                 tag.setInteger("itemID", searchStack.isEmpty() ? -1 : Item.getIdFromItem(searchStack.getItem()));
                 tag.setInteger("itemDamage", searchStack.isEmpty() ? -1 : searchStack.getItemDamage());
             }
@@ -52,13 +52,13 @@ public class GuiSearchUpgradeOptions implements IOptionPage {
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
-            searchGui = new GuiSearcher(player);
-            if (!player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
-                searchGui.setSearchStack(ItemPneumaticArmor.getSearchedStack(player.getItemStackFromSlot(EntityEquipmentSlot.HEAD)));
+            searchGui = new GuiSearcher(this.player);
+            if (!this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD).isEmpty()) {
+                searchGui.setSearchStack(ItemPneumaticArmor.getSearchedStack(this.player.getItemStackFromSlot(EntityEquipmentSlot.HEAD)));
             }
             Minecraft.getMinecraft().displayGuiScreen(searchGui);
         } else {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(renderHandler, ArmorHUDLayout.LayoutTypes.ITEM_SEARCH));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiMoveStat(this.renderHandler, ArmorHUDLayout.LayoutTypes.ITEM_SEARCH));
         }
     }
 

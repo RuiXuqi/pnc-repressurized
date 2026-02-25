@@ -10,36 +10,36 @@ public class LuaMethodRegistry {
     private String[] luaMethodNames = null;
 
     public void registerLuaMethod(ILuaMethod method) {
-        Integer idx = luaMethodMap.get(method.getMethodName());
+        Integer idx = this.luaMethodMap.get(method.getMethodName());
 
         if (idx == null) {
             // add new
-            luaMethods.add(method);
-            luaMethodMap.put(method.getMethodName(), luaMethods.size() - 1);
+            this.luaMethods.add(method);
+            this.luaMethodMap.put(method.getMethodName(), this.luaMethods.size() - 1);
         } else {
             // override previous
-            luaMethods.set(idx, method);
+            this.luaMethods.set(idx, method);
         }
     }
 
     public String[] getMethodNames() {
-        if (luaMethodNames == null) {
-            luaMethodNames = new String[luaMethods.size()];
-            Arrays.setAll(luaMethodNames, i -> luaMethods.get(i).getMethodName());
+        if (this.luaMethodNames == null) {
+            this.luaMethodNames = new String[this.luaMethods.size()];
+            Arrays.setAll(this.luaMethodNames, i -> this.luaMethods.get(i).getMethodName());
         }
-        return luaMethodNames;
+        return this.luaMethodNames;
     }
 
     public ILuaMethod getMethod(String methodName) {
-        Validate.isTrue(luaMethodMap.containsKey(methodName), "Attempt to get unregistered method '" + methodName + "'.");
-        return luaMethods.get(luaMethodMap.get(methodName));
+        Validate.isTrue(this.luaMethodMap.containsKey(methodName), "Attempt to get unregistered method '" + methodName + "'.");
+        return this.luaMethods.get(this.luaMethodMap.get(methodName));
     }
 
     public ILuaMethod getMethod(int methodIndex) {
-        return luaMethods.get(methodIndex);
+        return this.luaMethods.get(methodIndex);
     }
 
     public boolean isInited() {
-        return !luaMethods.isEmpty();
+        return !this.luaMethods.isEmpty();
     }
 }

@@ -36,88 +36,88 @@ public class DroneAILogistics extends EntityAIBase {
     }
 
     private LogisticsManager getLogisticsManager() {
-        if (drone.getLogisticsManager() == null) {
-            Set<BlockPos> area = widget.getCachedAreaSet();
+        if (this.drone.getLogisticsManager() == null) {
+            Set<BlockPos> area = this.widget.getCachedAreaSet();
             if (!area.isEmpty()) {
                 AxisAlignedBB aabb = ProgWidgetAreaItemBase.getExtents(area);
-                Stream<ISemiBlock> semiBlocksInArea = SemiBlockManager.getInstance(drone.world()).getSemiBlocksInArea(drone.world(), aabb);
+                Stream<ISemiBlock> semiBlocksInArea = SemiBlockManager.getInstance(this.drone.world()).getSemiBlocksInArea(this.drone.world(), aabb);
                 Stream<SemiBlockLogistics> logisticFrames = StreamUtils.ofType(SemiBlockLogistics.class, semiBlocksInArea);
 
                 LogisticsManager manager = new LogisticsManager();
                 logisticFrames.filter(frame -> area.contains(frame.getPos())).forEach(manager::addLogisticFrame);
-                drone.setLogisticsManager(manager);
+                this.drone.setLogisticsManager(manager);
             }
         }
-        return drone.getLogisticsManager();
+        return this.drone.getLogisticsManager();
     }
 
     @Override
     public boolean shouldExecute() {
-        if (getLogisticsManager() == null) return false;
-        curTask = null;
-        return doLogistics();
+        if (this.getLogisticsManager() == null) return false;
+        this.curTask = null;
+        return this.doLogistics();
     }
 
     private boolean doLogistics() {
-        ItemStack item = drone.getInv().getStackInSlot(0);
-        FluidStack fluid = drone.getTank().getFluid();
-        PriorityQueue<LogisticsTask> tasks = getLogisticsManager().getTasks(item.isEmpty() ? fluid : item);
+        ItemStack item = this.drone.getInv().getStackInSlot(0);
+        FluidStack fluid = this.drone.getTank().getFluid();
+        PriorityQueue<LogisticsTask> tasks = this.getLogisticsManager().getTasks(item.isEmpty() ? fluid : item);
         if (tasks.size() > 0) {
-            curTask = tasks.poll();
-            return execute(curTask);
+            this.curTask = tasks.poll();
+            return this.execute(this.curTask);
         }
         return false;
     }
 
     @Override
     public boolean shouldContinueExecuting() {
-        if (curTask == null) return false;
-        if (!curAI.shouldContinueExecuting()) {
-            if (curAI instanceof DroneEntityAIInventoryImport) {
-                curTask.requester.clearIncomingStack(curTask.transportingItem);
-                return clearAIAndProvideAgain();
-            } else if (curAI instanceof DroneAILiquidImport) {
-                curTask.requester.clearIncomingStack(curTask.transportingFluid);
-                return clearAIAndProvideAgain();
+        if (this.curTask == null) return false;
+        if (!this.curAI.shouldContinueExecuting()) {
+            if (this.curAI instanceof DroneEntityAIInventoryImport) {
+                this.curTask.requester.clearIncomingStack(this.curTask.transportingItem);
+                return this.clearAIAndProvideAgain();
+            } else if (this.curAI instanceof DroneAILiquidImport) {
+                this.curTask.requester.clearIncomingStack(this.curTask.transportingFluid);
+                return this.clearAIAndProvideAgain();
             } else {
-                curAI = null;
+                this.curAI = null;
                 return false;
             }
         } else {
-            curTask.informRequester();
+            this.curTask.informRequester();
             return true;
         }
     }
 
     private boolean clearAIAndProvideAgain() {
-        curAI = null;
-        if (curTask.isStillValid(drone.getInv().getStackInSlot(0).isEmpty() ? drone.getTank().getFluid() : drone.getInv().getStackInSlot(0)) && execute(curTask)) {
+        this.curAI = null;
+        if (this.curTask.isStillValid(this.drone.getInv().getStackInSlot(0).isEmpty() ? this.drone.getTank().getFluid() : this.drone.getInv().getStackInSlot(0)) && this.execute(this.curTask)) {
             return true;
         } else {
-            curTask = null;
-            return doLogistics();
+            this.curTask = null;
+            return this.doLogistics();
         }
     }
 
     public boolean execute(LogisticsTask task) {
-        if (!drone.getInv().getStackInSlot(0).isEmpty()) {
-            if (hasNoPathTo(task.requester.getPos())) return false;
-            curAI = new DroneEntityAIInventoryExport(drone,
+        if (!this.drone.getInv().getStackInSlot(0).isEmpty()) {
+            if (this.hasNoPathTo(task.requester.getPos())) return false;
+            this.curAI = new DroneEntityAIInventoryExport(this.drone,
                     new FakeWidgetLogistics(task.requester.getPos(), task.requester.getSide(), task.transportingItem));
-        } else if (drone.getTank().getFluidAmount() > 0) {
-            if (hasNoPathTo(task.requester.getPos())) return false;
-            curAI = new DroneAILiquidExport(drone,
+        } else if (this.drone.getTank().getFluidAmount() > 0) {
+            if (this.hasNoPathTo(task.requester.getPos())) return false;
+            this.curAI = new DroneAILiquidExport(this.drone,
                     new FakeWidgetLogistics(task.requester.getPos(), task.requester.getSide(), task.transportingFluid.stack));
         } else if (!task.transportingItem.isEmpty()) {
-            if (hasNoPathTo(task.provider.getPos())) return false;
-            curAI = new DroneEntityAIInventoryImport(drone,
+            if (this.hasNoPathTo(task.provider.getPos())) return false;
+            this.curAI = new DroneEntityAIInventoryImport(this.drone,
                     new FakeWidgetLogistics(task.provider.getPos(), task.provider.getSide(), task.transportingItem));
         } else {
-            if (hasNoPathTo(task.provider.getPos())) return false;
-            curAI = new DroneAILiquidImport(drone,
-                    new FakeWidgetLogistics(task.provider.getPos(),  task.provider.getSide(), task.transportingFluid.stack));
+            if (this.hasNoPathTo(task.provider.getPos())) return false;
+            this.curAI = new DroneAILiquidImport(this.drone,
+                    new FakeWidgetLogistics(task.provider.getPos(), task.provider.getSide(), task.transportingFluid.stack));
         }
-        if (curAI.shouldExecute()) {
+        if (this.curAI.shouldExecute()) {
             task.informRequester();
             return true;
         } else {
@@ -127,9 +127,9 @@ public class DroneAILogistics extends EntityAIBase {
 
     private boolean hasNoPathTo(BlockPos pos) {
         for (EnumFacing d : EnumFacing.VALUES) {
-            if (drone.isBlockValidPathfindBlock(pos.offset(d))) return false;
+            if (this.drone.isBlockValidPathfindBlock(pos.offset(d))) return false;
         }
-        drone.addDebugEntry("gui.progWidget.general.debug.cantNavigate", pos);
+        this.drone.addDebugEntry("gui.progWidget.general.debug.cantNavigate", pos);
         return true;
     }
 
@@ -144,17 +144,17 @@ public class DroneAILogistics extends EntityAIBase {
         FakeWidgetLogistics(BlockPos pos, EnumFacing side, @Nonnull ItemStack stack) {
             this.stack = stack;
             this.fluid = null;
-            area = new HashSet<>();
-            area.add(pos);
-            sides[side.getIndex()] = true;
+            this.area = new HashSet<>();
+            this.area.add(pos);
+            this.sides[side.getIndex()] = true;
         }
 
         FakeWidgetLogistics(BlockPos pos, EnumFacing side, FluidStack fluid) {
             this.stack = ItemStack.EMPTY;
             this.fluid = fluid;
-            area = new HashSet<>();
-            area.add(pos);
-            sides[side.getIndex()] = true;
+            this.area = new HashSet<>();
+            this.area.add(pos);
+            this.sides[side.getIndex()] = true;
         }
 
         @Override
@@ -178,12 +178,12 @@ public class DroneAILogistics extends EntityAIBase {
 
         @Override
         public boolean[] getSides() {
-            return sides;
+            return this.sides;
         }
 
         @Override
         public boolean isItemValidForFilters(@Nonnull ItemStack item) {
-            return !item.isEmpty() && item.isItemEqual(stack);
+            return !item.isEmpty() && item.isItemEqual(this.stack);
         }
 
         @Override
@@ -202,7 +202,7 @@ public class DroneAILogistics extends EntityAIBase {
 
         @Override
         public int getCount() {
-            return !stack.isEmpty() ? stack.getCount() : fluid.amount;
+            return !this.stack.isEmpty() ? this.stack.getCount() : this.fluid.amount;
         }
 
         @Override

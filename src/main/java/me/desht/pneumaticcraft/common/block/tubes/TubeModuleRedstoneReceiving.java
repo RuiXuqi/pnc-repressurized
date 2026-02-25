@@ -12,32 +12,32 @@ public abstract class TubeModuleRedstoneReceiving extends TubeModule {
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        redstoneLevel = tag.getInteger("redstone");
+        this.redstoneLevel = tag.getInteger("redstone");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("redstone", redstoneLevel);
+        tag.setInteger("redstone", this.redstoneLevel);
     }
 
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Applied redstone: " + TextFormatting.WHITE + redstoneLevel);
+        curInfo.add("Applied redstone: " + TextFormatting.WHITE + this.redstoneLevel);
     }
 
     @Override
     public void onNeighborBlockUpdate() {
-        redstoneLevel = pressureTube.world().getRedstonePowerFromNeighbors(pressureTube.pos());
+        this.redstoneLevel = this.pressureTube.world().getRedstonePowerFromNeighbors(this.pressureTube.pos());
     }
 
     public int getReceivingRedstoneLevel() {
-        return redstoneLevel;
+        return this.redstoneLevel;
     }
 
     public float getThreshold() {
-        return getThreshold(redstoneLevel);
+        return this.getThreshold(this.redstoneLevel);
     }
 
     @Override
@@ -47,9 +47,9 @@ public abstract class TubeModuleRedstoneReceiving extends TubeModule {
 
     @Override
     public void update() {
-        if (upgraded && !advancedConfig && higherBound != lowerBound) {
-            higherBound = lowerBound;
-            if (!getTube().world().isRemote) sendDescriptionPacket();
+        if (this.upgraded && !this.advancedConfig && this.higherBound != this.lowerBound) {
+            this.higherBound = this.lowerBound;
+            if (!this.getTube().world().isRemote) this.sendDescriptionPacket();
         }
     }
 }

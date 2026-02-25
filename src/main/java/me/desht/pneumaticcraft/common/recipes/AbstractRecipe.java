@@ -8,7 +8,7 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 
 public abstract class AbstractRecipe extends IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
     AbstractRecipe(String registryName) {
-        setRegistryName(registryName);
+        this.setRegistryName(registryName);
     }
 
     /**

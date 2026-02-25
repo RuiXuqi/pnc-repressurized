@@ -16,67 +16,67 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.UUID;
 
-public class SemiBlockSpawnerAgitator extends SemiBlockBasic<TileEntityMobSpawner>{
+public class SemiBlockSpawnerAgitator extends SemiBlockBasic<TileEntityMobSpawner> {
 
     public static final String ID = "spawner_agitator";
     public static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(UUID.randomUUID(), "SemiBlockSpawnerAgitator");
-    
-    public SemiBlockSpawnerAgitator(){
+
+    public SemiBlockSpawnerAgitator() {
         super(TileEntityMobSpawner.class);
     }
-    
+
     @Override
-    public boolean canPlace(EnumFacing facing){
-        return getBlockState().getBlock() == Blocks.MOB_SPAWNER;
+    public boolean canPlace(EnumFacing facing) {
+        return this.getBlockState().getBlock() == Blocks.MOB_SPAWNER;
     }
-    
+
     @Override
     public void update() {
         super.update();
-        if (!world.isRemote) {
-            TileEntityMobSpawner te = getTileEntity();
-            if(te != null){
+        if (!this.world.isRemote) {
+            TileEntityMobSpawner te = this.getTileEntity();
+            if (te != null) {
                 MobSpawnerBaseLogic spawnerLogic = te.getSpawnerBaseLogic();
-                
+
                 //Only tick the logic if it wasn't ticked already by the TE itself, to prevent double ticking.
-                if(!Reflections.isActivated(spawnerLogic)){
-                    
+                if (!Reflections.isActivated(spawnerLogic)) {
+
                     //Temporarily add a fake player to the world to trick the spawner into thinking there's a player nearby
-                    FakePlayer fakePlayer = FakePlayerFactory.get((WorldServer)world, FAKE_PLAYER_PROFILE);
+                    FakePlayer fakePlayer = FakePlayerFactory.get((WorldServer) this.world, FAKE_PLAYER_PROFILE);
                     if (fakePlayer.connection == null) {
                         fakePlayer.connection = new FakeNetHandlerPlayerServer(FMLCommonHandler.instance().getMinecraftServerInstance(), fakePlayer);
                     }
-                    fakePlayer.posX = getPos().getX();
-                    fakePlayer.posY = getPos().getY();
-                    fakePlayer.posZ = getPos().getZ();
-                    
-                    world.playerEntities.add(fakePlayer);
+                    fakePlayer.posX = this.getPos().getX();
+                    fakePlayer.posY = this.getPos().getY();
+                    fakePlayer.posZ = this.getPos().getZ();
+
+                    this.world.playerEntities.add(fakePlayer);
                     spawnerLogic.updateSpawner();
-                    world.playerEntities.remove(fakePlayer);
-                }                
+                    this.world.playerEntities.remove(fakePlayer);
+                }
             }
         }
     }
-    
+
     @Override
     public void onPlaced(EntityPlayer player, ItemStack stack, EnumFacing facing) {
         super.onPlaced(player, stack, facing);
-        if (!world.isRemote) {
-            setSpawnPersistentEntities(true);
+        if (!this.world.isRemote) {
+            this.setSpawnPersistentEntities(true);
         }
     }
-    
+
     @Override
-    public void invalidate(){
+    public void invalidate() {
         super.invalidate();
-        if (!world.isRemote) {
-            setSpawnPersistentEntities(false);
+        if (!this.world.isRemote) {
+            this.setSpawnPersistentEntities(false);
         }
     }
-    
-    private void setSpawnPersistentEntities(boolean persistent){
-        TileEntityMobSpawner te = getTileEntity();
-        if(te != null){
+
+    private void setSpawnPersistentEntities(boolean persistent) {
+        TileEntityMobSpawner te = this.getTileEntity();
+        if (te != null) {
             MobSpawnerBaseLogic spawnerLogic = te.getSpawnerBaseLogic();
             spawnerLogic.spawnData.getNbt().setBoolean("PersistenceRequired", persistent);
         }

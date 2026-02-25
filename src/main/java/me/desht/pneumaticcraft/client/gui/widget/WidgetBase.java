@@ -29,19 +29,19 @@ public class WidgetBase implements IGuiWidget {
     @Override
     public int getID() {
 
-        return id;
+        return this.id;
     }
 
     @Override
     public void setListener(IWidgetListener gui) {
 
-        listener = gui;
+        this.listener = gui;
     }
 
     @Override
     public void onMouseClicked(int mouseX, int mouseY, int button) {
 
-        listener.actionPerformed(this);
+        this.listener.actionPerformed(this);
     }
 
     @Override
@@ -51,25 +51,25 @@ public class WidgetBase implements IGuiWidget {
 
     @Override
     public Rectangle getBounds() {
-        return new Rectangle(x, y, width, height);
+        return new Rectangle(this.x, this.y, this.width, this.height);
     }
 
     public void setTooltipText(String tooltip) {
-        tooltipText.clear();
+        this.tooltipText.clear();
         if (I18n.hasKey(tooltip)) {
-            tooltipText.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(tooltip)));
+            this.tooltipText.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format(tooltip)));
         } else if (tooltip != null && !tooltip.isEmpty()) {
-            tooltipText.add(tooltip);
+            this.tooltipText.add(tooltip);
         }
     }
 
     @Override
     public void addTooltip(int mouseX, int mouseY, List<String> curTip, boolean shiftPressed) {
-        curTip.addAll(tooltipText);
+        curTip.addAll(this.tooltipText);
     }
 
     public String getTooltip() {
-        return tooltipText.size() > 0 ? tooltipText.get(0) : "";
+        return this.tooltipText.size() > 0 ? this.tooltipText.get(0) : "";
     }
 
     @Override

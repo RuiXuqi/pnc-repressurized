@@ -7,7 +7,7 @@ public interface IHeatDisperser {
     /**
      * Disperse heat to adjacent modded machines which can accept it
      *
-     * @param te the PneumaticCraft tile entity trying to disperse heat
+     * @param te        the PneumaticCraft tile entity trying to disperse heat
      * @param tileCache cache of adjacent tile entities
      */
     void disperseHeat(TileEntity te, TileEntityCache[] tileCache);

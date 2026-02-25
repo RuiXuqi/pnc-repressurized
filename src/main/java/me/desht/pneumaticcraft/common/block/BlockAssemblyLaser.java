@@ -24,7 +24,7 @@ public class BlockAssemblyLaser extends BlockPneumaticCraftModeled {
 
     BlockAssemblyLaser() {
         super(Material.IRON, "assembly_laser");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Nullable

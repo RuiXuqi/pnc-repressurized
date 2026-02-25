@@ -54,8 +54,8 @@ public class HackableLivingDisarm implements IHackableEntity {
             IItemHandler handsHandler = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.UP);
             IItemHandler armorHandler = entity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, EnumFacing.NORTH);
 
-            doDisarm(entityLiving, player.getRNG(), handsHandler, entityLiving.inventoryHandsDropChances);
-            doDisarm(entityLiving, player.getRNG(), armorHandler, entityLiving.inventoryArmorDropChances);
+            this.doDisarm(entityLiving, player.getRNG(), handsHandler, entityLiving.inventoryHandsDropChances);
+            this.doDisarm(entityLiving, player.getRNG(), armorHandler, entityLiving.inventoryArmorDropChances);
             entityLiving.setCanPickUpLoot(false);
         }
     }

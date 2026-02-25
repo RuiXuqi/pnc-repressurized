@@ -17,7 +17,7 @@ public class RenderDrone extends RenderLiving<EntityDroneBase> {
     public RenderDrone(RenderManager manager) {
         super(manager, new ModelDrone(), 0);
     }
-    
+
     public RenderDrone(RenderManager manager, int frameColor) {
         super(manager, new ModelDrone(frameColor), 0);
     }
@@ -31,9 +31,9 @@ public class RenderDrone extends RenderLiving<EntityDroneBase> {
         GlStateManager.pushMatrix();
         GlStateManager.translate(0, 0.76F, 0);
         GlStateManager.scale(0.5F, -0.5F, -0.5F);
-        bindEntityTexture(drone);
-        mainModel.setLivingAnimations(drone, 0, 0, partialTicks);
-        mainModel.render(drone, 0, 0, 0, 0, partialTicks, 1 / 16F);
+        this.bindEntityTexture(drone);
+        this.mainModel.setLivingAnimations(drone, 0, 0, partialTicks);
+        this.mainModel.render(drone, 0, 0, 0, 0, partialTicks, 1 / 16F);
         GlStateManager.popMatrix();
 
         drone.renderExtras(x, y, z, partialTicks);
@@ -47,12 +47,12 @@ public class RenderDrone extends RenderLiving<EntityDroneBase> {
 
     @Override
     public void doRender(EntityDroneBase drone, double par2, double par4, double par6, float par8, float par9) {
-        renderDrone(drone, par2, par4, par6, par8, par9);
-        renderName(drone, par2, par4, par6); //TODO 1.8 test (renaming)
+        this.renderDrone(drone, par2, par4, par6, par8, par9);
+        this.renderName(drone, par2, par4, par6); //TODO 1.8 test (renaming)
     }
 
     @Override
     protected boolean canRenderName(EntityDroneBase drone) {
-        return super.canRenderName(drone) && (drone.getAlwaysRenderNameTagForRender() || drone.hasCustomName() && drone == renderManager.pointedEntity);
+        return super.canRenderName(drone) && (drone.getAlwaysRenderNameTagForRender() || drone.hasCustomName() && drone == this.renderManager.pointedEntity);
     }
 }

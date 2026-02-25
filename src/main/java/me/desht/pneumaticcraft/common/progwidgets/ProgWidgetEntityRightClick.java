@@ -30,7 +30,7 @@ public class ProgWidgetEntityRightClick extends ProgWidget implements IAreaProvi
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) {
+        if (this.getConnectedParameters()[0] == null) {
             curInfo.add("gui.progWidget.area.error.noArea");
         }
         EntityFilterPair.addErrors(this, curInfo);
@@ -78,18 +78,18 @@ public class ProgWidgetEntityRightClick extends ProgWidget implements IAreaProvi
 
             @Override
             protected boolean isEntityValid(Entity entity) {
-                return entity instanceof EntityLivingBase && !visitedEntities.contains(entity);
+                return entity instanceof EntityLivingBase && !this.visitedEntities.contains(entity);
             }
 
             @Override
             protected boolean doAction() {
-                visitedEntities.add(targetedEntity);
+                this.visitedEntities.add(this.targetedEntity);
                 boolean activated = false;
-                ItemStack stack = drone.getInv().getStackInSlot(0);
-                if (stack.getItem().itemInteractionForEntity(stack, drone.getFakePlayer(), targetedEntity, EnumHand.MAIN_HAND)) {
+                ItemStack stack = this.drone.getInv().getStackInSlot(0);
+                if (stack.getItem().itemInteractionForEntity(stack, this.drone.getFakePlayer(), this.targetedEntity, EnumHand.MAIN_HAND)) {
                     activated = true;
                 }
-                if (!activated && targetedEntity instanceof EntityAgeable && ((EntityAgeable) targetedEntity).processInteract(drone.getFakePlayer(), EnumHand.MAIN_HAND)) {
+                if (!activated && this.targetedEntity instanceof EntityAgeable && ((EntityAgeable) this.targetedEntity).processInteract(this.drone.getFakePlayer(), EnumHand.MAIN_HAND)) {
                     activated = true;
                 }
                 return false;//return activated; <-- will right click as long as it's sucessfully activated.
@@ -100,18 +100,18 @@ public class ProgWidgetEntityRightClick extends ProgWidget implements IAreaProvi
 
     @Override
     public List<Entity> getValidEntities(World world) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.getValidEntities(world);
+        return this.entityFilters.getValidEntities(world);
     }
 
     @Override
     public boolean isEntityValid(Entity entity) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.isEntityValid(entity);
+        return this.entityFilters.isEntityValid(entity);
     }
 
     @Override
@@ -122,6 +122,6 @@ public class ProgWidgetEntityRightClick extends ProgWidget implements IAreaProvi
 
     @Override
     public void getArea(Set<BlockPos> area) {
-        ProgWidgetEntityAttack.getArea(area, (ProgWidgetArea) getConnectedParameters()[0], (ProgWidgetArea) getConnectedParameters()[2]);
+        ProgWidgetEntityAttack.getArea(area, (ProgWidgetArea) this.getConnectedParameters()[0], (ProgWidgetArea) this.getConnectedParameters()[2]);
     }
 }

@@ -19,7 +19,7 @@ import java.util.Stack;
 public class ItemSeismicSensor extends ItemPneumatic {
     public ItemSeismicSensor() {
         super("seismic_sensor");
-        setMaxStackSize(1);
+        this.setMaxStackSize(1);
     }
 
     @Override
@@ -42,9 +42,9 @@ public class ItemSeismicSensor extends ItemPneumatic {
                         }
                     }
                     player.sendStatusMessage(new TextComponentTranslation(
-                            "message.seismicSensor.foundOilDetails",
-                            TextFormatting.GREEN.toString() + (startY - pos.getY()),
-                            TextFormatting.GREEN.toString() + oilPositions.size() / 10 * 10),
+                                    "message.seismicSensor.foundOilDetails",
+                                    TextFormatting.GREEN.toString() + (startY - pos.getY()),
+                                    TextFormatting.GREEN.toString() + oilPositions.size() / 10 * 10),
                             false);
                     return EnumActionResult.SUCCESS;
                 }

@@ -27,7 +27,7 @@ public class ThirdPartyConfig extends JsonConfig {
     protected void writeToJson(JsonObject json) {
         json.addProperty("description", "Enable/disable integration of specific third-party mods");
         JsonObject obj = new JsonObject();
-        for (Map.Entry<String,Boolean> entry : MODS.entrySet()) {
+        for (Map.Entry<String, Boolean> entry : MODS.entrySet()) {
             obj.add(entry.getKey(), new JsonPrimitive(entry.getValue()));
         }
         json.add("enabled_mods", obj);
@@ -37,7 +37,7 @@ public class ThirdPartyConfig extends JsonConfig {
     protected void readFromJson(JsonObject json) {
         JsonObject obj = json.get("enabled_mods").getAsJsonObject();
         MODS.clear();
-        for (Map.Entry<String,JsonElement> entry : obj.entrySet()) {
+        for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
             MODS.put(entry.getKey(), entry.getValue().getAsBoolean());
         }
     }

@@ -29,7 +29,7 @@ public abstract class BlockAndCoordinatePollSensor implements IPollSensorSetting
                     int toolY = gpsTag.getInteger("y");
                     int toolZ = gpsTag.getInteger("z");
                     if (Math.abs(toolX - pos.getX()) <= sensorRange && Math.abs(toolY - pos.getY()) <= sensorRange && Math.abs(toolZ - pos.getZ()) <= sensorRange) {
-                        return getRedstoneValue(world, pos, sensorRange, textBoxText, new BlockPos(toolX, toolY, toolZ));
+                        return this.getRedstoneValue(world, pos, sensorRange, textBoxText, new BlockPos(toolX, toolY, toolZ));
                     }
                 }
             }

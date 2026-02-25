@@ -13,9 +13,9 @@ public class DebugEntry /*implements Comparable<DebugEntry>*/ {
     /**
      * Called server side when a debug message is added to a drone.
      *
-     * @param message the message text
+     * @param message      the message text
      * @param progWidgetId a programming widget ID
-     * @param pos block position
+     * @param pos          block position
      */
     DebugEntry(String message, int progWidgetId, BlockPos pos) {
         this.message = message;
@@ -29,38 +29,38 @@ public class DebugEntry /*implements Comparable<DebugEntry>*/ {
      * @param buf message buffer
      */
     public DebugEntry(ByteBuf buf) {
-        message = ByteBufUtils.readUTF8String(buf);
-        pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
-        progWidgetId = buf.readInt();
-        receivedTime = System.currentTimeMillis();
+        this.message = ByteBufUtils.readUTF8String(buf);
+        this.pos = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.progWidgetId = buf.readInt();
+        this.receivedTime = System.currentTimeMillis();
     }
 
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, message);
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
-        buf.writeInt(progWidgetId);
+        ByteBufUtils.writeUTF8String(buf, this.message);
+        buf.writeInt(this.pos.getX());
+        buf.writeInt(this.pos.getY());
+        buf.writeInt(this.pos.getZ());
+        buf.writeInt(this.progWidgetId);
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     public int getProgWidgetId() {
-        return progWidgetId;
+        return this.progWidgetId;
     }
 
     public long getReceivedTime() {
-        return receivedTime;
+        return this.receivedTime;
     }
 
     public boolean hasCoords() {
-        return pos.getX() != 0 || pos.getY() != 0 || pos.getZ() != 0;
+        return this.pos.getX() != 0 || this.pos.getY() != 0 || this.pos.getZ() != 0;
     }
 
 }

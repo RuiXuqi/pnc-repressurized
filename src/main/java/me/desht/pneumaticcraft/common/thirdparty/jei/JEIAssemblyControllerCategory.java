@@ -54,7 +54,7 @@ public class JEIAssemblyControllerCategory extends PneumaticCraftCategory<JEIAss
                 this.addOutput(stack);
             }
             this.addIngredient(new PositionedStack(program.getItemStack(1), 133, 22));
-            ItemStack[] requiredMachines = getMachinesFromEnum(program.getRequiredMachines());
+            ItemStack[] requiredMachines = this.getMachinesFromEnum(program.getRequiredMachines());
             for (int i = 0; i < requiredMachines.length; i++) {
                 this.addIngredient(new PositionedStack(requiredMachines[i], 5 + i * 18, 25));
             }
@@ -94,7 +94,7 @@ public class JEIAssemblyControllerCategory extends PneumaticCraftCategory<JEIAss
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        drawProgressBar(68, 75, 173, 0, 24, 17, StartDirection.LEFT);
+        this.drawProgressBar(68, 75, 173, 0, 24, 17, StartDirection.LEFT);
         FontRenderer fontRenderer = FMLClientHandler.instance().getClient().fontRenderer;
         fontRenderer.drawString("Required Machines", 5, 15, 4210752);
         fontRenderer.drawString("Prog.", 129, 9, 4210752);

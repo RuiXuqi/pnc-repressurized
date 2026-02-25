@@ -27,20 +27,20 @@ public class GuiPressureChamber extends GuiPneumaticContainerBase<TileEntityPres
     public void initGui() {
         super.initGui();
 
-        addAnimatedStat("Pressure Chamber Status", new ItemStack(Blockss.PRESSURE_CHAMBER_WALL), 0xFFFFAA00, false)
+        this.addAnimatedStat("Pressure Chamber Status", new ItemStack(Blockss.PRESSURE_CHAMBER_WALL), 0xFFFFAA00, false)
                 .setText(ImmutableList.of(
                         "\u00a7fChamber Size:",
-                        "\u00a70" + te.multiBlockSize + "x" + te.multiBlockSize + "x" + te.multiBlockSize + " (outside)",
-                        "\u00a70" + (te.multiBlockSize - 2) + "x" + (te.multiBlockSize - 2) + "x" + (te.multiBlockSize - 2) + " (inside)"
+                        "\u00a70" + this.te.multiBlockSize + "x" + this.te.multiBlockSize + "x" + this.te.multiBlockSize + " (outside)",
+                        "\u00a70" + (this.te.multiBlockSize - 2) + "x" + (this.te.multiBlockSize - 2) + "x" + (this.te.multiBlockSize - 2) + " (inside)"
                 ));
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        String containerName = I18n.format("gui.pressureChamberTitle", te.multiBlockSize + "x" + te.multiBlockSize + "x" + te.multiBlockSize);
-        fontRenderer.drawString(containerName, xSize / 2 - fontRenderer.getStringWidth(containerName) / 2, 6, 4210752);
-        fontRenderer.drawString("Upgr.", 53, 19, 4210752);
+        String containerName = I18n.format("gui.pressureChamberTitle", this.te.multiBlockSize + "x" + this.te.multiBlockSize + "x" + this.te.multiBlockSize);
+        this.fontRenderer.drawString(containerName, this.xSize / 2 - this.fontRenderer.getStringWidth(containerName) / 2, 6, 4210752);
+        this.fontRenderer.drawString("Upgr.", 53, 19, 4210752);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class GuiPressureChamber extends GuiPneumaticContainerBase<TileEntityPres
     @Override
     protected void addWarnings(List<String> curInfo) {
         super.addWarnings(curInfo);
-        if (!te.isValidRecipeInChamber) {
+        if (!this.te.isValidRecipeInChamber) {
             curInfo.add("\u00a7fNo (valid) items in the chamber");
             curInfo.add("\u00a70Insert valid items in");
             curInfo.add("\u00a70the chamber to be compressed.");
@@ -60,19 +60,19 @@ public class GuiPressureChamber extends GuiPneumaticContainerBase<TileEntityPres
 
     @Override
     protected void addProblems(List<String> curInfo) {
-        if (te.isValidRecipeInChamber && !te.isSufficientPressureInChamber) {
-            if (te.recipePressure > 0F) {
+        if (this.te.isValidRecipeInChamber && !this.te.isSufficientPressureInChamber) {
+            if (this.te.recipePressure > 0F) {
                 curInfo.add("\u00a7fNot enough pressure");
                 curInfo.add("\u00a70Add air to the input");
             } else {
                 curInfo.add("\u00a7fToo much pressure");
                 curInfo.add("\u00a70Remove air from the input");
             }
-            if (te.itemsInOverflow) {
+            if (this.te.itemsInOverflow) {
                 curInfo.add("\u00a7fToo many items in Chamber");
                 curInfo.add("\u00a70Crafting cannot continue until some items are removed from the chamber");
             }
-            curInfo.add("\u00a70Pressure required: " + te.recipePressure + " bar");
+            curInfo.add("\u00a70Pressure required: " + this.te.recipePressure + " bar");
         }
     }
 }

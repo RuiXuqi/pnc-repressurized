@@ -22,14 +22,14 @@ public class ItemLogisticsFrame extends ItemSemiBlockBase {
 
     public ItemLogisticsFrame(String registryName) {
         super(registryName);
-        setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
+        this.setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
     }
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand handIn) {
         ItemStack stack = player.getHeldItem(handIn);
         if (!world.isRemote) {
-            player.openGui(PneumaticCraftRepressurized.instance, getSemiBlock(world, null, stack).getGuiID().ordinal(), world, 0, 0, 0);
+            player.openGui(PneumaticCraftRepressurized.instance, this.getSemiBlock(world, null, stack).getGuiID().ordinal(), world, 0, 0, 0);
         }
         return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
     }
@@ -49,8 +49,10 @@ public class ItemLogisticsFrame extends ItemSemiBlockBase {
             }
             String key = SemiBlockManager.getKeyForSemiBlock(SemiBlockManager.getSemiBlockForItem((ItemSemiBlockBase) stack.getItem()));
             if (sneaking) {
-                if (logistics.isFuzzyMeta()) curInfo.add("\u2022 " + PneumaticCraftUtils.xlate("gui.logistic_frame.fuzzyMeta"));
-                if (logistics.isFuzzyNBT()) curInfo.add("\u2022 " + PneumaticCraftUtils.xlate("gui.logistic_frame.fuzzyNBT"));
+                if (logistics.isFuzzyMeta())
+                    curInfo.add("\u2022 " + PneumaticCraftUtils.xlate("gui.logistic_frame.fuzzyMeta"));
+                if (logistics.isFuzzyNBT())
+                    curInfo.add("\u2022 " + PneumaticCraftUtils.xlate("gui.logistic_frame.fuzzyNBT"));
                 ItemStack[] stacks = new ItemStack[logistics.getFilters().getSlots()];
                 for (int i = 0; i < logistics.getFilters().getSlots(); i++) {
                     stacks[i] = logistics.getFilters().getStackInSlot(i);

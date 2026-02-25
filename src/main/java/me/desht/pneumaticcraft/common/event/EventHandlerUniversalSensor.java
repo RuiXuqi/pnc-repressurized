@@ -12,17 +12,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class EventHandlerUniversalSensor {
     @SubscribeEvent
     public void onInteraction(PlayerInteractEvent event) {
-        sendEventToSensors(event.getEntity().world, event);
+        this.sendEventToSensors(event.getEntity().world, event);
     }
 
     @SubscribeEvent
     public void onPlayerAttack(AttackEntityEvent event) {
-        sendEventToSensors(event.getEntity().world, event);
+        this.sendEventToSensors(event.getEntity().world, event);
     }
 
     @SubscribeEvent
     public void onItemPickUp(EntityItemPickupEvent event) {
-        sendEventToSensors(event.getEntity().world, event);
+        this.sendEventToSensors(event.getEntity().world, event);
     }
 
     private void sendEventToSensors(World world, Event event) {

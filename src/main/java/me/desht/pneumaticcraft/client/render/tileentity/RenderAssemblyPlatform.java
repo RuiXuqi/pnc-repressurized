@@ -12,7 +12,7 @@ public class RenderAssemblyPlatform extends AbstractModelRenderer<TileEntityAsse
     private final ModelAssemblyPlatform model;
 
     public RenderAssemblyPlatform() {
-        model = new ModelAssemblyPlatform();
+        this.model = new ModelAssemblyPlatform();
     }
 
     @Override
@@ -32,10 +32,10 @@ public class RenderAssemblyPlatform extends AbstractModelRenderer<TileEntityAsse
             RenderManager renderManager = Minecraft.getMinecraft().getRenderManager();
             boolean fancySetting = renderManager.options.fancyGraphics;
             renderManager.options.fancyGraphics = true;
-            model.renderModel(0.0625f, te.oldClawProgress + (te.clawProgress - te.oldClawProgress) * partialTicks, ghostEntityItem);
+            this.model.renderModel(0.0625f, te.oldClawProgress + (te.clawProgress - te.oldClawProgress) * partialTicks, ghostEntityItem);
             renderManager.options.fancyGraphics = fancySetting;
         } else {
-            model.renderModel(0.0625f, 0, null);
+            this.model.renderModel(0.0625f, 0, null);
         }
     }
 }

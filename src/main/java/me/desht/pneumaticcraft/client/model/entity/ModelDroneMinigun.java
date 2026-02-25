@@ -30,77 +30,77 @@ public class ModelDroneMinigun extends ModelBase {
     private final ModelRenderer magazineColor;
 
     public ModelDroneMinigun() {
-        textureWidth = 64;
-        textureHeight = 32;
+        this.textureWidth = 64;
+        this.textureHeight = 32;
 
-        barrel = new ModelRenderer(this, 30, 15);
-        barrel.addBox(-0.5F, 1.5F, 0F, 1, 1, 16);
-        barrel.setRotationPoint(0F, 20.96667F, -8F);
-        barrel.setTextureSize(64, 32);
-        barrel.mirror = true;
-        setRotation(barrel, 0F, 0F, 0F);
-        support1 = new ModelRenderer(this, 0, 0);
-        support1.addBox(-1.5F, -1.5F, 0F, 3, 3, 1);
-        support1.setRotationPoint(0F, 21F, -6F);
-        support1.setTextureSize(64, 32);
-        support1.mirror = true;
-        setRotation(support1, 0F, 0F, 0F);
-        support2 = new ModelRenderer(this, 0, 4);
-        support2.addBox(-1F, 1.5F, 0F, 2, 1, 1);
-        support2.setRotationPoint(0F, 21F, -6F);
-        support2.setTextureSize(64, 32);
-        support2.mirror = true;
-        setRotation(support2, 0F, 0F, 0F);
-        support3 = new ModelRenderer(this, 0, 6);
-        support3.addBox(-1F, -2.5F, 0F, 2, 1, 1);
-        support3.setRotationPoint(0F, 21F, -6F);
-        support3.setTextureSize(64, 32);
-        support3.mirror = true;
-        setRotation(support3, 0F, 0F, 0F);
-        support4 = new ModelRenderer(this, 0, 8);
-        support4.addBox(1.5F, -1F, 0F, 1, 2, 1);
-        support4.setRotationPoint(0F, 21F, -6F);
-        support4.setTextureSize(64, 32);
-        support4.mirror = true;
-        setRotation(support4, 0F, 0F, 0F);
-        support5 = new ModelRenderer(this, 0, 11);
-        support5.addBox(-2.5F, -1F, 0F, 1, 2, 1);
-        support5.setRotationPoint(0F, 21F, -6F);
-        support5.setTextureSize(64, 32);
-        support5.mirror = true;
-        setRotation(support5, 0F, 0F, 0F);
-        main = new ModelRenderer(this, 36, 0);
-        main.addBox(0F, 0F, 0F, 6, 6, 8);
-        main.setRotationPoint(-3F, 18F, 8F);
-        main.setTextureSize(64, 32);
-        main.mirror = true;
-        setRotation(main, 0F, 0F, 0F);
-        magazine = new ModelRenderer(this, 0, 14);
-        magazine.addBox(0F, 0F, 0F, 2, 3, 6);
-        magazine.setRotationPoint(3F, 22F, 9F);
-        magazine.setTextureSize(64, 32);
-        magazine.mirror = true;
-        setRotation(magazine, 0F, 0F, 0F);
-        mount = new ModelRenderer(this, 0, 23);
-        mount.addBox(0F, 0F, 0F, 2, 4, 2);
-        mount.setRotationPoint(-1F, 15F, 11F);
-        mount.setTextureSize(64, 32);
-        mount.mirror = true;
-        setRotation(mount, 0F, 0F, 0F);
-        magazineColor = new ModelRenderer(this, 8, 0);
-        magazineColor.addBox(0F, 0F, 0F, 1, 2, 4);
-        magazineColor.setRotationPoint(4.3F, 22.5F, 10F);
-        magazineColor.setTextureSize(64, 32);
-        magazineColor.mirror = true;
-        setRotation(magazineColor, 0F, 0F, 0F);
+        this.barrel = new ModelRenderer(this, 30, 15);
+        this.barrel.addBox(-0.5F, 1.5F, 0F, 1, 1, 16);
+        this.barrel.setRotationPoint(0F, 20.96667F, -8F);
+        this.barrel.setTextureSize(64, 32);
+        this.barrel.mirror = true;
+        this.setRotation(this.barrel, 0F, 0F, 0F);
+        this.support1 = new ModelRenderer(this, 0, 0);
+        this.support1.addBox(-1.5F, -1.5F, 0F, 3, 3, 1);
+        this.support1.setRotationPoint(0F, 21F, -6F);
+        this.support1.setTextureSize(64, 32);
+        this.support1.mirror = true;
+        this.setRotation(this.support1, 0F, 0F, 0F);
+        this.support2 = new ModelRenderer(this, 0, 4);
+        this.support2.addBox(-1F, 1.5F, 0F, 2, 1, 1);
+        this.support2.setRotationPoint(0F, 21F, -6F);
+        this.support2.setTextureSize(64, 32);
+        this.support2.mirror = true;
+        this.setRotation(this.support2, 0F, 0F, 0F);
+        this.support3 = new ModelRenderer(this, 0, 6);
+        this.support3.addBox(-1F, -2.5F, 0F, 2, 1, 1);
+        this.support3.setRotationPoint(0F, 21F, -6F);
+        this.support3.setTextureSize(64, 32);
+        this.support3.mirror = true;
+        this.setRotation(this.support3, 0F, 0F, 0F);
+        this.support4 = new ModelRenderer(this, 0, 8);
+        this.support4.addBox(1.5F, -1F, 0F, 1, 2, 1);
+        this.support4.setRotationPoint(0F, 21F, -6F);
+        this.support4.setTextureSize(64, 32);
+        this.support4.mirror = true;
+        this.setRotation(this.support4, 0F, 0F, 0F);
+        this.support5 = new ModelRenderer(this, 0, 11);
+        this.support5.addBox(-2.5F, -1F, 0F, 1, 2, 1);
+        this.support5.setRotationPoint(0F, 21F, -6F);
+        this.support5.setTextureSize(64, 32);
+        this.support5.mirror = true;
+        this.setRotation(this.support5, 0F, 0F, 0F);
+        this.main = new ModelRenderer(this, 36, 0);
+        this.main.addBox(0F, 0F, 0F, 6, 6, 8);
+        this.main.setRotationPoint(-3F, 18F, 8F);
+        this.main.setTextureSize(64, 32);
+        this.main.mirror = true;
+        this.setRotation(this.main, 0F, 0F, 0F);
+        this.magazine = new ModelRenderer(this, 0, 14);
+        this.magazine.addBox(0F, 0F, 0F, 2, 3, 6);
+        this.magazine.setRotationPoint(3F, 22F, 9F);
+        this.magazine.setTextureSize(64, 32);
+        this.magazine.mirror = true;
+        this.setRotation(this.magazine, 0F, 0F, 0F);
+        this.mount = new ModelRenderer(this, 0, 23);
+        this.mount.addBox(0F, 0F, 0F, 2, 4, 2);
+        this.mount.setRotationPoint(-1F, 15F, 11F);
+        this.mount.setTextureSize(64, 32);
+        this.mount.mirror = true;
+        this.setRotation(this.mount, 0F, 0F, 0F);
+        this.magazineColor = new ModelRenderer(this, 8, 0);
+        this.magazineColor.addBox(0F, 0F, 0F, 1, 2, 4);
+        this.magazineColor.setRotationPoint(4.3F, 22.5F, 10F);
+        this.magazineColor.setTextureSize(64, 32);
+        this.magazineColor.mirror = true;
+        this.setRotation(this.magazineColor, 0F, 0F, 0F);
     }
 
     @Override
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
         super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+        this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
         EntityDrone drone = (EntityDrone) entity;
-        renderMinigun(drone != null ? drone.getMinigun() : null, f5, 0, true);
+        this.renderMinigun(drone != null ? drone.getMinigun() : null, f5, 0, true);
     }
 
     public void renderMinigun(Minigun minigun, float size, float partialTick, boolean renderMount) {
@@ -109,7 +109,7 @@ public class ModelDroneMinigun extends ModelBase {
         GlStateManager.pushMatrix();
         if (renderMount) {
             GlStateManager.translate(0, 5 / 16D, -12 / 16D);
-            mount.render(size);
+            this.mount.render(size);
             GlStateManager.translate(0, -5 / 16D, 12 / 16D);
         }
 
@@ -120,31 +120,31 @@ public class ModelDroneMinigun extends ModelBase {
             double pitch = minigun.oldMinigunPitch + partialTick * (minigun.minigunPitch - minigun.oldMinigunPitch);
 
             GlStateManager.translate(0, 23 / 16D, 0);
-            GlStateManager.rotate((float)yaw, 0, 1, 0);
-            GlStateManager.rotate((float)pitch, 1, 0, 0);
+            GlStateManager.rotate((float) yaw, 0, 1, 0);
+            GlStateManager.rotate((float) pitch, 1, 0, 0);
             GlStateManager.translate(0, -18 / 16D, -12 / 16D);
         }
-        barrel.rotateAngleY = 0;
-        barrel.rotateAngleX = 0;
+        this.barrel.rotateAngleY = 0;
+        this.barrel.rotateAngleX = 0;
         for (int i = 0; i < 6; i++) {
-            barrel.rotateAngleZ = (float) (Math.PI / 3 * i) + barrelRotation;
-            barrel.render(size);
+            this.barrel.rotateAngleZ = (float) (Math.PI / 3 * i) + barrelRotation;
+            this.barrel.render(size);
         }
-        support1.rotateAngleZ = barrelRotation;
-        support2.rotateAngleZ = barrelRotation;
-        support3.rotateAngleZ = barrelRotation;
-        support4.rotateAngleZ = barrelRotation;
-        support5.rotateAngleZ = barrelRotation;
-        support1.render(size);
-        support2.render(size);
-        support3.render(size);
-        support4.render(size);
-        support5.render(size);
-        magazine.render(size);
-        main.render(size);
+        this.support1.rotateAngleZ = barrelRotation;
+        this.support2.rotateAngleZ = barrelRotation;
+        this.support3.rotateAngleZ = barrelRotation;
+        this.support4.rotateAngleZ = barrelRotation;
+        this.support5.rotateAngleZ = barrelRotation;
+        this.support1.render(size);
+        this.support2.render(size);
+        this.support3.render(size);
+        this.support4.render(size);
+        this.support5.render(size);
+        this.magazine.render(size);
+        this.main.render(size);
         GlStateManager.disableTexture2D();
         RenderUtils.glColorHex(minigun != null ? 0xFF000000 | minigun.getAmmoColor() : 0xFF313131);
-        magazineColor.render(size);
+        this.magazineColor.render(size);
         GlStateManager.color(1, 1, 1, 1);
         GlStateManager.enableTexture2D();
         GlStateManager.popMatrix();

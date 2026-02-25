@@ -9,7 +9,7 @@ public class BlockCompressedIron extends BlockPneumaticCraft {
 
     BlockCompressedIron() {
         super(Material.IRON, "compressed_iron_block");
-        setSoundType(SoundType.METAL);
+        this.setSoundType(SoundType.METAL);
     }
 
     @Override

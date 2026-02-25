@@ -30,8 +30,8 @@ public class DroneAINearestAttackableTarget extends EntityAITarget {
         super(drone, checkSight, easyTargetsOnly);
         this.drone = drone;
         this.widget = widget;
-        theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(drone);
-        setMutexBits(1);
+        this.theNearestAttackableTargetSorter = new EntityAINearestAttackableTarget.Sorter(drone);
+        this.setMutexBits(1);
     }
 
     /**
@@ -39,12 +39,12 @@ public class DroneAINearestAttackableTarget extends EntityAITarget {
      */
     @Override
     public boolean shouldExecute() {
-        if (drone.hasMinigun() && drone.getAmmo().isEmpty()) return false;
-        List<Entity> list = ((IEntityProvider) widget).getValidEntities(drone.world);
-        list.sort(theNearestAttackableTargetSorter);
+        if (this.drone.hasMinigun() && this.drone.getAmmo().isEmpty()) return false;
+        List<Entity> list = ((IEntityProvider) this.widget).getValidEntities(this.drone.world);
+        list.sort(this.theNearestAttackableTargetSorter);
         for (Entity entity : list) {
-            if (entity != taskOwner && entity instanceof EntityLivingBase) {
-                targetEntity = (EntityLivingBase) entity;
+            if (entity != this.taskOwner && entity instanceof EntityLivingBase) {
+                this.targetEntity = (EntityLivingBase) entity;
                 return true;
             }
         }
@@ -56,7 +56,7 @@ public class DroneAINearestAttackableTarget extends EntityAITarget {
      */
     @Override
     public void startExecuting() {
-        taskOwner.setAttackTarget(targetEntity);
+        this.taskOwner.setAttackTarget(this.targetEntity);
         super.startExecuting();
     }
 }

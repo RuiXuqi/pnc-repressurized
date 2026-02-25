@@ -46,32 +46,32 @@ public class GuiSecurityStationHacking extends GuiSecurityStationBase {
     public GuiSecurityStationHacking(InventoryPlayer player, TileEntitySecurityStation te) {
 
         super(new ContainerSecurityStationHacking(player, te), te, Textures.GUI_HACKING);
-        ySize = 238;
+        this.ySize = 238;
     }
 
     @Override
     public void initGui() {
         super.initGui();
 
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
 
-        statusStat = addAnimatedStat("Security Status", new ItemStack(Blockss.SECURITY_STATION), 0xFFFFAA00, false);
-        addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tab.info.tile.security_station.hacking");
-        addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF0000FF, true).setText("gui.tab.upgrades.tile.security_station.hacking");
-        addAnimatedStat(Itemss.NUKE_VIRUS.getTranslationKey() + ".name", new ItemStack(Itemss.NUKE_VIRUS), 0xFF18c9e8, false).setText("gui.tab.info.tile.security_station.nukeVirus");
-        addAnimatedStat(Itemss.STOP_WORM.getTranslationKey() + ".name", new ItemStack(Itemss.STOP_WORM), 0xFFc13232, false).setText("gui.tab.info.tile.security_station.stopWorm");
+        this.statusStat = this.addAnimatedStat("Security Status", new ItemStack(Blockss.SECURITY_STATION), 0xFFFFAA00, false);
+        this.addAnimatedStat("gui.tab.info", Textures.GUI_INFO_LOCATION, 0xFF8888FF, true).setText("gui.tab.info.tile.security_station.hacking");
+        this.addAnimatedStat("gui.tab.upgrades", Textures.GUI_UPGRADES_LOCATION, 0xFF0000FF, true).setText("gui.tab.upgrades.tile.security_station.hacking");
+        this.addAnimatedStat(Itemss.NUKE_VIRUS.getTranslationKey() + ".name", new ItemStack(Itemss.NUKE_VIRUS), 0xFF18c9e8, false).setText("gui.tab.info.tile.security_station.nukeVirus");
+        this.addAnimatedStat(Itemss.STOP_WORM.getTranslationKey() + ".name", new ItemStack(Itemss.STOP_WORM), 0xFFc13232, false).setText("gui.tab.info.tile.security_station.stopWorm");
 
-        if (playerBackgroundBridges == null) {
-            playerBackgroundBridges = new NetworkConnectionBackground(this, te, xStart + 21, yStart + 26, 31, 0xAA4444FF);
-            aiBackgroundBridges = new NetworkConnectionBackground(this, te, xStart + 23, yStart + 27, 31, 0xAA4444FF);
-            hackerBridges = new NetworkConnectionPlayerHandler(this, te, xStart + 21, yStart + 26, 31, 0xFF00FF00);
-            aiBridges = new NetworkConnectionAIHandler(this, te, xStart + 23, yStart + 27, 31, 0xFFFF0000);
+        if (this.playerBackgroundBridges == null) {
+            this.playerBackgroundBridges = new NetworkConnectionBackground(this, this.te, xStart + 21, yStart + 26, 31, 0xAA4444FF);
+            this.aiBackgroundBridges = new NetworkConnectionBackground(this, this.te, xStart + 23, yStart + 27, 31, 0xAA4444FF);
+            this.hackerBridges = new NetworkConnectionPlayerHandler(this, this.te, xStart + 21, yStart + 26, 31, 0xFF00FF00);
+            this.aiBridges = new NetworkConnectionAIHandler(this, this.te, xStart + 23, yStart + 27, 31, 0xFFFF0000);
         } else {
-            playerBackgroundBridges = new NetworkConnectionBackground(playerBackgroundBridges, xStart + 21, yStart + 26);
-            aiBackgroundBridges = new NetworkConnectionBackground(aiBackgroundBridges, xStart + 23, yStart + 27);
-            hackerBridges = new NetworkConnectionPlayerHandler(hackerBridges, xStart + 21, yStart + 26);
-            aiBridges = new NetworkConnectionAIHandler(aiBridges, xStart + 23, yStart + 27);
+            this.playerBackgroundBridges = new NetworkConnectionBackground(this.playerBackgroundBridges, xStart + 21, yStart + 26);
+            this.aiBackgroundBridges = new NetworkConnectionBackground(this.aiBackgroundBridges, xStart + 23, yStart + 27);
+            this.hackerBridges = new NetworkConnectionPlayerHandler(this.hackerBridges, xStart + 21, yStart + 26);
+            this.aiBridges = new NetworkConnectionAIHandler(this.aiBridges, xStart + 23, yStart + 27);
         }
     }
 
@@ -103,29 +103,29 @@ public class GuiSecurityStationHacking extends GuiSecurityStationBase {
     @Override
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
-        fontRenderer.drawString((aiBridges.isTracing() ? TextFormatting.RED : TextFormatting.GREEN) + "Tracing: " + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(aiBridges.getRemainingTraceTime(), true), 15, 7, 4210752);
-        renderConsumables(x, y);
+        this.fontRenderer.drawString((this.aiBridges.isTracing() ? TextFormatting.RED : TextFormatting.GREEN) + "Tracing: " + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(this.aiBridges.getRemainingTraceTime(), true), 15, 7, 4210752);
+        this.renderConsumables(x, y);
     }
 
     private void renderConsumables(int x, int y) {
-        stopWorms = 0;
-        nukeViruses = 0;
+        this.stopWorms = 0;
+        this.nukeViruses = 0;
         EntityPlayer player = FMLClientHandler.instance().getClient().player;
         for (ItemStack stack : player.inventory.mainInventory) {
-            if (stack.getItem() == Itemss.STOP_WORM) stopWorms += stack.getCount();
-            if (stack.getItem() == Itemss.NUKE_VIRUS) nukeViruses += stack.getCount();
+            if (stack.getItem() == Itemss.STOP_WORM) this.stopWorms += stack.getCount();
+            if (stack.getItem() == Itemss.NUKE_VIRUS) this.nukeViruses += stack.getCount();
         }
-        GuiUtils.drawItemStack(nukeVirus, 155, 30);
-        GuiUtils.drawItemStack(stopWorm, 155, 55);
-        fontRenderer.drawString(PneumaticCraftUtils.convertAmountToString(nukeViruses), 155, 45, 0xFFFFFFFF);
-        fontRenderer.drawString(PneumaticCraftUtils.convertAmountToString(stopWorms), 155, 70, 0xFFFFFFFF);
+        GuiUtils.drawItemStack(this.nukeVirus, 155, 30);
+        GuiUtils.drawItemStack(this.stopWorm, 155, 55);
+        this.fontRenderer.drawString(PneumaticCraftUtils.convertAmountToString(this.nukeViruses), 155, 45, 0xFFFFFFFF);
+        this.fontRenderer.drawString(PneumaticCraftUtils.convertAmountToString(this.stopWorms), 155, 70, 0xFFFFFFFF);
 
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        statusStat.setText(getStatusText());
+        this.statusStat.setText(this.getStatusText());
     }
 
     @Override
@@ -133,26 +133,26 @@ public class GuiSecurityStationHacking extends GuiSecurityStationBase {
         super.drawGuiContainerBackgroundLayer(opacity, x, y);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-        playerBackgroundBridges.render();
-        aiBackgroundBridges.render();
-        hackerBridges.render();
-        aiBridges.render();
+        this.playerBackgroundBridges.render();
+        this.aiBackgroundBridges.render();
+        this.hackerBridges.render();
+        this.aiBridges.render();
 
-        if (x >= guiLeft + 155 && x <= guiLeft + 171 && y >= guiTop + 30 && y <= guiTop + 50) {
+        if (x >= this.guiLeft + 155 && x <= this.guiLeft + 171 && y >= this.guiTop + 30 && y <= this.guiTop + 50) {
             List<String> text = new ArrayList<>();
             text.add("Nuke Virus");
-            if (hasNukeViruses()) {
+            if (this.hasNukeViruses()) {
                 text.add(TextFormatting.GRAY + "Middle-click a hackable node to use.");
             } else {
                 text.add(TextFormatting.RED + "You don't have any Nuke Viruses.");
             }
-            drawHoveringString(text, x, y, fontRenderer);
+            this.drawHoveringString(text, x, y, this.fontRenderer);
         }
-        if (x >= guiLeft + 155 && x <= guiLeft + 171 && y >= guiTop + 55 && y <= guiTop + 75) {
+        if (x >= this.guiLeft + 155 && x <= this.guiLeft + 171 && y >= this.guiTop + 55 && y <= this.guiTop + 75) {
             List<String> text = new ArrayList<>();
             text.add("STOP! Worm");
-            if (stopWorms > 0) {
-                if (aiBridges.isTracing()) {
+            if (this.stopWorms > 0) {
+                if (this.aiBridges.isTracing()) {
                     text.add(TextFormatting.GRAY + "Left-click to use.");
                 } else {
                     text.add(TextFormatting.GRAY + "STOP! Worms can only be used when being traced.");
@@ -160,52 +160,52 @@ public class GuiSecurityStationHacking extends GuiSecurityStationBase {
             } else {
                 text.add(TextFormatting.RED + "You don't have any STOP! Worms.");
             }
-            drawHoveringString(text, x, y, fontRenderer);
+            this.drawHoveringString(text, x, y, this.fontRenderer);
         }
     }
 
     @Override
     protected void addProblems(List<String> text) {
         super.addProblems(text);
-        if (aiBridges.isTracing()) {
+        if (this.aiBridges.isTracing()) {
             text.add(TextFormatting.GRAY + "Intrusion detected!");
-            text.add(TextFormatting.BLACK + "Time till trace: " + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(aiBridges.getRemainingTraceTime(), false));
+            text.add(TextFormatting.BLACK + "Time till trace: " + PneumaticCraftUtils.convertTicksToMinutesAndSeconds(this.aiBridges.getRemainingTraceTime(), false));
         }
     }
 
     private List<String> getStatusText() {
         List<String> text = new ArrayList<>();
         text.add(TextFormatting.GRAY + "Security Level");
-        text.add(TextFormatting.BLACK + "Level " + te.getSecurityLevel());
+        text.add(TextFormatting.BLACK + "Level " + this.te.getSecurityLevel());
         text.add(TextFormatting.GRAY + "Security Range");
-        text.add(TextFormatting.BLACK.toString() + te.getSecurityRange() + "m (square)");
+        text.add(TextFormatting.BLACK.toString() + this.te.getSecurityRange() + "m (square)");
         return text;
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         if (mouseButton != 2) super.mouseClicked(mouseX, mouseY, mouseButton);
-        hackerBridges.mouseClicked(mouseX, mouseY, mouseButton, getSlotAtPosition(mouseX, mouseY));
-        if (aiBridges.isTracing() && mouseX >= guiLeft + 155 && mouseX <= guiLeft + 171 && mouseY >= guiTop + 55 && mouseY <= guiTop + 75) {
+        this.hackerBridges.mouseClicked(mouseX, mouseY, mouseButton, this.getSlotAtPosition(mouseX, mouseY));
+        if (this.aiBridges.isTracing() && mouseX >= this.guiLeft + 155 && mouseX <= this.guiLeft + 171 && mouseY >= this.guiTop + 55 && mouseY <= this.guiTop + 75) {
             EntityPlayer player = FMLClientHandler.instance().getClient().player;
             NetworkHandler.sendToServer(new PacketUseItem(Itemss.STOP_WORM, 1));
             PneumaticCraftUtils.consumeInventoryItem(player.inventory, Itemss.STOP_WORM);
-            aiBridges.applyStopWorm();
+            this.aiBridges.applyStopWorm();
         }
     }
 
     public void addExtraHackInfo(List<String> currenttip) {
         int mouseX = Mouse.getX() * this.width / this.mc.displayWidth;
         int mouseY = this.height - Mouse.getY() * this.height / this.mc.displayHeight - 1;
-        Slot slot = getSlotAtPosition(mouseX, mouseY);
+        Slot slot = this.getSlotAtPosition(mouseX, mouseY);
         if (slot != null) {
-            if (hackerBridges.slotHacked[slot.slotNumber]) {
-                if (!hackerBridges.slotFortified[slot.slotNumber]) {
-                    currenttip.add(TextFormatting.RED + "DETECTION: " + te.getDetectionChance() + "%");
+            if (this.hackerBridges.slotHacked[slot.slotNumber]) {
+                if (!this.hackerBridges.slotFortified[slot.slotNumber]) {
+                    currenttip.add(TextFormatting.RED + "DETECTION: " + this.te.getDetectionChance() + "%");
                     currenttip.add(TextFormatting.YELLOW + "Right-click to fortify");
                 }
-            } else if (hackerBridges.canHackSlot(slot.slotNumber)) {
-                currenttip.add(TextFormatting.RED + "DETECTION: " + te.getDetectionChance() + "%");
+            } else if (this.hackerBridges.canHackSlot(slot.slotNumber)) {
+                currenttip.add(TextFormatting.RED + "DETECTION: " + this.te.getDetectionChance() + "%");
                 currenttip.add(TextFormatting.GREEN + "Left-click to hack");
 
             }
@@ -213,33 +213,33 @@ public class GuiSecurityStationHacking extends GuiSecurityStationBase {
     }
 
     public boolean hasNukeViruses() {
-        return nukeViruses > 0;
+        return this.nukeViruses > 0;
     }
 
     public void onSlotHack(int slot) {
-        if (Math.random() < te.getDetectionChance() / 100D) {
-            aiBridges.setTracing(true);
+        if (Math.random() < this.te.getDetectionChance() / 100D) {
+            this.aiBridges.setTracing(true);
         }
     }
 
     public void onSlotFortification(int slot) {
-        aiBridges.slotFortified[slot] = true;
-        if (Math.random() < te.getDetectionChance() / 100D) {
-            aiBridges.setTracing(true);
+        this.aiBridges.slotFortified[slot] = true;
+        if (Math.random() < this.te.getDetectionChance() / 100D) {
+            this.aiBridges.setTracing(true);
         }
     }
 
     @Override
     public void onGuiClosed() {
-        if (aiBridges.isTracing() && !hackerBridges.hackedSuccessfully)
-            NetworkHandler.sendToServer(new PacketSecurityStationFailedHack(te.getPos()));
-        removeUpdatesOnConnectionHandlers();
+        if (this.aiBridges.isTracing() && !this.hackerBridges.hackedSuccessfully)
+            NetworkHandler.sendToServer(new PacketSecurityStationFailedHack(this.te.getPos()));
+        this.removeUpdatesOnConnectionHandlers();
         super.onGuiClosed();
     }
 
     public void removeUpdatesOnConnectionHandlers() {
-        ClientTickHandler.instance().removeUpdatedObject(hackerBridges);
-        ClientTickHandler.instance().removeUpdatedObject(aiBridges);
+        ClientTickHandler.instance().removeUpdatedObject(this.hackerBridges);
+        ClientTickHandler.instance().removeUpdatedObject(this.aiBridges);
     }
 
 }

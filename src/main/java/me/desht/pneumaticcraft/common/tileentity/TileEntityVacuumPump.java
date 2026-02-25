@@ -34,15 +34,15 @@ public class TileEntityVacuumPump extends TileEntityPneumaticBase implements IRe
 
     public TileEntityVacuumPump() {
         super(PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.VOLUME_VACUUM_PUMP, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
     }
 
     @Override
     public IAirHandler getAirHandler(EnumFacing side) {
-        if (side == null || side == getInputSide()) {
+        if (side == null || side == this.getInputSide()) {
             return super.getAirHandler(side);
-        } else if (side == getVacuumSide()) {
-            return vacuumHandler;
+        } else if (side == this.getVacuumSide()) {
+            return this.vacuumHandler;
         } else {
             return null;
         }
@@ -51,99 +51,99 @@ public class TileEntityVacuumPump extends TileEntityPneumaticBase implements IRe
     @Override
     public void validate() {
         super.validate();
-        vacuumHandler.validate(this);
+        this.vacuumHandler.validate(this);
     }
 
     @Override
     public void onNeighborTileUpdate() {
         super.onNeighborTileUpdate();
-        vacuumHandler.onNeighborChange();
+        this.vacuumHandler.onNeighborChange();
     }
 
     public EnumFacing getInputSide() {
-        return getVacuumSide().getOpposite();
+        return this.getVacuumSide().getOpposite();
     }
 
     public EnumFacing getVacuumSide() {
-        return getRotation();
+        return this.getRotation();
     }
 
     @Override
     public void update() {
-        if (!getWorld().isRemote && turnTimer >= 0) {
-            turnTimer--;
+        if (!this.getWorld().isRemote && this.turnTimer >= 0) {
+            this.turnTimer--;
         }
-        if (!getWorld().isRemote
-                && getAirHandler(getInputSide()).getPressure() > PneumaticValues.MIN_PRESSURE_VACUUM_PUMP
-                && getAirHandler(getVacuumSide()).getPressure() > -1F
-                && redstoneAllows()) {
-            if (!getWorld().isRemote && turnTimer == -1) {
-                turning = true;
+        if (!this.getWorld().isRemote
+                && this.getAirHandler(this.getInputSide()).getPressure() > PneumaticValues.MIN_PRESSURE_VACUUM_PUMP
+                && this.getAirHandler(this.getVacuumSide()).getPressure() > -1F
+                && this.redstoneAllows()) {
+            if (!this.getWorld().isRemote && this.turnTimer == -1) {
+                this.turning = true;
             }
-            getAirHandler(getVacuumSide()).addAir((int) (-PneumaticValues.PRODUCTION_VACUUM_PUMP * getSpeedMultiplierFromUpgrades())); // negative because it's pulling a vacuum.
-            getAirHandler(getInputSide()).addAir((int) (-PneumaticValues.USAGE_VACUUM_PUMP * getSpeedUsageMultiplierFromUpgrades()));
-            turnTimer = 40;
+            this.getAirHandler(this.getVacuumSide()).addAir((int) (-PneumaticValues.PRODUCTION_VACUUM_PUMP * this.getSpeedMultiplierFromUpgrades())); // negative because it's pulling a vacuum.
+            this.getAirHandler(this.getInputSide()).addAir((int) (-PneumaticValues.USAGE_VACUUM_PUMP * this.getSpeedUsageMultiplierFromUpgrades()));
+            this.turnTimer = 40;
         }
-        if (turnTimer == 0) {
-            turning = false;
+        if (this.turnTimer == 0) {
+            this.turning = false;
         }
-        oldRotation = rotation;
-        if (getWorld().isRemote) {
-            if (turning) {
-                rotationSpeed = Math.min(rotationSpeed + 1, 20);
+        this.oldRotation = this.rotation;
+        if (this.getWorld().isRemote) {
+            if (this.turning) {
+                this.rotationSpeed = Math.min(this.rotationSpeed + 1, 20);
             } else {
-                rotationSpeed = Math.max(rotationSpeed - 1, 0);
+                this.rotationSpeed = Math.max(this.rotationSpeed - 1, 0);
             }
-            rotation += rotationSpeed;
+            this.rotation += this.rotationSpeed;
         }
 
         super.update();
-        vacuumHandler.update();
+        this.vacuumHandler.update();
 
-        IAirHandler inputHandler = getAirHandler(getInputSide());
+        IAirHandler inputHandler = this.getAirHandler(this.getInputSide());
         List<Pair<EnumFacing, IAirHandler>> teList = inputHandler.getConnectedPneumatics();
-        if (teList.size() == 0) inputHandler.airLeak(getInputSide());
-        teList = vacuumHandler.getConnectedPneumatics();
-        if (teList.size() == 0) vacuumHandler.airLeak(getVacuumSide());
+        if (teList.size() == 0) inputHandler.airLeak(this.getInputSide());
+        teList = this.vacuumHandler.getConnectedPneumatics();
+        if (teList.size() == 0) this.vacuumHandler.airLeak(this.getVacuumSide());
 
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        return new AxisAlignedBB(getPos().getX(), getPos().getY(), getPos().getZ(), getPos().getX() + 1, getPos().getY() + 1, getPos().getZ() + 1);
+        return new AxisAlignedBB(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ(), this.getPos().getX() + 1, this.getPos().getY() + 1, this.getPos().getZ() + 1);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
         NBTTagCompound vacuum = new NBTTagCompound();
-        vacuumHandler.writeToNBT(vacuum);
+        this.vacuumHandler.writeToNBT(vacuum);
         tag.setTag("vacuum", vacuum);
-        tag.setBoolean("turning", turning);
-        tag.setInteger("redstoneMode", redstoneMode);
+        tag.setBoolean("turning", this.turning);
+        tag.setInteger("redstoneMode", this.redstoneMode);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        vacuumHandler.readFromNBT(tag.getCompoundTag("vacuum"));
-        turning = tag.getBoolean("turning");
-        redstoneMode = tag.getInteger("redstoneMode");
+        this.vacuumHandler.readFromNBT(tag.getCompoundTag("vacuum"));
+        this.turning = tag.getBoolean("turning");
+        this.redstoneMode = tag.getInteger("redstoneMode");
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 2) redstoneMode = 0;
+            this.redstoneMode++;
+            if (this.redstoneMode > 2) this.redstoneMode = 0;
         }
     }
 
     @Override
     public void printManometerMessage(EntityPlayer player, List<String> curInfo) {
-        curInfo.add(TextFormatting.GREEN + "Input pressure: " + PneumaticCraftUtils.roundNumberTo(getAirHandler(getInputSide()).getPressure(), 1) + " bar. Vacuum pressure: " + PneumaticCraftUtils.roundNumberTo(getAirHandler(getVacuumSide()).getPressure(), 1) + " bar.");
+        curInfo.add(TextFormatting.GREEN + "Input pressure: " + PneumaticCraftUtils.roundNumberTo(this.getAirHandler(this.getInputSide()).getPressure(), 1) + " bar. Vacuum pressure: " + PneumaticCraftUtils.roundNumberTo(this.getAirHandler(this.getVacuumSide()).getPressure(), 1) + " bar.");
     }
 
     @Override
@@ -153,7 +153,7 @@ public class TileEntityVacuumPump extends TileEntityPneumaticBase implements IRe
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
 }

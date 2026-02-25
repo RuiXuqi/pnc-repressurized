@@ -10,15 +10,15 @@ public class ContainerAirCannon extends ContainerPneumaticBase<TileEntityAirCann
     public ContainerAirCannon(InventoryPlayer inventoryPlayer, TileEntityAirCannon te) {
         super(te);
 
-        addUpgradeSlots(8, 29);
+        this.addUpgradeSlots(8, 29);
 
         // add the gps slot
-        addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.GPS_TOOL, 1, 51, 29));
+        this.addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.GPS_TOOL, 1, 51, 29));
 
         // add the cannoned slot.
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 79, 40));
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, 79, 40));
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
 
     }
 

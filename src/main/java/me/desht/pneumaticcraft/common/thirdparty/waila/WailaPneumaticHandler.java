@@ -39,11 +39,11 @@ public class WailaPneumaticHandler implements IWailaDataProvider {
     private static void addTipToMachine(List<String> currenttip, IWailaDataAccessor accessor) {
         NBTTagCompound tag = accessor.getNBTData();
         TileEntity te = accessor.getTileEntity();
-        if(te instanceof IInfoForwarder){
+        if (te instanceof IInfoForwarder) {
             BlockPos infoPos = new BlockPos(tag.getInteger("infoX"), tag.getInteger("infoY"), tag.getInteger("infoZ"));
             te = accessor.getWorld().getTileEntity(infoPos);
         }
-        
+
         if (te instanceof IPneumaticMachine) {
             addTipToMachine(currenttip, (IPneumaticMachine) te, tag.getFloat("pressure"));
         }
@@ -75,21 +75,21 @@ public class WailaPneumaticHandler implements IWailaDataProvider {
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, BlockPos pos) {
         TileEntity teInfo;
-        if(te instanceof IInfoForwarder){
-            teInfo = ((IInfoForwarder)te).getInfoTileEntity();
-            if(teInfo != null){
+        if (te instanceof IInfoForwarder) {
+            teInfo = ((IInfoForwarder) te).getInfoTileEntity();
+            if (teInfo != null) {
                 tag.setInteger("infoX", teInfo.getPos().getX());
                 tag.setInteger("infoY", teInfo.getPos().getY());
                 tag.setInteger("infoZ", teInfo.getPos().getZ());
             }
-        }else{
+        } else {
             teInfo = te;
         }
-        
+
         if (teInfo instanceof IPneumaticMachine) {
             tag.setFloat("pressure", ((IPneumaticMachine) teInfo).getAirHandler(null).getPressure());
         }
-        
+
         return tag;
     }
 }

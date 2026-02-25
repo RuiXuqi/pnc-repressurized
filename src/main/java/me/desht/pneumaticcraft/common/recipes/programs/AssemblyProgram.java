@@ -56,7 +56,7 @@ public abstract class AssemblyProgram {
      */
     @SuppressWarnings("incomplete-switch")
     public void addProgramProblem(List<String> problemList) {
-        switch (curProblem) {
+        switch (this.curProblem) {
             case NO_INPUT:
                 problemList.addAll(PneumaticCraftUtils.convertStringIntoList(TextFormatting.GRAY + "The input IO Unit can't find an inventory with a Block of Compressed Iron.", GuiConstants.MAX_CHAR_PER_LINE_LEFT));
                 problemList.addAll(PneumaticCraftUtils.convertStringIntoList(TextFormatting.BLACK + "Place an inventory with a Block of Compressed Iron surrounding the IO Unit.", GuiConstants.MAX_CHAR_PER_LINE_LEFT));
@@ -78,7 +78,7 @@ public abstract class AssemblyProgram {
     }
 
     public ItemStack getItemStack(int amount) {
-        return new ItemStack(Itemss.ASSEMBLY_PROGRAM, amount, getItemMeta());
+        return new ItemStack(Itemss.ASSEMBLY_PROGRAM, amount, this.getItemMeta());
     }
 
     protected abstract int getItemMeta();

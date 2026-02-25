@@ -32,34 +32,34 @@ public class ArmorHUDLayout extends JsonConfig {
     @Override
     protected void writeToJson(JsonObject json) {
         json.addProperty("Description", "Stores the layout of Pneumatic Armor HUD elements");
-        if (needLegacyImport) {
-            json.addProperty("needLegacyImport", needLegacyImport);
+        if (this.needLegacyImport) {
+            json.addProperty("needLegacyImport", this.needLegacyImport);
         } else {
             JsonObject sub = new JsonObject();
-            sub.add("power", powerStat.toJson());
-            sub.add("message", messageStat.toJson());
-            sub.add("blockTracker", blockTrackerStat.toJson());
-            sub.add("entityTracker", entityTrackerStat.toJson());
-            sub.add("itemSearch", itemSearchStat.toJson());
-            sub.add("airCon", airConStat.toJson());
-            sub.add("jetBoots", jetBootsStat.toJson());
+            sub.add("power", this.powerStat.toJson());
+            sub.add("message", this.messageStat.toJson());
+            sub.add("blockTracker", this.blockTrackerStat.toJson());
+            sub.add("entityTracker", this.entityTrackerStat.toJson());
+            sub.add("itemSearch", this.itemSearchStat.toJson());
+            sub.add("airCon", this.airConStat.toJson());
+            sub.add("jetBoots", this.jetBootsStat.toJson());
             json.add("stats", sub);
         }
     }
 
     @Override
     protected void readFromJson(JsonObject json) {
-        needLegacyImport = json.has("needLegacyImport") && json.get("needLegacyImport").getAsBoolean();
+        this.needLegacyImport = json.has("needLegacyImport") && json.get("needLegacyImport").getAsBoolean();
 
         if (json.has("stats")) { // will always be false on dedicated server
             JsonObject sub = json.getAsJsonObject("stats");
-            powerStat = readLayout(sub, "power", POWER_DEF);
-            messageStat = readLayout(sub, "message", MESSAGE_DEF);
-            blockTrackerStat = readLayout(sub, "blockTracker", BLOCK_TRACKER_DEF);
-            entityTrackerStat = readLayout(sub, "entityTracker", ENTITY_TRACKER_DEF);
-            itemSearchStat = readLayout(sub, "itemSearch", ITEM_SEARCH_DEF);
-            airConStat = readLayout(sub, "airCon", AIR_CON_DEF);
-            jetBootsStat = readLayout(sub, "jetBoots", JET_BOOTS_DEF);
+            this.powerStat = this.readLayout(sub, "power", POWER_DEF);
+            this.messageStat = this.readLayout(sub, "message", MESSAGE_DEF);
+            this.blockTrackerStat = this.readLayout(sub, "blockTracker", BLOCK_TRACKER_DEF);
+            this.entityTrackerStat = this.readLayout(sub, "entityTracker", ENTITY_TRACKER_DEF);
+            this.itemSearchStat = this.readLayout(sub, "itemSearch", ITEM_SEARCH_DEF);
+            this.airConStat = this.readLayout(sub, "airCon", AIR_CON_DEF);
+            this.jetBootsStat = this.readLayout(sub, "jetBoots", JET_BOOTS_DEF);
         }
     }
 
@@ -79,20 +79,20 @@ public class ArmorHUDLayout extends JsonConfig {
      * @param sy screen Y resolution
      */
     public void maybeImportLegacySettings(int sx, int sy) {
-        if (needLegacyImport) {
-            needLegacyImport = false;
+        if (this.needLegacyImport) {
+            this.needLegacyImport = false;
 
             ConfigHandler.HelmetOptions ho = ConfigHandler.helmetOptions;
-            powerStat = new LayoutItem(sx, sy, ho.powerX, ho.powerY, ho.powerLeft);
-            messageStat = new LayoutItem(sx, sy, ho.messageX, ho.messageY, ho.messageLeft);
-            blockTrackerStat = new LayoutItem(sx, sy, ho.blockTrackerX, ho.blockTrackerY, ho.blockTrackerLeft);
-            entityTrackerStat = new LayoutItem(sx, sy, ho.entityTrackerX, ho.entityTrackerY, ho.entityTrackerLeft);
-            itemSearchStat = new LayoutItem(sx, sy, ho.itemSearchX, ho.itemSearchY, ho.itemSearchLeft);
-            airConStat = new LayoutItem(sx, sy, ho.acStatX, ho.acStatY, ho.acStatLeft);
-            jetBootsStat = JET_BOOTS_DEF; // no legacy import for jetBootsStat
+            this.powerStat = new LayoutItem(sx, sy, ho.powerX, ho.powerY, ho.powerLeft);
+            this.messageStat = new LayoutItem(sx, sy, ho.messageX, ho.messageY, ho.messageLeft);
+            this.blockTrackerStat = new LayoutItem(sx, sy, ho.blockTrackerX, ho.blockTrackerY, ho.blockTrackerLeft);
+            this.entityTrackerStat = new LayoutItem(sx, sy, ho.entityTrackerX, ho.entityTrackerY, ho.entityTrackerLeft);
+            this.itemSearchStat = new LayoutItem(sx, sy, ho.itemSearchX, ho.itemSearchY, ho.itemSearchLeft);
+            this.airConStat = new LayoutItem(sx, sy, ho.acStatX, ho.acStatY, ho.acStatLeft);
+            this.jetBootsStat = JET_BOOTS_DEF; // no legacy import for jetBootsStat
 
             try {
-                writeToFile();
+                this.writeToFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -102,16 +102,30 @@ public class ArmorHUDLayout extends JsonConfig {
     public void updateLayout(LayoutTypes what, float x, float y, boolean leftSided) {
         LayoutItem l = new LayoutItem(x, y, leftSided);
         switch (what) {
-            case POWER: powerStat = l; break;
-            case MESSAGE: messageStat = l; break;
-            case ENTITY_TRACKER: entityTrackerStat = l; break;
-            case BLOCK_TRACKER: blockTrackerStat = l; break;
-            case ITEM_SEARCH: itemSearchStat = l; break;
-            case AIR_CON: airConStat = l; break;
-            case JET_BOOTS: jetBootsStat = l; break;
+            case POWER:
+                this.powerStat = l;
+                break;
+            case MESSAGE:
+                this.messageStat = l;
+                break;
+            case ENTITY_TRACKER:
+                this.entityTrackerStat = l;
+                break;
+            case BLOCK_TRACKER:
+                this.blockTrackerStat = l;
+                break;
+            case ITEM_SEARCH:
+                this.itemSearchStat = l;
+                break;
+            case AIR_CON:
+                this.airConStat = l;
+                break;
+            case JET_BOOTS:
+                this.jetBootsStat = l;
+                break;
         }
         try {
-            writeToFile();
+            this.writeToFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -135,22 +149,22 @@ public class ArmorHUDLayout extends JsonConfig {
         }
 
         public float getX() {
-            return x;
+            return this.x;
         }
 
         public float getY() {
-            return y;
+            return this.y;
         }
 
         public boolean isLeftSided() {
-            return leftSided;
+            return this.leftSided;
         }
 
         JsonObject toJson() {
             JsonObject obj = new JsonObject();
-            obj.addProperty("x", x);
-            obj.addProperty("y", y);
-            obj.addProperty("leftSided", leftSided);
+            obj.addProperty("x", this.x);
+            obj.addProperty("y", this.y);
+            obj.addProperty("leftSided", this.leftSided);
             return obj;
         }
 

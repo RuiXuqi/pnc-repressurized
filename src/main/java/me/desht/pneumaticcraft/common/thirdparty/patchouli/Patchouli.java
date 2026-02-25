@@ -42,7 +42,7 @@ public class Patchouli implements IThirdParty, IDocsProvider {
     public void clientInit() {
         PatchouliAPI.IPatchouliAPI papi = PatchouliAPI.instance;
 
-        setConfigFlags();
+        this.setConfigFlags();
 
         IStateMatcher edge = papi.predicateMatcher(Blockss.PRESSURE_CHAMBER_WALL, this::validEdge);
         IStateMatcher wall = papi.predicateMatcher(Blockss.PRESSURE_CHAMBER_WALL, this::validFace);
@@ -52,31 +52,31 @@ public class Patchouli implements IThirdParty, IDocsProvider {
         IStateMatcher intI = papi.predicateMatcher(Blockss.PRESSURE_CHAMBER_INTERFACE.getDefaultState().withProperty(BlockPneumaticCraft.ROTATION, EnumFacing.EAST), this::validFace);
         IStateMatcher intO = papi.predicateMatcher(Blockss.PRESSURE_CHAMBER_INTERFACE.getDefaultState().withProperty(BlockPneumaticCraft.ROTATION, EnumFacing.WEST), this::validFace);
 
-        IMultiblock pc3 = papi.makeMultiblock(new String[][] {
-                        { "WWW", "WWW", "WWW" },
-                        { "WIW", "VAF", "WIW" },
-                        { "WWW", "W0W", "WWW" },
+        IMultiblock pc3 = papi.makeMultiblock(new String[][]{
+                        {"WWW", "WWW", "WWW"},
+                        {"WIW", "VAF", "WIW"},
+                        {"WWW", "W0W", "WWW"},
                 },
                 'W', edge, 'F', glass, '0', wall, 'V', valve, 'I', intI, 'O', intO, 'A', papi.airMatcher()
         ).setSymmetrical(true);
         papi.registerMultiblock(RL("pressure_chamber_3"), pc3);
 
-        IMultiblock pc4 = papi.makeMultiblock(new String[][] {
-                        { "WWWW", "WWWW", "WWWW", "WWWW" },
-                        { "WFFW", "VAAF", "FAAF", "WFFW" },
-                        { "WFFW", "VAAF", "FAAF", "WIOW" },
-                        { "WWWW", "W0WW", "WWWW", "WWWW" },
+        IMultiblock pc4 = papi.makeMultiblock(new String[][]{
+                        {"WWWW", "WWWW", "WWWW", "WWWW"},
+                        {"WFFW", "VAAF", "FAAF", "WFFW"},
+                        {"WFFW", "VAAF", "FAAF", "WIOW"},
+                        {"WWWW", "W0WW", "WWWW", "WWWW"},
                 },
                 'W', edge, 'F', glass, '0', wall, 'V', valve, 'I', intI, 'O', intO, 'A', papi.airMatcher()
         ).setSymmetrical(false);
         papi.registerMultiblock(RL("pressure_chamber_4"), pc4);
 
-        IMultiblock pc5 = papi.makeMultiblock(new String[][] {
-                        { "WWWWW", "WWVWW", "WVWVW", "WWVWW", "WWWWW" },
-                        { "WFFFW", "FAAAF", "FAAAF", "FAAAF", "WOFIW" },
-                        { "WFFFW", "FAAAF", "FAAAF", "FAAAF", "WFFFW" },
-                        { "WFFFW", "FAAAF", "FAAAF", "FAAAF", "WOFIW" },
-                        { "WWWWW", "WWWWW", "WW0WW", "WWWWW", "WWWWW" },
+        IMultiblock pc5 = papi.makeMultiblock(new String[][]{
+                        {"WWWWW", "WWVWW", "WVWVW", "WWVWW", "WWWWW"},
+                        {"WFFFW", "FAAAF", "FAAAF", "FAAAF", "WOFIW"},
+                        {"WFFFW", "FAAAF", "FAAAF", "FAAAF", "WFFFW"},
+                        {"WFFFW", "FAAAF", "FAAAF", "FAAAF", "WOFIW"},
+                        {"WWWWW", "WWWWW", "WW0WW", "WWWWW", "WWWWW"},
                 },
                 'W', edge, 'F', glass, '0', wall, 'V', valveUp, 'I', intI, 'O', intO, 'A', papi.airMatcher()
         ).setSymmetrical(true);
@@ -102,7 +102,7 @@ public class Patchouli implements IThirdParty, IDocsProvider {
     @SubscribeEvent
     public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
         if (event.getModID().equals(Names.MOD_ID)) {
-            setConfigFlags();
+            this.setConfigFlags();
         }
     }
 

@@ -28,22 +28,22 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
     @Override
     public void initGui() {
         super.initGui();
-        widgets.clear();
-        guiLeft = width / 2 - xSize / 2;
-        guiTop = height / 2 - ySize / 2;
+        this.widgets.clear();
+        this.guiLeft = this.width / 2 - this.xSize / 2;
+        this.guiTop = this.height / 2 - this.ySize / 2;
     }
 
     public void addWidget(IGuiWidget widget) {
-        widgets.add(widget);
+        this.widgets.add(widget);
         widget.setListener(this);
     }
 
     protected void addLabel(String text, int x, int y) {
-        addWidget(new WidgetLabel(x, y, text));
+        this.addWidget(new WidgetLabel(x, y, text));
     }
 
     protected void removeWidget(IGuiWidget widget) {
-        widgets.remove(widget);
+        this.widgets.remove(widget);
     }
 
     protected abstract ResourceLocation getTexture();
@@ -51,23 +51,23 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
         GlStateManager.color(1f, 1f, 1f, 1.0f);
-        if (getTexture() != null) {
-            FMLClientHandler.instance().getClient().getTextureManager().bindTexture(getTexture());
-            drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        if (this.getTexture() != null) {
+            FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.getTexture());
+            this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
         }
         super.drawScreen(x, y, partialTicks);
 
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.render(x, y, partialTicks);
         }
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.postRender(x, y, partialTicks);
         }
         GlStateManager.enableTexture2D();
         GlStateManager.color(0.25f, 0.25f, 0.25f, 1.0f);
 
         List<String> tooltip = new ArrayList<>();
-        for (Object obj : buttonList) {
+        for (Object obj : this.buttonList) {
             if (obj instanceof GuiButtonSpecial) {
                 GuiButtonSpecial button = (GuiButtonSpecial) obj;
                 if (button.x < x && button.x + button.getWidth() > x && button.y < y && button.y + button.getHeight() > y) {
@@ -76,7 +76,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
             }
         }
         boolean shift = PneumaticCraftRepressurized.proxy.isSneakingInGui();
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             if (widget.getBounds().contains(x, y)) widget.addTooltip(x, y, tooltip, shift);
         }
         if (!tooltip.isEmpty()) {
@@ -88,7 +88,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
                     localizedTooltip.addAll(Arrays.asList(lines));
                 }
             }
-            drawHoveringText(localizedTooltip, x, y, fontRenderer);
+            this.drawHoveringText(localizedTooltip, x, y, this.fontRenderer);
         }
         GlStateManager.color(0.25f, 0.25f, 0.25f, 1.0f);
     }
@@ -99,7 +99,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
 
         // new list creation necessary to avoid a comod exception
         LinkedList<IGuiWidget> l = new LinkedList<>();
-        widgets.forEach(w -> {
+        this.widgets.forEach(w -> {
             if (!(w instanceof WidgetComboBox && ((WidgetComboBox) w).isFocused())) {
                 // ensure any focused combobox is added last
                 l.addFirst(w);
@@ -122,7 +122,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
         if (keyCode == 1) {
             super.keyTyped(key, keyCode);
         } else {
-            for (IGuiWidget widget : widgets) {
+            for (IGuiWidget widget : this.widgets) {
                 widget.onKey(key, keyCode);
             }
         }
@@ -132,7 +132,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
     public void actionPerformed(IGuiWidget widget) {
         if (widget instanceof IGuiAnimatedStat) {
             boolean leftSided = ((IGuiAnimatedStat) widget).isLeftSided();
-            for (IGuiWidget w : widgets) {
+            for (IGuiWidget w : this.widgets) {
                 if (w instanceof IGuiAnimatedStat) {
                     IGuiAnimatedStat stat = (IGuiAnimatedStat) w;
                     if (widget != stat && stat.isLeftSided() == leftSided) {//when the stat is on the same side, close it.
@@ -146,7 +146,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
     @Override
     public void updateScreen() {
         super.updateScreen();
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.update();
         }
     }
@@ -154,7 +154,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
-        for (IGuiWidget widget : widgets) {
+        for (IGuiWidget widget : this.widgets) {
             widget.handleMouseInput();
         }
     }
@@ -165,7 +165,7 @@ public abstract class GuiPneumaticScreenBase extends GuiScreen implements IWidge
 
     @Override
     public void setWorldAndResolution(Minecraft par1Minecraft, int par2, int par3) {
-        widgets.clear();
+        this.widgets.clear();
         super.setWorldAndResolution(par1Minecraft, par2, par3);
     }
 }

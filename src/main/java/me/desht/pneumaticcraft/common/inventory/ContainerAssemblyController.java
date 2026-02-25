@@ -9,11 +9,11 @@ public class ContainerAssemblyController extends ContainerPneumaticBase<TileEnti
     public ContainerAssemblyController(InventoryPlayer inventoryPlayer, TileEntityAssemblyController te) {
         super(te);
 
-        addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.ASSEMBLY_PROGRAM, 0, 74, 38));
+        this.addSlotToContainer(new SlotItemSpecific(te.getPrimaryInventory(), Itemss.ASSEMBLY_PROGRAM, 0, 74, 38));
 
-        addUpgradeSlots(13, 31);
+        this.addUpgradeSlots(13, 31);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
 }

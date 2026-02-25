@@ -37,12 +37,12 @@ import java.util.List;
  * Base class for blocks which may be camouflaged, storing the camouflaged block state in the
  * CAMO_STATE unlisted property
  */
-@Optional.Interface (iface = "team.chisel.ctm.api.IFacade", modid = "ctm-api")
+@Optional.Interface(iface = "team.chisel.ctm.api.IFacade", modid = "ctm-api")
 public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled implements IFacade {
     public static final PropertyObject<IBlockState> CAMO_STATE = new PropertyObject<>("camo_state", IBlockState.class);
     public static final PropertyObject<IBlockAccess> BLOCK_ACCESS = new PropertyObject<>("block_access", IBlockAccess.class);
     public static final PropertyObject<BlockPos> BLOCK_POS = new PropertyObject<>("pos", BlockPos.class);
-    static final IUnlistedProperty[] UNLISTED_CAMO_PROPERTIES = new IUnlistedProperty[] { CAMO_STATE, BLOCK_ACCESS, BLOCK_POS };
+    static final IUnlistedProperty[] UNLISTED_CAMO_PROPERTIES = new IUnlistedProperty[]{CAMO_STATE, BLOCK_ACCESS, BLOCK_POS};
 
     protected BlockPneumaticCraftCamo(Material par2Material, String registryName) {
         super(par2Material, registryName);
@@ -60,7 +60,7 @@ public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled
 
     @Override
     protected BlockStateContainer createBlockState() {
-        IProperty[] props = isRotatable() ? new IProperty[] { ROTATION } : new IProperty[] { };
+        IProperty[] props = this.isRotatable() ? new IProperty[]{ROTATION} : new IProperty[]{};
         return new ExtendedBlockState(this, props, UNLISTED_CAMO_PROPERTIES);
     }
 
@@ -97,20 +97,20 @@ public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled
 
     @Override
     public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-        IBlockState camo = getCamoState(source, pos);
-        return camo != null && doesCamoOverrideBounds() ? camo.getBoundingBox(source, pos) : super.getBoundingBox(state, source, pos);
+        IBlockState camo = this.getCamoState(source, pos);
+        return camo != null && this.doesCamoOverrideBounds() ? camo.getBoundingBox(source, pos) : super.getBoundingBox(state, source, pos);
     }
 
     @Nullable
     @Override
     public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        IBlockState camo = getCamoState(worldIn, pos);
+        IBlockState camo = this.getCamoState(worldIn, pos);
         return camo != null ? camo.getCollisionBoundingBox(worldIn, pos) : super.getCollisionBoundingBox(blockState, worldIn, pos);
     }
 
     @Override
     public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
-        IBlockState camo = getCamoState(worldIn, pos);
+        IBlockState camo = this.getCamoState(worldIn, pos);
         if (camo != null) {
             addCollisionBoxToList(pos, entityBox, collidingBoxes, camo.getBoundingBox(worldIn, pos));
         } else {
@@ -120,14 +120,14 @@ public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled
 
     @Override
     public boolean doesSideBlockRendering(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing face) {
-        IBlockState camo = getCamoState(world, pos);
+        IBlockState camo = this.getCamoState(world, pos);
         return camo == null ? super.doesSideBlockRendering(state, world, pos, face) : camo.doesSideBlockRendering(world, pos, face);
     }
 
     @Override
     public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         // ensure levers etc. can be attached to the block even though it can possibly emit redstone
-        IBlockState camo = getCamoState(world, pos);
+        IBlockState camo = this.getCamoState(world, pos);
         return camo == null ? super.isSideSolid(base_state, world, pos, side) : camo.isSideSolid(world, pos, side);
     }
 
@@ -143,7 +143,7 @@ public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled
 
     @Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-        IBlockState camoState = getCamoState(worldIn, pos);
+        IBlockState camoState = this.getCamoState(worldIn, pos);
         return camoState != null ? camoState.getBlockFaceShape(worldIn, pos, face) : BlockFaceShape.UNDEFINED;
     }
 
@@ -157,7 +157,7 @@ public abstract class BlockPneumaticCraftCamo extends BlockPneumaticCraftModeled
     public void addProbeInfo(ProbeMode mode, IProbeInfo probeInfo, EntityPlayer player, World world, IBlockState blockState, IProbeHitData data) {
         super.addProbeInfo(mode, probeInfo, player, world, blockState, data);
 
-        IBlockState camo = getCamoState(world, data.getPos());
+        IBlockState camo = this.getCamoState(world, data.getPos());
         if (camo != null) {
             TOPCallback.handleCamo(mode, probeInfo, camo);
         }

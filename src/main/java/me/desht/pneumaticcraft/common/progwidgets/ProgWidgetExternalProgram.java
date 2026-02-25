@@ -33,7 +33,7 @@ public class ProgWidgetExternalProgram extends ProgWidgetAreaItemBase {
 
     @Override
     public EntityAIBase getWidgetAI(IDroneBase drone, IProgWidget widget) {
-        return new DroneAIExternalProgram(drone, aiManager, (ProgWidgetExternalProgram) widget);
+        return new DroneAIExternalProgram(drone, this.aiManager, (ProgWidgetExternalProgram) widget);
     }
 
     @Override
@@ -44,13 +44,13 @@ public class ProgWidgetExternalProgram extends ProgWidgetAreaItemBase {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("shareVariables", shareVariables);
+        tag.setBoolean("shareVariables", this.shareVariables);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        shareVariables = tag.getBoolean("shareVariables");
+        this.shareVariables = tag.getBoolean("shareVariables");
     }
 
     @Override

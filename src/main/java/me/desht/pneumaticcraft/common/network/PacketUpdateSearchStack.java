@@ -19,23 +19,23 @@ public class PacketUpdateSearchStack extends AbstractPacket<PacketUpdateSearchSt
 
     public PacketUpdateSearchStack(ItemStack stack) {
         if (!stack.isEmpty()) {
-            itemId = Item.getIdFromItem(stack.getItem());
-            itemDamage = stack.getItemDamage();
+            this.itemId = Item.getIdFromItem(stack.getItem());
+            this.itemDamage = stack.getItemDamage();
         } else {
-            itemId = itemDamage = -1;
+            this.itemId = this.itemDamage = -1;
         }
     }
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        buffer.writeInt(itemId);
-        buffer.writeInt(itemDamage);
+        buffer.writeInt(this.itemId);
+        buffer.writeInt(this.itemDamage);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        itemId = buffer.readInt();
-        itemDamage = buffer.readInt();
+        this.itemId = buffer.readInt();
+        this.itemDamage = buffer.readInt();
     }
 
     @Override

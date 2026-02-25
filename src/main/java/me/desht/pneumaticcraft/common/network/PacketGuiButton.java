@@ -16,12 +16,12 @@ public class PacketGuiButton extends AbstractPacket<PacketGuiButton> {
 
     @Override
     public void toBytes(ByteBuf buffer) {
-        buffer.writeInt(buttonID);
+        buffer.writeInt(this.buttonID);
     }
 
     @Override
     public void fromBytes(ByteBuf buffer) {
-        buttonID = buffer.readInt();
+        this.buttonID = buffer.readInt();
     }
 
     @Override

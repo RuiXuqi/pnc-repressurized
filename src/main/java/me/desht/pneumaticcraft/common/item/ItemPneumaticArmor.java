@@ -51,8 +51,7 @@ import java.util.*;
 })
 public class ItemPneumaticArmor extends ItemArmor
         implements IPressurizable, IChargingStationGUIHolderItem, IUpgradeAcceptor, ISpecialArmor,
-        IVisDiscountGear, IGoggles, IRevealer, IFOVModifierItem
-{
+        IVisDiscountGear, IGoggles, IRevealer, IFOVModifierItem {
     private static final ArmorMaterial COMPRESSED_IRON_MATERIAL = EnumHelper.addArmorMaterial(
             "compressedIron", "compressedIron",
             PneumaticValues.PNEUMATIC_ARMOR_DURABILITY_BASE,
@@ -60,13 +59,13 @@ public class ItemPneumaticArmor extends ItemArmor
             SoundEvents.ITEM_ARMOR_EQUIP_IRON, 1.0F
     );
 
-    private static final int[] ARMOR_VOLUMES = new int[] {
+    private static final int[] ARMOR_VOLUMES = new int[]{
             PneumaticValues.PNEUMATIC_BOOTS_VOLUME,
             PneumaticValues.PNEUMATIC_LEGGINGS_VOLUME,
             PneumaticValues.PNEUMATIC_CHESTPLATE_VOLUME,
             PneumaticValues.PNEUMATIC_HELMET_VOLUME
     };
-    private static final int[] VIS_DISCOUNTS = new int[] { 1, 2, 2, 5 };
+    private static final int[] VIS_DISCOUNTS = new int[]{1, 2, 2, 5};
     private static final List<Set<Item>> applicableUpgrades = new ArrayList<>();
 
     public static final String NBT_SEARCH_STACK = "SearchStack";
@@ -79,9 +78,9 @@ public class ItemPneumaticArmor extends ItemArmor
     public ItemPneumaticArmor(String name, EntityEquipmentSlot equipmentSlotIn) {
         super(COMPRESSED_IRON_MATERIAL, PneumaticCraftRepressurized.proxy.getArmorRenderID(Textures.ARMOR_PNEUMATIC), equipmentSlotIn);
 
-        setRegistryName(name);
-        setTranslationKey(name);
-        setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
+        this.setRegistryName(name);
+        this.setTranslationKey(name);
+        this.setCreativeTab(PneumaticCraftRepressurized.tabPneumaticCraft);
     }
 
     /**
@@ -107,7 +106,7 @@ public class ItemPneumaticArmor extends ItemArmor
      * @return the base volume
      */
     public int getBaseVolume() {
-        return ARMOR_VOLUMES[armorType.getIndex()];
+        return ARMOR_VOLUMES[this.armorType.getIndex()];
     }
 
     @Nullable
@@ -120,8 +119,8 @@ public class ItemPneumaticArmor extends ItemArmor
     public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         ItemPneumatic.addStandardTooltip(stack, worldIn, tooltip, flagIn);
 
-        if (armorType == EntityEquipmentSlot.HEAD) {
-            addHelmetInformation(stack, worldIn, tooltip, flagIn);
+        if (this.armorType == EntityEquipmentSlot.HEAD) {
+            this.addHelmetInformation(stack, worldIn, tooltip, flagIn);
         }
     }
 
@@ -184,12 +183,12 @@ public class ItemPneumaticArmor extends ItemArmor
 
     @Override
     public Set<Item> getApplicableUpgrades() {
-        return applicableUpgrades.get(armorType.getIndex());
+        return applicableUpgrades.get(this.armorType.getIndex());
     }
 
     @Override
     public float getPressure(ItemStack iStack) {
-        int volume = UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, iStack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + getBaseVolume();
+        int volume = UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, iStack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + this.getBaseVolume();
         int oldVolume = NBTUtil.getInteger(iStack, "volume");
         int currentAir = NBTUtil.getInteger(iStack, "air");
         if (volume < oldVolume) {
@@ -209,12 +208,12 @@ public class ItemPneumaticArmor extends ItemArmor
 
     @Override
     public int getVolume(ItemStack iStack) {
-        return UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, iStack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + getBaseVolume();
+        return UpgradableItemUtils.getUpgrades(EnumUpgrade.VOLUME, iStack) * PneumaticValues.VOLUME_VOLUME_UPGRADE + this.getBaseVolume();
     }
 
     @Override
     public void addAir(ItemStack iStack, int amount) {
-        int maxAir = (int)(maxPressure(iStack) * getVolume(iStack));
+        int maxAir = (int) (this.maxPressure(iStack) * this.getVolume(iStack));
         int oldAir = NBTUtil.getInteger(iStack, "air");
         NBTUtil.setInteger(iStack, "air", Math.min(maxAir, Math.max(oldAir + amount, 0)));
     }
@@ -226,7 +225,7 @@ public class ItemPneumaticArmor extends ItemArmor
 
     @Override
     public String getName() {
-        return getTranslationKey() + ".name";
+        return this.getTranslationKey() + ".name";
     }
 
     @Override
@@ -329,24 +328,24 @@ public class ItemPneumaticArmor extends ItemArmor
     /*------- Thaumcraft -------- */
 
     private boolean hasThaumcraftUpgradeAndPressure(ItemStack stack) {
-        return getPressure(stack) > 0F && UpgradableItemUtils.getUpgrades(EnumUpgrade.THAUMCRAFT, stack) > 0;
+        return this.getPressure(stack) > 0F && UpgradableItemUtils.getUpgrades(EnumUpgrade.THAUMCRAFT, stack) > 0;
     }
 
     @Override
     @Optional.Method(modid = ModIds.THAUMCRAFT)
     public int getVisDiscount(ItemStack stack, EntityPlayer player) {
-        return hasThaumcraftUpgradeAndPressure(stack) ? VIS_DISCOUNTS[armorType.getIndex()] : 0;
+        return this.hasThaumcraftUpgradeAndPressure(stack) ? VIS_DISCOUNTS[this.armorType.getIndex()] : 0;
     }
 
     @Override
     @Optional.Method(modid = ModIds.THAUMCRAFT)
     public boolean showIngamePopups(ItemStack itemstack, EntityLivingBase player) {
-        return armorType == EntityEquipmentSlot.HEAD && hasThaumcraftUpgradeAndPressure(itemstack);
+        return this.armorType == EntityEquipmentSlot.HEAD && this.hasThaumcraftUpgradeAndPressure(itemstack);
     }
 
     @Override
     @Optional.Method(modid = ModIds.THAUMCRAFT)
     public boolean showNodes(ItemStack itemstack, EntityLivingBase player) {
-        return armorType == EntityEquipmentSlot.HEAD && hasThaumcraftUpgradeAndPressure(itemstack);
+        return this.armorType == EntityEquipmentSlot.HEAD && this.hasThaumcraftUpgradeAndPressure(itemstack);
     }
 }

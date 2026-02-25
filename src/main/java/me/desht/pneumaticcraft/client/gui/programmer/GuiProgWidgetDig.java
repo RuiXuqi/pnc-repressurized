@@ -6,28 +6,28 @@ import me.desht.pneumaticcraft.client.gui.widget.IGuiWidget;
 import me.desht.pneumaticcraft.common.progwidgets.ProgWidgetDig;
 import net.minecraft.client.resources.I18n;
 
-public class GuiProgWidgetDig extends GuiProgWidgetDigAndPlace<ProgWidgetDig>{
+public class GuiProgWidgetDig extends GuiProgWidgetDigAndPlace<ProgWidgetDig> {
 
     private GuiCheckBox requiresDiggingTool;
-    
-    public GuiProgWidgetDig(ProgWidgetDig widget, GuiProgrammer guiProgrammer){
+
+    public GuiProgWidgetDig(ProgWidgetDig widget, GuiProgrammer guiProgrammer) {
         super(widget, guiProgrammer);
     }
 
     @Override
     public void initGui() {
         super.initGui();
-        
-        requiresDiggingTool = new GuiCheckBox(125, guiLeft + 4, guiTop + 85, 0xFF404040, I18n.format("gui.progWidget.dig.requiresDiggingTool"));
-        requiresDiggingTool.setTooltip("gui.progWidget.dig.requiresDiggingTool.tooltip");
-        requiresDiggingTool.checked = widget.requiresTool();
-        addWidget(requiresDiggingTool);
+
+        this.requiresDiggingTool = new GuiCheckBox(125, this.guiLeft + 4, this.guiTop + 85, 0xFF404040, I18n.format("gui.progWidget.dig.requiresDiggingTool"));
+        this.requiresDiggingTool.setTooltip("gui.progWidget.dig.requiresDiggingTool.tooltip");
+        this.requiresDiggingTool.checked = this.widget.requiresTool();
+        this.addWidget(this.requiresDiggingTool);
     }
 
     @Override
     public void actionPerformed(IGuiWidget guiWidget) {
-        if(guiWidget == requiresDiggingTool){
-            widget.setRequiresTool(requiresDiggingTool.checked);
+        if (guiWidget == this.requiresDiggingTool) {
+            this.widget.setRequiresTool(this.requiresDiggingTool.checked);
         }
         super.actionPerformed(guiWidget);
     }

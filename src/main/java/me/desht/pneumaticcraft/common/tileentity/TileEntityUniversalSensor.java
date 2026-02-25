@@ -86,70 +86,70 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
     public TileEntityUniversalSensor() {
         super(PneumaticValues.DANGER_PRESSURE_UNIVERSAL_SENSOR, PneumaticValues.MAX_PRESSURE_UNIVERSAL_SENSOR, PneumaticValues.VOLUME_UNIVERSAL_SENSOR, 0);
         for (Item upgrade : SensorHandler.getInstance().getUniversalSensorUpgrades()) {
-            addApplicableUpgrade(upgrade);
+            this.addApplicableUpgrade(upgrade);
         }
-        addApplicableUpgrade(EnumUpgrade.RANGE);
-        upgradeHandler = new UniversalSensorUpgradeHandler();  // custom upgrade inventory
+        this.addApplicableUpgrade(EnumUpgrade.RANGE);
+        this.upgradeHandler = new UniversalSensorUpgradeHandler();  // custom upgrade inventory
     }
 
     @Override
     public void update() {
-        oldDishRotation = dishRotation;
-        if (isSensorActive) {
-            dishSpeed = Math.min(dishSpeed + 0.2F, 10);
+        this.oldDishRotation = this.dishRotation;
+        if (this.isSensorActive) {
+            this.dishSpeed = Math.min(this.dishSpeed + 0.2F, 10);
         } else {
-            dishSpeed = Math.max(dishSpeed - 0.2F, 0);
+            this.dishSpeed = Math.max(this.dishSpeed - 0.2F, 0);
         }
-        dishRotation += dishSpeed;
+        this.dishRotation += this.dishSpeed;
 
-        if (getWorld().isRemote) {
-            int sensorRange = getRange();
-            if (oldSensorRange != sensorRange || oldSensorRange == 0) {
-                oldSensorRange = sensorRange;
-                if (!firstRun) rangeLineRenderer.resetRendering(sensorRange);
+        if (this.getWorld().isRemote) {
+            int sensorRange = this.getRange();
+            if (this.oldSensorRange != sensorRange || this.oldSensorRange == 0) {
+                this.oldSensorRange = sensorRange;
+                if (!this.firstRun) this.rangeLineRenderer.resetRendering(sensorRange);
             }
-            rangeLineRenderer.update();
+            this.rangeLineRenderer.update();
         }
         super.update();
 
-        if (!getWorld().isRemote) {
-            tickTimer++;
-            ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(sensorSetting);
-            if (sensor != null && getPressure() > PneumaticValues.MIN_PRESSURE_UNIVERSAL_SENSOR) {
-                isSensorActive = true;
-                addAir(-sensor.getAirUsage(getWorld(), getPos()));
+        if (!this.getWorld().isRemote) {
+            this.tickTimer++;
+            ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.sensorSetting);
+            if (sensor != null && this.getPressure() > PneumaticValues.MIN_PRESSURE_UNIVERSAL_SENSOR) {
+                this.isSensorActive = true;
+                this.addAir(-sensor.getAirUsage(this.getWorld(), this.getPos()));
                 if (sensor instanceof IPollSensorSetting) {
-                    if (tickTimer >= ((IPollSensorSetting) sensor).getPollFrequency(this)) {
+                    if (this.tickTimer >= ((IPollSensorSetting) sensor).getPollFrequency(this)) {
                         try {
-                            int newRedstoneStrength = ((IPollSensorSetting) sensor).getRedstoneValue(getWorld(), getPos(), getRange(), sensorGuiText);
-                            if (invertedRedstone) newRedstoneStrength = 15 - newRedstoneStrength;
-                            if (newRedstoneStrength != redstoneStrength) {
-                                redstoneStrength = newRedstoneStrength;
-                                if (requestPollPullEvent) {
-                                    notifyComputers(redstoneStrength);
+                            int newRedstoneStrength = ((IPollSensorSetting) sensor).getRedstoneValue(this.getWorld(), this.getPos(), this.getRange(), this.sensorGuiText);
+                            if (this.invertedRedstone) newRedstoneStrength = 15 - newRedstoneStrength;
+                            if (newRedstoneStrength != this.redstoneStrength) {
+                                this.redstoneStrength = newRedstoneStrength;
+                                if (this.requestPollPullEvent) {
+                                    this.notifyComputers(this.redstoneStrength);
                                 }
-                                updateNeighbours();
+                                this.updateNeighbours();
                             }
-                            tickTimer = 0;
+                            this.tickTimer = 0;
                         } catch (Exception e) {
-                            lastSensorError = e.getMessage();
+                            this.lastSensorError = e.getMessage();
                         }
                     }
-                    eventTimer = 0;
+                    this.eventTimer = 0;
                 } else {
-                    if (eventTimer > 0) {
-                        eventTimer--;
-                        if (eventTimer == 0 && redstoneStrength != (invertedRedstone ? 15 : 0)) {
-                            redstoneStrength = invertedRedstone ? 15 : 0;
-                            updateNeighbours();
+                    if (this.eventTimer > 0) {
+                        this.eventTimer--;
+                        if (this.eventTimer == 0 && this.redstoneStrength != (this.invertedRedstone ? 15 : 0)) {
+                            this.redstoneStrength = this.invertedRedstone ? 15 : 0;
+                            this.updateNeighbours();
                         }
                     }
                 }
             } else {
-                isSensorActive = false;
-                if (redstoneStrength != (invertedRedstone ? 15 : 0)) {
-                    redstoneStrength = invertedRedstone ? 15 : 0;
-                    updateNeighbours();
+                this.isSensorActive = false;
+                if (this.redstoneStrength != (this.invertedRedstone ? 15 : 0)) {
+                    this.redstoneStrength = this.invertedRedstone ? 15 : 0;
+                    this.updateNeighbours();
                 }
             }
         }
@@ -158,14 +158,14 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
     @Override
     public void onNeighborBlockUpdate() {
         super.onNeighborBlockUpdate();
-        updateConnections();
+        this.updateConnections();
     }
 
     private void updateConnections() {
-        List<Pair<EnumFacing, IAirHandler>> connections = getAirHandler(null).getConnectedPneumatics();
-        Arrays.fill(sidesConnected, false);
+        List<Pair<EnumFacing, IAirHandler>> connections = this.getAirHandler(null).getConnectedPneumatics();
+        Arrays.fill(this.sidesConnected, false);
         for (Pair<EnumFacing, IAirHandler> entry : connections) {
-            sidesConnected[entry.getKey().ordinal()] = true;
+            this.sidesConnected[entry.getKey().ordinal()] = true;
         }
     }
 
@@ -184,54 +184,54 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
      */
     @Override
     public void showRangeLines() {
-        if (getWorld().isRemote) {
-            rangeLineRenderer.resetRendering(getRange());
+        if (this.getWorld().isRemote) {
+            this.rangeLineRenderer.resetRendering(this.getRange());
         } else {
-            NetworkHandler.sendToAllAround(new PacketRenderRangeLines(this), getWorld(), TileEntityConstants.PACKET_UPDATE_DISTANCE + getRange());
+            NetworkHandler.sendToAllAround(new PacketRenderRangeLines(this), this.getWorld(), TileEntityConstants.PACKET_UPDATE_DISTANCE + this.getRange());
         }
     }
 
     @SideOnly(Side.CLIENT)
     public void renderRangeLines() {
-        rangeLineRenderer.render();
+        this.rangeLineRenderer.render();
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public AxisAlignedBB getRenderBoundingBox() {
-        if (rangeLineRenderer == null || rangeLineRenderer.isIdle()) return super.getRenderBoundingBox();
-        int range = getRange();
-        return new AxisAlignedBB(getPos().getX() - range, getPos().getY() - range, getPos().getZ() - range, getPos().getX() + 1 + range, getPos().getY() + 1 + range, getPos().getZ() + 1 + range);
+        if (this.rangeLineRenderer == null || this.rangeLineRenderer.isIdle()) return super.getRenderBoundingBox();
+        int range = this.getRange();
+        return new AxisAlignedBB(this.getPos().getX() - range, this.getPos().getY() - range, this.getPos().getZ() - range, this.getPos().getX() + 1 + range, this.getPos().getY() + 1 + range, this.getPos().getZ() + 1 + range);
     }
 
     public void onEvent(Event event) {
-        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(sensorSetting);
-        if (sensor instanceof IEventSensorSetting && getPressure() > PneumaticValues.MIN_PRESSURE_UNIVERSAL_SENSOR) {
-            int newRedstoneStrength = ((IEventSensorSetting) sensor).emitRedstoneOnEvent(event, this, getRange(), sensorGuiText);
-            if (newRedstoneStrength != 0) eventTimer = ((IEventSensorSetting) sensor).getRedstonePulseLength();
-            if (invertedRedstone) newRedstoneStrength = 15 - newRedstoneStrength;
-            if (eventTimer > 0 && ThirdPartyManager.computerCraftLoaded) {
+        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.sensorSetting);
+        if (sensor instanceof IEventSensorSetting && this.getPressure() > PneumaticValues.MIN_PRESSURE_UNIVERSAL_SENSOR) {
+            int newRedstoneStrength = ((IEventSensorSetting) sensor).emitRedstoneOnEvent(event, this, this.getRange(), this.sensorGuiText);
+            if (newRedstoneStrength != 0) this.eventTimer = ((IEventSensorSetting) sensor).getRedstonePulseLength();
+            if (this.invertedRedstone) newRedstoneStrength = 15 - newRedstoneStrength;
+            if (this.eventTimer > 0 && ThirdPartyManager.computerCraftLoaded) {
                 if (event instanceof PlayerInteractEvent) {
                     PlayerInteractEvent e = (PlayerInteractEvent) event;
-                    notifyComputers(newRedstoneStrength, e.getPos().getX(), e.getPos().getY(), e.getPos().getZ());
+                    this.notifyComputers(newRedstoneStrength, e.getPos().getX(), e.getPos().getY(), e.getPos().getZ());
                 } else {
-                    notifyComputers(newRedstoneStrength);
+                    this.notifyComputers(newRedstoneStrength);
                 }
             }
-            if (newRedstoneStrength != redstoneStrength) {
-                redstoneStrength = newRedstoneStrength;
-                updateNeighbours();
+            if (newRedstoneStrength != this.redstoneStrength) {
+                this.redstoneStrength = newRedstoneStrength;
+                this.updateNeighbours();
             }
         }
     }
 
     public int getRange() {
-        return getUpgrades(EnumUpgrade.RANGE) + 2;
+        return this.getUpgrades(EnumUpgrade.RANGE) + 2;
     }
 
     private void setSensorSetting(String sensorPath) {
-        sensorSetting = sensorPath;
-        if (getWorld() != null && getWorld().isRemote) {
+        this.sensorSetting = sensorPath;
+        if (this.getWorld() != null && this.getWorld().isRemote) {
             GuiScreen guiScreen = Minecraft.getMinecraft().currentScreen;
             if (guiScreen instanceof GuiUniversalSensor) {
                 ((GuiUniversalSensor) guiScreen).updateButtons();
@@ -240,8 +240,8 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
     }
 
     private boolean setSensorSetting(ISensorSetting sensor) {
-        if (areGivenUpgradesInserted(sensor.getRequiredUpgrades())) {
-            setSensorSetting(sensor.getSensorPath());
+        if (this.areGivenUpgradesInserted(sensor.getRequiredUpgrades())) {
+            this.setSensorSetting(sensor.getSensorPath());
             return true;
         } else {
             return false;
@@ -249,64 +249,64 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
     }
 
     public String getSensorSetting() {
-        return sensorSetting;
+        return this.sensorSetting;
     }
 
     @Override
     public void onGuiUpdate() {
-        setSensorSetting(sensorSetting);
+        this.setSensorSetting(this.sensorSetting);
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setString("sensorSetting", sensorSetting);
-        tag.setBoolean("invertedRedstone", invertedRedstone);
-        tag.setFloat("dishSpeed", dishSpeed);
-        tag.setString("sensorText", sensorGuiText);
+        tag.setString("sensorSetting", this.sensorSetting);
+        tag.setBoolean("invertedRedstone", this.invertedRedstone);
+        tag.setFloat("dishSpeed", this.dishSpeed);
+        tag.setString("sensorText", this.sensorGuiText);
         return tag;
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        setSensorSetting(tag.getString("sensorSetting"));
-        invertedRedstone = tag.getBoolean("invertedRedstone");
-        dishSpeed = tag.getFloat("dishSpeed");
-        sensorGuiText = tag.getString("sensorText");
-        setupGPSPositions();
+        this.setSensorSetting(tag.getString("sensorSetting"));
+        this.invertedRedstone = tag.getBoolean("invertedRedstone");
+        this.dishSpeed = tag.getFloat("dishSpeed");
+        this.sensorGuiText = tag.getString("sensorText");
+        this.setupGPSPositions();
     }
 
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID >= 10 && buttonID % 10 == 0) {
-            String[] directories = SensorHandler.getInstance().getDirectoriesAtLocation(getSensorSetting());
+            String[] directories = SensorHandler.getInstance().getDirectoriesAtLocation(this.getSensorSetting());
             if (buttonID / 10 <= directories.length) {// <= because of the redstone button being 0.
-                if (getSensorSetting().equals("")) {
-                    setSensorSetting(directories[buttonID / 10 - 1]);
+                if (this.getSensorSetting().equals("")) {
+                    this.setSensorSetting(directories[buttonID / 10 - 1]);
                 } else {
-                    setSensorSetting(getSensorSetting() + "/" + directories[buttonID / 10 - 1]);
+                    this.setSensorSetting(this.getSensorSetting() + "/" + directories[buttonID / 10 - 1]);
                 }
             }
         } else if (buttonID == 1) {
             // the 'back' button
-            String[] folders = getSensorSetting().split("/");
-            String newPath = getSensorSetting().replace(folders[folders.length - 1], "");
+            String[] folders = this.getSensorSetting().split("/");
+            String newPath = this.getSensorSetting().replace(folders[folders.length - 1], "");
             if (newPath.endsWith("/")) {
                 newPath = newPath.substring(0, newPath.length() - 1);
             }
-            setSensorSetting(newPath);
-            setText(0, "");
+            this.setSensorSetting(newPath);
+            this.setText(0, "");
         } else if (buttonID == 0) {
-            invertedRedstone = !invertedRedstone;
-            redstoneStrength = 15 - redstoneStrength;
-            updateNeighbours();
+            this.invertedRedstone = !this.invertedRedstone;
+            this.redstoneStrength = 15 - this.redstoneStrength;
+            this.updateNeighbours();
         }
     }
 
     public boolean areGivenUpgradesInserted(Set<Item> requiredItems) {
         for (Item requiredItem : requiredItems) {
-            if (getUpgrades(requiredItem) == 0) {
+            if (this.getUpgrades(requiredItem) == 0) {
                 return false;
             }
         }
@@ -315,29 +315,29 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
 
     @Nonnull
     public Set<BlockPos> getGPSPositions() {
-        return positions;
+        return this.positions;
     }
 
     private void setupGPSPositions() {
-        positions.clear();
+        this.positions.clear();
 
         List<BlockPos> gpsPositions = new ArrayList<>();
-        int sensorRange = getRange();
-        for (int i = 0; i < upgradeHandler.getSlots(); i++) {
-            ItemStack gps = upgradeHandler.getStackInSlot(i);
+        int sensorRange = this.getRange();
+        for (int i = 0; i < this.upgradeHandler.getSlots(); i++) {
+            ItemStack gps = this.upgradeHandler.getStackInSlot(i);
             if (gps.getItem() == Itemss.GPS_TOOL) {
                 BlockPos pos = ItemGPSTool.getGPSLocation(gps);
                 if (pos != null
-                        && Math.abs(pos.getX() - getPos().getX()) <= sensorRange
-                        && Math.abs(pos.getY() - getPos().getY()) <= sensorRange
-                        && Math.abs(pos.getZ() - getPos().getZ()) <= sensorRange) {
+                        && Math.abs(pos.getX() - this.getPos().getX()) <= sensorRange
+                        && Math.abs(pos.getY() - this.getPos().getY()) <= sensorRange
+                        && Math.abs(pos.getZ() - this.getPos().getZ()) <= sensorRange) {
                     gpsPositions.add(pos);
                 }
             }
         }
 
         if (gpsPositions.size() == 1) {
-            positions.add(gpsPositions.get(0));
+            this.positions.add(gpsPositions.get(0));
         } else if (gpsPositions.size() > 1) {
             int minX = Math.min(gpsPositions.get(0).getX(), gpsPositions.get(1).getX());
             int minY = Math.min(gpsPositions.get(0).getY(), gpsPositions.get(1).getY());
@@ -348,7 +348,7 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
             for (int x = minX; x <= maxX; x++) {
                 for (int y = Math.min(255, maxY); y >= minY && y >= 0; y--) {
                     for (int z = minZ; z <= maxZ; z++) {
-                        positions.add(new BlockPos(x, y, z));
+                        this.positions.add(new BlockPos(x, y, z));
                     }
                 }
             }
@@ -362,22 +362,22 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
 
     @Override
     public void setText(int textFieldID, String text) {
-        sensorGuiText = text;
-        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(sensorSetting);
+        this.sensorGuiText = text;
+        ISensorSetting sensor = SensorHandler.getInstance().getSensorFromPath(this.sensorSetting);
         if (sensor != null) {
             try {
-                lastSensorError = "";
-                sensor.notifyTextChange(sensorGuiText);
+                this.lastSensorError = "";
+                sensor.notifyTextChange(this.sensorGuiText);
             } catch (Exception e) {
-                lastSensorError = e.getMessage();
+                this.lastSensorError = e.getMessage();
             }
         }
-        if (!getWorld().isRemote) scheduleDescriptionPacket();
+        if (!this.getWorld().isRemote) this.scheduleDescriptionPacket();
     }
 
     @Override
     public String getText(int textFieldID) {
-        return sensorGuiText;
+        return this.sensorGuiText;
     }
 
     /*
@@ -395,7 +395,7 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("getSensorNames") {
             @Override
             public Object[] call(Object[] args) {
-                requireNoArgs(args);
+                this.requireNoArgs(args);
                 return SensorHandler.getInstance().getSensorNames();
             }
         });
@@ -403,7 +403,7 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("setSensor") {
             @Override
             public Object[] call(Object[] args) {
-                requireArgs(args, 0, 1, "sensor_name?");
+                this.requireArgs(args, 0, 1, "sensor_name?");
                 if (args.length == 1) {
                     ISensorSetting sensor;
                     if (args[0] instanceof String) {
@@ -411,10 +411,10 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
                     } else {
                         sensor = SensorHandler.getInstance().getSensorByIndex(((Double) args[0]).intValue() - 1);
                     }
-                    if (sensor != null) return new Object[]{setSensorSetting(sensor)};
+                    if (sensor != null) return new Object[]{TileEntityUniversalSensor.this.setSensorSetting(sensor)};
                     throw new IllegalArgumentException("Invalid sensor name/index: " + args[0]);
                 } else {
-                    setSensorSetting("");
+                    TileEntityUniversalSensor.this.setSensorSetting("");
                     return new Object[]{true};
                 }
             }
@@ -423,17 +423,17 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("getSensor") {
             @Override
             public Object[] call(Object[] args) {
-                requireNoArgs(args);
-                ISensorSetting curSensor = SensorHandler.getInstance().getSensorFromPath(getSensorSetting());
-                return curSensor == null ? null : new Object[]{getSensorSetting().substring(getSensorSetting().lastIndexOf('/') + 1)};
+                this.requireNoArgs(args);
+                ISensorSetting curSensor = SensorHandler.getInstance().getSensorFromPath(TileEntityUniversalSensor.this.getSensorSetting());
+                return curSensor == null ? null : new Object[]{TileEntityUniversalSensor.this.getSensorSetting().substring(TileEntityUniversalSensor.this.getSensorSetting().lastIndexOf('/') + 1)};
             }
         });
 
         registry.registerLuaMethod(new LuaMethod("setTextfield") {
             @Override
             public Object[] call(Object[] args) {
-                requireArgs(args, 1, "textfield_value");
-                setText(0, (String) args[0]);
+                this.requireArgs(args, 1, "textfield_value");
+                TileEntityUniversalSensor.this.setText(0, (String) args[0]);
                 return null;
             }
         });
@@ -441,27 +441,27 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("getTextfield") {
             @Override
             public Object[] call(Object[] args) {
-                requireNoArgs(args);
-                return new Object[]{getText(0)};
+                this.requireNoArgs(args);
+                return new Object[]{TileEntityUniversalSensor.this.getText(0)};
             }
         });
 
         registry.registerLuaMethod(new LuaMethod("isSensorEventBased") {
             @Override
             public Object[] call(Object[] args) {
-                requireNoArgs(args);
-                return new Object[]{SensorHandler.getInstance().getSensorFromPath(getSensorSetting()) instanceof IEventSensorSetting};
+                this.requireNoArgs(args);
+                return new Object[]{SensorHandler.getInstance().getSensorFromPath(TileEntityUniversalSensor.this.getSensorSetting()) instanceof IEventSensorSetting};
             }
         });
 
         registry.registerLuaMethod(new LuaMethod("getSensorValue") {
             @Override
             public Object[] call(Object[] args) {
-                requireNoArgs(args);
-                ISensorSetting s = SensorHandler.getInstance().getSensorFromPath(getSensorSetting());
+                this.requireNoArgs(args);
+                ISensorSetting s = SensorHandler.getInstance().getSensorFromPath(TileEntityUniversalSensor.this.getSensorSetting());
                 if (s instanceof IPollSensorSetting) {
-                    requestPollPullEvent = true;
-                    return new Object[]{redstoneStrength};
+                    TileEntityUniversalSensor.this.requestPollPullEvent = true;
+                    return new Object[]{TileEntityUniversalSensor.this.redstoneStrength};
                 } else if (s != null) {
                     throw new IllegalArgumentException("The selected sensor is pull event based. You can't poll the value.");
                 } else {
@@ -473,8 +473,8 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("setGPSToolCoordinate") {
             @Override
             public Object[] call(Object[] args) {
-                requireArgs(args, 4, "slot, x, y, z");
-                ItemStack stack = upgradeHandler.getStackInSlot(((Double) args[0]).intValue() - 1); //minus one, as lua is 1-oriented.
+                this.requireArgs(args, 4, "slot, x, y, z");
+                ItemStack stack = TileEntityUniversalSensor.this.upgradeHandler.getStackInSlot(((Double) args[0]).intValue() - 1); //minus one, as lua is 1-oriented.
                 if (stack.getItem() == Itemss.GPS_TOOL) {
                     ItemGPSTool.setGPSLocation(stack, new BlockPos((Double) args[1], (Double) args[2], (Double) args[3]));
                     return new Object[]{true};
@@ -488,8 +488,8 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
         registry.registerLuaMethod(new LuaMethod("getGPSToolCoordinate") {
             @Override
             public Object[] call(Object[] args) {
-                requireArgs(args, 1, "upgrade_slot");
-                ItemStack stack = upgradeHandler.getStackInSlot(((Double) args[0]).intValue() - 1); //minus one, as lua is 1-oriented.
+                this.requireArgs(args, 1, "upgrade_slot");
+                ItemStack stack = TileEntityUniversalSensor.this.upgradeHandler.getStackInSlot(((Double) args[0]).intValue() - 1); //minus one, as lua is 1-oriented.
                 if (stack.getItem() == Itemss.GPS_TOOL) {
                     BlockPos pos = ItemGPSTool.getGPSLocation(stack);
                     if (pos != null) {
@@ -506,14 +506,14 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
 
     @Override
     @Optional.Method(modid = ModIds.COMPUTERCRAFT)
-    public void attach(IComputerAccess computer){
-        attachedComputers.add(computer);
+    public void attach(IComputerAccess computer) {
+        this.attachedComputers.add(computer);
     }
 
     @Override
     @Optional.Method(modid = ModIds.COMPUTERCRAFT)
-    public void detach(IComputerAccess computer){
-        attachedComputers.remove(computer);
+    public void detach(IComputerAccess computer) {
+        this.attachedComputers.remove(computer);
     }
 
     /**
@@ -523,14 +523,14 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
      */
     @Optional.Method(modid = ModIds.COMPUTERCRAFT)
     private void notifyComputers(Object... arguments) {
-        for (IComputerAccess computer : attachedComputers) {
-            computer.queueEvent(getType(), arguments);
+        for (IComputerAccess computer : this.attachedComputers) {
+            computer.queueEvent(this.getType(), arguments);
         }
     }
 
     @Override
     public int getRedstoneMode() {
-        return invertedRedstone ? 1 : 0;
+        return this.invertedRedstone ? 1 : 0;
     }
 
     @Override
@@ -547,15 +547,15 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
     protected List<String> getRedstoneButtonLabels() {
         return REDSTONE_LABELS;
     }
-    
+
     @Override
-    public void invalidate(){
+    public void invalidate() {
         super.invalidate();
         GlobalTileEntityCacheManager.getInstance().universalSensors.remove(this);
     }
-    
+
     @Override
-    public void validate(){
+    public void validate() {
         super.validate();
         GlobalTileEntityCacheManager.getInstance().universalSensors.add(this);
     }
@@ -567,19 +567,19 @@ public class TileEntityUniversalSensor extends TileEntityPneumaticBase
 
         @Override
         public boolean isItemValid(int slot, ItemStack itemStack) {
-            return itemStack.isEmpty() || getApplicableUpgrades().contains(itemStack.getItem()) || itemStack.getItem() == Itemss.GPS_TOOL;
+            return itemStack.isEmpty() || TileEntityUniversalSensor.this.getApplicableUpgrades().contains(itemStack.getItem()) || itemStack.getItem() == Itemss.GPS_TOOL;
         }
 
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            if (!getWorld().isRemote && !getSensorSetting().isEmpty()
-                    && !areGivenUpgradesInserted(SensorHandler.getInstance().getRequiredStacksFromText(getSensorSetting()))) {
-                setSensorSetting("");
+            if (!TileEntityUniversalSensor.this.getWorld().isRemote && !TileEntityUniversalSensor.this.getSensorSetting().isEmpty()
+                    && !TileEntityUniversalSensor.this.areGivenUpgradesInserted(SensorHandler.getInstance().getRequiredStacksFromText(TileEntityUniversalSensor.this.getSensorSetting()))) {
+                TileEntityUniversalSensor.this.setSensorSetting("");
             }
 
-            setupGPSPositions();
+            TileEntityUniversalSensor.this.setupGPSPositions();
         }
     }
 

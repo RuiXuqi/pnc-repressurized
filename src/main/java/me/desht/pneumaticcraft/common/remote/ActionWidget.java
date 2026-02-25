@@ -20,17 +20,17 @@ public abstract class ActionWidget<Widget extends IGuiWidget> {
     }
 
     public void readFromNBT(NBTTagCompound tag, int guiLeft, int guiTop) {
-        enableVariable = tag.getString("enableVariable");
-        enablingValue = tag.hasKey("enablingX") ? new BlockPos(tag.getInteger("enablingX"), tag.getInteger("enablingY"), tag.getInteger("enablingZ")) : new BlockPos(1, 0, 0);
+        this.enableVariable = tag.getString("enableVariable");
+        this.enablingValue = tag.hasKey("enablingX") ? new BlockPos(tag.getInteger("enablingX"), tag.getInteger("enablingY"), tag.getInteger("enablingZ")) : new BlockPos(1, 0, 0);
     }
 
     public NBTTagCompound toNBT(int guiLeft, int guitTop) {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("id", getId());
-        tag.setString("enableVariable", enableVariable);
-        tag.setInteger("enablingX", enablingValue.getX());
-        tag.setInteger("enablingY", enablingValue.getY());
-        tag.setInteger("enablingZ", enablingValue.getZ());
+        tag.setString("id", this.getId());
+        tag.setString("enableVariable", this.enableVariable);
+        tag.setInteger("enablingX", this.enablingValue.getX());
+        tag.setInteger("enablingY", this.enablingValue.getY());
+        tag.setInteger("enablingZ", this.enablingValue.getZ());
         return tag;
     }
 
@@ -40,14 +40,14 @@ public abstract class ActionWidget<Widget extends IGuiWidget> {
             widget.readFromNBT(this.toNBT(0, 0), 0, 0);
             return widget;
         } catch (Exception e) {
-            Log.error("Error occured when trying to copy an " + getId() + " action widget.");
+            Log.error("Error occured when trying to copy an " + this.getId() + " action widget.");
             e.printStackTrace();
             return null;
         }
     }
 
     public Widget getWidget() {
-        return widget;
+        return this.widget;
     }
 
     public abstract void setWidgetPos(int x, int y);
@@ -63,18 +63,18 @@ public abstract class ActionWidget<Widget extends IGuiWidget> {
     }
 
     public String getEnableVariable() {
-        return enableVariable;
+        return this.enableVariable;
     }
 
     public boolean isEnabled() {
-        return enableVariable.equals("") || GlobalVariableManager.getInstance().getPos(enableVariable).equals(enablingValue);
+        return this.enableVariable.equals("") || GlobalVariableManager.getInstance().getPos(this.enableVariable).equals(this.enablingValue);
     }
 
     public void setEnablingValue(int x, int y, int z) {
-        enablingValue = new BlockPos(x, y, z);
+        this.enablingValue = new BlockPos(x, y, z);
     }
 
     public BlockPos getEnablingValue() {
-        return enablingValue;
+        return this.enablingValue;
     }
 }

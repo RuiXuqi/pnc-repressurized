@@ -38,7 +38,7 @@ public class ProgWidgetCoordinateCondition extends ProgWidgetConditionBase {
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (!checkingAxis[0] && !checkingAxis[1] && !checkingAxis[2])
+        if (!this.checkingAxis[0] && !this.checkingAxis[1] && !this.checkingAxis[2])
             curInfo.add("gui.progWidget.conditionCoordinate.error.noAxisSelected");
     }
 
@@ -46,17 +46,17 @@ public class ProgWidgetCoordinateCondition extends ProgWidgetConditionBase {
     public boolean evaluate(IDroneBase drone, IProgWidget widget) {
         BlockPos pos1 = ProgWidgetCoordinateOperator.calculateCoordinate(widget, 0, EnumOperator.PLUS_MINUS);
         BlockPos pos2 = ProgWidgetCoordinateOperator.calculateCoordinate(widget, 1, EnumOperator.PLUS_MINUS);
-        if (checkingAxis[0] && !evaluate(pos1.getX(), pos2.getX())) return false;
-        if (checkingAxis[1] && !evaluate(pos1.getY(), pos2.getY())) return false;
-        return !(checkingAxis[2] && !evaluate(pos1.getZ(), pos2.getZ()));
+        if (this.checkingAxis[0] && !this.evaluate(pos1.getX(), pos2.getX())) return false;
+        if (this.checkingAxis[1] && !this.evaluate(pos1.getY(), pos2.getY())) return false;
+        return !(this.checkingAxis[2] && !this.evaluate(pos1.getZ(), pos2.getZ()));
     }
 
     private boolean evaluate(int arg1, int arg2) {
-        return operator == Operator.EQUALS ? arg1 == arg2 : arg1 >= arg2;
+        return this.operator == Operator.EQUALS ? arg1 == arg2 : arg1 >= arg2;
     }
 
     public Operator getOperator() {
-        return operator;
+        return this.operator;
     }
 
     public void setOperator(Operator operator) {
@@ -66,19 +66,19 @@ public class ProgWidgetCoordinateCondition extends ProgWidgetConditionBase {
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("checkX", checkingAxis[0]);
-        tag.setBoolean("checkY", checkingAxis[1]);
-        tag.setBoolean("checkZ", checkingAxis[2]);
-        tag.setByte("operator", (byte) operator.ordinal());
+        tag.setBoolean("checkX", this.checkingAxis[0]);
+        tag.setBoolean("checkY", this.checkingAxis[1]);
+        tag.setBoolean("checkZ", this.checkingAxis[2]);
+        tag.setByte("operator", (byte) this.operator.ordinal());
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        checkingAxis[0] = tag.getBoolean("checkX");
-        checkingAxis[1] = tag.getBoolean("checkY");
-        checkingAxis[2] = tag.getBoolean("checkZ");
-        operator = Operator.values()[tag.getByte("operator")];
+        this.checkingAxis[0] = tag.getBoolean("checkX");
+        this.checkingAxis[1] = tag.getBoolean("checkY");
+        this.checkingAxis[2] = tag.getBoolean("checkZ");
+        this.operator = Operator.values()[tag.getByte("operator")];
     }
 
     @Override
@@ -95,12 +95,12 @@ public class ProgWidgetCoordinateCondition extends ProgWidgetConditionBase {
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        curTooltip.add("Condition: \"" + getCondition() + "\"");
+        curTooltip.add("Condition: \"" + this.getCondition() + "\"");
     }
 
     @Override
     public String getExtraStringInfo() {
-        String condition = getCondition();
+        String condition = this.getCondition();
         return condition.length() > 0 ? condition : null;
     }
 
@@ -108,9 +108,9 @@ public class ProgWidgetCoordinateCondition extends ProgWidgetConditionBase {
         char[] axis = new char[]{'x', 'y', 'z'};
         StringBuilder condition = new StringBuilder();
         for (int i = 0; i < 3; i++) {
-            if (checkingAxis[i]) {
+            if (this.checkingAxis[i]) {
                 if (condition.length() > 0) condition.append(" and ");
-                condition.append(("%s1 " + operator + " %s2").replace("%s", "" + axis[i]));
+                condition.append(("%s1 " + this.operator + " %s2").replace("%s", "" + axis[i]));
             }
         }
         return condition.toString();

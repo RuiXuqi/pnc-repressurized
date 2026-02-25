@@ -46,9 +46,9 @@ public class ModuleAirGrate extends TubeModule {
     }
 
     private int getRange() {
-        float range = pressureTube.getAirHandler(null).getPressure() * 4;
-        vacuum = range < 0;
-        if (vacuum) range = -range * 4;
+        float range = this.pressureTube.getAirHandler(null).getPressure() * 4;
+        this.vacuum = range < 0;
+        if (this.vacuum) range = -range * 4;
         return (int) range;
     }
 
@@ -61,38 +61,38 @@ public class ModuleAirGrate extends TubeModule {
     public void update() {
         super.update();
 
-        World world = pressureTube.world();
-        BlockPos pos = pressureTube.pos();
+        World world = this.pressureTube.world();
+        BlockPos pos = this.pressureTube.pos();
 
         if (!world.isRemote) {
-            int oldGrateRange = grateRange;
-            grateRange = getRange();
-            pressureTube.getAirHandler(null).addAir((vacuum ? 1 : -1) * grateRange * PneumaticValues.USAGE_AIR_GRATE);
-            if (oldGrateRange != grateRange) sendDescriptionPacket();
-            coolHeatSinks();
+            int oldGrateRange = this.grateRange;
+            this.grateRange = this.getRange();
+            this.pressureTube.getAirHandler(null).addAir((this.vacuum ? 1 : -1) * this.grateRange * PneumaticValues.USAGE_AIR_GRATE);
+            if (oldGrateRange != this.grateRange) this.sendDescriptionPacket();
+            this.coolHeatSinks();
         } else {
-            if (resetRendering && grateRange > 0) {
-                rangeLineRenderer.resetRendering(grateRange);
-                resetRendering = false;
+            if (this.resetRendering && this.grateRange > 0) {
+                this.rangeLineRenderer.resetRendering(this.grateRange);
+                this.resetRendering = false;
             }
-            rangeLineRenderer.update();
+            this.rangeLineRenderer.update();
         }
 
-        pushEntities(world, pos, new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
+        this.pushEntities(world, pos, new Vec3d(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D));
     }
 
     private AxisAlignedBB getAffectedAABB() {
-        return new AxisAlignedBB(pressureTube.pos()).grow(grateRange);
+        return new AxisAlignedBB(this.pressureTube.pos()).grow(this.grateRange);
     }
 
     private void pushEntities(World world, BlockPos pos, Vec3d tileVec) {
-        AxisAlignedBB bbBox = getAffectedAABB();
-        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, bbBox, entityFilter);
-        double d0 = grateRange + 0.5D;
+        AxisAlignedBB bbBox = this.getAffectedAABB();
+        List<Entity> entities = world.getEntitiesWithinAABB(Entity.class, bbBox, this.entityFilter);
+        double d0 = this.grateRange + 0.5D;
         for (Entity entity : entities) {
             if (!entity.world.isRemote && entity instanceof EntityItem && !entity.isDead
                     && entity.getDistanceSq(pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D) < 1D) {
-                tryItemInsertion((EntityItem) entity);
+                this.tryItemInsertion((EntityItem) entity);
             } else if (!entity.isSneaking() && (!(entity instanceof EntityPlayer) || !((EntityPlayer) entity).capabilities.isCreativeMode)) {
                 Vec3d entityVec = new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
                 RayTraceResult trace = world.rayTraceBlocks(entityVec, tileVec, false, true, false);
@@ -106,12 +106,12 @@ public class ModuleAirGrate extends TubeModule {
 
                     if (d5 > 0.0D) {
                         d5 *= d5;
-                        if (!vacuum) d5 *= -1;
+                        if (!this.vacuum) d5 *= -1;
                         entity.motionX -= d1 / d4 * d5 * 0.1D;
                         entity.motionY -= d2 / d4 * d5 * 0.1D;
                         entity.motionZ -= d3 / d4 * d5 * 0.1D;
                         if (world.isRemote && world.rand.nextDouble() * 0.85 > d4) {
-                            if (vacuum) {
+                            if (this.vacuum) {
                                 PneumaticCraftRepressurized.proxy.playCustomParticle(EnumCustomParticleType.AIR_PARTICLE_DENSE, world,
                                         entity.posX, entity.posY, entity.posZ, -d1, -d2, -d3);
                             } else {
@@ -126,9 +126,9 @@ public class ModuleAirGrate extends TubeModule {
     }
 
     private void tryItemInsertion(EntityItem entity) {
-        if (getAdjacentInventory() != null) {
+        if (this.getAdjacentInventory() != null) {
             ItemStack stack = entity.getItem();
-            ItemStack excess = IOHelper.insert(getAdjacentInventory(), stack, adjacentInvSide, false);
+            ItemStack excess = IOHelper.insert(this.getAdjacentInventory(), stack, this.adjacentInvSide, false);
             if (excess.isEmpty()) {
                 entity.setDead();
             } else {
@@ -138,30 +138,30 @@ public class ModuleAirGrate extends TubeModule {
     }
 
     private TileEntity getAdjacentInventory() {
-        if (adjacentInv != null && !adjacentInv.isInvalid()) {
-            return adjacentInv;
+        if (this.adjacentInv != null && !this.adjacentInv.isInvalid()) {
+            return this.adjacentInv;
         }
 
-        adjacentInv = null;
+        this.adjacentInv = null;
         for (EnumFacing dir : EnumFacing.VALUES) {
-            TileEntity inv = pressureTube.world().getTileEntity(pressureTube.pos().offset(dir));
+            TileEntity inv = this.pressureTube.world().getTileEntity(this.pressureTube.pos().offset(dir));
             if (inv != null && inv.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite())) {
-                adjacentInv = inv;
-                adjacentInvSide = dir.getOpposite();
+                this.adjacentInv = inv;
+                this.adjacentInvSide = dir.getOpposite();
                 break;
             }
         }
-        return adjacentInv;
+        return this.adjacentInv;
     }
 
     private void coolHeatSinks() {
-        if (grateRange > 2) {
-            int curTeIndex = (int) (pressureTube.world().getTotalWorldTime() % 27);
-            BlockPos curPos = pressureTube.pos().offset(dir, 2).add(-1 + curTeIndex % 3, -1 + curTeIndex / 3 % 3, -1 + curTeIndex / 9 % 3);
-            TileEntity te = pressureTube.world().getTileEntity(curPos);
-            if (te instanceof TileEntityHeatSink) heatSinks.add((TileEntityHeatSink) te);
+        if (this.grateRange > 2) {
+            int curTeIndex = (int) (this.pressureTube.world().getTotalWorldTime() % 27);
+            BlockPos curPos = this.pressureTube.pos().offset(this.dir, 2).add(-1 + curTeIndex % 3, -1 + curTeIndex / 3 % 3, -1 + curTeIndex / 9 % 3);
+            TileEntity te = this.pressureTube.world().getTileEntity(curPos);
+            if (te instanceof TileEntityHeatSink) this.heatSinks.add((TileEntityHeatSink) te);
 
-            Iterator<TileEntityHeatSink> iterator = heatSinks.iterator();
+            Iterator<TileEntityHeatSink> iterator = this.heatSinks.iterator();
             while (iterator.hasNext()) {
                 TileEntityHeatSink heatSink = iterator.next();
                 if (heatSink.isInvalid()) {
@@ -177,18 +177,18 @@ public class ModuleAirGrate extends TubeModule {
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        vacuum = tag.getBoolean("vacuum");
-        grateRange = tag.getInteger("grateRange");
+        this.vacuum = tag.getBoolean("vacuum");
+        this.grateRange = tag.getInteger("grateRange");
         String f = tag.getString("entityFilter");
-        entityFilter = f.isEmpty() ? null : EntityFilter.fromString(f);
+        this.entityFilter = f.isEmpty() ? null : EntityFilter.fromString(f);
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("vacuum", vacuum);
-        tag.setInteger("grateRange", grateRange);
-        tag.setString("entityFilter", entityFilter == null ? "" : entityFilter.toString());
+        tag.setBoolean("vacuum", this.vacuum);
+        tag.setInteger("grateRange", this.grateRange);
+        tag.setString("entityFilter", this.entityFilter == null ? "" : this.entityFilter.toString());
     }
 
     @Override
@@ -199,10 +199,10 @@ public class ModuleAirGrate extends TubeModule {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        curInfo.add("Status: " + TextFormatting.WHITE + (grateRange == 0 ? "Idle" : vacuum ? "Attracting" : "Repelling"));
-        curInfo.add("Range: " + TextFormatting.WHITE + grateRange + " blocks");
-        if (entityFilter != null)
-            curInfo.add("Entity Filter: " + TextFormatting.WHITE + "\"" + entityFilter.toString() + "\"");
+        curInfo.add("Status: " + TextFormatting.WHITE + (this.grateRange == 0 ? "Idle" : this.vacuum ? "Attracting" : "Repelling"));
+        curInfo.add("Range: " + TextFormatting.WHITE + this.grateRange + " blocks");
+        if (this.entityFilter != null)
+            curInfo.add("Entity Filter: " + TextFormatting.WHITE + "\"" + this.entityFilter + "\"");
     }
 
     @Override
@@ -217,26 +217,26 @@ public class ModuleAirGrate extends TubeModule {
 
     @Override
     public void doExtraRendering() {
-        rangeLineRenderer.render();
+        this.rangeLineRenderer.render();
     }
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return getAffectedAABB();
+        return this.getAffectedAABB();
     }
 
     public String getEntityFilterString() {
-        return entityFilter == null ? "" : entityFilter.toString();
+        return this.entityFilter == null ? "" : this.entityFilter.toString();
     }
 
     public void setEntityFilter(String filter) {
-        entityFilter = EntityFilter.fromString(filter);
+        this.entityFilter = EntityFilter.fromString(filter);
     }
 
     @Override
     public boolean onActivated(EntityPlayer player, EnumHand hand) {
-        if (player.world.isRemote && rangeLineRenderer.isIdle()) {
-            resetRendering = true;
+        if (player.world.isRemote && this.rangeLineRenderer.isIdle()) {
+            this.resetRendering = true;
         }
         return super.onActivated(player, hand);
     }

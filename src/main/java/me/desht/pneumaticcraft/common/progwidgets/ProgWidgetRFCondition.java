@@ -31,16 +31,16 @@ public class ProgWidgetRFCondition extends ProgWidgetCondition {
         return new DroneAIBlockCondition(drone, (ProgWidgetAreaItemBase) widget) {
             @Override
             protected boolean evaluate(BlockPos pos) {
-                TileEntity te = drone.world().getTileEntity(pos);
+                TileEntity te = this.drone.world().getTileEntity(pos);
                 if (te == null) return false;
                 int energy = 0;
                 for (EnumFacing face : EnumFacing.VALUES) {
-                    if (getSides()[face.getIndex()] && te.hasCapability(CapabilityEnergy.ENERGY, face)) {
+                    if (ProgWidgetRFCondition.this.getSides()[face.getIndex()] && te.hasCapability(CapabilityEnergy.ENERGY, face)) {
                         IEnergyStorage storage = te.getCapability(CapabilityEnergy.ENERGY, face);
                         energy = Math.max(storage.getEnergyStored(), energy);
                     }
                 }
-                return ((ICondition) widget).getOperator().evaluate(energy,((ICondition) widget).getRequiredCount());
+                return ((ICondition) this.widget).getOperator().evaluate(energy, ((ICondition) this.widget).getRequiredCount());
             }
         };
     }

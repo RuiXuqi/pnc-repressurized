@@ -13,12 +13,12 @@ public class AirHandlerSupplier implements IAirHandlerSupplier {
 
     @Override
     public IAirHandler createTierOneAirHandler(int volume) {
-        return createAirHandler(PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE, volume);
+        return this.createAirHandler(PneumaticValues.DANGER_PRESSURE_TIER_ONE, PneumaticValues.MAX_PRESSURE_TIER_ONE, volume);
     }
 
     @Override
     public IAirHandler createTierTwoAirHandler(int volume) {
-        return createAirHandler(PneumaticValues.DANGER_PRESSURE_TIER_TWO, PneumaticValues.MAX_PRESSURE_TIER_TWO, volume);
+        return this.createAirHandler(PneumaticValues.DANGER_PRESSURE_TIER_TWO, PneumaticValues.MAX_PRESSURE_TIER_TWO, volume);
     }
 
     @Override

@@ -33,22 +33,22 @@ public class PacketSetGlobalVariable extends AbstractPacket<PacketSetGlobalVaria
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        varName = ByteBufUtils.readUTF8String(buf);
-        value = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        this.varName = ByteBufUtils.readUTF8String(buf);
+        this.value = new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, varName);
-        buf.writeInt(value.getX());
-        buf.writeInt(value.getY());
-        buf.writeInt(value.getZ());
+        ByteBufUtils.writeUTF8String(buf, this.varName);
+        buf.writeInt(this.value.getX());
+        buf.writeInt(this.value.getY());
+        buf.writeInt(this.value.getZ());
     }
 
     @Override
     @SideOnly(Side.CLIENT)
     public void handleClientSide(PacketSetGlobalVariable message, EntityPlayer player) {
-        handleServerSide(message, player);
+        this.handleServerSide(message, player);
         GuiScreen screen = Minecraft.getMinecraft().currentScreen;
         if (screen instanceof GuiRemote) {
             ((GuiRemote) screen).onGlobalVariableChange(message.varName);

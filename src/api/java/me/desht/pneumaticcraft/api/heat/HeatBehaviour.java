@@ -27,45 +27,46 @@ public abstract class HeatBehaviour<Tile extends TileEntity> {
 
     /**
      * Called by the connected IHeatExchangerLogic.
-     * @param id ID of this behaviour; can be used to
+     *
+     * @param id                 ID of this behaviour; can be used to
      * @param connectedHeatLogic
      * @param world
      * @param pos
-     * @param direction direction of this behaviour from the tile entity's PoV
+     * @param direction          direction of this behaviour from the tile entity's PoV
      */
     public void initialize(String id, IHeatExchangerLogic connectedHeatLogic, World world, BlockPos pos, EnumFacing direction) {
         this.connectedHeatLogic = connectedHeatLogic;
         this.world = world;
         this.pos = pos;
         this.direction = direction;
-        cachedTE = null;
-        blockState = null;
+        this.cachedTE = null;
+        this.blockState = null;
     }
 
     public IHeatExchangerLogic getHeatExchanger() {
-        return connectedHeatLogic;
+        return this.connectedHeatLogic;
     }
 
     public World getWorld() {
-        return world;
+        return this.world;
     }
 
     public BlockPos getPos() {
-        return pos;
+        return this.pos;
     }
 
     public EnumFacing getDirection() {
-        return direction;
+        return this.direction;
     }
 
     public Tile getTileEntity() {
-        if (cachedTE == null || cachedTE.isInvalid()) cachedTE = (Tile) world.getTileEntity(pos);
-        return cachedTE;
+        if (this.cachedTE == null || this.cachedTE.isInvalid()) this.cachedTE = (Tile) this.world.getTileEntity(this.pos);
+        return this.cachedTE;
     }
 
     public IBlockState getBlockState() {
-        if (blockState == null) blockState = world.getBlockState(pos);
-        return blockState;
+        if (this.blockState == null) this.blockState = this.world.getBlockState(this.pos);
+        return this.blockState;
     }
 
     /**
@@ -89,20 +90,20 @@ public abstract class HeatBehaviour<Tile extends TileEntity> {
     public abstract void update();
 
     public void writeToNBT(NBTTagCompound tag) {
-        tag.setInteger("x", pos.getX());
-        tag.setInteger("y", pos.getY());
-        tag.setInteger("z", pos.getZ());
+        tag.setInteger("x", this.pos.getX());
+        tag.setInteger("y", this.pos.getY());
+        tag.setInteger("z", this.pos.getZ());
     }
 
     public void readFromNBT(NBTTagCompound tag) {
-        pos = new BlockPos(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
+        this.pos = new BlockPos(tag.getInteger("x"), tag.getInteger("y"), tag.getInteger("z"));
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof HeatBehaviour) {
             HeatBehaviour behaviour = (HeatBehaviour) o;
-            return behaviour.getId().equals(getId()) && behaviour.getPos().equals(getPos());
+            return behaviour.getId().equals(this.getId()) && behaviour.getPos().equals(this.getPos());
         } else {
             return false;
         }
@@ -110,8 +111,8 @@ public abstract class HeatBehaviour<Tile extends TileEntity> {
 
     @Override
     public int hashCode() {
-        int i = getId().hashCode();
-        i = i * 31 + getPos().hashCode();
+        int i = this.getId().hashCode();
+        i = i * 31 + this.getPos().hashCode();
         return i;
     }
 }

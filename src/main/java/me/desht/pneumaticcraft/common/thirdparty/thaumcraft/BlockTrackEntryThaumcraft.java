@@ -34,11 +34,11 @@ public class BlockTrackEntryThaumcraft implements IBlockTrackEntry {
     @Override
     public void addInformation(World world, BlockPos pos, TileEntity te, EnumFacing face, List<String> infoList) {
         if (te instanceof IAspectContainer) {
-            IAspectContainer container = (IAspectContainer)te;
+            IAspectContainer container = (IAspectContainer) te;
             AspectList aspects = container.getAspects();
             if (aspects != null && aspects.size() > 0) {
                 infoList.add("blockTracker.info.thaumcraft");
-                for(Map.Entry<Aspect, Integer> entry : aspects.aspects.entrySet()) {
+                for (Map.Entry<Aspect, Integer> entry : aspects.aspects.entrySet()) {
                     infoList.add("\u2022 " + entry.getValue() + " x " + entry.getKey().getName());
                 }
             } else {

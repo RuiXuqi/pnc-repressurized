@@ -15,7 +15,7 @@ public abstract class DroneEntityBase<Widget extends IProgWidget, E extends Enti
 
     public DroneEntityBase(IDroneBase drone, Widget widget) {
         this.drone = drone;
-        setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
+        this.setMutexBits(63);//binary 111111, so it won't run along with other AI tasks.
         this.widget = widget;
     }
 
@@ -24,13 +24,13 @@ public abstract class DroneEntityBase<Widget extends IProgWidget, E extends Enti
      */
     @Override
     public boolean shouldExecute() {
-        List<Entity> pickableItems = ((IEntityProvider) widget).getValidEntities(drone.world());
+        List<Entity> pickableItems = ((IEntityProvider) this.widget).getValidEntities(this.drone.world());
 
-        pickableItems.sort(new DistanceEntitySorter(drone));
+        pickableItems.sort(new DistanceEntitySorter(this.drone));
         for (Entity ent : pickableItems) {
-            if (ent != drone && isEntityValid(ent)) {
-                if (drone.getPathNavigator().moveToEntity(ent)) {
-                    targetedEntity = (E) ent;
+            if (ent != this.drone && this.isEntityValid(ent)) {
+                if (this.drone.getPathNavigator().moveToEntity(ent)) {
+                    this.targetedEntity = (E) ent;
                     return true;
                 }
             }
@@ -46,11 +46,11 @@ public abstract class DroneEntityBase<Widget extends IProgWidget, E extends Enti
      */
     @Override
     public boolean shouldContinueExecuting() {
-        if (targetedEntity.isDead) return false;
-        if (new Vec3d(targetedEntity.posX, targetedEntity.posY, targetedEntity.posZ).squareDistanceTo(drone.getDronePos()) < 2.25) {
-            return doAction();
+        if (this.targetedEntity.isDead) return false;
+        if (new Vec3d(this.targetedEntity.posX, this.targetedEntity.posY, this.targetedEntity.posZ).squareDistanceTo(this.drone.getDronePos()) < 2.25) {
+            return this.doAction();
         }
-        return !drone.getPathNavigator().hasNoPath();
+        return !this.drone.getPathNavigator().hasNoPath();
     }
 
     protected abstract boolean doAction();

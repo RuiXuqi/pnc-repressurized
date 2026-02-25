@@ -34,7 +34,7 @@ public class ProgWidgetDropItem extends ProgWidgetInventoryBase implements IItem
 
     @Override
     public boolean dropStraight() {
-        return dropStraight;
+        return this.dropStraight;
     }
 
     @Override
@@ -45,13 +45,13 @@ public class ProgWidgetDropItem extends ProgWidgetInventoryBase implements IItem
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("dropStraight", dropStraight);
+        tag.setBoolean("dropStraight", this.dropStraight);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        dropStraight = tag.getBoolean("dropStraight");
+        this.dropStraight = tag.getBoolean("dropStraight");
     }
 
     @Override
@@ -69,9 +69,9 @@ public class ProgWidgetDropItem extends ProgWidgetInventoryBase implements IItem
             @Override
             public boolean shouldExecute() {
                 boolean shouldExecute = false;
-                for (int i = 0; i < drone.getInv().getSlots(); i++) {
-                    ItemStack stack = drone.getInv().getStackInSlot(i);
-                    if (widget.isItemValidForFilters(stack)) {
+                for (int i = 0; i < this.drone.getInv().getSlots(); i++) {
+                    ItemStack stack = this.drone.getInv().getStackInSlot(i);
+                    if (this.widget.isItemValidForFilters(stack)) {
                         shouldExecute = super.shouldExecute();
                         break;
                     }
@@ -86,30 +86,30 @@ public class ProgWidgetDropItem extends ProgWidgetInventoryBase implements IItem
 
             @Override
             protected boolean isValidPosition(BlockPos pos) {
-                return !visitedPositions.contains(pos);//another requirement is that the drone can navigate to this exact block, but that's handled by the pathfinder.
+                return !this.visitedPositions.contains(pos);//another requirement is that the drone can navigate to this exact block, but that's handled by the pathfinder.
             }
 
             @Override
             protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-                visitedPositions.add(pos);
-                for (int i = 0; i < drone.getInv().getSlots(); i++) {
-                    ItemStack stack = drone.getInv().getStackInSlot(i);
-                    if (widget.isItemValidForFilters(stack)) {
-                        if (useCount() && getRemainingCount() < stack.getCount()) {
-                            stack = stack.splitStack(getRemainingCount());
-                            decreaseCount(getRemainingCount());
+                this.visitedPositions.add(pos);
+                for (int i = 0; i < this.drone.getInv().getSlots(); i++) {
+                    ItemStack stack = this.drone.getInv().getStackInSlot(i);
+                    if (this.widget.isItemValidForFilters(stack)) {
+                        if (this.useCount() && this.getRemainingCount() < stack.getCount()) {
+                            stack = stack.splitStack(this.getRemainingCount());
+                            this.decreaseCount(this.getRemainingCount());
                         } else {
-                            decreaseCount(stack.getCount());
-                            drone.getInv().setStackInSlot(i, ItemStack.EMPTY);
+                            this.decreaseCount(stack.getCount());
+                            this.drone.getInv().setStackInSlot(i, ItemStack.EMPTY);
                         }
-                        EntityItem item = new EntityItem(drone.world(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
-                        if (((IItemDropper) widget).dropStraight()) {
+                        EntityItem item = new EntityItem(this.drone.world(), pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+                        if (((IItemDropper) this.widget).dropStraight()) {
                             item.motionX = 0;
                             item.motionY = 0;
                             item.motionZ = 0;
                         }
-                        drone.world().spawnEntity(item);
-                        if (useCount() && getRemainingCount() == 0) break;
+                        this.drone.world().spawnEntity(item);
+                        if (this.useCount() && this.getRemainingCount() == 0) break;
                     }
                 }
                 return false;
@@ -130,6 +130,6 @@ public class ProgWidgetDropItem extends ProgWidgetInventoryBase implements IItem
 
     @Override
     public String getExtraStringInfo() {
-        return dropStraight() ? "Straight" : "Random";
+        return this.dropStraight() ? "Straight" : "Random";
     }
 }

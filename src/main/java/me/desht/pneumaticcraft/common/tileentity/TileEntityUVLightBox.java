@@ -40,7 +40,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     public static final int INVENTORY_SIZE = 1;
     public static final int PCB_SLOT = 0;
 
-    private Object light = null;
+    private final Object light = null;
 
     @DescSynced
     public boolean areLightsOn;
@@ -50,27 +50,27 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     public boolean hasLoadedPCB;
 
     public final LightBoxItemHandlerInternal inventory = new LightBoxItemHandlerInternal();
-    private final LightBoxItemHandlerExternal inventoryExt = new LightBoxItemHandlerExternal(inventory);
+    private final LightBoxItemHandlerExternal inventoryExt = new LightBoxItemHandlerExternal(this.inventory);
     public int ticksExisted;
     private boolean oldRedstoneStatus;
 
     public TileEntityUVLightBox() {
         super(PneumaticValues.DANGER_PRESSURE_UV_LIGHTBOX, PneumaticValues.MAX_PRESSURE_UV_LIGHTBOX, PneumaticValues.VOLUME_UV_LIGHTBOX, 4);
-        addApplicableUpgrade(EnumUpgrade.SPEED);
+        this.addApplicableUpgrade(EnumUpgrade.SPEED);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);
-        redstoneMode = nbt.getInteger("redstoneMode");
-        inventory.deserializeNBT(nbt.getCompoundTag("Items"));
+        this.redstoneMode = nbt.getInteger("redstoneMode");
+        this.inventory.deserializeNBT(nbt.getCompoundTag("Items"));
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         super.writeToNBT(nbt);
-        nbt.setInteger("redstoneMode", redstoneMode);
-        nbt.setTag("Items", inventory.serializeNBT());
+        nbt.setInteger("redstoneMode", this.redstoneMode);
+        nbt.setTag("Items", this.inventory.serializeNBT());
         return nbt;
     }
 
@@ -78,25 +78,25 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     public void update() {
         super.update();
 
-        if (!getWorld().isRemote) {
-            ticksExisted++;
-            ItemStack stack = getLoadedPCB();
-            if (getPressure() >= PneumaticValues.MIN_PRESSURE_UV_LIGHTBOX && stack.getItem() instanceof ItemEmptyPCB && stack.getItemDamage() > 0) {
-                addAir((int) (-PneumaticValues.USAGE_UV_LIGHTBOX * getSpeedUsageMultiplierFromUpgrades()));
-                if (ticksExisted % ticksPerProgress(stack.getItemDamage()) == 0) {
-                    if (!areLightsOn) {
-                        setLightsOn(true);
-                        updateNeighbours();
+        if (!this.getWorld().isRemote) {
+            this.ticksExisted++;
+            ItemStack stack = this.getLoadedPCB();
+            if (this.getPressure() >= PneumaticValues.MIN_PRESSURE_UV_LIGHTBOX && stack.getItem() instanceof ItemEmptyPCB && stack.getItemDamage() > 0) {
+                this.addAir((int) (-PneumaticValues.USAGE_UV_LIGHTBOX * this.getSpeedUsageMultiplierFromUpgrades()));
+                if (this.ticksExisted % this.ticksPerProgress(stack.getItemDamage()) == 0) {
+                    if (!this.areLightsOn) {
+                        this.setLightsOn(true);
+                        this.updateNeighbours();
                     }
                     stack.setItemDamage(Math.max(0, stack.getItemDamage() - 1));
                 }
-            } else if (areLightsOn) {
-                setLightsOn(false);
-                updateNeighbours();
+            } else if (this.areLightsOn) {
+                this.setLightsOn(false);
+                this.updateNeighbours();
             }
-            if (oldRedstoneStatus != shouldEmitRedstone()) {
-                oldRedstoneStatus = !oldRedstoneStatus;
-                updateNeighbours();
+            if (this.oldRedstoneStatus != this.shouldEmitRedstone()) {
+                this.oldRedstoneStatus = !this.oldRedstoneStatus;
+                this.updateNeighbours();
             }
         }
     }
@@ -105,7 +105,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     protected void onFirstServerUpdate() {
         super.onFirstServerUpdate();
 
-        hasLoadedPCB = !getLoadedPCB().isEmpty();
+        this.hasLoadedPCB = !this.getLoadedPCB().isEmpty();
     }
 
     private int ticksPerProgress(int damage) {
@@ -121,7 +121,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
         } else {
             ticks = 300;
         }
-        return Math.max(1, (int) (ticks / getSpeedMultiplierFromUpgrades()));
+        return Math.max(1, (int) (ticks / this.getSpeedMultiplierFromUpgrades()));
     }
 
     @Override
@@ -130,11 +130,11 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     }
 
     private void setLightsOn(boolean lightsOn) {
-        boolean check = areLightsOn != lightsOn;
-        areLightsOn = lightsOn;
+        boolean check = this.areLightsOn != lightsOn;
+        this.areLightsOn = lightsOn;
         if (check) {
-            getWorld().checkLightFor(EnumSkyBlock.BLOCK, getPos());
-            sendDescriptionPacket();
+            this.getWorld().checkLightFor(EnumSkyBlock.BLOCK, this.getPos());
+            this.sendDescriptionPacket();
         }
     }
 
@@ -142,17 +142,17 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     public void onDescUpdate() {
         super.onDescUpdate();
 
-        getWorld().checkLightFor(EnumSkyBlock.BLOCK, getPos());
-        getWorld().markBlockRangeForRenderUpdate(getPos(), getPos());
+        this.getWorld().checkLightFor(EnumSkyBlock.BLOCK, this.getPos());
+        this.getWorld().markBlockRangeForRenderUpdate(this.getPos(), this.getPos());
     }
 
     public int getLightLevel() {
-        return areLightsOn ? Math.max(15, getUpgrades(EnumUpgrade.SPEED)) + 11 : 0;
+        return this.areLightsOn ? Math.max(15, this.getUpgrades(EnumUpgrade.SPEED)) + 11 : 0;
     }
 
     @Override
     public boolean isConnectedTo(EnumFacing side) {
-        return side == getRotation().rotateYCCW();
+        return side == this.getRotation().rotateYCCW();
     }
 
     @Override
@@ -163,16 +163,16 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     @Override
     public void handleGUIButtonPress(int buttonID, EntityPlayer player) {
         if (buttonID == 0) {
-            redstoneMode++;
-            if (redstoneMode > 4) redstoneMode = 0;
-            updateNeighbours();
+            this.redstoneMode++;
+            if (this.redstoneMode > 4) this.redstoneMode = 0;
+            this.updateNeighbours();
         }
     }
 
     public boolean shouldEmitRedstone() {
-        ItemStack stack = getLoadedPCB();
-        if (redstoneMode == 0 || stack.getItem() != Itemss.EMPTY_PCB) return false;
-        switch (redstoneMode) {
+        ItemStack stack = this.getLoadedPCB();
+        if (this.redstoneMode == 0 || stack.getItem() != Itemss.EMPTY_PCB) return false;
+        switch (this.redstoneMode) {
             case 1:
                 return stack.getItemDamage() < 30;
             case 2:
@@ -187,7 +187,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
 
     @Override
     public IItemHandlerModifiable getPrimaryInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Nullable
@@ -195,14 +195,14 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
         // return the wrapped item handler when accessed via capability
         if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(inventoryExt);
+            return CapabilityItemHandler.ITEM_HANDLER_CAPABILITY.cast(this.inventoryExt);
         }
         return super.getCapability(capability, facing);
     }
 
     @Override
     public int getRedstoneMode() {
-        return redstoneMode;
+        return this.redstoneMode;
     }
 
     @Override
@@ -216,7 +216,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
     }
 
     private ItemStack getLoadedPCB() {
-        return inventory.getStackInSlot(PCB_SLOT);
+        return this.inventory.getStackInSlot(PCB_SLOT);
     }
 
     /*
@@ -252,7 +252,7 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
 
-            hasLoadedPCB = !getStackInSlot(slot).isEmpty();
+            TileEntityUVLightBox.this.hasLoadedPCB = !this.getStackInSlot(slot).isEmpty();
         }
     }
 
@@ -265,39 +265,39 @@ public class TileEntityUVLightBox extends TileEntityPneumaticBase implements IMi
 
         @Override
         public int getSlots() {
-            return wrapped.getSlots();
+            return this.wrapped.getSlots();
         }
 
         @Nonnull
         @Override
         public ItemStack getStackInSlot(int slot) {
-            return wrapped.getStackInSlot(slot);
+            return this.wrapped.getStackInSlot(slot);
         }
 
         @Nonnull
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-            return wrapped.insertItem(slot, stack, simulate);
+            return this.wrapped.insertItem(slot, stack, simulate);
         }
 
         @Nonnull
         @Override
         public ItemStack extractItem(int slot, int amount, boolean simulate) {
-            if (redstoneMode != 0 && !shouldEmitRedstone()) {
+            if (TileEntityUVLightBox.this.redstoneMode != 0 && !TileEntityUVLightBox.this.shouldEmitRedstone()) {
                 return ItemStack.EMPTY;
             } else {
-                return wrapped.extractItem(slot, amount, simulate);
+                return this.wrapped.extractItem(slot, amount, simulate);
             }
         }
 
         @Override
         public int getSlotLimit(int slot) {
-            return wrapped.getSlotLimit(slot);
+            return this.wrapped.getSlotLimit(slot);
         }
 
         @Override
         public void setStackInSlot(int slot, @Nonnull ItemStack stack) {
-            wrapped.setStackInSlot(slot, stack);
+            this.wrapped.setStackInSlot(slot, stack);
         }
     }
 }

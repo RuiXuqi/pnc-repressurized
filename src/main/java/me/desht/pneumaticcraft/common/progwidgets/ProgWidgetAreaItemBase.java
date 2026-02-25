@@ -47,10 +47,10 @@ public abstract class ProgWidgetAreaItemBase extends ProgWidget implements IArea
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) {
+        if (this.getConnectedParameters()[0] == null) {
             curInfo.add("gui.progWidget.area.error.noArea");
         }
-        Set<BlockPos> areaSet = getCachedAreaSet();
+        Set<BlockPos> areaSet = this.getCachedAreaSet();
         if (areaSet.size() > ConfigHandler.general.maxProgrammingArea) {
             curInfo.add(I18n.format("gui.progWidget.area.error.areaTooBig", ConfigHandler.general.maxProgrammingArea));
         }
@@ -80,57 +80,57 @@ public abstract class ProgWidgetAreaItemBase extends ProgWidget implements IArea
     }
 
     public synchronized List<BlockPos> getCachedAreaList() {
-        if (areaListCache != null) {
-            if (!canCache || updateVariables()) {
-                areaSetCache = new HashSet<>(areaListCache.size());
-                getArea(areaSetCache);
-                areaListCache = new ArrayList<>(areaSetCache.size());
-                areaListCache.addAll(areaSetCache);
+        if (this.areaListCache != null) {
+            if (!this.canCache || this.updateVariables()) {
+                this.areaSetCache = new HashSet<>(this.areaListCache.size());
+                this.getArea(this.areaSetCache);
+                this.areaListCache = new ArrayList<>(this.areaSetCache.size());
+                this.areaListCache.addAll(this.areaSetCache);
             }
         } else {
-            areaSetCache = new HashSet<>();
-            getArea(areaSetCache);
-            areaListCache = new ArrayList<>(areaSetCache.size());
-            areaListCache.addAll(areaSetCache);
-            initializeVariableCache();
+            this.areaSetCache = new HashSet<>();
+            this.getArea(this.areaSetCache);
+            this.areaListCache = new ArrayList<>(this.areaSetCache.size());
+            this.areaListCache.addAll(this.areaSetCache);
+            this.initializeVariableCache();
         }
-        return areaListCache;
+        return this.areaListCache;
     }
 
     public synchronized Set<BlockPos> getCachedAreaSet() {
-        getCachedAreaList();
-        return areaSetCache;
+        this.getCachedAreaList();
+        return this.areaSetCache;
     }
 
     protected synchronized void invalidateAreaCache() {
-        areaListCache = null;
-        areaSetCache = null;
+        this.areaListCache = null;
+        this.areaSetCache = null;
     }
 
     private void initializeVariableCache() {
-        areaVariableStates = new HashMap<>();
-        ProgWidgetArea whitelistWidget = (ProgWidgetArea) getConnectedParameters()[0];
-        ProgWidgetArea blacklistWidget = (ProgWidgetArea) getConnectedParameters()[getParameters().length];
+        this.areaVariableStates = new HashMap<>();
+        ProgWidgetArea whitelistWidget = (ProgWidgetArea) this.getConnectedParameters()[0];
+        ProgWidgetArea blacklistWidget = (ProgWidgetArea) this.getConnectedParameters()[this.getParameters().length];
         if (whitelistWidget == null) return;
         ProgWidgetArea widget = whitelistWidget;
         while (widget != null) {
-            if (!widget.type.isDeterministic()) canCache = false;
-            if (aiManager != null) {
+            if (!widget.type.isDeterministic()) this.canCache = false;
+            if (this.aiManager != null) {
                 if (!widget.getCoord1Variable().equals(""))
-                    areaVariableStates.put(widget.getCoord1Variable(), aiManager.getCoordinate(widget.getCoord1Variable()));
+                    this.areaVariableStates.put(widget.getCoord1Variable(), this.aiManager.getCoordinate(widget.getCoord1Variable()));
                 if (!widget.getCoord2Variable().equals(""))
-                    areaVariableStates.put(widget.getCoord2Variable(), aiManager.getCoordinate(widget.getCoord2Variable()));
+                    this.areaVariableStates.put(widget.getCoord2Variable(), this.aiManager.getCoordinate(widget.getCoord2Variable()));
             }
             widget = (ProgWidgetArea) widget.getConnectedParameters()[0];
         }
         widget = blacklistWidget;
         while (widget != null) {
-            if (!widget.type.isDeterministic()) canCache = false;
-            if (aiManager != null) {
+            if (!widget.type.isDeterministic()) this.canCache = false;
+            if (this.aiManager != null) {
                 if (!widget.getCoord1Variable().equals(""))
-                    areaVariableStates.put(widget.getCoord1Variable(), aiManager.getCoordinate(widget.getCoord1Variable()));
+                    this.areaVariableStates.put(widget.getCoord1Variable(), this.aiManager.getCoordinate(widget.getCoord1Variable()));
                 if (!widget.getCoord2Variable().equals(""))
-                    areaVariableStates.put(widget.getCoord2Variable(), aiManager.getCoordinate(widget.getCoord2Variable()));
+                    this.areaVariableStates.put(widget.getCoord2Variable(), this.aiManager.getCoordinate(widget.getCoord2Variable()));
             }
             widget = (ProgWidgetArea) widget.getConnectedParameters()[0];
         }
@@ -138,8 +138,8 @@ public abstract class ProgWidgetAreaItemBase extends ProgWidget implements IArea
 
     private boolean updateVariables() {
         boolean varChanged = false;
-        for (Map.Entry<String, BlockPos> entry : areaVariableStates.entrySet()) {
-            BlockPos newValue = aiManager.getCoordinate(entry.getKey());
+        for (Map.Entry<String, BlockPos> entry : this.areaVariableStates.entrySet()) {
+            BlockPos newValue = this.aiManager.getCoordinate(entry.getKey());
             if (!newValue.equals(entry.getValue())) {
                 varChanged = true;
                 entry.setValue(newValue);
@@ -150,7 +150,7 @@ public abstract class ProgWidgetAreaItemBase extends ProgWidget implements IArea
 
     @Override
     public void getArea(Set<BlockPos> area) {
-        getArea(area, (ProgWidgetArea) getConnectedParameters()[0], (ProgWidgetArea) getConnectedParameters()[getParameters().length]);
+        getArea(area, (ProgWidgetArea) this.getConnectedParameters()[0], (ProgWidgetArea) this.getConnectedParameters()[this.getParameters().length]);
     }
 
     public static void getArea(Set<BlockPos> area, ProgWidgetArea whitelistWidget, ProgWidgetArea blacklistWidget) {
@@ -171,43 +171,43 @@ public abstract class ProgWidgetAreaItemBase extends ProgWidget implements IArea
 
     @Override
     public boolean isItemValidForFilters(ItemStack item) {
-        return isItemValidForFilters(item, null);
+        return this.isItemValidForFilters(item, null);
     }
 
     public boolean isItemValidForFilters(ItemStack item, IBlockState blockState) {
         return ProgWidgetItemFilter.isItemValidForFilters(item,
                 ProgWidget.getConnectedWidgetList(this, 1),
-                ProgWidget.getConnectedWidgetList(this, getParameters().length + 1),
+                ProgWidget.getConnectedWidgetList(this, this.getParameters().length + 1),
                 blockState
         );
     }
 
     public boolean isItemFilterEmpty() {
-        return getConnectedParameters()[1] == null && getConnectedParameters()[3] == null;
+        return this.getConnectedParameters()[1] == null && this.getConnectedParameters()[3] == null;
     }
 
     public List<Entity> getEntitiesInArea(World world, Predicate<? super Entity> filter) {
         return getEntitiesInArea(
-                (ProgWidgetArea) getConnectedParameters()[0],
-                (ProgWidgetArea) getConnectedParameters()[getParameters().length],
+                (ProgWidgetArea) this.getConnectedParameters()[0],
+                (ProgWidgetArea) this.getConnectedParameters()[this.getParameters().length],
                 world, filter, null
         );
     }
 
     @Override
     public List<Entity> getValidEntities(World world) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.getValidEntities(world);
+        return this.entityFilters.getValidEntities(world);
     }
 
     @Override
     public boolean isEntityValid(Entity entity) {
-        if (entityFilters == null) {
-            entityFilters = new EntityFilterPair(this);
+        if (this.entityFilters == null) {
+            this.entityFilters = new EntityFilterPair(this);
         }
-        return entityFilters.isEntityValid(entity);
+        return this.entityFilters.isEntityValid(entity);
     }
 
     public static List<Entity> getEntitiesInArea(ProgWidgetArea whitelistWidget, ProgWidgetArea blacklistWidget, World world,

@@ -19,28 +19,28 @@ public class PacketSetLogisticsFluidFilterStack extends LocationIntPacket<Packet
 
     public PacketSetLogisticsFluidFilterStack(SemiBlockLogistics logistics, FluidStack stack, int index) {
         super(logistics.getPos());
-        settingStack = stack;
-        settingIndex = index;
+        this.settingStack = stack;
+        this.settingIndex = index;
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         super.toBytes(buf);
-        buf.writeBoolean(settingStack != null);
-        if (settingStack != null) {
-            ByteBufUtils.writeUTF8String(buf, settingStack.getFluid().getName());
-            buf.writeInt(settingStack.amount);
-            ByteBufUtils.writeTag(buf, settingStack.tag);
+        buf.writeBoolean(this.settingStack != null);
+        if (this.settingStack != null) {
+            ByteBufUtils.writeUTF8String(buf, this.settingStack.getFluid().getName());
+            buf.writeInt(this.settingStack.amount);
+            ByteBufUtils.writeTag(buf, this.settingStack.tag);
         }
-        buf.writeInt(settingIndex);
+        buf.writeInt(this.settingIndex);
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         super.fromBytes(buf);
         if (buf.readBoolean())
-            settingStack = new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
-        settingIndex = buf.readInt();
+            this.settingStack = new FluidStack(FluidRegistry.getFluid(ByteBufUtils.readUTF8String(buf)), buf.readInt(), ByteBufUtils.readTag(buf));
+        this.settingIndex = buf.readInt();
     }
 
     @Override

@@ -7,8 +7,8 @@ public class ContainerLiquidHopper extends ContainerPneumaticBase<TileEntityLiqu
     public ContainerLiquidHopper(InventoryPlayer inventoryPlayer, TileEntityLiquidHopper te) {
         super(te);
 
-        addUpgradeSlots(48, 29);
+        this.addUpgradeSlots(48, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 }

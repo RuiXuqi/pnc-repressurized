@@ -17,8 +17,8 @@ public class GuiRemote extends GuiPneumaticContainerBase {
 
     public GuiRemote(ItemStack remote, String texture) {
         super(new ContainerRemote(remote), null, texture);
-        xSize = 183;
-        ySize = 202;
+        this.xSize = 183;
+        this.ySize = 202;
         this.remote = remote;
     }
 
@@ -28,10 +28,10 @@ public class GuiRemote extends GuiPneumaticContainerBase {
 
     @Override
     public void initGui() {
-        remoteLayout = null;
+        this.remoteLayout = null;
         super.initGui();
-        if (remoteLayout == null) remoteLayout = new RemoteLayout(remote, guiLeft, guiTop);
-        addWidgets(remoteLayout.getWidgets(!(this instanceof GuiRemoteEditor)));
+        if (this.remoteLayout == null) this.remoteLayout = new RemoteLayout(this.remote, this.guiLeft, this.guiTop);
+        this.addWidgets(this.remoteLayout.getWidgets(!(this instanceof GuiRemoteEditor)));
     }
 
     @Override
@@ -46,9 +46,9 @@ public class GuiRemote extends GuiPneumaticContainerBase {
 
     @Override
     public void actionPerformed(IGuiWidget widget) {
-        for (ActionWidget actionWidget : remoteLayout.getActionWidgets()) {
+        for (ActionWidget actionWidget : this.remoteLayout.getActionWidgets()) {
             if (actionWidget.getWidget() == widget && actionWidget instanceof ActionWidgetVariable) {
-                onActionPerformed((ActionWidgetVariable) actionWidget);
+                this.onActionPerformed((ActionWidgetVariable) actionWidget);
             }
         }
     }
@@ -60,9 +60,9 @@ public class GuiRemote extends GuiPneumaticContainerBase {
     @Override
     public void onKeyTyped(IGuiWidget widget) {
         super.onKeyTyped(widget);
-        for (ActionWidget actionWidget : remoteLayout.getActionWidgets()) {
+        for (ActionWidget actionWidget : this.remoteLayout.getActionWidgets()) {
             if (actionWidget.getWidget() == widget && actionWidget instanceof ActionWidgetVariable) {
-                onKeyTyped((ActionWidgetVariable) actionWidget);
+                this.onKeyTyped((ActionWidgetVariable) actionWidget);
             }
         }
     }
@@ -77,9 +77,9 @@ public class GuiRemote extends GuiPneumaticContainerBase {
     }
 
     public void onGlobalVariableChange(String variable) {
-        widgets.clear();
-        initGui();
-        for (ActionWidget actionWidget : remoteLayout.getActionWidgets()) {
+        this.widgets.clear();
+        this.initGui();
+        for (ActionWidget actionWidget : this.remoteLayout.getActionWidgets()) {
             if (actionWidget instanceof ActionWidgetVariable) {
                 ((ActionWidgetVariable) actionWidget).onVariableChange();
             }

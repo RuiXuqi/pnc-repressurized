@@ -18,11 +18,11 @@ public interface IProvidingInventoryListener {
         }
 
         public TileEntity getTileEntity() {
-            return te;
+            return this.te;
         }
 
         public EnumFacing getFace() {
-            return face;
+            return this.face;
         }
 
         @Override
@@ -30,14 +30,13 @@ public interface IProvidingInventoryListener {
             if (this == o) return true;
             if (!(o instanceof TileEntityAndFace)) return false;
             TileEntityAndFace tileEntityAndFace = (TileEntityAndFace) o;
-            return te.equals(tileEntityAndFace.te) &&
-                    face == tileEntityAndFace.face;
+            return this.te.equals(tileEntityAndFace.te) &&
+                    this.face == tileEntityAndFace.face;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(te, face);
+            return Objects.hash(this.te, this.face);
         }
     }
 }
-

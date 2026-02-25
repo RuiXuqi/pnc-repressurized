@@ -8,12 +8,12 @@ import net.minecraft.util.ITickable;
 public class TileEntityDroneRedstoneEmitter extends TileEntity implements ITickable {
     @Override
     public void update() {
-        IBlockState state = getWorld().getBlockState(getPos());
+        IBlockState state = this.getWorld().getBlockState(this.getPos());
         for (EnumFacing facing : EnumFacing.VALUES) {
-            if (state.getWeakPower(getWorld(), getPos(),  facing) > 0) {
+            if (state.getWeakPower(this.getWorld(), this.getPos(), facing) > 0) {
                 return;
             }
         }
-        getWorld().setBlockToAir(getPos());
+        this.getWorld().setBlockToAir(this.getPos());
     }
 }

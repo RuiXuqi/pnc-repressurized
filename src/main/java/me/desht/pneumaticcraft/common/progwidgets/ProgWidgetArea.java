@@ -37,15 +37,15 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
 
     private static final Map<String, Supplier<? extends AreaType>> areaTypes = new LinkedHashMap<>(); //We want to preserve order in the GUI
     private static final Map<Class<? extends AreaType>, String> typeToIDs = new HashMap<>();
-    
+
     /**
      * A way to map from the old to the new format
      * Remove in 1.13.
      */
     @Deprecated
     private static final Map<EnumAreaType, String> oldFormatToAreaTypes = new HashMap<>();
-    
-    static{
+
+    static {
         register(AreaTypeBox.ID, AreaTypeBox.class, AreaTypeBox::new, EnumAreaType.FILL, EnumAreaType.WALL, EnumAreaType.FRAME);
         register(AreaTypeSphere.ID, AreaTypeSphere.class, AreaTypeSphere::new, EnumAreaType.SPHERE);
         register(AreaTypeLine.ID, AreaTypeLine.class, AreaTypeLine::new, EnumAreaType.LINE);
@@ -54,26 +54,27 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
         register(AreaTypePyramid.ID, AreaTypePyramid.class, AreaTypePyramid::new, EnumAreaType.X_PYRAMID, EnumAreaType.Y_PYRAMID, EnumAreaType.Z_PYRAMID);
         register(AreaTypeGrid.ID, AreaTypeGrid.class, AreaTypeGrid::new, EnumAreaType.GRID);
         register(AreaTypeRandom.ID, AreaTypeRandom.class, AreaTypeRandom::new, EnumAreaType.RANDOM);
-        if(oldFormatToAreaTypes.size() != EnumAreaType.values().length) throw new IllegalStateException("Not all old formats are handled!");
+        if (oldFormatToAreaTypes.size() != EnumAreaType.values().length)
+            throw new IllegalStateException("Not all old formats are handled!");
     }
-    
-    private static <T extends AreaType> void register(String id, Class<T> clazz, Supplier<T> creator, EnumAreaType... oldTypes){
-        if(areaTypes.containsKey(id)){
+
+    private static <T extends AreaType> void register(String id, Class<T> clazz, Supplier<T> creator, EnumAreaType... oldTypes) {
+        if (areaTypes.containsKey(id)) {
             throw new IllegalStateException("Area type " + clazz + " could not be registered, duplicate id: " + id);
         }
-        
+
         areaTypes.put(id, creator);
         typeToIDs.put(clazz, id);
-        
-        for(EnumAreaType oldType : oldTypes){
+
+        for (EnumAreaType oldType : oldTypes) {
             oldFormatToAreaTypes.put(oldType, id);
         }
     }
-   
-    public static List<AreaType> getAllAreaTypes(){
+
+    public static List<AreaType> getAllAreaTypes() {
         return areaTypes.values().stream().map(Supplier::get).collect(Collectors.toList());
     }
-    
+
     @Deprecated
     public enum EnumAreaType {
         FILL("Filled"), FRAME("Frame"), WALL("Walls"), SPHERE("Sphere"), LINE("Line"), X_WALL("X-Wall"), Y_WALL(
@@ -95,22 +96,22 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
 
         @Override
         public String toString() {
-            return name;
+            return this.name;
         }
     }
-    
-    public static ProgWidgetArea fromPosition(BlockPos p1){
+
+    public static ProgWidgetArea fromPosition(BlockPos p1) {
         return fromPositions(p1, p1);
     }
-    
-    public static ProgWidgetArea fromPosAndExpansions(BlockPos p1, int expX, int expY, int expZ){
+
+    public static ProgWidgetArea fromPosAndExpansions(BlockPos p1, int expX, int expY, int expZ) {
         int x = expX / 2;
         int y = expY / 2;
         int z = expZ / 2;
         return fromPositions(p1.add(-x, -y, -z), p1.add(x, y, z));
     }
-    
-    public static ProgWidgetArea fromPositions(BlockPos p1, BlockPos p2){
+
+    public static ProgWidgetArea fromPositions(BlockPos p1, BlockPos p2) {
         ProgWidgetArea area = new ProgWidgetArea();
         area.setP1(p1);
         area.setP2(p2);
@@ -122,16 +123,16 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
         super.getTooltip(curTooltip);
 
         String c1;
-        if (coord1Variable.equals("")) {
-            c1 = x1 != 0 || y1 != 0 || z1 != 0 ? "X%s: " + x1 + ", Y%s: " + y1 + ", Z%s: " + z1 : null;
+        if (this.coord1Variable.equals("")) {
+            c1 = this.x1 != 0 || this.y1 != 0 || this.z1 != 0 ? "X%s: " + this.x1 + ", Y%s: " + this.y1 + ", Z%s: " + this.z1 : null;
         } else {
-            c1 = "XYZ%s: \"" + coord1Variable + "\"";
+            c1 = "XYZ%s: \"" + this.coord1Variable + "\"";
         }
         String c2;
-        if (coord2Variable.equals("")) {
-            c2 = x2 != 0 || y2 != 0 || z2 != 0 ? "X%s: " + x2 + ", Y%s: " + y2 + ", Z%s: " + z2 : null;
+        if (this.coord2Variable.equals("")) {
+            c2 = this.x2 != 0 || this.y2 != 0 || this.z2 != 0 ? "X%s: " + this.x2 + ", Y%s: " + this.y2 + ", Z%s: " + this.z2 : null;
         } else {
-            c2 = "XYZ%s: \"" + coord2Variable + "\"";
+            c2 = "XYZ%s: \"" + this.coord2Variable + "\"";
         }
         if (c1 == null) {
             c1 = c2;
@@ -149,15 +150,15 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
             }
         }
 
-        addAreaTypeTooltip(curTooltip);
+        this.addAreaTypeTooltip(curTooltip);
     }
-    
-    public void addAreaTypeTooltip(List<String> curTooltip){
-        curTooltip.add("Area type: " + type.getName());
-        
+
+    public void addAreaTypeTooltip(List<String> curTooltip) {
+        curTooltip.add("Area type: " + this.type.getName());
+
         List<AreaTypeWidget> widgets = new ArrayList<>();
-        type.addUIWidgets(widgets);
-        for(AreaTypeWidget widget : widgets){
+        this.type.addUIWidgets(widgets);
+        for (AreaTypeWidget widget : widgets) {
             curTooltip.add(String.format("%s %s", I18n.format(widget.title), widget.getCurValue()));
         }
     }
@@ -165,47 +166,47 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (coord1Variable.equals("") && coord2Variable.equals("") && x1 == 0 && y1 == 0 && z1 == 0 && x2 == 0 && y2 == 0 && z2 == 0) {
+        if (this.coord1Variable.equals("") && this.coord2Variable.equals("") && this.x1 == 0 && this.y1 == 0 && this.z1 == 0 && this.x2 == 0 && this.y2 == 0 && this.z2 == 0) {
             curInfo.add("gui.progWidget.area.error.noArea");
         }
     }
-    
-    public void setP1(BlockPos p){
-        x1 = p.getX();
-        y1 = p.getY();
-        z1 = p.getZ();
+
+    public void setP1(BlockPos p) {
+        this.x1 = p.getX();
+        this.y1 = p.getY();
+        this.z1 = p.getZ();
     }
-    
-    public void setP2(BlockPos p){
-        x2 = p.getX();
-        y2 = p.getY();
-        z2 = p.getZ();
+
+    public void setP2(BlockPos p) {
+        this.x2 = p.getX();
+        this.y2 = p.getY();
+        this.z2 = p.getZ();
     }
-    
-    public void setAreaPoint(BlockPos p, int index){
-        if(index == 0){
-            setP1(p);
-        }else{
-            setP2(p);
+
+    public void setAreaPoint(BlockPos p, int index) {
+        if (index == 0) {
+            this.setP1(p);
+        } else {
+            this.setP2(p);
         }
     }
-    
-    public BlockPos getRawAreaPoint(int index){
-        return index == 0 ? new BlockPos(x1, y1, z1) : new BlockPos(x2, y2, z2);
+
+    public BlockPos getRawAreaPoint(int index) {
+        return index == 0 ? new BlockPos(this.x1, this.y1, this.z1) : new BlockPos(this.x2, this.y2, this.z2);
     }
 
     private BlockPos[] getAreaPoints() {
         BlockPos c1;
-        if (coord1Variable.equals("")) {
-            c1 = x1 != 0 || y1 != 0 || z1 != 0 ? new BlockPos(x1, y1, z1) : null;
+        if (this.coord1Variable.equals("")) {
+            c1 = this.x1 != 0 || this.y1 != 0 || this.z1 != 0 ? new BlockPos(this.x1, this.y1, this.z1) : null;
         } else {
-            c1 = variableProvider != null ? variableProvider.getCoordinate(coord1Variable) : null;
+            c1 = this.variableProvider != null ? this.variableProvider.getCoordinate(this.coord1Variable) : null;
         }
         BlockPos c2;
-        if (coord2Variable.equals("")) {
-            c2 = x2 != 0 || y2 != 0 || z2 != 0 ? new BlockPos(x2, y2, z2) : null;
+        if (this.coord2Variable.equals("")) {
+            c2 = this.x2 != 0 || this.y2 != 0 || this.z2 != 0 ? new BlockPos(this.x2, this.y2, this.z2) : null;
         } else {
-            c2 = variableProvider != null ? variableProvider.getCoordinate(coord2Variable) : null;
+            c2 = this.variableProvider != null ? this.variableProvider.getCoordinate(this.coord2Variable) : null;
         }
         if (c1 == null && c2 == null) {
             return new BlockPos[]{null, null};
@@ -242,14 +243,14 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
     public ResourceLocation getTexture() {
         return Textures.PROG_WIDGET_AREA;
     }
-    
+
     @Override
     public void getArea(Set<BlockPos> area) {
-        getArea(area, type);
+        this.getArea(area, this.type);
     }
 
     public void getArea(Set<BlockPos> area, AreaType areaType) {
-        BlockPos[] areaPoints = getAreaPoints();
+        BlockPos[] areaPoints = this.getAreaPoints();
         if (areaPoints[0] == null && areaPoints[1] == null) return;
 
         int minX;
@@ -276,11 +277,11 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
         // https://github.com/TeamPneumatic/pnc-repressurized/issues/104
         int size = (maxX - minX) * (maxY - minY) * (maxZ - minZ);
         if (size > ConfigHandler.general.maxProgrammingArea) { // Prevent memory problems when getting to ridiculous areas.
-            if (aiManager != null) {
+            if (this.aiManager != null) {
                 // We still need to do run-time checks:
                 // 1) Drones programmed before the compile-time validation was added
                 // 2) Programs using variables where we don't necessarily have the values at compile-time
-                IDroneBase drone = aiManager.getDrone();
+                IDroneBase drone = this.aiManager.getDrone();
                 Log.warning(String.format("Drone @ %s (DIM %d) was killed due to excessively large area (%d > %d). See 'I:maxProgrammingArea' in config.",
                         drone.getDronePos().toString(), drone.world().provider.getDimension(), size, ConfigHandler.general.maxProgrammingArea));
                 drone.overload("areaTooLarge", ConfigHandler.general.maxProgrammingArea);
@@ -291,7 +292,7 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
         }
 
         Consumer<BlockPos> addFunc = p -> {
-            if (p.getY() >= 0 && p.getY() < 256 && area.add(p) && area.size() > ConfigHandler.general.maxProgrammingArea){
+            if (p.getY() >= 0 && p.getY() < 256 && area.add(p) && area.size() > ConfigHandler.general.maxProgrammingArea) {
                 throw new AreaTooBigException();
             }
         };
@@ -302,10 +303,10 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
             areaType.addArea(addFunc, p1, p2, minX, minY, minZ, maxX, maxY, maxZ);
         } catch (AreaTooBigException ignored) {
         }
-    } 
+    }
 
     private AxisAlignedBB getAABB() {
-        BlockPos[] areaPoints = getAreaPoints();
+        BlockPos[] areaPoints = this.getAreaPoints();
         if (areaPoints[0] == null) return null;
         int minX;
         int minY;
@@ -329,81 +330,82 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
     }
 
     public List<Entity> getEntitiesWithinArea(World world, Predicate<? super Entity> predicate) {
-        AxisAlignedBB aabb = getAABB();
+        AxisAlignedBB aabb = this.getAABB();
         return aabb != null ? world.getEntitiesInAABBexcluding(null, aabb, predicate::test) : new ArrayList<>();
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setInteger("x1", x1);
-        tag.setInteger("y1", y1);
-        tag.setInteger("z1", z1);
-        tag.setInteger("x2", x2);
-        tag.setInteger("y2", y2);
-        tag.setInteger("z2", z2);
-        
-        String typeId = typeToIDs.get(type.getClass());
-        if(typeId == null){
-            Log.error("No type id for area type " + type + "! Substituting Box.");
+        tag.setInteger("x1", this.x1);
+        tag.setInteger("y1", this.y1);
+        tag.setInteger("z1", this.z1);
+        tag.setInteger("x2", this.x2);
+        tag.setInteger("y2", this.y2);
+        tag.setInteger("z2", this.z2);
+
+        String typeId = typeToIDs.get(this.type.getClass());
+        if (typeId == null) {
+            Log.error("No type id for area type " + this.type + "! Substituting Box.");
             typeId = AreaTypeBox.ID;
-        }else{
-            type.writeToNBT(tag);
+        } else {
+            this.type.writeToNBT(tag);
         }
         tag.setString("type", typeId);
-        
-        tag.setString("coord1Variable", coord1Variable);
-        tag.setString("coord2Variable", coord2Variable);
+
+        tag.setString("coord1Variable", this.coord1Variable);
+        tag.setString("coord2Variable", this.coord2Variable);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        x1 = tag.getInteger("x1");
-        y1 = tag.getInteger("y1");
-        z1 = tag.getInteger("z1");
-        x2 = tag.getInteger("x2");
-        y2 = tag.getInteger("y2");
-        z2 = tag.getInteger("z2");
-        
-        if(tag.getTag("type") instanceof NBTPrimitive){ 
+        this.x1 = tag.getInteger("x1");
+        this.y1 = tag.getInteger("y1");
+        this.z1 = tag.getInteger("z1");
+        this.x2 = tag.getInteger("x2");
+        this.y2 = tag.getInteger("y2");
+        this.z2 = tag.getInteger("z2");
+
+        if (tag.getTag("type") instanceof NBTPrimitive) {
             //Old format
             EnumAreaType oldType = EnumAreaType.values()[tag.getInteger("type")];
             int typeInfo = tag.getInteger("typeInfo");
-            type = convertFromLegacyFormat(oldType, typeInfo);
-        }else{
+            this.type = convertFromLegacyFormat(oldType, typeInfo);
+        } else {
             //New format
-            type = createType(tag.getString("type"));
-            type.readFromNBT(tag);
+            this.type = createType(tag.getString("type"));
+            this.type.readFromNBT(tag);
         }
-        
-        coord1Variable = tag.getString("coord1Variable");
-        coord2Variable = tag.getString("coord2Variable");
+
+        this.coord1Variable = tag.getString("coord1Variable");
+        this.coord2Variable = tag.getString("coord2Variable");
     }
-    
-    private static AreaType createType(String id){
+
+    private static AreaType createType(String id) {
         Supplier<? extends AreaType> creator = areaTypes.get(id);
-        if(creator != null){
+        if (creator != null) {
             return creator.get();
-        }else{
+        } else {
             Log.error("No Area type found for id '" + id + "'! Substituting Box!");
             return new AreaTypeBox();
         }
     }
-    
+
     /**
      * Remove in 1.13
+     *
      * @param oldType
      * @param typeInfo
      * @return
      */
     @Deprecated
-    public static AreaType convertFromLegacyFormat(EnumAreaType oldType, int typeInfo){
+    public static AreaType convertFromLegacyFormat(EnumAreaType oldType, int typeInfo) {
         String newTypeId = oldFormatToAreaTypes.get(oldType);
-        if(newTypeId == null){
+        if (newTypeId == null) {
             Log.error("No area converter found for EnumAreaType " + oldType + "! Substituting Box.");
             return new AreaTypeBox();
-        }else{
+        } else {
             AreaType type = createType(newTypeId);
             type.convertFromLegacy(oldType, typeInfo);
             return type;
@@ -427,7 +429,7 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
     }
 
     public String getCoord1Variable() {
-        return coord1Variable;
+        return this.coord1Variable;
     }
 
     public void setCoord1Variable(String coord1Variable) {
@@ -435,7 +437,7 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
     }
 
     public String getCoord2Variable() {
-        return coord2Variable;
+        return this.coord2Variable;
     }
 
     public void setCoord2Variable(String coord2Variable) {
@@ -447,15 +449,15 @@ public class ProgWidgetArea extends ProgWidget implements IAreaProvider, IVariab
         this.aiManager = aiManager;
         this.variableProvider = aiManager;
     }
-    
-    public void setVariableProvider(IVariableProvider variableProvider){
+
+    public void setVariableProvider(IVariableProvider variableProvider) {
         this.variableProvider = variableProvider;
     }
 
     @Override
     public void addVariables(Set<String> variables) {
-        variables.add(coord1Variable);
-        variables.add(coord2Variable);
+        variables.add(this.coord1Variable);
+        variables.add(this.coord2Variable);
     }
 
 }

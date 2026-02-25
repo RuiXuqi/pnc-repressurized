@@ -21,11 +21,11 @@ public class DroneDebugUpgradeHandler implements IUpgradeRenderHandler {
     private final Set<BlockPos> shownArea = new HashSet<>();
 
     public Set<BlockPos> getShowingPositions() {
-        return shownPositions;
+        return this.shownPositions;
     }
 
     public Set<BlockPos> getShownArea() {
-        return shownArea;
+        return this.shownArea;
     }
 
     @Override

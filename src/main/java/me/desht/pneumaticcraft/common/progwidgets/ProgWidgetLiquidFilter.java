@@ -29,7 +29,7 @@ public class ProgWidgetLiquidFilter extends ProgWidget {
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (fluid == null) curInfo.add("gui.progWidget.liquidFilter.error.noLiquid");
+        if (this.fluid == null) curInfo.add("gui.progWidget.liquidFilter.error.noLiquid");
     }
 
     @Override
@@ -60,20 +60,20 @@ public class ProgWidgetLiquidFilter extends ProgWidget {
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        fluid = FluidRegistry.getFluid(tag.getString("fluid"));
+        this.fluid = FluidRegistry.getFluid(tag.getString("fluid"));
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        if (fluid != null) tag.setString("fluid", fluid.getName());
+        if (this.fluid != null) tag.setString("fluid", this.fluid.getName());
     }
 
     @Override
     public void getTooltip(List<String> curTooltip) {
         super.getTooltip(curTooltip);
-        if (fluid != null) {
-            curTooltip.add(TextFormatting.AQUA + "Fluid: " + TextFormatting.WHITE + getExtraStringInfo());
+        if (this.fluid != null) {
+            curTooltip.add(TextFormatting.AQUA + "Fluid: " + TextFormatting.WHITE + this.getExtraStringInfo());
         }
     }
 
@@ -114,7 +114,7 @@ public class ProgWidgetLiquidFilter extends ProgWidget {
 
     @Override
     public String getExtraStringInfo() {
-        return fluid != null ? fluid.getLocalizedName(new FluidStack(fluid, 1)) : I18n.format("gui.progWidget.liquidFilter.noFluid");
+        return this.fluid != null ? this.fluid.getLocalizedName(new FluidStack(this.fluid, 1)) : I18n.format("gui.progWidget.liquidFilter.noFluid");
     }
 
     @Override
@@ -128,7 +128,7 @@ public class ProgWidgetLiquidFilter extends ProgWidget {
     }
 
     public Fluid getFluid() {
-        return fluid;
+        return this.fluid;
     }
 
     @Override

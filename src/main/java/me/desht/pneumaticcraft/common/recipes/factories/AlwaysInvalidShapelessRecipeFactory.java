@@ -11,28 +11,29 @@ import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 /**
  * Registered to Forge by the _factories.json in the recipes resource folder.
- * 
+ * <p>
  * This is used for recipes that are registered for the crafting book / mods like JEI,
  * while this recipe may not be used, because NBT needs to be preserved for example.
+ *
  * @author Maarten
  *
  */
-public class AlwaysInvalidShapelessRecipeFactory implements IRecipeFactory{
+public class AlwaysInvalidShapelessRecipeFactory implements IRecipeFactory {
 
     @Override
-    public IRecipe parse(JsonContext context, JsonObject json){
+    public IRecipe parse(JsonContext context, JsonObject json) {
         ShapelessOreRecipe dummy = ShapelessOreRecipe.factory(context, json);
         return new AlwaysInvalidShapelessOreRecipe(dummy);
     }
-    
-    public class AlwaysInvalidShapelessOreRecipe extends ShapelessOreRecipe{
 
-        public AlwaysInvalidShapelessOreRecipe(ShapelessOreRecipe dummy){
+    public class AlwaysInvalidShapelessOreRecipe extends ShapelessOreRecipe {
+
+        public AlwaysInvalidShapelessOreRecipe(ShapelessOreRecipe dummy) {
             super(new ResourceLocation(dummy.getGroup()), dummy.getIngredients(), dummy.getRecipeOutput());
         }
-        
+
         @Override
-        public boolean matches(InventoryCrafting inv, World world){
+        public boolean matches(InventoryCrafting inv, World world) {
             return false;
         }
     }

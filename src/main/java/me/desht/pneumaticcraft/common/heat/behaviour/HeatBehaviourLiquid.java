@@ -7,10 +7,10 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 public abstract class HeatBehaviourLiquid extends HeatBehaviour {
     public Fluid getFluid() {
-        Fluid fluid = FluidRegistry.lookupFluidForBlock(getBlockState().getBlock());
+        Fluid fluid = FluidRegistry.lookupFluidForBlock(this.getBlockState().getBlock());
         if (fluid != null) return fluid;
-        else if (getBlockState().getBlock() == Blocks.FLOWING_LAVA) return FluidRegistry.LAVA;
-        else if (getBlockState().getBlock() == Blocks.FLOWING_WATER) return FluidRegistry.WATER;
+        else if (this.getBlockState().getBlock() == Blocks.FLOWING_LAVA) return FluidRegistry.LAVA;
+        else if (this.getBlockState().getBlock() == Blocks.FLOWING_WATER) return FluidRegistry.WATER;
         return null;
     }
 }

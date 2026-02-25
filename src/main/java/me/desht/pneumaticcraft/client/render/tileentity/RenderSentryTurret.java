@@ -9,7 +9,7 @@ public class RenderSentryTurret extends AbstractModelRenderer<TileEntitySentryTu
     private final ModelSentryTurret model;
 
     public RenderSentryTurret() {
-        model = new ModelSentryTurret();
+        this.model = new ModelSentryTurret();
     }
 
     @Override
@@ -19,6 +19,6 @@ public class RenderSentryTurret extends AbstractModelRenderer<TileEntitySentryTu
 
     @Override
     void renderModel(TileEntitySentryTurret te, float partialTicks) {
-        model.renderModel(0.0625f, te, partialTicks);
+        this.model.renderModel(0.0625f, te, partialTicks);
     }
 }

@@ -35,6 +35,7 @@ public final class PneumaticRegistry {
 
     /**
      * Do not call this method yourself.  For PneumaticCraft internal usage only!
+     *
      * @param inter reference to the API interface object
      */
     public static void init(IPneumaticCraftInterface inter) {
@@ -63,7 +64,7 @@ public final class PneumaticRegistry {
         ISensorRegistry getSensorRegistry();
 
         IItemRegistry getItemRegistry();
-        
+
         IHarvestRegistry getHarvestRegistry();
 
         /**
@@ -71,7 +72,7 @@ public final class PneumaticRegistry {
          * of that liquid to be used in furnaces, the burn time being half the mLPerBucket value.  Note that this
          * can also be manipulated via CraftTweaker.
          *
-         * @param fluid the fluid to register
+         * @param fluid       the fluid to register
          * @param mLPerBucket the amount of mL generated for 1000mB of the fuel. As comparison, one piece of coal
          *                    generates 16000mL in an Air Compressor.
          */
@@ -81,9 +82,9 @@ public final class PneumaticRegistry {
          * Returns the number of Security Stations that disallow interaction with the given coordinate for the given
          * player. Usually you'd disallow interaction when this returns > 0.
          *
-         * @param world the player's world
-         * @param pos the position to check
-         * @param player the player to check
+         * @param world          the player's world
+         * @param pos            the position to check
+         * @param player         the player to check
          * @param showRangeLines when true, any Security Station that prevents interaction will show the line grid
          *                       (server --> client update is handled internally).
          * @return the number of Security Stations that disallow interaction for the given player.
@@ -95,9 +96,9 @@ public final class PneumaticRegistry {
          * Used to register a liquid that represents liquid XP (e.g. CoFH Essence of Knowledge or OpenBlocks liquid XP).
          * This is used in the Aerial Interface to pump XP in/out of the player.
          *
-         * @param fluid registered name of the fluid (may have been registered by another mod)
+         * @param fluid              registered name of the fluid (may have been registered by another mod)
          * @param liquidToPointRatio the amount of liquid (in mB) used to get one XP point; use a value of 0 or less to
-         *                          unregister this fluid
+         *                           unregister this fluid
          */
         void registerXPLiquid(Fluid fluid, int liquidToPointRatio);
 
@@ -113,9 +114,9 @@ public final class PneumaticRegistry {
         /**
          * Register a fluid as a valid input for the Plastic Mixer.
          *
-         * @deprecated use {@link IPneumaticRecipeRegistry#registerPlasticMixerRecipe(FluidStack, ItemStack, int, boolean, boolean, boolean, int)}
          * @param fluid the fluid to register
          * @param ratio amount in mB which will be used to make 1 solid plastic sheet
+         * @deprecated use {@link IPneumaticRecipeRegistry#registerPlasticMixerRecipe(FluidStack, ItemStack, int, boolean, boolean, boolean, int)}
          */
         @Deprecated
         void registerPlasticFluid(Fluid fluid, int ratio);

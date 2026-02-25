@@ -15,17 +15,17 @@ public class TileEntityAdvancedAirCompressor extends TileEntityAirCompressor imp
 
     public TileEntityAdvancedAirCompressor() {
         super(20, 25, 10000);
-        heatExchanger.setThermalCapacity(100);
+        this.heatExchanger.setThermalCapacity(100);
     }
 
     @Override
     public IHeatExchangerLogic getHeatExchangerLogic(EnumFacing side) {
-        return heatExchanger;
+        return this.heatExchanger;
     }
 
     @Override
     protected void onFuelBurn(int burnedFuel) {
-        heatExchanger.addHeat(burnedFuel / 2D);
+        this.heatExchanger.addHeat(burnedFuel / 2D);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class TileEntityAdvancedAirCompressor extends TileEntityAirCompressor imp
 
     @Override
     public int getEfficiency() {
-        return HeatUtil.getEfficiency(heatExchanger.getTemperatureAsInt());
+        return HeatUtil.getEfficiency(this.heatExchanger.getTemperatureAsInt());
     }
 
 //    @Override

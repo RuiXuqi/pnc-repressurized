@@ -14,7 +14,7 @@ public class ChargingUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleab
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] {Itemss.upgrades.get(IItemRegistry.EnumUpgrade.CHARGING)};
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.CHARGING)};
     }
 
     @Override

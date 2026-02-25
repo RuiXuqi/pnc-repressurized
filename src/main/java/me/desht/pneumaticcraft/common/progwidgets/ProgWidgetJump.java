@@ -15,7 +15,7 @@ public class ProgWidgetJump extends ProgWidget implements IJump {
     @Override
     public void addErrors(List<String> curInfo, List<IProgWidget> widgets) {
         super.addErrors(curInfo, widgets);
-        if (getConnectedParameters()[0] == null) curInfo.add("gui.progWidget.label.error.noJumpLocation");
+        if (this.getConnectedParameters()[0] == null) curInfo.add("gui.progWidget.label.error.noJumpLocation");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ProgWidgetJump extends ProgWidget implements IJump {
 
     @Override
     public IProgWidget getOutputWidget(IDroneBase drone, List<IProgWidget> allWidgets) {
-        ProgWidgetString jumpedLabel = (ProgWidgetString) getConnectedParameters()[0];
+        ProgWidgetString jumpedLabel = (ProgWidgetString) this.getConnectedParameters()[0];
         if (jumpedLabel != null) {
             drone.getAIManager().setLabel(jumpedLabel.string);
             IProgWidget widget = jumpToLabel(drone, allWidgets, jumpedLabel.string);
@@ -116,7 +116,7 @@ public class ProgWidgetJump extends ProgWidget implements IJump {
 
     @Override
     public List<String> getPossibleJumpLocations() {
-        ProgWidgetString jumpedLabel = (ProgWidgetString) getConnectedParameters()[0];
+        ProgWidgetString jumpedLabel = (ProgWidgetString) this.getConnectedParameters()[0];
         if (jumpedLabel != null) {
             return Collections.singletonList(jumpedLabel.string);
         }

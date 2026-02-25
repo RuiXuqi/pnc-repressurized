@@ -37,9 +37,9 @@ public class MainHelmetHandler implements IUpgradeRenderHandler {
     @SideOnly(Side.CLIENT)
     public void update(EntityPlayer player, int rangeUpgrades) {
         List<String> l = Arrays.stream(UpgradeRenderHandlerList.ARMOR_SLOTS)
-                .map(slot -> getPressureStr(player, slot))
+                .map(slot -> this.getPressureStr(player, slot))
                 .collect(Collectors.toList());
-        powerStat.setText(l);
+        this.powerStat.setText(l);
     }
 
     private String getPressureStr(EntityPlayer player, EntityEquipmentSlot slot) {
@@ -56,7 +56,7 @@ public class MainHelmetHandler implements IUpgradeRenderHandler {
         } else {
             colour = TextFormatting.GREEN;
         }
-        return colour.toString() + String.format("%5.2f", pressure);
+        return colour + String.format("%5.2f", pressure);
     }
 
     @Override
@@ -72,21 +72,21 @@ public class MainHelmetHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public IGuiAnimatedStat getAnimatedStat() {
-        if (powerStat == null) {
-            powerStat = new GuiAnimatedStat(null, "", GuiAnimatedStat.StatIcon.NONE,0x3000AA00, null, ArmorHUDLayout.INSTANCE.powerStat);
-            powerStat.setLineSpacing(15);
-            powerStat.setWidgetOffsets(-18, 0);  // ensure armor icons are rendered in the right place
+        if (this.powerStat == null) {
+            this.powerStat = new GuiAnimatedStat(null, "", GuiAnimatedStat.StatIcon.NONE, 0x3000AA00, null, ArmorHUDLayout.INSTANCE.powerStat);
+            this.powerStat.setLineSpacing(15);
+            this.powerStat.setWidgetOffsets(-18, 0);  // ensure armor icons are rendered in the right place
             for (EntityEquipmentSlot slot : UpgradeRenderHandlerList.ARMOR_SLOTS) {
-                GuiButtonSpecial pressureButton = new GuiButtonSpecial(-1, 0, 5 + (3 - slot.getIndex()) * 15, 18, 18, "") ;
+                GuiButtonSpecial pressureButton = new GuiButtonSpecial(-1, 0, 5 + (3 - slot.getIndex()) * 15, 18, 18, "");
                 ItemStack stack = GuiHelmetMainScreen.ARMOR_STACKS[slot.getIndex()];
                 pressureButton.setVisible(false);
                 pressureButton.setRenderStacks(stack);
-                powerStat.addWidget(pressureButton);
+                this.powerStat.addWidget(pressureButton);
             }
-            powerStat.setMinDimensionsAndReset(0, 0);
-            powerStat.openWindow();
+            this.powerStat.setMinDimensionsAndReset(0, 0);
+            this.powerStat.openWindow();
         }
-        return powerStat;
+        return this.powerStat;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class MainHelmetHandler implements IUpgradeRenderHandler {
     @Override
     @SideOnly(Side.CLIENT)
     public void reset() {
-        powerStat = null;
+        this.powerStat = null;
     }
 
     @Override
@@ -124,6 +124,6 @@ public class MainHelmetHandler implements IUpgradeRenderHandler {
 
     @Override
     public void onResolutionChanged() {
-        powerStat = null;
+        this.powerStat = null;
     }
 }

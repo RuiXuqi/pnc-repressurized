@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class GenericIntegrationHandler implements IThirdParty {
     @Override
     public void postInit() {
-        registerXPFluids();
+        this.registerXPFluids();
         ModdedWrenchUtils.getInstance().registerThirdPartyWrenches();
         ModNameCache.init();
     }
@@ -22,10 +22,10 @@ public class GenericIntegrationHandler implements IThirdParty {
         // by multiple mods ("xpjuice" is registered by EnderIO, OpenBlocks and Cyclic for example).  So handle
         // XP fluid registration here rather than in mod-specific modules.
 
-        maybeRegisterXPFluid("xpjuice", 20);  // XP Juice from EnderIO, Cyclic, OpenBlocks, others?
-        maybeRegisterXPFluid("mobessence", 77); // MFR Mob Essence (not in 1.12.2 at this time)
-        maybeRegisterXPFluid("essence", 20);  // Industrial Foregoing Essence
-        maybeRegisterXPFluid("experience", 20);  // CoFH Essence of Knowledge
+        this.maybeRegisterXPFluid("xpjuice", 20);  // XP Juice from EnderIO, Cyclic, OpenBlocks, others?
+        this.maybeRegisterXPFluid("mobessence", 77); // MFR Mob Essence (not in 1.12.2 at this time)
+        this.maybeRegisterXPFluid("essence", 20);  // Industrial Foregoing Essence
+        this.maybeRegisterXPFluid("experience", 20);  // CoFH Essence of Knowledge
     }
 
     private void maybeRegisterXPFluid(String fluidName, int xpRatio) {

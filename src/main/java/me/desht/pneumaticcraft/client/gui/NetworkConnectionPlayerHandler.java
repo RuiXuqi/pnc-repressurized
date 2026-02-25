@@ -30,7 +30,7 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
         super(gui, station, baseX, baseY, nodeSpacing, color, TileEntityConstants.NETWORK_NORMAL_BRIDGE_SPEED);
         for (int i = 0; i < station.getPrimaryInventory().getSlots(); i++) {
             if (station.getPrimaryInventory().getStackInSlot(i).getItemDamage() == ItemNetworkComponents.NETWORK_IO_PORT) {
-                slotHacked[i] = true;
+                this.slotHacked[i] = true;
             }
         }
     }
@@ -46,7 +46,7 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
         // GlStateManager.disableTexture2D();
         GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1, 1, 1, 0.5F);
-        for (GuiStatBalloon balloon : balloons) {
+        for (GuiStatBalloon balloon : this.balloons) {
             balloon.render();
         }
         // GlStateManager.enableTexture2D();
@@ -56,7 +56,7 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
     @Override
     public void update() {
         super.update();
-        for (GuiStatBalloon balloon : balloons) {
+        for (GuiStatBalloon balloon : this.balloons) {
             String numberText = balloon.text.replace("%", "");
             if (numberText.equals("")) {
                 balloon.text = "0%";
@@ -66,7 +66,7 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
                     balloon.text = percentage + "%";
                 } else {
                     balloon.text = "+1";
-                    onSlotFortification(balloon.slotNumber);
+                    this.onSlotFortification(balloon.slotNumber);
                 }
             }
         }
@@ -74,30 +74,30 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
 
     public void mouseClicked(int x, int y, int mouseButton, Slot slot) {
         if (slot != null) {
-            if (mouseButton == 0) tryToHackSlot(slot.slotNumber);
-            if (mouseButton == 1 && slotHacked[slot.slotNumber]) {
+            if (mouseButton == 0) this.tryToHackSlot(slot.slotNumber);
+            if (mouseButton == 1 && this.slotHacked[slot.slotNumber]) {
                 boolean alreadyFortifying = false;
-                for (GuiStatBalloon balloon : balloons) {
+                for (GuiStatBalloon balloon : this.balloons) {
                     if (balloon.slotNumber == slot.slotNumber) {
                         alreadyFortifying = true;
                         break;
                     }
                 }
                 if (!alreadyFortifying) {
-                    balloons.add(new GuiStatBalloon(slot.xPos + gui.getGuiLeft() + 8, slot.yPos + gui.getGuiTop() - 5, slot.slotNumber));
+                    this.balloons.add(new GuiStatBalloon(slot.xPos + this.gui.getGuiLeft() + 8, slot.yPos + this.gui.getGuiTop() - 5, slot.slotNumber));
                 }
             }
-            if (mouseButton == 2 && !slotHacked[slot.slotNumber] && ((GuiSecurityStationHacking) gui).hasNukeViruses()) {
-                int linesBefore = lineList.size();
-                if (tryToHackSlot(slot.slotNumber)) {
+            if (mouseButton == 2 && !this.slotHacked[slot.slotNumber] && ((GuiSecurityStationHacking) this.gui).hasNukeViruses()) {
+                int linesBefore = this.lineList.size();
+                if (this.tryToHackSlot(slot.slotNumber)) {
                     EntityPlayer player = FMLClientHandler.instance().getClient().player;
                     NetworkHandler.sendToServer(new PacketUseItem(Itemss.NUKE_VIRUS, 1));
                     PneumaticCraftUtils.consumeInventoryItem(player.inventory, Itemss.NUKE_VIRUS);
-                    for (int i = linesBefore; i < lineList.size(); i++) {
-                        RenderProgressingLine line = lineList.get(i);
+                    for (int i = linesBefore; i < this.lineList.size(); i++) {
+                        RenderProgressingLine line = this.lineList.get(i);
                         line.setProgress(1);
-                        slotHacked[slot.slotNumber] = true;
-                        onSlotHack(slot.slotNumber, true);
+                        this.slotHacked[slot.slotNumber] = true;
+                        this.onSlotHack(slot.slotNumber, true);
                     }
                 }
             }
@@ -105,25 +105,25 @@ public class NetworkConnectionPlayerHandler extends NetworkConnectionHandler {
     }
 
     private void onSlotFortification(int slot) {
-        if (gui instanceof GuiSecurityStationHacking) {
-            ((GuiSecurityStationHacking) gui).onSlotFortification(slot);
+        if (this.gui instanceof GuiSecurityStationHacking) {
+            ((GuiSecurityStationHacking) this.gui).onSlotFortification(slot);
         }
     }
 
     @Override
     protected void onSlotHack(int slot, boolean nuked) {
-        if (!nuked && gui instanceof GuiSecurityStationHacking) {
-            ((GuiSecurityStationHacking) gui).onSlotHack(slot);
+        if (!nuked && this.gui instanceof GuiSecurityStationHacking) {
+            ((GuiSecurityStationHacking) this.gui).onSlotHack(slot);
         }
-        ItemStack stack = station.getPrimaryInventory().getStackInSlot(slot);
+        ItemStack stack = this.station.getPrimaryInventory().getStackInSlot(slot);
         if (stack.getItem() instanceof ItemNetworkComponents && (stack.getItemDamage() == ItemNetworkComponents.NETWORK_REGISTRY || stack.getItemDamage() == ItemNetworkComponents.DIAGNOSTIC_SUBROUTINE)) {
-            hackedSuccessfully = true;
+            this.hackedSuccessfully = true;
             EntityPlayer player = FMLClientHandler.instance().getClient().player;
-            NetworkHandler.sendToServer(new PacketSecurityStationAddHacker(station, player.getName()));
+            NetworkHandler.sendToServer(new PacketSecurityStationAddHacker(this.station, player.getName()));
             FMLClientHandler.instance().getClient().player.closeScreen();
             player.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "Hacking successful! This Security Station now doesn't protect the area any longer!"), false);
-            if (gui instanceof GuiSecurityStationHacking)
-                ((GuiSecurityStationHacking) gui).removeUpdatesOnConnectionHandlers();
+            if (this.gui instanceof GuiSecurityStationHacking)
+                ((GuiSecurityStationHacking) this.gui).removeUpdatesOnConnectionHandlers();
         }
     }
 

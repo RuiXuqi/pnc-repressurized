@@ -21,23 +21,23 @@ public class PacketSyncDroneEntityProgWidgets extends AbstractPacket<PacketSyncD
     }
 
     public PacketSyncDroneEntityProgWidgets(EntityDrone drone) {
-        progWidgets = drone.getProgWidgets();
-        entityId = drone.getEntityId();
+        this.progWidgets = drone.getProgWidgets();
+        this.entityId = drone.getEntityId();
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        progWidgets = TileEntityProgrammer.getWidgetsFromNBT(ByteBufUtils.readTag(buf));
-        entityId = buf.readInt();
+        this.progWidgets = TileEntityProgrammer.getWidgetsFromNBT(ByteBufUtils.readTag(buf));
+        this.entityId = buf.readInt();
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         NBTTagCompound tag = new NBTTagCompound();
-        TileEntityProgrammer.setWidgetsToNBT(progWidgets, tag);
+        TileEntityProgrammer.setWidgetsToNBT(this.progWidgets, tag);
         ByteBufUtils.writeTag(buf, tag);
 
-        buf.writeInt(entityId);
+        buf.writeInt(this.entityId);
     }
 
     @Override

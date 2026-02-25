@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.Validate;
 
 public class AmadronOffer {
-    public enum TradeType { PLAYER, PERIODIC, STATIC }
+    public enum TradeType {PLAYER, PERIODIC, STATIC}
 
     protected Object input;
     protected Object output;
@@ -51,11 +51,11 @@ public class AmadronOffer {
     }
 
     public Object getInput() {
-        return input;
+        return this.input;
     }
 
     public Object getOutput() {
-        return output;
+        return this.output;
     }
 
     public String getVendor() {
@@ -72,9 +72,9 @@ public class AmadronOffer {
 
     public boolean passesQuery(String query) {
         String queryLow = query.toLowerCase();
-        return getObjectName(getInput()).toLowerCase().contains(queryLow)
-                || getObjectName(getOutput()).toLowerCase().contains(queryLow)
-                || getVendor().toLowerCase().contains(queryLow);
+        return this.getObjectName(this.getInput()).toLowerCase().contains(queryLow)
+                || this.getObjectName(this.getOutput()).toLowerCase().contains(queryLow)
+                || this.getVendor().toLowerCase().contains(queryLow);
     }
 
     private String getObjectName(Object object) {
@@ -86,19 +86,19 @@ public class AmadronOffer {
 
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagCompound subTag = new NBTTagCompound();
-        if (input instanceof ItemStack) {
-            ((ItemStack) input).writeToNBT(subTag);
+        if (this.input instanceof ItemStack) {
+            ((ItemStack) this.input).writeToNBT(subTag);
             tag.setTag("inputItem", subTag);
         } else {
-            ((FluidStack) input).writeToNBT(subTag);
+            ((FluidStack) this.input).writeToNBT(subTag);
             tag.setTag("inputFluid", subTag);
         }
         subTag = new NBTTagCompound();
-        if (output instanceof ItemStack) {
-            ((ItemStack) output).writeToNBT(subTag);
+        if (this.output instanceof ItemStack) {
+            ((ItemStack) this.output).writeToNBT(subTag);
             tag.setTag("outputItem", subTag);
         } else {
-            ((FluidStack) output).writeToNBT(subTag);
+            ((FluidStack) this.output).writeToNBT(subTag);
             tag.setTag("outputFluid", subTag);
         }
     }
@@ -120,8 +120,8 @@ public class AmadronOffer {
     }
 
     public void writeToBuf(ByteBuf buf) {
-        PacketSyncAmadronOffers.writeFluidOrItemStack(getInput(), buf);
-        PacketSyncAmadronOffers.writeFluidOrItemStack(getOutput(), buf);
+        PacketSyncAmadronOffers.writeFluidOrItemStack(this.getInput(), buf);
+        PacketSyncAmadronOffers.writeFluidOrItemStack(this.getOutput(), buf);
     }
 
     public static AmadronOffer readFromBuf(ByteBuf buf) {
@@ -132,8 +132,8 @@ public class AmadronOffer {
         JsonObject object = new JsonObject();
 
         JsonObject inputObject = new JsonObject();
-        if (input instanceof ItemStack) {
-            ItemStack stack = (ItemStack) input;
+        if (this.input instanceof ItemStack) {
+            ItemStack stack = (ItemStack) this.input;
             ResourceLocation name = stack.getItem().getRegistryName();
             inputObject.addProperty("id", name == null ? "" : name.toString());
             inputObject.addProperty("damage", stack.getItemDamage());
@@ -143,16 +143,16 @@ public class AmadronOffer {
                 inputObject.add("nbt", NBTToJsonConverter.getObject(stack.getTagCompound()));
             }
         } else {
-            inputObject.addProperty("id", ((FluidStack) input).getFluid().getName());
-            inputObject.addProperty("amount", ((FluidStack) input).amount);
+            inputObject.addProperty("id", ((FluidStack) this.input).getFluid().getName());
+            inputObject.addProperty("amount", ((FluidStack) this.input).amount);
         }
         object.add("input", inputObject);
 
         JsonObject outputObject = new JsonObject();
-        if (output instanceof ItemStack) {
-            ItemStack stack = (ItemStack) output;
+        if (this.output instanceof ItemStack) {
+            ItemStack stack = (ItemStack) this.output;
             ResourceLocation name = stack.getItem().getRegistryName();
-            outputObject.addProperty("id",  name == null ? "" : name.toString());
+            outputObject.addProperty("id", name == null ? "" : name.toString());
             outputObject.addProperty("damage", stack.getItemDamage());
             outputObject.addProperty("amount", stack.getCount());
             if (stack.hasTagCompound()) {
@@ -160,12 +160,12 @@ public class AmadronOffer {
                 outputObject.add("nbt", NBTToJsonConverter.getObject(stack.getTagCompound()));
             }
         } else {
-            outputObject.addProperty("id", ((FluidStack) output).getFluid().getName());
-            outputObject.addProperty("amount", ((FluidStack) output).amount);
+            outputObject.addProperty("id", ((FluidStack) this.output).getFluid().getName());
+            outputObject.addProperty("amount", ((FluidStack) this.output).amount);
         }
         object.add("output", outputObject);
 
-        if (addedBy != null) object.addProperty("addedBy", addedBy);
+        if (this.addedBy != null) object.addProperty("addedBy", this.addedBy);
         return object;
     }
 
@@ -222,15 +222,15 @@ public class AmadronOffer {
 
     @Override
     public int hashCode() {
-        int code = getObjectHashCode(getInput());
-        code = 31 * code + getObjectHashCode(getOutput());
-        code = 31 * code + getVendor().hashCode();
+        int code = this.getObjectHashCode(this.getInput());
+        code = 31 * code + this.getObjectHashCode(this.getOutput());
+        code = 31 * code + this.getVendor().hashCode();
         return code;
     }
 
     @Override
     public String toString() {
-        return String.format("[in = %s, out = %s]", input, output);
+        return String.format("[in = %s, out = %s]", this.input, this.output);
     }
 
     private int getObjectHashCode(Object o) {
@@ -247,26 +247,26 @@ public class AmadronOffer {
     public boolean equals(Object o) {
         if (o instanceof AmadronOffer) {
             AmadronOffer offer = (AmadronOffer) o;
-            if (offer.getInput().getClass() == getInput().getClass() && offer.getOutput().getClass() == getOutput().getClass()) {
+            if (offer.getInput().getClass() == this.getInput().getClass() && offer.getOutput().getClass() == this.getOutput().getClass()) {
                 if (offer.getInput() instanceof ItemStack) {
                     ItemStack s1 = (ItemStack) offer.getInput();
-                    ItemStack s2 = (ItemStack) getInput();
+                    ItemStack s2 = (ItemStack) this.getInput();
                     if (!ItemStack.areItemStacksEqual(s1, s2)) return false;
                 } else {
                     FluidStack s1 = (FluidStack) offer.getInput();
-                    FluidStack s2 = (FluidStack) getInput();
+                    FluidStack s2 = (FluidStack) this.getInput();
                     if (!s1.isFluidEqual(s2) || s1.amount != s2.amount) return false;
                 }
                 if (offer.getOutput() instanceof ItemStack) {
                     ItemStack s1 = (ItemStack) offer.getOutput();
-                    ItemStack s2 = (ItemStack) getOutput();
+                    ItemStack s2 = (ItemStack) this.getOutput();
                     if (!ItemStack.areItemStacksEqual(s1, s2)) return false;
                 } else {
                     FluidStack s1 = (FluidStack) offer.getOutput();
-                    FluidStack s2 = (FluidStack) getOutput();
+                    FluidStack s2 = (FluidStack) this.getOutput();
                     if (!s1.isFluidEqual(s2) || s1.amount != s2.amount) return false;
                 }
-                return getVendor().equals(offer.getVendor());
+                return this.getVendor().equals(offer.getVendor());
             }
         }
         return false;

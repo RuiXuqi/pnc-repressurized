@@ -40,13 +40,13 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
         super.addErrors(curInfo, widgets);
         boolean usingVariables = false;
         for (int y = 0; y < 3; y++) {
-            ProgWidgetItemFilter itemFilter = (ProgWidgetItemFilter) getConnectedParameters()[y];
+            ProgWidgetItemFilter itemFilter = (ProgWidgetItemFilter) this.getConnectedParameters()[y];
             for (int x = 0; x < 3 && itemFilter != null; x++) {
                 if (!itemFilter.getVariable().equals("")) usingVariables = true;
                 itemFilter = (ProgWidgetItemFilter) itemFilter.getConnectedParameters()[0];
             }
         }
-        if (!usingVariables && getRecipeResult(PneumaticCraftRepressurized.proxy.getClientWorld()) == null) {
+        if (!usingVariables && this.getRecipeResult(PneumaticCraftRepressurized.proxy.getClientWorld()) == null) {
             curInfo.add("gui.progWidget.crafting.error.noCraftingRecipe");
         }
     }
@@ -101,7 +101,7 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
 
         }, 3, 3);
         for (int y = 0; y < 3; y++) {
-            ProgWidgetItemFilter itemFilter = (ProgWidgetItemFilter) getConnectedParameters()[y];
+            ProgWidgetItemFilter itemFilter = (ProgWidgetItemFilter) this.getConnectedParameters()[y];
             for (int x = 0; x < 3 && itemFilter != null; x++) {
                 invCrafting.setInventorySlotContents(y * 3 + x, itemFilter.getFilter());
                 itemFilter = (ProgWidgetItemFilter) itemFilter.getConnectedParameters()[0];
@@ -111,8 +111,8 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
     }
 
     private ItemStack getRecipeResult(World world) {
-        IRecipe recipe = CraftingManager.findMatchingRecipe(getCraftingGrid(), world);
-        return recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(getCraftingGrid());
+        IRecipe recipe = CraftingManager.findMatchingRecipe(this.getCraftingGrid(), world);
+        return recipe == null ? ItemStack.EMPTY : recipe.getCraftingResult(this.getCraftingGrid());
     }
 
     public static IRecipe getRecipe(World world, ICraftingWidget widget) {
@@ -127,9 +127,9 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
 
     @Override
     public void renderExtraInfo() {
-        ItemStack recipe = getRecipeResult(PneumaticCraftRepressurized.proxy.getClientWorld());
+        ItemStack recipe = this.getRecipeResult(PneumaticCraftRepressurized.proxy.getClientWorld());
         if (recipe != null) {
-            ProgWidgetItemFilter.drawItemStack(recipe, 8, getHeight() / 2 - 8, recipe.getCount() + "");
+            ProgWidgetItemFilter.drawItemStack(recipe, 8, this.getHeight() / 2 - 8, recipe.getCount() + "");
         }
     }
 
@@ -150,17 +150,17 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
 
         @Override
         public boolean shouldExecute() {
-            IRecipe recipe = ProgWidgetCrafting.getRecipe(drone.world(), widget);
+            IRecipe recipe = ProgWidgetCrafting.getRecipe(this.drone.world(), this.widget);
             if (recipe == null) return false;
-            InventoryCrafting craftingGrid = widget.getCraftingGrid();
-            for (int crafted = 0; !((ICountWidget) widget).useCount() || crafted < ((ICountWidget) widget).getCount(); crafted++) {
+            InventoryCrafting craftingGrid = this.widget.getCraftingGrid();
+            for (int crafted = 0; !((ICountWidget) this.widget).useCount() || crafted < ((ICountWidget) this.widget).getCount(); crafted++) {
                 List<ItemStack>[] equivalentsList = new List[9];
                 for (int i = 0; i < equivalentsList.length; i++) {
                     ItemStack originalStack = craftingGrid.getStackInSlot(i);
                     if (!originalStack.isEmpty()) {
                         List<ItemStack> equivalents = new ArrayList<>();
-                        for (int j = 0; j < drone.getInv().getSlots(); j++) {
-                            ItemStack droneStack = drone.getInv().getStackInSlot(j);
+                        for (int j = 0; j < this.drone.getInv().getSlots(); j++) {
+                            ItemStack droneStack = this.drone.getInv().getStackInSlot(j);
                             if (!droneStack.isEmpty() && (droneStack.getItem() == originalStack.getItem() || PneumaticCraftUtils.isSameOreDictStack(droneStack, originalStack))) {
                                 equivalents.add(droneStack);
                             }
@@ -173,7 +173,7 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
                 int[] curIndexes = new int[9];
                 boolean first = true;
                 boolean hasCrafted = false;
-                while (first || count(curIndexes, equivalentsList)) {
+                while (first || this.count(curIndexes, equivalentsList)) {
                     first = false;
                     InventoryCrafting craftMatrix = new InventoryCrafting(new Container() {
                         @Override
@@ -186,8 +186,8 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
                         ItemStack stack = equivalentsList[i] == null ? ItemStack.EMPTY : equivalentsList[i].get(curIndexes[i]);
                         craftMatrix.setInventorySlotContents(i, stack);
                     }
-                    if (recipe.matches(craftMatrix, drone.world())) {
-                        if (craft(recipe.getCraftingResult(craftMatrix), craftMatrix)) {
+                    if (recipe.matches(craftMatrix, this.drone.world())) {
+                        if (this.craft(recipe.getCraftingResult(craftMatrix), craftMatrix)) {
                             hasCrafted = true;
                             break;
                         }
@@ -225,7 +225,7 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
                 }
             }
 
-            FMLCommonHandler.instance().firePlayerCraftingEvent(drone.getFakePlayer(), craftedStack, craftMatrix);
+            FMLCommonHandler.instance().firePlayerCraftingEvent(this.drone.getFakePlayer(), craftedStack, craftMatrix);
 
             for (int i = 0; i < craftMatrix.getSizeInventory(); ++i) {
                 ItemStack itemstack1 = craftMatrix.getStackInSlot(i);
@@ -235,33 +235,33 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
                         ItemStack itemstack2 = itemstack1.getItem().getContainerItem(itemstack1);
 
                         if (!itemstack2.isEmpty() && itemstack2.isItemStackDamageable() && itemstack2.getItemDamage() > itemstack2.getMaxDamage()) {
-                            MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(drone.getFakePlayer(), itemstack2, EnumHand.MAIN_HAND));
+                            MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.drone.getFakePlayer(), itemstack2, EnumHand.MAIN_HAND));
                             continue;
                         }
 
-                        ItemStack remainder = ItemHandlerHelper.insertItem(drone.getInv(), itemstack2.copy(), false);
+                        ItemStack remainder = ItemHandlerHelper.insertItem(this.drone.getInv(), itemstack2.copy(), false);
                         if (!remainder.isEmpty()) {
-                            Vec3d pos = drone.getDronePos();
-                            EntityItem item = new EntityItem(drone.world(), pos.x, pos.y, pos.z, remainder);
-                            drone.world().spawnEntity(item);
+                            Vec3d pos = this.drone.getDronePos();
+                            EntityItem item = new EntityItem(this.drone.world(), pos.x, pos.y, pos.z, remainder);
+                            this.drone.world().spawnEntity(item);
                         }
                     }
                     itemstack1.shrink(1); // As this stack references to the Drones stacks in its inventory, we can do this.
                 }
             }
 
-            for (int i = 0; i < drone.getInv().getSlots(); i++) {
-                ItemStack stack = drone.getInv().getStackInSlot(i);
+            for (int i = 0; i < this.drone.getInv().getSlots(); i++) {
+                ItemStack stack = this.drone.getInv().getStackInSlot(i);
                 if (stack.getCount() <= 0) {
-                    drone.getInv().setStackInSlot(i, ItemStack.EMPTY);
+                    this.drone.getInv().setStackInSlot(i, ItemStack.EMPTY);
                 }
             }
 
-            ItemStack remainder = ItemHandlerHelper.insertItem(drone.getInv(), craftedStack, false);
+            ItemStack remainder = ItemHandlerHelper.insertItem(this.drone.getInv(), craftedStack, false);
             if (!remainder.isEmpty()) {
-                Vec3d pos = drone.getDronePos();
-                EntityItem item = new EntityItem(drone.world(), pos.x, pos.y, pos.z, remainder);
-                drone.world().spawnEntity(item);
+                Vec3d pos = this.drone.getDronePos();
+                EntityItem item = new EntityItem(this.drone.world(), pos.x, pos.y, pos.z, remainder);
+                this.drone.world().spawnEntity(item);
             }
             return true;
         }
@@ -269,7 +269,7 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
 
     @Override
     public boolean useCount() {
-        return useCount;
+        return this.useCount;
     }
 
     @Override
@@ -279,7 +279,7 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
 
     @Override
     public int getCount() {
-        return count;
+        return this.count;
     }
 
     @Override
@@ -290,15 +290,15 @@ public class ProgWidgetCrafting extends ProgWidget implements ICraftingWidget, I
     @Override
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
-        tag.setBoolean("useCount", useCount);
-        tag.setInteger("count", count);
+        tag.setBoolean("useCount", this.useCount);
+        tag.setInteger("count", this.count);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
-        useCount = tag.getBoolean("useCount");
-        count = tag.getInteger("count");
+        this.useCount = tag.getBoolean("useCount");
+        this.count = tag.getInteger("count");
     }
 
     @Override

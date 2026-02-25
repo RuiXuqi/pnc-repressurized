@@ -13,10 +13,10 @@ public class FluidPneumaticCraft extends Fluid {
 
     @Override
     public int getColor() {
-        return customColor == null ? super.getColor() : customColor;
+        return this.customColor == null ? super.getColor() : this.customColor;
     }
 
     public void setCustomColor(int color) {
-        customColor = color;
+        this.customColor = color;
     }
 }

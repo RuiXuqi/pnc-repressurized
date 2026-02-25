@@ -15,11 +15,11 @@ public class DroneAICustomBlockInteract extends DroneAIImExBase {
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        return blockInteractor.doInteract(pos, drone, this, false) && super.doBlockInteraction(pos, distToBlock);
+        return this.blockInteractor.doInteract(pos, this.drone, this, false) && super.doBlockInteraction(pos, distToBlock);
     }
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return blockInteractor.doInteract(pos, drone, this, true);
+        return this.blockInteractor.doInteract(pos, this.drone, this, true);
     }
 }

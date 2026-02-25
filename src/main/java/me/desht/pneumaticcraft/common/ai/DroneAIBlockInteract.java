@@ -37,36 +37,36 @@ public class DroneAIBlockInteract extends DroneAIBlockInteraction {
 
     @Override
     protected boolean isValidPosition(BlockPos pos) {
-        return !visitedPositions.contains(pos) && (widget.isItemFilterEmpty() || DroneAIDig.isBlockValidForFilter(drone.world(), drone, pos, widget));
+        return !this.visitedPositions.contains(pos) && (this.widget.isItemFilterEmpty() || DroneAIDig.isBlockValidForFilter(this.drone.world(), this.drone, pos, this.widget));
     }
 
     @Override
     protected boolean doBlockInteraction(BlockPos pos, double distToBlock) {
-        visitedPositions.add(pos);
-        boolean result = rightClick(pos);
-        if (drone.getFakePlayer().getHeldItemMainhand().getCount() <= 0) {
-            drone.getFakePlayer().setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
+        this.visitedPositions.add(pos);
+        boolean result = this.rightClick(pos);
+        if (this.drone.getFakePlayer().getHeldItemMainhand().getCount() <= 0) {
+            this.drone.getFakePlayer().setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
         }
         return result;
     }
 
     private boolean rightClick(BlockPos pos) {
-        EnumFacing faceDir = ProgWidgetPlace.getDirForSides(((ISidedWidget) widget).getSides());
-        EntityPlayer player = drone.getFakePlayer();
-        World world = drone.world();
+        EnumFacing faceDir = ProgWidgetPlace.getDirForSides(((ISidedWidget) this.widget).getSides());
+        EntityPlayer player = this.drone.getFakePlayer();
+        World world = this.drone.world();
         ItemStack stack = player.getHeldItemMainhand();
 
         player.setPosition(pos.getX() + 0.5, pos.getY() + 0.5 - player.eyeHeight, pos.getZ() + 0.5);
         player.rotationPitch = faceDir.getYOffset() * -90;
         player.rotationYaw = PneumaticCraftUtils.getYawFromFacing(faceDir);
 
-        float hitX = (float)(player.posX - pos.getX());
-        float hitY = (float)(player.posY - pos.getY());
-        float hitZ = (float)(player.posZ - pos.getZ());
+        float hitX = (float) (player.posX - pos.getX());
+        float hitY = (float) (player.posY - pos.getY());
+        float hitZ = (float) (player.posZ - pos.getZ());
 
         // this is adapted from PlayerInteractionManager#processRightClickBlock()
         try {
-            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, EnumHand.MAIN_HAND, pos, faceDir.getOpposite(),  ForgeHooks.rayTraceEyeHitVec(player, 2.0D));
+            PlayerInteractEvent.RightClickBlock event = ForgeHooks.onRightClickBlock(player, EnumHand.MAIN_HAND, pos, faceDir.getOpposite(), ForgeHooks.rayTraceEyeHitVec(player, 2.0D));
             if (event.isCanceled() || event.getUseItem() == Event.Result.DENY) {
                 return false;
             }
@@ -79,7 +79,7 @@ public class DroneAIBlockInteract extends DroneAIBlockInteraction {
 
             if (!player.isSneaking() || bypass || event.getUseBlock() == net.minecraftforge.fml.common.eventhandler.Event.Result.ALLOW) {
                 IBlockState iblockstate = world.getBlockState(pos);
-                if(event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
+                if (event.getUseBlock() != net.minecraftforge.fml.common.eventhandler.Event.Result.DENY)
                     if (iblockstate.getBlock().onBlockActivated(world, pos, iblockstate, player, EnumHand.MAIN_HAND, faceDir, hitX, hitY, hitZ)) {
                         result = EnumActionResult.SUCCESS;
                     }
@@ -90,7 +90,7 @@ public class DroneAIBlockInteract extends DroneAIBlockInteraction {
             }
 
             if (stack.getItem() instanceof ItemBlock && !player.canUseCommandBlock()) {
-                Block block = ((ItemBlock)stack.getItem()).getBlock();
+                Block block = ((ItemBlock) stack.getItem()).getBlock();
                 if (block instanceof BlockCommandBlock || block instanceof BlockStructure) {
                     return false;
                 }

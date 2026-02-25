@@ -22,7 +22,7 @@ public class HackTickHandler {
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
-            Iterator<Map.Entry<WorldAndCoord, IHackableBlock>> blockIterator = hackedBlocks.entrySet().iterator();
+            Iterator<Map.Entry<WorldAndCoord, IHackableBlock>> blockIterator = this.hackedBlocks.entrySet().iterator();
             while (blockIterator.hasNext()) {
                 Map.Entry<WorldAndCoord, IHackableBlock> entry = blockIterator.next();
                 IHackableBlock hackableBlock = entry.getValue();
@@ -64,7 +64,7 @@ public class HackTickHandler {
     }
 
     public void trackBlock(WorldAndCoord coord, IHackableBlock iHackable) {
-        hackedBlocks.put(coord, iHackable);
+        this.hackedBlocks.put(coord, iHackable);
     }
 
     public void trackEntity(Entity entity, IHackableEntity iHackable) {

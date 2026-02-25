@@ -16,16 +16,16 @@ import java.util.function.BiFunction;
 public class ItemBasicDrone extends ItemDrone {
 
     private final BiFunction<World, EntityPlayer, EntityBasicDrone> droneCreator;
-    
+
     public ItemBasicDrone(String name, BiFunction<World, EntityPlayer, EntityBasicDrone> droneCreator) {
         super(name);
         this.droneCreator = droneCreator;
-        setMaxStackSize(64);
+        this.setMaxStackSize(64);
     }
 
     @Override
-    public void spawnDrone(EntityPlayer player, World world, BlockPos clickPos, EnumFacing facing, BlockPos placePos, ItemStack iStack){
-        EntityBasicDrone drone = droneCreator.apply(world, player);
+    public void spawnDrone(EntityPlayer player, World world, BlockPos clickPos, EnumFacing facing, BlockPos placePos, ItemStack iStack) {
+        EntityBasicDrone drone = this.droneCreator.apply(world, player);
 
         drone.setPosition(placePos.getX() + 0.5, placePos.getY() + 0.5, placePos.getZ() + 0.5);
         world.spawnEntity(drone);

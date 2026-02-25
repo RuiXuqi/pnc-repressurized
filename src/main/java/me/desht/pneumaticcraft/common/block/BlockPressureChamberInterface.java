@@ -25,7 +25,7 @@ public class BlockPressureChamberInterface extends BlockPneumaticCraftModeled im
 
     BlockPressureChamberInterface() {
         super(Material.IRON, "pressure_chamber_interface");
-        setResistance(2000.f);
+        this.setResistance(2000.f);
     }
 
     @Override

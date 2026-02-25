@@ -38,6 +38,7 @@ public interface IPressureChamberRecipe {
     default List<ItemIngredient> getInput() {
         return EMPTY_INPUT;
     }
+
     /**
      * Get the output of this recipe, without crafting it.  This is primarily intended for recipe display purposes by
      * JEI or any other recipe display mod.
@@ -52,16 +53,17 @@ public interface IPressureChamberRecipe {
      * items will be automatically placed into the {@code chamberHandler} but this implementation should also return
      * the list of crafted items, in case they do not all fit in the pressure chamber.
      *
-     * @param chamberHandler  items in the pressure chamber; should be modified to remove recipe input items.
+     * @param chamberHandler items in the pressure chamber; should be modified to remove recipe input items.
      * @return the resulting items; these do not have to be copies - the Pressure Chamber itself will make sure they are copied
      */
-    @Nonnull NonNullList<ItemStack> craftRecipe(@Nonnull ItemStackHandler chamberHandler);
+    @Nonnull
+    NonNullList<ItemStack> craftRecipe(@Nonnull ItemStackHandler chamberHandler);
 
     /**
      * Store a translation key to be displayed as an item tooltip by JEI (or in theory any other recipe display system)
      *
      * @param stack the stack to modify
-     * @param key the translation key
+     * @param key   the translation key
      */
     static void setTooltipKey(ItemStack stack, String key) {
         if (!stack.hasTagCompound()) stack.setTagCompound(new NBTTagCompound());
@@ -75,7 +77,8 @@ public interface IPressureChamberRecipe {
      * @return the translation key, or null if no key has been set
      */
     static String getTooltipKey(ItemStack stack) {
-        if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey(NBT_TOOLTIP_KEY, Constants.NBT.TAG_STRING)) return null;
+        if (!stack.hasTagCompound() || !stack.getTagCompound().hasKey(NBT_TOOLTIP_KEY, Constants.NBT.TAG_STRING))
+            return null;
         return stack.getTagCompound().getString(NBT_TOOLTIP_KEY);
     }
 

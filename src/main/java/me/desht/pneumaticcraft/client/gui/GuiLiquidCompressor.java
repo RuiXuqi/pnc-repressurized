@@ -17,8 +17,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.apache.commons.lang3.StringUtils;
 
 import java.awt.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiquidCompressor> {
 
@@ -33,16 +33,16 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
     @Override
     public void initGui() {
         super.initGui();
-        addWidget(new WidgetTank(-1, guiLeft + getFluidOffset(), guiTop + 15, te.getTank()));
-        addAnimatedStat("gui.tab.liquidCompressor.fuel", new ItemStack(Items.LAVA_BUCKET), 0xFFFF6600, true).setTextWithoutCuttingString(getAllFuels());
+        this.addWidget(new WidgetTank(-1, this.guiLeft + this.getFluidOffset(), this.guiTop + 15, this.te.getTank()));
+        this.addAnimatedStat("gui.tab.liquidCompressor.fuel", new ItemStack(Items.LAVA_BUCKET), 0xFFFF6600, true).setTextWithoutCuttingString(this.getAllFuels());
     }
 
     @Override
     protected void addPressureStatInfo(List<String> pressureStatText) {
         super.addPressureStatInfo(pressureStatText);
-        if (te.isProducing) {
+        if (this.te.isProducing) {
             pressureStatText.add("\u00a77Currently producing:");
-            pressureStatText.add("\u00a70" + (double) Math.round(te.getBaseProduction() * te.getEfficiency() * te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
+            pressureStatText.add("\u00a70" + (double) Math.round(this.te.getBaseProduction() * this.te.getEfficiency() * this.te.getSpeedMultiplierFromUpgrades() / 100) + " mL/tick.");
         }
     }
 
@@ -57,9 +57,9 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
 
     @Override
     protected Point getGaugeLocation() {
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        return new Point(xStart + xSize * 3 / 4 + 5, yStart + ySize / 4 + 4);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        return new Point(xStart + this.xSize * 3 / 4 + 5, yStart + this.ySize / 4 + 4);
     }
 
     private List<String> getAllFuels() {
@@ -67,7 +67,7 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
         fuels.add("L/Bucket | Fluid");
         for (Map.Entry<String, Integer> map : sortByValue(PneumaticCraftAPIHandler.getInstance().liquidFuels).entrySet()) {
             String value = map.getValue() / 1000 + "";
-            while (fontRenderer.getStringWidth(value) < 25) {
+            while (this.fontRenderer.getStringWidth(value) < 25) {
                 value = value + " ";
             }
             Fluid fluid = FluidRegistry.getFluid(map.getKey());
@@ -91,14 +91,14 @@ public class GuiLiquidCompressor extends GuiPneumaticContainerBase<TileEntityLiq
     protected void drawGuiContainerForegroundLayer(int x, int y) {
         super.drawGuiContainerForegroundLayer(x, y);
 
-        fontRenderer.drawString("Upgr.", 15, 19, 4210752);
+        this.fontRenderer.drawString("Upgr.", 15, 19, 4210752);
     }
 
     @Override
     public void addProblems(List<String> curInfo) {
         super.addProblems(curInfo);
-        IFluidHandler fluidHandler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-        if (!te.isProducing && (fluidHandler == null || fluidHandler.getTankProperties()[0].getContents() == null)) {
+        IFluidHandler fluidHandler = this.te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+        if (!this.te.isProducing && (fluidHandler == null || fluidHandler.getTankProperties()[0].getContents() == null)) {
             curInfo.add("gui.tab.problems.liquidCompressor.noFuel");
         }
     }

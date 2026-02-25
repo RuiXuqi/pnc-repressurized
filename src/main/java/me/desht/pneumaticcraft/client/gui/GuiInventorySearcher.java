@@ -31,25 +31,25 @@ public class GuiInventorySearcher extends GuiContainer {
 
     public GuiInventorySearcher(EntityPlayer par1EntityPlayer) {
         super(new ContainerInventorySearcher(par1EntityPlayer.inventory));
-        par1EntityPlayer.openContainer = inventorySlots;
-        allowUserInput = true;
-        ySize = 176; //TODO change
-        parentScreen = FMLClientHandler.instance().getClient().currentScreen;
-        ((ContainerInventorySearcher) inventorySlots).init(inventory);
+        par1EntityPlayer.openContainer = this.inventorySlots;
+        this.allowUserInput = true;
+        this.ySize = 176; //TODO change
+        this.parentScreen = FMLClientHandler.instance().getClient().currentScreen;
+        ((ContainerInventorySearcher) this.inventorySlots).init(this.inventory);
     }
 
     public void setStackPredicate(Predicate<ItemStack> predicate) {
-        stackPredicate = predicate;
+        this.stackPredicate = predicate;
     }
 
     @Nonnull
     public ItemStack getSearchStack() {
-        return inventory.getStackInSlot(0);
+        return this.inventory.getStackInSlot(0);
     }
 
     public void setSearchStack(@Nonnull ItemStack stack) {
-        if (!stack.isEmpty() && stackPredicate.test(stack)) {
-            inventory.setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
+        if (!stack.isEmpty() && this.stackPredicate.test(stack)) {
+            this.inventory.setStackInSlot(0, ItemHandlerHelper.copyStackWithSize(stack, 1));
         }
     }
 
@@ -59,7 +59,7 @@ public class GuiInventorySearcher extends GuiContainer {
             if (par1Slot.slotNumber == 36) {
                 par1Slot.putStack(ItemStack.EMPTY);
             } else {
-                setSearchStack(par1Slot.getStack());
+                this.setSearchStack(par1Slot.getStack());
             }
         }
     }
@@ -70,8 +70,8 @@ public class GuiInventorySearcher extends GuiContainer {
     @Override
     protected void keyTyped(char par1, int par2) throws IOException {
         if (par2 == Keyboard.KEY_ESCAPE) {
-            mc.displayGuiScreen(parentScreen);
-            onGuiClosed();
+            this.mc.displayGuiScreen(this.parentScreen);
+            this.onGuiClosed();
         } else {
             super.keyTyped(par1, par2);
         }
@@ -82,10 +82,10 @@ public class GuiInventorySearcher extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        fontRenderer.drawString("Inventory", 7, 5, 4210752);
-        fontRenderer.drawString("Searcher", 7, 15, 4210752);
-        fontRenderer.drawString("Target", 71, 8, 4210752);
-        ItemStack stack = inventory.getStackInSlot(0);
+        this.fontRenderer.drawString("Inventory", 7, 5, 4210752);
+        this.fontRenderer.drawString("Searcher", 7, 15, 4210752);
+        this.fontRenderer.drawString("Target", 71, 8, 4210752);
+        ItemStack stack = this.inventory.getStackInSlot(0);
         if (stack.getItem() instanceof IPositionProvider) {
             List<BlockPos> posList = ((IPositionProvider) stack.getItem()).getStoredPositions(stack);
             if (!posList.isEmpty()) {
@@ -95,7 +95,7 @@ public class GuiInventorySearcher extends GuiContainer {
                     GlStateManager.pushMatrix();
                     GlStateManager.scale(scale, scale, scale);
                     GlStateManager.translate(140 * (1 - scale), 28 * (1 - scale), 0);
-                    fontRenderer.drawString(String.format("%d, %d, %d", pos.getX(), pos.getY(), pos.getZ()), 105, 28, 0x404080);
+                    this.fontRenderer.drawString(String.format("%d, %d, %d", pos.getX(), pos.getY(), pos.getZ()), 105, 28, 0x404080);
                     GlStateManager.popMatrix();
                 }
             }
@@ -109,7 +109,7 @@ public class GuiInventorySearcher extends GuiContainer {
     public void drawScreen(int par1, int par2, float par3) {
         super.drawScreen(par1, par2, par3);
 
-        renderHoveredToolTip(par1, par2);
+        this.renderHoveredToolTip(par1, par2);
     }
 
     /**
@@ -117,10 +117,10 @@ public class GuiInventorySearcher extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
-        drawDefaultBackground();
-        mc.getTextureManager().bindTexture(Textures.GUI_INVENTORY_SEARCHER);
-        int xStart = (width - xSize) / 2;
-        int yStart = (height - ySize) / 2;
-        drawTexturedModalRect(xStart, yStart, 0, 0, xSize, ySize);
+        this.drawDefaultBackground();
+        this.mc.getTextureManager().bindTexture(Textures.GUI_INVENTORY_SEARCHER);
+        int xStart = (this.width - this.xSize) / 2;
+        int yStart = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(xStart, yStart, 0, 0, this.xSize, this.ySize);
     }
 }

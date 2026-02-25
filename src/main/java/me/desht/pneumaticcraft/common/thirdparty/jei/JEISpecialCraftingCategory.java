@@ -19,7 +19,7 @@ public abstract class JEISpecialCraftingCategory<T extends IRecipeWrapper> exten
     }
 
     protected void setText(String localizationKey, Object... parameters) {
-        text = PneumaticCraftUtils.convertStringIntoList(I18n.format(localizationKey, parameters), 30);
+        this.text = PneumaticCraftUtils.convertStringIntoList(I18n.format(localizationKey, parameters), 30);
     }
 
     @Override
@@ -34,12 +34,12 @@ public abstract class JEISpecialCraftingCategory<T extends IRecipeWrapper> exten
 
     @Override
     public void drawExtras(Minecraft minecraft) {
-        drawProgressBar(63, 0, 82, 0, 38, 18, StartDirection.LEFT);
+        this.drawProgressBar(63, 0, 82, 0, 38, 18, StartDirection.LEFT);
     }
 
     @Override
     public List<String> getTooltipStrings(int mouseX, int mouseY) {
-        return mouseX >= 63 && mouseX <= 101 ? text : Collections.emptyList();
+        return mouseX >= 63 && mouseX <= 101 ? this.text : Collections.emptyList();
     }
 
     protected abstract List<MultipleInputOutputRecipeWrapper> getAllRecipes();

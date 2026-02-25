@@ -20,18 +20,18 @@ public class HeatBehaviourManager {
     }
 
     public void onPostInit() {
-        registerBehaviour(HeatBehaviourFurnace.class);
-        registerBehaviour(HeatBehaviourHeatFrame.class);
+        this.registerBehaviour(HeatBehaviourFurnace.class);
+        this.registerBehaviour(HeatBehaviourHeatFrame.class);
 
         // this handles any custom non-tile-entity blocks and fluids, vanilla and modded
-        registerBehaviour(HeatBehaviourCustomTransition.class);
+        this.registerBehaviour(HeatBehaviourCustomTransition.class);
     }
 
     public void registerBehaviour(Class<? extends HeatBehaviour> behaviour) {
         if (behaviour == null) throw new IllegalArgumentException("Can't register a null behaviour!");
         try {
             HeatBehaviour ins = behaviour.newInstance();
-            HeatBehaviour old = behaviours.put(ins.getId(), ins);
+            HeatBehaviour old = this.behaviours.put(ins.getId(), ins);
             if (old != null)
                 Log.warning("Registered a heat behaviour that has the same id as an already registered one. The old one will be discarded. Old behaviour class: " + old.getClass() + ". New class: " + behaviour.getClass());
         } catch (InstantiationException e) {
@@ -42,11 +42,11 @@ public class HeatBehaviourManager {
     }
 
     HeatBehaviour getBehaviour(String id) {
-        return behaviours.get(id);
+        return this.behaviours.get(id);
     }
 
     public HeatBehaviour getNewBehaviourForId(String id) {
-        HeatBehaviour behaviour = behaviours.get(id);
+        HeatBehaviour behaviour = this.behaviours.get(id);
         if (behaviour != null) {
             try {
                 return behaviour.getClass().newInstance();
@@ -61,7 +61,7 @@ public class HeatBehaviourManager {
     }
 
     public void addHeatBehaviours(World world, BlockPos pos, EnumFacing direction, IHeatExchangerLogic logic, List<HeatBehaviour> list) {
-        for (HeatBehaviour behaviour : behaviours.values()) {
+        for (HeatBehaviour behaviour : this.behaviours.values()) {
             String id = behaviour.getId();
             behaviour.initialize(id, logic, world, pos, direction);
             if (behaviour.isApplicable()) {

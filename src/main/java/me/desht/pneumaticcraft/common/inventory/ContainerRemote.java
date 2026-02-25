@@ -25,8 +25,8 @@ public class ContainerRemote extends ContainerPneumaticBase {
 
     public ContainerRemote(ItemStack remote) {
         super(null);
-        syncedVars = new ArrayList<>(getRelevantVariableNames(remote));
-        lastValues = new BlockPos[syncedVars.size()];
+        this.syncedVars = new ArrayList<>(getRelevantVariableNames(remote));
+        this.lastValues = new BlockPos[this.syncedVars.size()];
     }
 
     private static Set<String> getRelevantVariableNames(@Nonnull ItemStack remote) {
@@ -49,13 +49,13 @@ public class ContainerRemote extends ContainerPneumaticBase {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (int i = 0; i < lastValues.length; i++) {
-            BlockPos newValue = GlobalVariableManager.getInstance().getPos(syncedVars.get(i));
-            if (!newValue.equals(lastValues[i])) {
-                lastValues[i] = newValue;
-                for (Object o : listeners) {
+        for (int i = 0; i < this.lastValues.length; i++) {
+            BlockPos newValue = GlobalVariableManager.getInstance().getPos(this.syncedVars.get(i));
+            if (!newValue.equals(this.lastValues[i])) {
+                this.lastValues[i] = newValue;
+                for (Object o : this.listeners) {
                     if (o instanceof EntityPlayerMP)
-                        NetworkHandler.sendTo(new PacketSetGlobalVariable(syncedVars.get(i), newValue), (EntityPlayerMP) o);
+                        NetworkHandler.sendTo(new PacketSetGlobalVariable(this.syncedVars.get(i), newValue), (EntityPlayerMP) o);
                 }
             }
         }

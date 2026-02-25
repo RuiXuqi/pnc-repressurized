@@ -14,7 +14,7 @@ public class MagnetUpgradeHandler extends IUpgradeRenderHandler.SimpleToggleable
 
     @Override
     public Item[] getRequiredUpgrades() {
-        return new Item[] {Itemss.upgrades.get(IItemRegistry.EnumUpgrade.MAGNET)};
+        return new Item[]{Itemss.upgrades.get(IItemRegistry.EnumUpgrade.MAGNET)};
     }
 
     @Override

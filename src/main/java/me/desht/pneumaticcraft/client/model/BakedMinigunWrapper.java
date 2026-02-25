@@ -27,32 +27,32 @@ public class BakedMinigunWrapper implements IBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand) {
-        return original.getQuads(state, side, rand);
+        return this.original.getQuads(state, side, rand);
     }
 
     @Override
     public boolean isAmbientOcclusion() {
-        return original.isAmbientOcclusion();
+        return this.original.isAmbientOcclusion();
     }
 
     @Override
     public boolean isGui3d() {
-        return original.isGui3d();
+        return this.original.isGui3d();
     }
 
     @Override
     public boolean isBuiltInRenderer() {
-        return original.isBuiltInRenderer();
+        return this.original.isBuiltInRenderer();
     }
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return original.getParticleTexture();
+        return this.original.getParticleTexture();
     }
 
     @Override
     public ItemOverrideList getOverrides() {
-        return original.getOverrides();
+        return this.original.getOverrides();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class BakedMinigunWrapper implements IBakedModel {
             case NONE:
             case GUI:
             case FIXED:
-                return original.handlePerspective(cameraTransformType);
+                return this.original.handlePerspective(cameraTransformType);
         }
         return of(EMPTY_MODEL, null);
     }

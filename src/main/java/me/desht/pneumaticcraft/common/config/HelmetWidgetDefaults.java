@@ -25,11 +25,11 @@ public class HelmetWidgetDefaults extends JsonConfig {
     protected void writeToJson(JsonObject json) {
         json.addProperty("description", "Tracks the active upgrades for the Pneumatic Armor");
         JsonArray array = new JsonArray();
-        if (keyBinds.isEmpty()) {
+        if (this.keyBinds.isEmpty()) {
             // armor is on by default
-            keyBinds.add("pneumaticHelmet.upgrade.coreComponents");
+            this.keyBinds.add("pneumaticHelmet.upgrade.coreComponents");
         }
-        for (String s : keyBinds) {
+        for (String s : this.keyBinds) {
             array.add(s);
         }
         json.add("active", array);
@@ -38,21 +38,21 @@ public class HelmetWidgetDefaults extends JsonConfig {
     @Override
     protected void readFromJson(JsonObject json) {
         JsonArray array = json.get("active").getAsJsonArray();
-        keyBinds.clear();
+        this.keyBinds.clear();
         for (JsonElement element : array) {
-            keyBinds.add(element.getAsString());
+            this.keyBinds.add(element.getAsString());
         }
     }
 
     public void setKey(String keyBindName, boolean checked) {
         if (checked) {
-            keyBinds.add(keyBindName);
+            this.keyBinds.add(keyBindName);
         } else {
-            keyBinds.remove(keyBindName);
+            this.keyBinds.remove(keyBindName);
         }
     }
 
     public boolean getKey(String keyBindingName) {
-        return keyBinds.contains(keyBindingName);
+        return this.keyBinds.contains(keyBindingName);
     }
 }

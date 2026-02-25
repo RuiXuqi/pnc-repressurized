@@ -30,13 +30,13 @@ public class PacketAmadronInvSync extends AbstractPacket<PacketAmadronInvSync> {
     @Override
     public void fromBytes(ByteBuf buf) {
         for (int i = 0; i < INV_SIZE; i++) {
-            items.add(ByteBufUtils.readItemStack(buf));
+            this.items.add(ByteBufUtils.readItemStack(buf));
         }
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        for (ItemStack stack : items) {
+        for (ItemStack stack : this.items) {
             ByteBufUtils.writeItemStack(buf, stack);
         }
     }
@@ -50,8 +50,8 @@ public class PacketAmadronInvSync extends AbstractPacket<PacketAmadronInvSync> {
     public void handleServerSide(PacketAmadronInvSync message, EntityPlayer player) {
         if (player.openContainer instanceof ContainerAmadron) {
             ContainerAmadron container = (ContainerAmadron) player.openContainer;
-            for (int i = 0; i < items.size(); i++) {
-                container.setStack(i, items.get(i));
+            for (int i = 0; i < this.items.size(); i++) {
+                container.setStack(i, this.items.get(i));
             }
         }
     }

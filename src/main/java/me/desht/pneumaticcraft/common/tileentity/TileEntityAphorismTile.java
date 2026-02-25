@@ -24,58 +24,58 @@ public class TileEntityAphorismTile extends TileEntityBase {
     @Override
     public void writeToPacket(NBTTagCompound tag) {
         super.writeToPacket(tag);
-        tag.setInteger("lines", textLines.length);
-        for (int i = 0; i < textLines.length; i++) {
-            tag.setString("line" + i, textLines[i]);
+        tag.setInteger("lines", this.textLines.length);
+        for (int i = 0; i < this.textLines.length; i++) {
+            tag.setString("line" + i, this.textLines[i]);
         }
-        tag.setInteger("textRot", textRotation);
-        tag.setInteger("border", borderColor);
-        tag.setInteger("background", backgroundColor);
+        tag.setInteger("textRot", this.textRotation);
+        tag.setInteger("border", this.borderColor);
+        tag.setInteger("background", this.backgroundColor);
     }
 
     @Override
     public void readFromPacket(NBTTagCompound tag) {
         super.readFromPacket(tag);
         int lines = tag.getInteger("lines");
-        textLines = new String[lines];
+        this.textLines = new String[lines];
         for (int i = 0; i < lines; i++) {
-            textLines[i] = tag.getString("line" + i);
+            this.textLines[i] = tag.getString("line" + i);
         }
-        textRotation = tag.getInteger("textRot");
+        this.textRotation = tag.getInteger("textRot");
         if (tag.hasKey("border")) {
-            borderColor = tag.getInteger("border");
-            backgroundColor = tag.getInteger("background");
+            this.borderColor = tag.getInteger("border");
+            this.backgroundColor = tag.getInteger("background");
         } else {
-            borderColor = EnumDyeColor.BLUE.getDyeDamage();
-            backgroundColor = EnumDyeColor.WHITE.getDyeDamage();
+            this.borderColor = EnumDyeColor.BLUE.getDyeDamage();
+            this.backgroundColor = EnumDyeColor.WHITE.getDyeDamage();
         }
-        if (world != null) rerenderTileEntity();
+        if (this.world != null) this.rerenderTileEntity();
     }
 
     public String[] getTextLines() {
-        return textLines;
+        return this.textLines;
     }
 
     public void setTextLines(String[] textLines) {
         this.textLines = textLines;
-        if (!world.isRemote) sendDescriptionPacket();
+        if (!this.world.isRemote) this.sendDescriptionPacket();
     }
 
     public void setBorderColor(int color) {
         this.borderColor = color;
-        if (!world.isRemote) sendDescriptionPacket();
+        if (!this.world.isRemote) this.sendDescriptionPacket();
     }
 
     public int getBorderColor() {
-        return borderColor;
+        return this.borderColor;
     }
 
     public int getBackgroundColor() {
-        return backgroundColor;
+        return this.backgroundColor;
     }
 
     public void setBackgroundColor(int color) {
         this.backgroundColor = color;
-        if (!world.isRemote) sendDescriptionPacket();
+        if (!this.world.isRemote) this.sendDescriptionPacket();
     }
 }

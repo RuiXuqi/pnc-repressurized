@@ -8,9 +8,9 @@ public class ContainerPressureChamber extends ContainerPneumaticBase<TileEntityP
     public ContainerPressureChamber(InventoryPlayer inventoryPlayer, TileEntityPressureChamberValve te) {
         super(te);
 
-        addUpgradeSlots(48, 29);
+        this.addUpgradeSlots(48, 29);
 
-        addPlayerSlots(inventoryPlayer, 84);
+        this.addPlayerSlots(inventoryPlayer, 84);
     }
 
 }

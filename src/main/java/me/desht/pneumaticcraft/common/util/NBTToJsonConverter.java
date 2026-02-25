@@ -14,7 +14,7 @@ public class NBTToJsonConverter {
     }
 
     public String convert(boolean pretty) {
-        JsonObject json = getObject(tag);
+        JsonObject json = getObject(this.tag);
         String jsonString = json.toString();
 
         JsonParser parser = new JsonParser();
@@ -41,17 +41,23 @@ public class NBTToJsonConverter {
             } else if (nbt instanceof NBTPrimitive) {
                 switch (nbt.getId()) {
                     case Constants.NBT.TAG_BYTE:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getByte()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getByte());
+                        break;
                     case Constants.NBT.TAG_INT:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getInt()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getInt());
+                        break;
                     case Constants.NBT.TAG_SHORT:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getShort()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getShort());
+                        break;
                     case Constants.NBT.TAG_LONG:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getLong()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getLong());
+                        break;
                     case Constants.NBT.TAG_FLOAT:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getFloat()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getFloat());
+                        break;
                     case Constants.NBT.TAG_DOUBLE:
-                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getDouble()); break;
+                        keyObject.addProperty("value", ((NBTPrimitive) nbt).getDouble());
+                        break;
                 }
             } else if (nbt instanceof NBTTagString) {
                 keyObject.addProperty("value", ((NBTTagString) nbt).getString());

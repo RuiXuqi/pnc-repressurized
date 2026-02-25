@@ -18,14 +18,14 @@ public class GuiKickOptions implements IOptionPage {
 
     @Override
     public void initGui(IGuiScreen gui) {
-        changeKeybindingButton = new KeybindingButton(10, 30, 128, 150, 20, "Change Kick Key...", KeyHandler.getInstance().keybindKick);
-        gui.getButtonList().add(changeKeybindingButton);
+        this.changeKeybindingButton = new KeybindingButton(10, 30, 128, 150, 20, "Change Kick Key...", KeyHandler.getInstance().keybindKick);
+        gui.getButtonList().add(this.changeKeybindingButton);
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 10) {
-            changeKeybindingButton.toggleKeybindMode();
+            this.changeKeybindingButton.toggleKeybindMode();
         }
     }
 
@@ -41,7 +41,7 @@ public class GuiKickOptions implements IOptionPage {
 
     @Override
     public void keyTyped(char ch, int key) {
-        if (changeKeybindingButton != null) changeKeybindingButton.receiveKey(key);
+        if (this.changeKeybindingButton != null) this.changeKeybindingButton.receiveKey(key);
     }
 
     @Override

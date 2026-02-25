@@ -26,7 +26,7 @@ public class ItemNetworkComponents extends ItemPneumaticSubtyped implements IPro
 
     public ItemNetworkComponents() {
         super("network_component");
-        setHasSubtypes(true);
+        this.setHasSubtypes(true);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ItemNetworkComponents extends ItemPneumaticSubtyped implements IPro
     @Override
     @SideOnly(Side.CLIENT)
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        if (isInCreativeTab(tab)) {
+        if (this.isInCreativeTab(tab)) {
             for (int i = 0; i < COMPONENT_AMOUNT; i++) {
                 subItems.add(new ItemStack(this, 1, i));
             }

@@ -15,7 +15,7 @@ public class ContainerSecurityStationHacking extends ContainerPneumaticBase<Tile
         //add the network slots
         for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 5; j++) {
-                addSlotToContainer(new SlotUntouchable(te.getPrimaryInventory(), j + i * 5, 13 + j * 31, 18 + i * 31));
+                this.addSlotToContainer(new SlotUntouchable(te.getPrimaryInventory(), j + i * 5, 13 + j * 31, 18 + i * 31));
             }
         }
     }

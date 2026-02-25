@@ -30,25 +30,25 @@ public class ProgWidgetLiquidInventoryCondition extends ProgWidgetCondition {
 
             @Override
             protected boolean evaluate(BlockPos pos) {
-                TileEntity te = drone.world().getTileEntity(pos);
+                TileEntity te = this.drone.world().getTileEntity(pos);
                 int count = 0;
-                if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null) ) {
+                if (te != null && te.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                     IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                     for (IFluidTankProperties prop : handler.getTankProperties()) {
                         FluidStack stack = prop.getContents();
                         if (stack != null) {
-                            if (ProgWidgetLiquidFilter.isLiquidValid(stack.getFluid(), widget, 1)) {
+                            if (ProgWidgetLiquidFilter.isLiquidValid(stack.getFluid(), this.widget, 1)) {
                                 count += stack.amount;
                             }
                         }
                     }
                 } else {
-                    FluidStack fluidStack = FluidUtils.getFluidAt(drone.world(), pos, false);
-                    if (fluidStack != null && ProgWidgetLiquidFilter.isLiquidValid(fluidStack.getFluid(), widget, 1)) {
+                    FluidStack fluidStack = FluidUtils.getFluidAt(this.drone.world(), pos, false);
+                    if (fluidStack != null && ProgWidgetLiquidFilter.isLiquidValid(fluidStack.getFluid(), this.widget, 1)) {
                         count += 1000;
                     }
                 }
-                return ((ICondition) widget).getOperator().evaluate(count, ((ICondition) widget).getRequiredCount());
+                return ((ICondition) this.widget).getOperator().evaluate(count, ((ICondition) this.widget).getRequiredCount());
             }
 
         };

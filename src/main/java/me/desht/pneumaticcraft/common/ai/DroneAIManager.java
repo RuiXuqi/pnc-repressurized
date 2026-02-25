@@ -59,60 +59,60 @@ public class DroneAIManager implements IVariableProvider {
     private static final int MAX_JUMP_STACK_SIZE = 100;
 
     public DroneAIManager(IDroneBase drone) {
-        theProfiler = drone.world().profiler;
+        this.theProfiler = drone.world().profiler;
         this.drone = drone;
         if (!drone.world().isRemote) {
             // we normally don't called clientside, but The One Probe can do it
             // don't set the widgets clientside because there aren't any and that messes up any entity tracker info
-            setWidgets(drone.getProgWidgets());
+            this.setWidgets(drone.getProgWidgets());
         }
     }
 
     public DroneAIManager(IDroneBase drone, List<IProgWidget> progWidgets) {
-        theProfiler = drone.world().profiler;
+        this.theProfiler = drone.world().profiler;
         this.drone = drone;
-        stopWhenEndReached = true;
-        setWidgets(progWidgets);
+        this.stopWhenEndReached = true;
+        this.setWidgets(progWidgets);
     }
 
     public void dontStopWhenEndReached() {
-        stopWhenEndReached = false;
+        this.stopWhenEndReached = false;
     }
 
     public void setWidgets(List<IProgWidget> progWidgets) {
         this.progWidgets = progWidgets;
         if (progWidgets.isEmpty()) {
-            setActiveWidget(null);
+            this.setActiveWidget(null);
         } else {
             for (IProgWidget widget : progWidgets) {
                 if (widget instanceof IVariableWidget) {
                     ((IVariableWidget) widget).setAIManager(this);
                 }
             }
-            gotoFirstWidget();
+            this.gotoFirstWidget();
         }
     }
 
     public void connectVariables(DroneAIManager subAI) {
-        subAI.coordinateVariables = coordinateVariables;
-        subAI.itemVariables = itemVariables;
+        subAI.coordinateVariables = this.coordinateVariables;
+        subAI.itemVariables = this.itemVariables;
     }
 
     public boolean isIdling() {
-        return curWidgetAI == null;
+        return this.curWidgetAI == null;
     }
 
     public EntityAIBase getCurrentAI() {
-        return curWidgetAI;
+        return this.curWidgetAI;
     }
 
     public IDroneBase getDrone() {
-        return drone;
+        return this.drone;
     }
 
     public void writeToNBT(NBTTagCompound tag) {
         NBTTagList tagList = new NBTTagList();
-        for (Map.Entry<String, BlockPos> entry : coordinateVariables.entrySet()) {
+        for (Map.Entry<String, BlockPos> entry : this.coordinateVariables.entrySet()) {
             NBTTagCompound t = new NBTTagCompound();
             t.setString("key", entry.getKey());
             t.setInteger("x", entry.getValue().getX());
@@ -122,31 +122,31 @@ public class DroneAIManager implements IVariableProvider {
         }
         tag.setTag("coords", tagList);
 
-        GlobalVariableManager.getInstance().writeItemVars(tag, itemVariables);
+        GlobalVariableManager.getInstance().writeItemVars(tag, this.itemVariables);
     }
 
     public void readFromNBT(NBTTagCompound tag) {
-        coordinateVariables.clear();
+        this.coordinateVariables.clear();
         NBTTagList tagList = tag.getTagList("coords", 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound t = tagList.getCompoundTagAt(i);
-            coordinateVariables.put(t.getString("key"), new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
+            this.coordinateVariables.put(t.getString("key"), new BlockPos(t.getInteger("x"), t.getInteger("y"), t.getInteger("z")));
         }
 
-        GlobalVariableManager.readItemVars(tag, itemVariables);
+        GlobalVariableManager.readItemVars(tag, this.itemVariables);
     }
 
     @Override
     public BlockPos getCoordinate(String varName) {
         BlockPos pos;
         if (varName.startsWith("$")) {
-            SpecialVariableRetrievalEvent.CoordinateVariable.Drone event = new SpecialVariableRetrievalEvent.CoordinateVariable.Drone(drone, varName.substring(1));
+            SpecialVariableRetrievalEvent.CoordinateVariable.Drone event = new SpecialVariableRetrievalEvent.CoordinateVariable.Drone(this.drone, varName.substring(1));
             MinecraftForge.EVENT_BUS.post(event);
             pos = event.coordinate;
         } else if (varName.startsWith("#")) {
             pos = GlobalVariableManager.getInstance().getPos(varName.substring(1));
         } else {
-            pos = coordinateVariables.get(varName);
+            pos = this.coordinateVariables.get(varName);
         }
         return pos != null ? pos : BlockPos.ORIGIN;
     }
@@ -154,20 +154,20 @@ public class DroneAIManager implements IVariableProvider {
     public void setCoordinate(String varName, BlockPos coord) {
         if (varName.startsWith("#")) {
             GlobalVariableManager.getInstance().set(varName.substring(1), coord);
-        } else if (!varName.startsWith("$")) coordinateVariables.put(varName, coord);
+        } else if (!varName.startsWith("$")) this.coordinateVariables.put(varName, coord);
     }
 
     @Nonnull
     public ItemStack getStack(String varName) {
         ItemStack item;
         if (varName.startsWith("$")) {
-            SpecialVariableRetrievalEvent.ItemVariable.Drone event = new SpecialVariableRetrievalEvent.ItemVariable.Drone(drone, varName.substring(1));
+            SpecialVariableRetrievalEvent.ItemVariable.Drone event = new SpecialVariableRetrievalEvent.ItemVariable.Drone(this.drone, varName.substring(1));
             MinecraftForge.EVENT_BUS.post(event);
             item = event.item;
         } else if (varName.startsWith("#")) {
             item = GlobalVariableManager.getInstance().getItem(varName.substring(1));
         } else {
-            item = itemVariables.getOrDefault(varName, ItemStack.EMPTY);
+            item = this.itemVariables.getOrDefault(varName, ItemStack.EMPTY);
         }
         return item;
     }
@@ -175,45 +175,45 @@ public class DroneAIManager implements IVariableProvider {
     public void setItem(String varName, @Nonnull ItemStack item) {
         if (varName.startsWith("#")) {
             GlobalVariableManager.getInstance().set(varName.substring(1), item);
-        } else if (!varName.startsWith("$")) itemVariables.put(varName, item);
+        } else if (!varName.startsWith("$")) this.itemVariables.put(varName, item);
     }
 
     private void updateWidgetFlow() {
         boolean isExecuting = false;
-        for (EntityAITaskEntry entry : executingTaskEntries) {
-            if (curWidgetAI == entry.action) {
+        for (EntityAITaskEntry entry : this.executingTaskEntries) {
+            if (this.curWidgetAI == entry.action) {
                 isExecuting = true;
                 break;
             }
         }
-        if (!isExecuting && curActiveWidget != null && (curWidgetTargetAI == null || !curWidgetTargetAI.shouldExecute())) {
-            IProgWidget widget = curActiveWidget.getOutputWidget(drone, progWidgets);
+        if (!isExecuting && this.curActiveWidget != null && (this.curWidgetTargetAI == null || !this.curWidgetTargetAI.shouldExecute())) {
+            IProgWidget widget = this.curActiveWidget.getOutputWidget(this.drone, this.progWidgets);
             if (widget != null) {
-                if (curActiveWidget.getOutputWidget() != widget) {
-                    if (addJumpBackWidget(curActiveWidget)) return;
+                if (this.curActiveWidget.getOutputWidget() != widget) {
+                    if (this.addJumpBackWidget(this.curActiveWidget)) return;
                 }
-                setActiveWidget(widget);
+                this.setActiveWidget(widget);
             } else {
-                if (stopWhenEndReached) {
-                    setActiveWidget(null);
+                if (this.stopWhenEndReached) {
+                    this.setActiveWidget(null);
                 } else {
-                    gotoFirstWidget();
+                    this.gotoFirstWidget();
                 }
             }
         }
-        if (curActiveWidget == null && !stopWhenEndReached) {
-            gotoFirstWidget();
+        if (this.curActiveWidget == null && !this.stopWhenEndReached) {
+            this.gotoFirstWidget();
         }
     }
 
     private void gotoFirstWidget() {
-        setLabel("Main");
-        if (!jumpBackWidgets.isEmpty()) {
-            setActiveWidget(jumpBackWidgets.pop());
+        this.setLabel("Main");
+        if (!this.jumpBackWidgets.isEmpty()) {
+            this.setActiveWidget(this.jumpBackWidgets.pop());
         } else {
-            for (IProgWidget widget : progWidgets) {
+            for (IProgWidget widget : this.progWidgets) {
                 if (widget instanceof ProgWidgetStart) {
-                    setActiveWidget(widget);
+                    this.setActiveWidget(widget);
                     return;
                 }
             }
@@ -225,64 +225,64 @@ public class DroneAIManager implements IVariableProvider {
         EntityAIBase ai = null;
         if (widget != null) {
             boolean first = widget instanceof ProgWidgetStart;
-            targetAI = widget.getWidgetTargetAI(drone, widget);
-            ai = widget.getWidgetAI(drone, widget);
+            targetAI = widget.getWidgetTargetAI(this.drone, widget);
+            ai = widget.getWidgetAI(this.drone, widget);
             Set<IProgWidget> visitedWidgets = new HashSet<>();//Prevent endless loops
             while (!visitedWidgets.contains(widget) && targetAI == null && ai == null) {
                 visitedWidgets.add(widget);
                 IProgWidget oldWidget = widget;
-                widget = widget.getOutputWidget(drone, progWidgets);
+                widget = widget.getOutputWidget(this.drone, this.progWidgets);
                 if (widget == null) {
                     if (first) {
                         return;
                     } else {
-                        if (stopWhenEndReached) {
-                            setActiveWidget(null);
+                        if (this.stopWhenEndReached) {
+                            this.setActiveWidget(null);
                         } else {
-                            gotoFirstWidget();
+                            this.gotoFirstWidget();
                         }
                         return;
                     }
                 } else if (oldWidget.getOutputWidget() != widget) {
-                    if (addJumpBackWidget(oldWidget)) return;
+                    if (this.addJumpBackWidget(oldWidget)) return;
                 }
-                targetAI = widget.getWidgetTargetAI(drone, widget);
-                ai = widget.getWidgetAI(drone, widget);
+                targetAI = widget.getWidgetTargetAI(this.drone, widget);
+                ai = widget.getWidgetAI(this.drone, widget);
             }
-            drone.setActiveProgram(widget);
+            this.drone.setActiveProgram(widget);
         } else {
-            setLabel("Stopped");
+            this.setLabel("Stopped");
         }
 
-        curActiveWidget = widget;
-        if (curWidgetAI != null) removeTask(curWidgetAI);
-        if (curWidgetTargetAI != null) drone.getTargetAI().removeTask(curWidgetTargetAI);
-        if (ai != null) addTask(2, ai);
-        if (targetAI != null) drone.getTargetAI().addTask(2, targetAI);
-        curWidgetAI = ai;
-        curWidgetTargetAI = targetAI;
+        this.curActiveWidget = widget;
+        if (this.curWidgetAI != null) this.removeTask(this.curWidgetAI);
+        if (this.curWidgetTargetAI != null) this.drone.getTargetAI().removeTask(this.curWidgetTargetAI);
+        if (ai != null) this.addTask(2, ai);
+        if (targetAI != null) this.drone.getTargetAI().addTask(2, targetAI);
+        this.curWidgetAI = ai;
+        this.curWidgetTargetAI = targetAI;
     }
 
     private boolean addJumpBackWidget(IProgWidget widget) {
         if (widget instanceof IJumpBackWidget) {
-            if (jumpBackWidgets.size() >= MAX_JUMP_STACK_SIZE) {
-                drone.overload("jumpStackTooLarge", MAX_JUMP_STACK_SIZE);
-                jumpBackWidgets.clear();
-                setActiveWidget(null);
+            if (this.jumpBackWidgets.size() >= MAX_JUMP_STACK_SIZE) {
+                this.drone.overload("jumpStackTooLarge", MAX_JUMP_STACK_SIZE);
+                this.jumpBackWidgets.clear();
+                this.setActiveWidget(null);
                 return true;
             } else {
-                jumpBackWidgets.push(widget);
+                this.jumpBackWidgets.push(widget);
             }
         }
         return false;
     }
 
     public List<EntityAITaskEntry> getRunningTasks() {
-        return taskEntries;
+        return this.taskEntries;
     }
 
     public EntityAIBase getTargetAI() {
-        return curWidgetTargetAI;
+        return this.curWidgetTargetAI;
     }
 
     /**
@@ -290,83 +290,83 @@ public class DroneAIManager implements IVariableProvider {
      */
 
     public void addTask(int par1, EntityAIBase par2EntityAIBase) {
-        taskEntries.add(new EntityAITaskEntry(par1, par2EntityAIBase));
+        this.taskEntries.add(new EntityAITaskEntry(par1, par2EntityAIBase));
     }
 
     /**
      * removes the indicated task from the entity's AI tasks.
      */
     public void removeTask(EntityAIBase par1EntityAIBase) {
-        Iterator iterator = taskEntries.iterator();
+        Iterator iterator = this.taskEntries.iterator();
 
         while (iterator.hasNext()) {
             EntityAITaskEntry entityaitaskentry = (EntityAITaskEntry) iterator.next();
             EntityAIBase entityaibase1 = entityaitaskentry.action;
 
             if (entityaibase1 == par1EntityAIBase) {
-                if (executingTaskEntries.contains(entityaitaskentry)) {
+                if (this.executingTaskEntries.contains(entityaitaskentry)) {
                     entityaibase1.resetTask();
-                    executingTaskEntries.remove(entityaitaskentry);
+                    this.executingTaskEntries.remove(entityaitaskentry);
                 }
 
                 iterator.remove();
             }
         }
     }
-    
+
     private void pickupItemsIfMagnet() {
-        int magnetUpgrades = drone.getUpgrades(ItemRegistry.getInstance().getUpgrade(EnumUpgrade.MAGNET));
+        int magnetUpgrades = this.drone.getUpgrades(ItemRegistry.getInstance().getUpgrade(EnumUpgrade.MAGNET));
         if (magnetUpgrades > 0) {
             int range = Math.min(6, 1 + magnetUpgrades);
-            Vec3d v = drone.getDronePos();
+            Vec3d v = this.drone.getDronePos();
             AxisAlignedBB aabb = new AxisAlignedBB(v.x, v.y, v.z, v.x, v.y, v.z).grow(range);
-            List<EntityItem> items = drone.world().getEntitiesWithinAABB(EntityItem.class, aabb,
+            List<EntityItem> items = this.drone.world().getEntitiesWithinAABB(EntityItem.class, aabb,
                     item -> item != null
                             && item.isEntityAlive()
                             && !item.cannotPickup()
-                            && drone.getDronePos().squareDistanceTo(item.getPositionVector()) <= range * range);
+                            && this.drone.getDronePos().squareDistanceTo(item.getPositionVector()) <= range * range);
 
             for (EntityItem item : items) {
-                DroneEntityAIPickupItems.tryPickupItem(drone, item);
+                DroneEntityAIPickupItems.tryPickupItem(this.drone, item);
             }
         }
     }
 
     public void onUpdateTasks() {
-        pickupItemsIfMagnet();
-        
+        this.pickupItemsIfMagnet();
+
         if (ConfigHandler.advanced.stopDroneAI) return;
-        if (!drone.isAIOverriden()) {
-            if (wasAIOveridden && curWidgetTargetAI != null) drone.getTargetAI().addTask(2, curWidgetTargetAI);
-            wasAIOveridden = false;
+        if (!this.drone.isAIOverriden()) {
+            if (this.wasAIOveridden && this.curWidgetTargetAI != null) this.drone.getTargetAI().addTask(2, this.curWidgetTargetAI);
+            this.wasAIOveridden = false;
             ArrayList<EntityAITaskEntry> arraylist = new ArrayList<>();
             Iterator<EntityAITaskEntry> iterator;
             EntityAITaskEntry entityaitaskentry;
 
-            if (tickCount++ % TICK_RATE == 0) {
-                iterator = taskEntries.iterator();
+            if (this.tickCount++ % TICK_RATE == 0) {
+                iterator = this.taskEntries.iterator();
 
                 while (iterator.hasNext()) {
                     entityaitaskentry = iterator.next();
-                    boolean flag = executingTaskEntries.contains(entityaitaskentry);
+                    boolean flag = this.executingTaskEntries.contains(entityaitaskentry);
 
                     if (flag) {
-                        if (canUse(entityaitaskentry) && canContinue(entityaitaskentry)) {
+                        if (this.canUse(entityaitaskentry) && this.canContinue(entityaitaskentry)) {
                             continue;
                         }
 
                         entityaitaskentry.action.resetTask();
-                        executingTaskEntries.remove(entityaitaskentry);
+                        this.executingTaskEntries.remove(entityaitaskentry);
                     }
 
-                    if (canUse(entityaitaskentry) && entityaitaskentry.action.shouldExecute()) {
+                    if (this.canUse(entityaitaskentry) && entityaitaskentry.action.shouldExecute()) {
                         arraylist.add(entityaitaskentry);
-                        executingTaskEntries.add(entityaitaskentry);
+                        this.executingTaskEntries.add(entityaitaskentry);
                     }
                 }
-                updateWidgetFlow();
+                this.updateWidgetFlow();
             } else {
-                iterator = executingTaskEntries.iterator();
+                iterator = this.executingTaskEntries.iterator();
 
                 while (iterator.hasNext()) {
                     entityaitaskentry = iterator.next();
@@ -378,36 +378,36 @@ public class DroneAIManager implements IVariableProvider {
                 }
             }
 
-            theProfiler.startSection("goalStart");
+            this.theProfiler.startSection("goalStart");
             iterator = arraylist.iterator();
 
             while (iterator.hasNext()) {
                 entityaitaskentry = iterator.next();
-                theProfiler.startSection(entityaitaskentry.action.getClass().getSimpleName());
+                this.theProfiler.startSection(entityaitaskentry.action.getClass().getSimpleName());
                 entityaitaskentry.action.startExecuting();
-                theProfiler.endSection();
+                this.theProfiler.endSection();
             }
 
-            theProfiler.endSection();
-            theProfiler.startSection("goalTick");
-            iterator = executingTaskEntries.iterator();
+            this.theProfiler.endSection();
+            this.theProfiler.startSection("goalTick");
+            iterator = this.executingTaskEntries.iterator();
 
             while (iterator.hasNext()) {
                 entityaitaskentry = iterator.next();
                 entityaitaskentry.action.updateTask();
             }
 
-            theProfiler.endSection();
+            this.theProfiler.endSection();
         } else {//drone charging ai is running
-            if (!wasAIOveridden && curWidgetTargetAI != null) {
-                drone.getTargetAI().removeTask(curWidgetTargetAI);
+            if (!this.wasAIOveridden && this.curWidgetTargetAI != null) {
+                this.drone.getTargetAI().removeTask(this.curWidgetTargetAI);
             }
-            wasAIOveridden = true;
-            for (EntityAITaskEntry ai : executingTaskEntries) {
+            this.wasAIOveridden = true;
+            for (EntityAITaskEntry ai : this.executingTaskEntries) {
                 ai.action.resetTask();
             }
-            executingTaskEntries.clear();
-            drone.setDugBlock(null);
+            this.executingTaskEntries.clear();
+            this.drone.setDugBlock(null);
         }
     }
 
@@ -415,9 +415,9 @@ public class DroneAIManager implements IVariableProvider {
      * Determine if a specific AI Task should continue being executed.
      */
     private boolean canContinue(EntityAITaskEntry par1EntityAITaskEntry) {
-        theProfiler.startSection("canContinue");
+        this.theProfiler.startSection("canContinue");
         boolean flag = par1EntityAITaskEntry.action.shouldContinueExecuting();
-        theProfiler.endSection();
+        this.theProfiler.endSection();
         return flag;
     }
 
@@ -426,23 +426,23 @@ public class DroneAIManager implements IVariableProvider {
      * tasks are compatible with it or all lower priority tasks can be interrupted.
      */
     private boolean canUse(EntityAITaskEntry par1EntityAITaskEntry) {
-        theProfiler.startSection("canUse");
+        this.theProfiler.startSection("canUse");
 
-        for (EntityAITaskEntry entry : taskEntries) {
+        for (EntityAITaskEntry entry : this.taskEntries) {
             if (entry != par1EntityAITaskEntry) {
                 if (par1EntityAITaskEntry.priority >= entry.priority) {
-                    if (executingTaskEntries.contains(entry) && !areTasksCompatible(par1EntityAITaskEntry, entry)) {
-                        theProfiler.endSection();
+                    if (this.executingTaskEntries.contains(entry) && !this.areTasksCompatible(par1EntityAITaskEntry, entry)) {
+                        this.theProfiler.endSection();
                         return false;
                     }
-                } else if (executingTaskEntries.contains(entry) && !entry.action.isInterruptible()) {
-                    theProfiler.endSection();
+                } else if (this.executingTaskEntries.contains(entry) && !entry.action.isInterruptible()) {
+                    this.theProfiler.endSection();
                     return false;
                 }
             }
         }
 
-        theProfiler.endSection();
+        this.theProfiler.endSection();
         return true;
     }
 
@@ -454,15 +454,15 @@ public class DroneAIManager implements IVariableProvider {
     }
 
     public void setLabel(String label) {
-        currentLabel = label;
-        drone.updateLabel();
+        this.currentLabel = label;
+        this.drone.updateLabel();
     }
 
     public String getLabel() {
-        if (curWidgetAI instanceof DroneAIExternalProgram) {
-            return ((DroneAIExternalProgram) curWidgetAI).getRunningAI().getLabel() + " --> " + currentLabel;
+        if (this.curWidgetAI instanceof DroneAIExternalProgram) {
+            return ((DroneAIExternalProgram) this.curWidgetAI).getRunningAI().getLabel() + " --> " + this.currentLabel;
         } else {
-            return currentLabel;
+            return this.currentLabel;
         }
     }
 
@@ -477,8 +477,8 @@ public class DroneAIManager implements IVariableProvider {
         public final int priority;
 
         public EntityAITaskEntry(int par2, EntityAIBase par3EntityAIBase) {
-            priority = par2;
-            action = par3EntityAIBase;
+            this.priority = par2;
+            this.action = par3EntityAIBase;
         }
     }
 

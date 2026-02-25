@@ -22,7 +22,7 @@ public class ContainerProgrammer extends ContainerPneumaticBase<TileEntityProgra
         super(te);
         this.hiRes = hiRes;
 
-        addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, hiRes ? 676 : 326, 15) {
+        this.addSlotToContainer(new SlotItemHandler(te.getPrimaryInventory(), 0, hiRes ? 676 : 326, 15) {
             @Override
             public boolean isItemValid(@Nonnull ItemStack stack) {
                 return isProgrammableItem(stack);
@@ -35,18 +35,18 @@ public class ContainerProgrammer extends ContainerPneumaticBase<TileEntityProgra
         // Add the player's inventory slots to the container
         for (int inventoryRowIndex = 0; inventoryRowIndex < 3; ++inventoryRowIndex) {
             for (int inventoryColumnIndex = 0; inventoryColumnIndex < 9; ++inventoryColumnIndex) {
-                addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, xBase + inventoryColumnIndex * 18, yBase + inventoryRowIndex * 18));
+                this.addSlotToContainer(new Slot(inventoryPlayer, inventoryColumnIndex + inventoryRowIndex * 9 + 9, xBase + inventoryColumnIndex * 18, yBase + inventoryRowIndex * 18));
             }
         }
 
         // Add the player's action bar slots to the container
         for (int actionBarSlotIndex = 0; actionBarSlotIndex < 9; ++actionBarSlotIndex) {
-            addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, xBase + actionBarSlotIndex * 18, yBase + 58));
+            this.addSlotToContainer(new Slot(inventoryPlayer, actionBarSlotIndex, xBase + actionBarSlotIndex * 18, yBase + 58));
         }
     }
 
     public boolean isHiRes() {
-        return hiRes;
+        return this.hiRes;
     }
 
     private static boolean isProgrammableItem(@Nonnull ItemStack stack) {
@@ -56,11 +56,11 @@ public class ContainerProgrammer extends ContainerPneumaticBase<TileEntityProgra
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        if (te.getWorld().getTotalWorldTime() % 20 == 0) {
+        if (this.te.getWorld().getTotalWorldTime() % 20 == 0) {
             for (EnumFacing d : EnumFacing.VALUES) {
-                TileEntity neighbor = te.getWorld().getTileEntity(te.getPos().offset(d));
+                TileEntity neighbor = this.te.getWorld().getTileEntity(this.te.getPos().offset(d));
                 if (neighbor != null && neighbor.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, d.getOpposite())) {
-                    sendToContainerListeners(new PacketSendNBTPacket(neighbor));
+                    this.sendToContainerListeners(new PacketSendNBTPacket(neighbor));
                 }
             }
         }
@@ -70,17 +70,17 @@ public class ContainerProgrammer extends ContainerPneumaticBase<TileEntityProgra
     @Override
     public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int slotIndex) {
         ItemStack stack = ItemStack.EMPTY;
-        Slot srcSlot = inventorySlots.get(slotIndex);
+        Slot srcSlot = this.inventorySlots.get(slotIndex);
 
         if (srcSlot != null && srcSlot.getHasStack()) {
             ItemStack stackInSlot = srcSlot.getStack();
             stack = stackInSlot.copy();
 
             if (slotIndex == 0) {
-                if (!mergeItemStack(stackInSlot, 1, 36, false)) return ItemStack.EMPTY;
+                if (!this.mergeItemStack(stackInSlot, 1, 36, false)) return ItemStack.EMPTY;
                 srcSlot.onSlotChange(stackInSlot, stack);
             } else if (isProgrammableItem(stack)) {
-                if (!mergeItemStack(stackInSlot, 0, 1, false)) return ItemStack.EMPTY;
+                if (!this.mergeItemStack(stackInSlot, 0, 1, false)) return ItemStack.EMPTY;
                 srcSlot.onSlotChange(stackInSlot, stack);
             }
             if (stackInSlot.isEmpty()) {

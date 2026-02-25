@@ -20,9 +20,9 @@ public class LuaConstant extends LuaMethod {
     @Override
     public Object[] call(Object[] args) throws Exception {
         if (args.length == 0) {
-            return new Object[]{constant};
+            return new Object[]{this.constant};
         } else {
-            throw new IllegalArgumentException(getMethodName() + " doesn't take any arguments!");
+            throw new IllegalArgumentException(this.getMethodName() + " doesn't take any arguments!");
         }
     }
 

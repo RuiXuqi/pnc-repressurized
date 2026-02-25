@@ -11,7 +11,7 @@ public class RenderVacuumPump extends AbstractModelRenderer<TileEntityVacuumPump
     private final ModelVacuumPump model;
 
     public RenderVacuumPump() {
-        model = new ModelVacuumPump();
+        this.model = new ModelVacuumPump();
     }
 
     @Override
@@ -24,9 +24,9 @@ public class RenderVacuumPump extends AbstractModelRenderer<TileEntityVacuumPump
         if (te != null) {
             RenderUtils.rotateMatrixByMetadata(te.getBlockMetadata());
             GlStateManager.rotate(-90, 0, 1, 0);
-            model.renderModel(0.0625f, te.oldRotation + (te.rotation - te.oldRotation) * partialTicks);
+            this.model.renderModel(0.0625f, te.oldRotation + (te.rotation - te.oldRotation) * partialTicks);
         } else {
-            model.renderModel(0.0625f, 0);
+            this.model.renderModel(0.0625f, 0);
         }
     }
 }

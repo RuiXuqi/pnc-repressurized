@@ -24,7 +24,7 @@ public class BlockAssemblyPlatform extends BlockPneumaticCraftModeled {
 
     BlockAssemblyPlatform() {
         super(Material.IRON, "assembly_platform");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Nullable

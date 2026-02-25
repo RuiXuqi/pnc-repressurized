@@ -89,7 +89,7 @@ public class JEIExplosionCraftingCategory extends JEISpecialCraftingCategory<JEI
         public List<String> getTooltipStrings(int mouseX, int mouseY) {
             List<String> res = super.getTooltipStrings(mouseX, mouseY);
             if (mouseX >= 63 && mouseX <= 100) {
-                res.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.nei.recipe.explosionCrafting", lossRate), 32));
+                res.addAll(PneumaticCraftUtils.convertStringIntoList(I18n.format("gui.nei.recipe.explosionCrafting", this.lossRate), 32));
             }
             return res;
         }

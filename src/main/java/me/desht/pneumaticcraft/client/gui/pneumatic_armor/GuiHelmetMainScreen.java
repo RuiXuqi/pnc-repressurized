@@ -72,26 +72,26 @@ public class GuiHelmetMainScreen extends GuiPneumaticScreenBase implements IGuiS
     @Override
     public void initGui() {
         super.initGui();
-        buttonList.clear();
-        upgradeOptions.clear();
-        addPages();
-        for (int i = 0; i < upgradeOptions.size(); i++) {
-            GuiButtonSpecial button = new GuiButtonSpecial(100 + i, 210, 20 + i * 22, 120, 20, upgradeOptions.get(i).page.getPageName());
-            button.setRenderStacks(upgradeOptions.get(i).icons);
+        this.buttonList.clear();
+        this.upgradeOptions.clear();
+        this.addPages();
+        for (int i = 0; i < this.upgradeOptions.size(); i++) {
+            GuiButtonSpecial button = new GuiButtonSpecial(100 + i, 210, 20 + i * 22, 120, 20, this.upgradeOptions.get(i).page.getPageName());
+            button.setRenderStacks(this.upgradeOptions.get(i).icons);
             button.setIconPosition(GuiButtonSpecial.IconPosition.RIGHT);
             if (pageNumber == i) button.enabled = false;
-            buttonList.add(button);
+            this.buttonList.add(button);
         }
-        if (pageNumber > upgradeOptions.size() - 1) {
-            pageNumber = upgradeOptions.size() - 1;
+        if (pageNumber > this.upgradeOptions.size() - 1) {
+            pageNumber = this.upgradeOptions.size() - 1;
         }
         GuiKeybindCheckBox checkBox = new GuiKeybindCheckBox(100, 40, 25, 0xFFFFFFFF,
-                I18n.format("gui.enableModule", I18n.format(GuiKeybindCheckBox.UPGRADE_PREFIX + upgradeOptions.get(pageNumber).text)),
-                GuiKeybindCheckBox.UPGRADE_PREFIX + upgradeOptions.get(pageNumber).text);
-        if (upgradeOptions.get(pageNumber).page.canBeTurnedOff()) {
-            addWidget(checkBox);
+                I18n.format("gui.enableModule", I18n.format(GuiKeybindCheckBox.UPGRADE_PREFIX + this.upgradeOptions.get(pageNumber).text)),
+                GuiKeybindCheckBox.UPGRADE_PREFIX + this.upgradeOptions.get(pageNumber).text);
+        if (this.upgradeOptions.get(pageNumber).page.canBeTurnedOff()) {
+            this.addWidget(checkBox);
         }
-        upgradeOptions.get(pageNumber).page.initGui(this);
+        this.upgradeOptions.get(pageNumber).page.initGui(this);
     }
 
     @Override
@@ -103,9 +103,9 @@ public class GuiHelmetMainScreen extends GuiPneumaticScreenBase implements IGuiS
         for (EntityEquipmentSlot slot : UpgradeRenderHandlerList.ARMOR_SLOTS) {
             List<IUpgradeRenderHandler> renderHandlers = UpgradeRenderHandlerList.instance().getHandlersForSlot(slot);
             for (int i = 0; i < renderHandlers.size(); i++) {
-                if (inInitPhase || CommonArmorHandler.getHandlerForPlayer().isUpgradeRendererInserted(slot, i)) {
+                if (this.inInitPhase || CommonArmorHandler.getHandlerForPlayer().isUpgradeRendererInserted(slot, i)) {
                     IUpgradeRenderHandler upgradeRenderHandler = renderHandlers.get(i);
-                    if (inInitPhase
+                    if (this.inInitPhase
                             || ItemPneumaticArmor.isPneumaticArmorPiece(Minecraft.getMinecraft().player, slot)
                             || upgradeRenderHandler instanceof MainHelmetHandler) {
                         IOptionPage optionPage = upgradeRenderHandler.getGuiOptionsPage();
@@ -113,7 +113,7 @@ public class GuiHelmetMainScreen extends GuiPneumaticScreenBase implements IGuiS
                             List<ItemStack> stacks = new ArrayList<>();
                             stacks.add(ARMOR_STACKS[upgradeRenderHandler.getEquipmentSlot().getIndex()]);
                             Arrays.stream(upgradeRenderHandler.getRequiredUpgrades()).map(ItemStack::new).forEach(stacks::add);
-                            upgradeOptions.add(new UpgradeOption(optionPage, upgradeRenderHandler.getUpgradeName(), stacks.toArray(new ItemStack[0])));
+                            this.upgradeOptions.add(new UpgradeOption(optionPage, upgradeRenderHandler.getUpgradeName(), stacks.toArray(new ItemStack[0])));
                         }
                     }
                 }
@@ -123,11 +123,12 @@ public class GuiHelmetMainScreen extends GuiPneumaticScreenBase implements IGuiS
 
     @Override
     public void drawScreen(int x, int y, float partialTicks) {
-        drawDefaultBackground();
-        IOptionPage optionPage = upgradeOptions.get(pageNumber).page;
+        this.drawDefaultBackground();
+        IOptionPage optionPage = this.upgradeOptions.get(pageNumber).page;
         optionPage.drawPreButtons(x, y, partialTicks);
-        drawCenteredString(fontRenderer, TITLE_PREFIX + upgradeOptions.get(pageNumber).page.getPageName(), 100, 12, 0xFFFFFFFF);
-        if (optionPage.displaySettingsText()) drawCenteredString(fontRenderer, "Settings", 100, optionPage.settingsYposition(), 0xFFFFFFFF);
+        this.drawCenteredString(this.fontRenderer, TITLE_PREFIX + this.upgradeOptions.get(pageNumber).page.getPageName(), 100, 12, 0xFFFFFFFF);
+        if (optionPage.displaySettingsText())
+            this.drawCenteredString(this.fontRenderer, "Settings", 100, optionPage.settingsYposition(), 0xFFFFFFFF);
         super.drawScreen(x, y, partialTicks);
         optionPage.drawScreen(x, y, partialTicks);
     }
@@ -135,46 +136,46 @@ public class GuiHelmetMainScreen extends GuiPneumaticScreenBase implements IGuiS
     @Override
     public void updateScreen() {
         super.updateScreen();
-        IOptionPage optionPage = upgradeOptions.get(pageNumber).page;
+        IOptionPage optionPage = this.upgradeOptions.get(pageNumber).page;
         optionPage.updateScreen();
     }
 
     @Override
     public void keyTyped(char par1, int par2) throws IOException {
         super.keyTyped(par1, par2);
-        upgradeOptions.get(pageNumber).page.keyTyped(par1, par2);
+        this.upgradeOptions.get(pageNumber).page.keyTyped(par1, par2);
     }
 
     @Override
     public void actionPerformed(GuiButton button) {
-        if (button.id >= 100 && button.id < 100 + upgradeOptions.size()) {
+        if (button.id >= 100 && button.id < 100 + this.upgradeOptions.size()) {
             pageNumber = button.id - 100;
-            initGui();
+            this.initGui();
         } else {
-            upgradeOptions.get(pageNumber).page.actionPerformed(button);
+            this.upgradeOptions.get(pageNumber).page.actionPerformed(button);
         }
     }
 
     @Override
     public void handleMouseInput() throws IOException {
         super.handleMouseInput();
-        upgradeOptions.get(pageNumber).page.handleMouseInput();
+        this.upgradeOptions.get(pageNumber).page.handleMouseInput();
     }
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int par3) throws IOException {
         super.mouseClicked(mouseX, mouseY, par3);
-        upgradeOptions.get(pageNumber).page.mouseClicked(mouseX, mouseY, par3);
+        this.upgradeOptions.get(pageNumber).page.mouseClicked(mouseX, mouseY, par3);
     }
 
     @Override
     public List getButtonList() {
-        return buttonList;
+        return this.buttonList;
     }
 
     @Override
     public FontRenderer getFontRenderer() {
-        return fontRenderer;
+        return this.fontRenderer;
     }
 
     @Override

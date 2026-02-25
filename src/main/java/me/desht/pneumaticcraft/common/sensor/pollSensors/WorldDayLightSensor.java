@@ -51,7 +51,7 @@ public class WorldDayLightSensor implements IPollSensorSetting {
 
     @Override
     public int getRedstoneValue(World world, BlockPos pos, int sensorRange, String textBoxText) {
-        return updatePower(world, pos);
+        return this.updatePower(world, pos);
     }
 
     private int updatePower(World worldIn, BlockPos pos) {

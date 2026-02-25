@@ -38,7 +38,7 @@ public class BlockSecurityStation extends BlockPneumaticCraftModeled {
 
     BlockSecurityStation() {
         super(Material.IRON, "security_station");
-        setBlockBounds(BLOCK_BOUNDS);
+        this.setBlockBounds(BLOCK_BOUNDS);
     }
 
     @Nullable
@@ -82,7 +82,7 @@ public class BlockSecurityStation extends BlockPneumaticCraftModeled {
                         player.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "This Security Station is out of order: Its network hasn't been properly configured."), false);
                     } else if (te.hasPlayerHacked(player)) {
                         player.sendStatusMessage(new TextComponentString(TextFormatting.GREEN + "You've already hacked this Security Station!"), false);
-                    } else if (getPlayerHackLevel(player) < te.getSecurityLevel()) {
+                    } else if (this.getPlayerHackLevel(player) < te.getSecurityLevel()) {
                         player.sendStatusMessage(new TextComponentString(TextFormatting.RED + "You can't access or hack this Security Station. To hack it you need at least a Pneumatic Helmet upgraded with " + te.getSecurityLevel() + " Security upgrade(s)."), false);
                     } else {
                         player.openGui(PneumaticCraftRepressurized.instance, EnumGuiId.HACKING.ordinal(), world, pos.getX(), pos.getY(), pos.getZ());

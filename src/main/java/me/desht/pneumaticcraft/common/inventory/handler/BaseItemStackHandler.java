@@ -25,12 +25,12 @@ public class BaseItemStackHandler extends ItemStackHandler {
     @Override
     protected void onContentsChanged(int slot) {
         super.onContentsChanged(slot);
-        if (te != null) te.markDirty();
+        if (this.te != null) this.te.markDirty();
     }
 
     @Nonnull
     @Override
     public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        return isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
+        return this.isItemValid(slot, stack) ? super.insertItem(slot, stack, simulate) : stack;
     }
 }

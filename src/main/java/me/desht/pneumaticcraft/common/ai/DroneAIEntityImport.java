@@ -14,13 +14,13 @@ public class DroneAIEntityImport extends DroneEntityBase<IProgWidget, Entity> {
 
     @Override
     protected boolean isEntityValid(Entity entity) {
-        return drone.getCarryingEntities().isEmpty() &&
+        return this.drone.getCarryingEntities().isEmpty() &&
                 (entity instanceof EntityLivingBase || entity instanceof EntityMinecart || entity instanceof EntityBoat);
     }
 
     @Override
     protected boolean doAction() {
-        drone.setCarryingEntity(targetedEntity);
+        this.drone.setCarryingEntity(this.targetedEntity);
         return false;
     }
 

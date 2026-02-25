@@ -34,7 +34,7 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     private boolean invert = false;
     private int otherColor = 0;   // for advanced modules
     private int constantVal = 0;  // for advanced modules
-    private byte[] prevLevels = new byte[16];
+    private final byte[] prevLevels = new byte[16];
 
     // for client-side rendering the redstone connector
     public float extension = 1.0f;
@@ -57,7 +57,7 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
 
     @Override
     public void onNeighborBlockUpdate() {
-        updateInputLevel();
+        this.updateInputLevel();
     }
 
     @Override
@@ -74,11 +74,11 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     public void update() {
         super.update();
 
-        if (!pressureTube.world().isRemote) {
+        if (!this.pressureTube.world().isRemote) {
             byte[] levels = new byte[16];
 
-            if (redstoneDirection == EnumRedstoneDirection.OUTPUT) {
-                for (TubeModule module : ModuleNetworkManager.getInstance(getTube().world()).getConnectedModules(this)) {
+            if (this.redstoneDirection == EnumRedstoneDirection.OUTPUT) {
+                for (TubeModule module : ModuleNetworkManager.getInstance(this.getTube().world()).getConnectedModules(this)) {
                     if (module instanceof ModuleRedstone) {
                         ModuleRedstone mr = (ModuleRedstone) module;
                         if (mr.getRedstoneDirection() == EnumRedstoneDirection.INPUT && mr.getInputLevel() > levels[mr.getColorChannel()])
@@ -86,30 +86,30 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
                     }
                 }
 
-                int out = computeOutputSignal(outputLevel, levels);
-                if (invert) out = out > 0 ? 0 : 15;
-                if (setOutputLevel(out)) {
-                    NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), getTube().world());
+                int out = this.computeOutputSignal(this.outputLevel, levels);
+                if (this.invert) out = out > 0 ? 0 : 15;
+                if (this.setOutputLevel(out)) {
+                    NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), this.getTube().world());
                 }
             } else {
-                if (inputLevel < 0) updateInputLevel();  // first update
+                if (this.inputLevel < 0) this.updateInputLevel();  // first update
             }
-            System.arraycopy(levels, 0, prevLevels, 0, 16);
+            System.arraycopy(levels, 0, this.prevLevels, 0, 16);
         } else {
-            lastExtension = extension;
-            if (redstoneDirection == EnumRedstoneDirection.OUTPUT) {
-                extension = Math.min(1.0f, extension + 0.125f);
+            this.lastExtension = this.extension;
+            if (this.redstoneDirection == EnumRedstoneDirection.OUTPUT) {
+                this.extension = Math.min(1.0f, this.extension + 0.125f);
             } else {
-                extension = Math.max(0.0f, extension - 0.125f);
+                this.extension = Math.max(0.0f, this.extension - 0.125f);
             }
         }
     }
 
     private int computeOutputSignal(int lastOutput, byte[] levels) {
-        byte s1 = levels[getColorChannel()];
-        byte s2 = levels[otherColor];
+        byte s1 = levels[this.getColorChannel()];
+        byte s2 = levels[this.otherColor];
 
-        switch (operation) {
+        switch (this.operation) {
             case PASSTHROUGH:
                 return s1;
             case AND:
@@ -123,21 +123,21 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
             case SUBTRACT:
                 return MathHelper.clamp(s1 - s2, 0, 15);
             case COMPARE:
-                return s1 > constantVal ? 15 : 0;
+                return s1 > this.constantVal ? 15 : 0;
             case CLOCK:
-                return s1 == 0 && getTube().world().getTotalWorldTime() % constantVal < 2 ? 15 : 0;
+                return s1 == 0 && this.getTube().world().getTotalWorldTime() % this.constantVal < 2 ? 15 : 0;
             case TOGGLE:
-                if (s1 > prevLevels[getColorChannel()]) {
+                if (s1 > this.prevLevels[this.getColorChannel()]) {
                     return lastOutput > 0 ? 0 : 15;
                 } else {
                     return lastOutput;
                 }
             case CONSTANT:
-                return MathHelper.clamp(constantVal, 0, 15);
+                return MathHelper.clamp(this.constantVal, 0, 15);
             case COUNTER:
-                if (s1 > prevLevels[getColorChannel()]) {
+                if (s1 > this.prevLevels[this.getColorChannel()]) {
                     lastOutput++;
-                    return lastOutput > Math.min(15, constantVal) ? 0 : lastOutput;
+                    return lastOutput > Math.min(15, this.constantVal) ? 0 : lastOutput;
                 } else {
                     return lastOutput;
                 }
@@ -150,38 +150,38 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     public void writeToNBT(NBTTagCompound tag) {
         super.writeToNBT(tag);
 
-        tag.setBoolean("input", redstoneDirection == EnumRedstoneDirection.INPUT);
-        tag.setByte("channel", (byte) colorChannel);
-        tag.setByte("outputLevel", (byte) outputLevel);
-        tag.setString("op", operation.toString());
-        tag.setByte("color2", (byte) otherColor);
-        tag.setByte("const", (byte) constantVal);
-        tag.setBoolean("invert", invert);
-        tag.setLong("prevLevels", encodeLevels(prevLevels));
+        tag.setBoolean("input", this.redstoneDirection == EnumRedstoneDirection.INPUT);
+        tag.setByte("channel", (byte) this.colorChannel);
+        tag.setByte("outputLevel", (byte) this.outputLevel);
+        tag.setString("op", this.operation.toString());
+        tag.setByte("color2", (byte) this.otherColor);
+        tag.setByte("const", (byte) this.constantVal);
+        tag.setBoolean("invert", this.invert);
+        tag.setLong("prevLevels", this.encodeLevels(this.prevLevels));
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         super.readFromNBT(tag);
 
-        redstoneDirection = tag.getBoolean("input") ? EnumRedstoneDirection.INPUT : EnumRedstoneDirection.OUTPUT;
-        colorChannel = tag.getByte("channel");
-        outputLevel = tag.getByte("outputLevel"); // for sync'ing to clients on login
+        this.redstoneDirection = tag.getBoolean("input") ? EnumRedstoneDirection.INPUT : EnumRedstoneDirection.OUTPUT;
+        this.colorChannel = tag.getByte("channel");
+        this.outputLevel = tag.getByte("outputLevel"); // for sync'ing to clients on login
         try {
-            operation = tag.hasKey("op") ? Operation.valueOf(tag.getString("op")) : Operation.PASSTHROUGH;
+            this.operation = tag.hasKey("op") ? Operation.valueOf(tag.getString("op")) : Operation.PASSTHROUGH;
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            operation = Operation.PASSTHROUGH;
+            this.operation = Operation.PASSTHROUGH;
         }
-        otherColor = tag.getByte("color2");
-        constantVal = tag.getByte("const");
-        invert = tag.getBoolean("invert");
-        decodeLevels(tag.getLong("prevLevels"), prevLevels);
+        this.otherColor = tag.getByte("color2");
+        this.constantVal = tag.getByte("const");
+        this.invert = tag.getBoolean("invert");
+        this.decodeLevels(tag.getLong("prevLevels"), this.prevLevels);
     }
 
     private long encodeLevels(byte[] l) {
         return IntStream.range(0, l.length)
-                .mapToLong(i -> l[i] << 4 * i)
+                .mapToLong(i -> (long) l[i] << 4 * i)
                 .reduce(0, (a, b) -> a | b);
     }
 
@@ -192,7 +192,7 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     }
 
     public EnumRedstoneDirection getRedstoneDirection() {
-        return redstoneDirection;
+        return this.redstoneDirection;
     }
 
     public void setRedstoneDirection(EnumRedstoneDirection redstoneDirection) {
@@ -201,14 +201,14 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
 
     @Override
     public int getRedstoneLevel() {
-        return redstoneDirection == EnumRedstoneDirection.OUTPUT ? outputLevel : 0;
+        return this.redstoneDirection == EnumRedstoneDirection.OUTPUT ? this.outputLevel : 0;
     }
 
     public boolean setOutputLevel(int level) {
         level = MathHelper.clamp(level, 0, 15);
-        if (level != outputLevel) {
-            outputLevel = level;
-            updateNeighbors();
+        if (level != this.outputLevel) {
+            this.outputLevel = level;
+            this.updateNeighbors();
             return true;
         } else {
             return false;
@@ -216,17 +216,17 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     }
 
     public int getInputLevel() {
-        return inputLevel;
+        return this.inputLevel;
     }
 
     // for clientside use
     public void setInputLevel(int level) {
-        inputLevel = level;
+        this.inputLevel = level;
     }
 
     @Override
     public int getColorChannel() {
-        return colorChannel;
+        return this.colorChannel;
     }
 
     @Override
@@ -235,7 +235,7 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     }
 
     public boolean isInvert() {
-        return invert;
+        return this.invert;
     }
 
     public void setInvert(boolean invert) {
@@ -245,24 +245,24 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
     @Override
     public void addInfo(List<String> curInfo) {
         super.addInfo(curInfo);
-        if (getRedstoneDirection() == EnumRedstoneDirection.INPUT) {
-            curInfo.add("Receiving Redstone: " + TextFormatting.YELLOW + inputLevel);
+        if (this.getRedstoneDirection() == EnumRedstoneDirection.INPUT) {
+            curInfo.add("Receiving Redstone: " + TextFormatting.YELLOW + this.inputLevel);
         } else {
-            curInfo.add("Emitting Redstone: " + TextFormatting.YELLOW + outputLevel);
-            if (upgraded) addAdvancedInfo(curInfo);
+            curInfo.add("Emitting Redstone: " + TextFormatting.YELLOW + this.outputLevel);
+            if (this.upgraded) this.addAdvancedInfo(curInfo);
         }
     }
 
     private void addAdvancedInfo(List<String> curInfo) {
-        String s = "Operation: " + TextFormatting.YELLOW + PneumaticCraftUtils.xlate(operation.getTranslationKey()) + " ";
-        if (operation.useOtherColor) {
-            s += "(" + PneumaticCraftUtils.dyeColorDesc(otherColor) + ")";
+        String s = "Operation: " + TextFormatting.YELLOW + PneumaticCraftUtils.xlate(this.operation.getTranslationKey()) + " ";
+        if (this.operation.useOtherColor) {
+            s += "(" + PneumaticCraftUtils.dyeColorDesc(this.otherColor) + ")";
         }
-        if (operation.useConst) {
-            s += "(" + constantVal + ")";
+        if (this.operation.useConst) {
+            s += "(" + this.constantVal + ")";
         }
         curInfo.add(s);
-        curInfo.add("Output inverted: " + TextFormatting.YELLOW + (invert ? "Yes" : "No"));
+        curInfo.add("Output inverted: " + TextFormatting.YELLOW + (this.invert ? "Yes" : "No"));
     }
 
     @Override
@@ -270,46 +270,46 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
         ItemStack heldStack = player.getHeldItem(hand);
         OptionalInt colorIndex = DyeUtils.dyeDamageFromStack(heldStack);
         if (colorIndex.isPresent()) {
-            setColorChannel(colorIndex.getAsInt());
+            this.setColorChannel(colorIndex.getAsInt());
             if (ConfigHandler.general.useUpDyesWhenColoring && !player.capabilities.isCreativeMode) {
                 heldStack.shrink(1);
             }
             return true;
         } else if (heldStack.getItem() instanceof ItemPneumaticWrench || ModdedWrenchUtils.getInstance().isModdedWrench(heldStack)) {
-            redstoneDirection = redstoneDirection == EnumRedstoneDirection.INPUT ? EnumRedstoneDirection.OUTPUT : EnumRedstoneDirection.INPUT;
-            updateNeighbors();
-            if (!updateInputLevel()) {
-                NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), getTube().world());
+            this.redstoneDirection = this.redstoneDirection == EnumRedstoneDirection.INPUT ? EnumRedstoneDirection.OUTPUT : EnumRedstoneDirection.INPUT;
+            this.updateNeighbors();
+            if (!this.updateInputLevel()) {
+                NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), this.getTube().world());
             }
             return true;
-        } else if (!getTube().world().isRemote && upgraded && getRedstoneDirection() == EnumRedstoneDirection.OUTPUT) {
-            NetworkHandler.sendTo(new PacketOpenTubeModuleGui(getGuiId().ordinal(), pressureTube.pos()), (EntityPlayerMP) player);
+        } else if (!this.getTube().world().isRemote && this.upgraded && this.getRedstoneDirection() == EnumRedstoneDirection.OUTPUT) {
+            NetworkHandler.sendTo(new PacketOpenTubeModuleGui(this.getGuiId().ordinal(), this.pressureTube.pos()), (EntityPlayerMP) player);
             return true;
         }
         return false;
     }
 
     private boolean updateInputLevel() {
-        int newInputLevel = redstoneDirection == EnumRedstoneDirection.INPUT ?
-                pressureTube.world().getRedstonePower(pressureTube.pos().offset(getDirection()), getDirection()) : 0;
-        if (newInputLevel != inputLevel) {
-            inputLevel = newInputLevel;
-            NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), getTube().world());
+        int newInputLevel = this.redstoneDirection == EnumRedstoneDirection.INPUT ?
+                this.pressureTube.world().getRedstonePower(this.pressureTube.pos().offset(this.getDirection()), this.getDirection()) : 0;
+        if (newInputLevel != this.inputLevel) {
+            this.inputLevel = newInputLevel;
+            NetworkHandler.sendToAllAround(new PacketSyncRedstoneModuleToClient(this), this.getTube().world());
             return true;
         }
         return false;
     }
 
     public Operation getOperation() {
-        return operation;
+        return this.operation;
     }
 
     public int getOtherColor() {
-        return otherColor;
+        return this.otherColor;
     }
 
     public int getConstantVal() {
-        return constantVal;
+        return this.constantVal;
     }
 
     public void setOperation(Operation operation, int otherColor, int constantVal) {
@@ -351,11 +351,11 @@ public class ModuleRedstone extends TubeModule implements INetworkedModule {
         }
 
         public boolean useOtherColor() {
-            return useOtherColor;
+            return this.useOtherColor;
         }
 
         public boolean useConst() {
-            return useConst;
+            return this.useConst;
         }
     }
 }

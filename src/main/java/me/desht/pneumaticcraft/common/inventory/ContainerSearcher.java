@@ -21,12 +21,12 @@ public class ContainerSearcher extends Container {
         this.gui = gui;
         for (int i = 0; i < SEARCH_ROWS; ++i) {
             for (int j = 0; j < SEARCH_COLS; ++j) {
-                addSlotToContainer(new SlotItemHandler(gui.getInventory(), i * SEARCH_COLS + j, SEARCH_COLS + j * 18, 52 + i * 18));
+                this.addSlotToContainer(new SlotItemHandler(gui.getInventory(), i * SEARCH_COLS + j, SEARCH_COLS + j * 18, 52 + i * 18));
             }
         }
 
-        addSlotToContainer(new SlotItemHandler(gui.getInventory(), 48, 124, 25));
-        scrollTo(0.0F);
+        this.addSlotToContainer(new SlotItemHandler(gui.getInventory(), 48, 124, 25));
+        this.scrollTo(0.0F);
     }
 
     @Override
@@ -36,23 +36,24 @@ public class ContainerSearcher extends Container {
 
     /**
      * Updates the gui slots ItemStack's based on scroll position.
+     *
      * @param scrollPos scroll position, the range 0.0 - 1.0
      */
     public void scrollTo(float scrollPos) {
-        int i = itemList.size() / SEARCH_COLS - SEARCH_ROWS + 1;
+        int i = this.itemList.size() / SEARCH_COLS - SEARCH_ROWS + 1;
         int j = Math.max(0, (int) (scrollPos * i + 0.5D));
 
         for (int k = 0; k < SEARCH_ROWS; ++k) {
             for (int l = 0; l < SEARCH_COLS; ++l) {
                 int idx = l + (k + j) * SEARCH_COLS;
-                ItemStack stack = idx >= 0 && idx < itemList.size() ? itemList.get(idx) : ItemStack.EMPTY;
-                gui.getInventory().setStackInSlot(l + k * SEARCH_COLS, stack);
+                ItemStack stack = idx >= 0 && idx < this.itemList.size() ? this.itemList.get(idx) : ItemStack.EMPTY;
+                this.gui.getInventory().setStackInSlot(l + k * SEARCH_COLS, stack);
             }
         }
     }
 
     public boolean hasMoreThan1PageOfItemsInList() {
-        return itemList.size() > SEARCH_COLS * SEARCH_ROWS;
+        return this.itemList.size() > SEARCH_COLS * SEARCH_ROWS;
     }
 
     /**

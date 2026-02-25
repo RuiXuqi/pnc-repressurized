@@ -24,8 +24,8 @@ public class ClientUtils {
      * Emit particles from just above the given blockpos, which is generally a machine or similar.
      * Only call this clientside.
      *
-     * @param world the world
-     * @param pos the block pos
+     * @param world    the world
+     * @param pos      the block pos
      * @param particle the particle type
      */
     public static void emitParticles(World world, BlockPos pos, EnumParticleTypes particle) {
@@ -47,7 +47,7 @@ public class ClientUtils {
         List<BakedQuad> quads = model.getQuads(state, face, 0L);
         if (!quads.isEmpty()) {
             TextureAtlasSprite sprite = quads.get(0).getSprite();
-            return new double[] { sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV() };
+            return new double[]{sprite.getMinU(), sprite.getMinV(), sprite.getMaxU(), sprite.getMaxV()};
         } else {
             return null;
         }

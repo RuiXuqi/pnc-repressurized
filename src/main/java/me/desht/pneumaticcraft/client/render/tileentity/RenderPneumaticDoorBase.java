@@ -10,7 +10,7 @@ public class RenderPneumaticDoorBase extends AbstractModelRenderer<TileEntityPne
     private final ModelDoorBase model;
 
     public RenderPneumaticDoorBase() {
-        model = new ModelDoorBase();
+        this.model = new ModelDoorBase();
     }
 
     @Override
@@ -22,9 +22,9 @@ public class RenderPneumaticDoorBase extends AbstractModelRenderer<TileEntityPne
     void renderModel(TileEntityPneumaticDoorBase te, float partialTicks) {
         if (te != null) {
             RenderUtils.rotateMatrixByMetadata(te.getRotation().ordinal());
-            model.renderModel(0.0625f, te.oldProgress + (te.progress - te.oldProgress) * partialTicks, te.rightGoing);
+            this.model.renderModel(0.0625f, te.oldProgress + (te.progress - te.oldProgress) * partialTicks, te.rightGoing);
         } else {
-            model.renderModel(0.0625f, 1, false);
+            this.model.renderModel(0.0625f, 1, false);
         }
     }
 }

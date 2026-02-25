@@ -26,20 +26,20 @@ public class ProcessorPressureChamber implements IComponentProcessor {
 
     @Override
     public String process(String s) {
-        if (recipe == null) return null;
+        if (this.recipe == null) return null;
 
         if (s.startsWith("input")) {
             int index = Integer.parseInt(s.substring(5)) - 1;
-            if (index >= 0 && index < recipe.getInput().size()) {
-                return ItemStackUtil.serializeStack(recipe.getInput().get(index).getSingleStack());
+            if (index >= 0 && index < this.recipe.getInput().size()) {
+                return ItemStackUtil.serializeStack(this.recipe.getInput().get(index).getSingleStack());
             }
         } else if (s.startsWith("output")) {
             int index = Integer.parseInt(s.substring(6)) - 1;
-            if (index >= 0 && index < recipe.getResult().size()) {
-                return ItemStackUtil.serializeStack(recipe.getResult().get(index));
+            if (index >= 0 && index < this.recipe.getResult().size()) {
+                return ItemStackUtil.serializeStack(this.recipe.getResult().get(index));
             }
         } else if (s.equals("pressure")) {
-            return String.format("Required pressure: %.1f bar", recipe.getCraftingPressure());
+            return String.format("Required pressure: %.1f bar", this.recipe.getCraftingPressure());
         }
 
         return null;
