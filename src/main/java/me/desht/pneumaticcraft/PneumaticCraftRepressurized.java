@@ -62,14 +62,15 @@ import org.apache.logging.log4j.Logger;
 
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
-@Mod(modid = Names.MOD_ID, name = Names.MOD_NAME, version = PneumaticCraftRepressurized.MODVERSION,
+@Mod(
+        modid = Names.MOD_ID,
+        name = Names.MOD_NAME,
+        version = Tags.VERSION,
         dependencies = "required-after:forge@[14.23.5.2768,);after:forestry;after:igwmod@[1.4.2-11,);after:thaumcraft;after:computercraft;after:appliedenergistics2@[rv6,];after:jei@[4.12.0,)",
-        updateJSON = "https://raw.github.com/TeamPneumatic/pnc-repressurized/master/release_info.json",
-        acceptedMinecraftVersions = "1.12"
+        acceptedMinecraftVersions = "1.12",
+        customProperties = @Mod.CustomProperty(k = "license", v = "GPL3")
 )
 public class PneumaticCraftRepressurized {
-    public static final String MODVERSION = "@VERSION@";
-
     @SidedProxy(clientSide = "me.desht.pneumaticcraft.proxy.ClientProxy", serverSide = "me.desht.pneumaticcraft.proxy.ServerProxy")
     public static IProxy proxy;
 

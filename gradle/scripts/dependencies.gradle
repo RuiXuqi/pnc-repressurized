@@ -1,0 +1,121 @@
+apply from: 'gradle/scripts/helpers.gradle'
+
+repositories {
+    flatDir {
+        dirs('libs') // /libs
+    }
+    // Other repositories described by default:
+    // CleanroomMC: https://maven.cleanroommc.com
+    maven {
+        name 'CurseMaven'
+        url 'https://curse.cleanroommc.com'
+    }
+    maven {
+        name 'Modrinth'
+        url 'https://api.modrinth.com/maven'
+    }
+    maven {
+        name 'CoFH Maven'
+        url 'https://maven.covers1624.net'
+    }
+    maven {
+        name 'JEI'
+        url 'https://dvs1.progwml6.com/files/maven'
+    }
+//    maven {
+//        name 'OpenComputers'
+//        url 'https://maven.cil.li/'
+//    }
+    maven { // TOP
+        name 'tterrag maven'
+        url 'https://maven.tterrag.com/'
+    }
+    maven {
+        name 'BlameJared - Crafttweaker/Patchouli'
+        url 'https://maven.blamejared.com/'
+    }
+    maven {
+        name 'Mod maven'
+        url 'https://modmaven.dev/'
+    }
+    maven {
+        name 'ic2'
+        url 'https://maven.ic2.player.to/'
+    }
+    maven { // Baubles
+        name 'thiakil'
+        url 'https://maven.thiakil.com'
+    }
+    mavenLocal() // Must be last for caching to work
+}
+
+dependencies {
+    // Include StripLatestForgeRequirements by default for the dev env, saves everyone a hassle
+    runtimeOnly 'com.cleanroommc:strip-latest-forge-requirements:1.0'
+    // Include OSXNarratorBlocker by default for the dev env, for M1+ Macs
+    runtimeOnly 'com.cleanroommc:osxnarratorblocker:1.0'
+
+    // Example - Dependency descriptor:
+    // 'com.google.code.gson:gson:2.8.6' << group: com.google.code.gson, name:gson, version:2.8.6
+    // 'group:name:version:classifier' where classifier is optional
+
+    // Example - Deobfuscating dependencies:
+    // rfg.deobf('curse.maven:had-enough-items-557549:4543375')
+    // By wrapping a dependency descriptor in rfg.deobf() method call, the dependency is queued for deobfuscation
+    // When deobfuscating, RFG respects the mapping_channel + mapping_version stated in gradle.properties
+
+    // Example - CurseMaven dependencies:
+    // 'curse.maven:had-enough-items-557549:4543375' << had-enough-items = project slug, 557549 = project id, 4543375 = file id
+    // Full documentation: https://cursemaven.com/
+
+    // Example - Modrinth dependencies:
+    // 'maven.modrinth:jei:4.16.1.1000' << jei = project name, 4.16.1.1000 = file version
+    // Full documentation: https://docs.modrinth.com/docs/tutorials/maven/
+
+    // Example - Local dependencies:
+    // 'libs:ctm-1.2.1; << libs = folder name (/libs) in flatDir, ctm-1.2.1 = file name (ctm-1.2.1.jar)
+
+    // Common dependency types (configuration):
+    // implementation = dependency available at both compile time and runtime
+    // runtimeOnly = runtime dependency
+    // compileOnly = compile time dependency
+    // annotationProcessor = annotation processing dependencies
+    // embed = bundle dependencies into final output artifact (no relocation)
+
+    // Transitive dependencies:
+    // (Dependencies that your dependency depends on)
+    // If you wish to exclude transitive dependencies in the described dependencies
+    // Use a closure as such:
+    // implementation ('com.google.code.gson:gson:2.8.6') {
+    //     transitive = false
+    // }
+
+    compileOnly 'MCMultiPart2:MCMultiPart:2.5.3'
+    compileOnly 'dan200.computercraft:ComputerCraft:1.80pr1'
+    compileOnly 'CraftTweaker2:CraftTweaker2-API:4.1.20.711'
+    compileOnly 'CraftTweaker2:CraftTweaker2-MC1120-Main:1.12-4.1.20.711'
+    compileOnly 'igwmod:IGW-Mod-1.12.2:1.4.4-15:universal'
+    compileOnly 'net.industrial-craft:industrialcraft-2:2.8.222-ex112:api'
+    compileOnly 'team.chisel.ctm:CTM:MC1.12.2-1.0.2.31:api'
+    compileOnly 'vazkii.botania:Botania:r1.10-364.4'
+    compileOnly 'vazkii.patchouli:Patchouli:1.0-23.6'
+    compileOnly 'com.azanor.baubles:Baubles:1.12-1.5.2'
+
+    compileOnly 'libs:OpenComputers:MC1.12.2-1.8.9+61e1ccd:api'
+
+    compileOnly rfg.deobf('curse.maven:applied-energistics-2-223794:2747063')
+    compileOnly rfg.deobf('curse.maven:cofh-core-69162:2920433')
+    compileOnly rfg.deobf('curse.maven:immersive-engineering-231951:2974106')
+    compileOnly rfg.deobf('curse.maven:mekanism-268560:2835176')
+    compileOnly rfg.deobf('curse.maven:redstone-flux-270789:2920436')
+    compileOnly rfg.deobf('curse.maven:thaumcraft-223628:2629023')
+    compileOnly rfg.deobf('curse.maven:tough-as-nails-246391:2661865')
+
+    implementation 'mezz:jei:4.29.15'
+    implementation 'libs:Hwyla:1.8.26-B41_1.12.2'
+    implementation rfg.deobf('curse.maven:the-one-probe-community-edition-885670:7129885')
+
+    runtimeOnly 'curse.maven:bilingualname-417557:5797200'
+    runtimeOnly 'curse.maven:had-enough-characters-640802:4874506'
+    runtimeOnly 'curse.maven:just-enough-characters-250702:4692184'
+}
