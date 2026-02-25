@@ -38,7 +38,6 @@ import me.desht.pneumaticcraft.common.util.Reflections;
 import me.desht.pneumaticcraft.common.worldgen.WorldGeneratorPneumaticCraft;
 import me.desht.pneumaticcraft.lib.Log;
 import me.desht.pneumaticcraft.lib.Names;
-import me.desht.pneumaticcraft.lib.Versions;
 import me.desht.pneumaticcraft.proxy.IProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
@@ -89,8 +88,6 @@ public class PneumaticCraftRepressurized {
     @EventHandler
     public void onPreInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
-
-        event.getModMetadata().version = Versions.fullVersionString();
 
         Reflections.init();
         PneumaticRegistry.init(PneumaticCraftAPIHandler.getInstance());
