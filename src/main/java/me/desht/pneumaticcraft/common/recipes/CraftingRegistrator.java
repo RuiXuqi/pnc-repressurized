@@ -30,7 +30,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 public class CraftingRegistrator {
     @GameRegistry.ObjectHolder("theoneprobe:probe")
-    public static final Item ONE_PROBE = null;
+    public static final Item ONE_PROBE = Items.AIR;
 
     private static ItemStack emptyPCB;
 

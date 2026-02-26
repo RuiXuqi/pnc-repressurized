@@ -80,6 +80,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Quaternion;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
@@ -178,21 +179,21 @@ public class ClientEventHandler {
     }
 
     @SubscribeEvent
-    public void onLivingRender(RenderLivingEvent.Pre event) {
+    public void onLivingRender(RenderLivingEvent.Pre<? extends EntityLivingBase> event) {
         this.setRenderHead(event.getEntity(), false);
     }
 
     @SubscribeEvent
-    public void onLivingRender(RenderLivingEvent.Post event) {
+    public void onLivingRender(RenderLivingEvent.Post<? extends EntityLivingBase> event) {
         this.setRenderHead(event.getEntity(), true);
     }
 
     private void setRenderHead(EntityLivingBase entity, boolean setRender) {
         if (entity.getItemStackFromSlot(EntityEquipmentSlot.HEAD).getItem() == Itemss.PNEUMATIC_HELMET
                 && (ConfigHandler.client.useHelmetModel || DateEventHandler.isIronManEvent())) {
-            Render renderer = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);
-            if (renderer instanceof RenderBiped) {
-                ModelBiped modelBiped = (ModelBiped) ((RenderBiped) renderer).getMainModel();
+            Render<EntityLivingBase> renderer = Minecraft.getMinecraft().getRenderManager().getEntityRenderObject(entity);
+            if (renderer instanceof RenderBiped<?> renderBiped) {
+                ModelBiped modelBiped = (ModelBiped) renderBiped.getMainModel();
                 modelBiped.bipedHead.showModel = setRender;
             }
         }
@@ -430,8 +431,9 @@ public class ClientEventHandler {
         ModelLoader.setCustomStateMapper(Blockss.DRONE_REDSTONE_EMITTER, blockIn -> Collections.emptyMap());
         ModelLoader.setCustomStateMapper(Blockss.KEROSENE_LAMP_LIGHT, blockIn -> Collections.emptyMap());
         ModelLoader.setCustomStateMapper(Blockss.PRESSURE_CHAMBER_GLASS, new StateMapperBase() {
+            @Nonnull
             @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
+            protected ModelResourceLocation getModelResourceLocation(@Nonnull IBlockState iBlockState) {
                 return PressureGlassBakedModel.BAKED_MODEL;
             }
         });

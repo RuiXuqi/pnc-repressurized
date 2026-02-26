@@ -727,8 +727,8 @@ public class PneumaticCraftUtils {
      * @return the tile entity, or null if there is none
      */
     public static TileEntity getTileEntitySafely(IBlockAccess world, BlockPos pos) {
-        return world instanceof ChunkCache ?
-                ((ChunkCache) world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) :
+        return world instanceof ChunkCache chunkCache ?
+                chunkCache.getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) :
                 world.getTileEntity(pos);
     }
 

@@ -55,7 +55,7 @@ public class TileEntityAerialInterface extends TileEntityPneumaticBase
     private static final int RF_PER_TICK = 1000;
 
     @GameRegistry.ObjectHolder("baubles:ring")
-    private static final Item BAUBLES_RING = null;
+    private static final Item BAUBLES_RING = Items.AIR;
 
     @GuiSynced
     @DescSynced

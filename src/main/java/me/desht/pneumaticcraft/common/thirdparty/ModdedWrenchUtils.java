@@ -1,5 +1,6 @@
 package me.desht.pneumaticcraft.common.thirdparty;
 
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -12,25 +13,25 @@ public enum ModdedWrenchUtils {
     INSTANCE;
 
     @GameRegistry.ObjectHolder("thermalfoundation:wrench")
-    private static final Item CRESCENT_HAMMER = null;
+    private static final Item CRESCENT_HAMMER = Items.AIR;
     @GameRegistry.ObjectHolder("rftools:smartwrench")
-    private static final Item SMART_WRENCH = null;
+    private static final Item SMART_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("immersiveengineering:tool")
-    private static final Item IMMERSIVE_TOOL = null;
+    private static final Item IMMERSIVE_TOOL = Items.AIR;
     @GameRegistry.ObjectHolder("appliedenergistics2:certus_quartz_wrench")
-    private static final Item AE2_CERTUS_WRENCH = null;
+    private static final Item AE2_CERTUS_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("appliedenergistics2:nether_quartz_wrench")
-    private static final Item AE2_NETHER_WRENCH = null;
+    private static final Item AE2_NETHER_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("enderio:item_yeta_wrench")
-    private static final Item YETA_WRENCH = null;
+    private static final Item YETA_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("buildcraftcore:wrench")
-    private static final Item BC_WRENCH = null;
+    private static final Item BC_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("teslacorelib:wrench")
-    private static final Item TESLA_WRENCH = null;
+    private static final Item TESLA_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("ic2:wrench")
-    private static final Item IC2_WRENCH = null;
+    private static final Item IC2_WRENCH = Items.AIR;
     @GameRegistry.ObjectHolder("chiselsandbits:wrench_wood")
-    private static final Item CB_WRENCH_WOOD = null;
+    private static final Item CB_WRENCH_WOOD = Items.AIR;
 
     private final Set<String> wrenches = new HashSet<>();
 

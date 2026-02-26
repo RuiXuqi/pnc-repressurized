@@ -7,6 +7,7 @@ import me.desht.pneumaticcraft.common.progwidgets.WidgetRegistrator;
 import me.desht.pneumaticcraft.common.thirdparty.IThirdParty;
 import me.desht.pneumaticcraft.lib.ModIds;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Loader;
@@ -18,7 +19,7 @@ import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
 public class OpenComputers implements IThirdParty {
     @GameRegistry.ObjectHolder("pneumaticcraft:drone_interface")
-    public static final Block DRONE_INTERFACE = null;
+    public static final Block DRONE_INTERFACE = Blocks.AIR;
 
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> event) {

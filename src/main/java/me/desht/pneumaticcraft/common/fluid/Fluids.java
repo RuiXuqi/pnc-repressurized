@@ -7,6 +7,7 @@ import me.desht.pneumaticcraft.common.block.BlockFluidEtchingAcid;
 import me.desht.pneumaticcraft.common.block.BlockFluidPneumaticCraft;
 import me.desht.pneumaticcraft.common.item.Itemss;
 import me.desht.pneumaticcraft.lib.Log;
+import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
@@ -103,7 +104,7 @@ public class Fluids {
         }
     }
 
-    @Mod.EventBusSubscriber
+    @Mod.EventBusSubscriber(modid = Names.MOD_ID)
     public static class RegistrationHandler {
         @SubscribeEvent
         public static void registerBlocks(RegistryEvent.Register<Block> event) {

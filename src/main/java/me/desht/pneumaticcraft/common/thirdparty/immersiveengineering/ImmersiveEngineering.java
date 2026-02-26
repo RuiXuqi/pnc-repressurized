@@ -5,6 +5,7 @@ import me.desht.pneumaticcraft.common.thirdparty.IThirdParty;
 import me.desht.pneumaticcraft.lib.Log;
 import me.desht.pneumaticcraft.lib.ModIds;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ImmersiveEngineering implements IThirdParty {
 
     @GameRegistry.ObjectHolder("hemp")
-    private static final Block HEMP_BLOCK = null;
+    private static final Block HEMP_BLOCK = Blocks.AIR;
 
     @Override
     public void preInit() {

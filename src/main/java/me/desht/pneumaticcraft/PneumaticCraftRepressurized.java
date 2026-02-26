@@ -123,7 +123,6 @@ public class PneumaticCraftRepressurized {
         MinecraftForge.EVENT_BUS.register(new EventHandlerUniversalSensor());
         MinecraftForge.EVENT_BUS.register(new DroneSpecialVariableHandler());
         MinecraftForge.EVENT_BUS.register(new CraftingHandler());
-        MinecraftForge.EVENT_BUS.register(new ConfigHandler());
     }
 
     @EventHandler

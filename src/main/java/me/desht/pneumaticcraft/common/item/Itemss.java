@@ -14,6 +14,7 @@ import me.desht.pneumaticcraft.lib.Names;
 import me.desht.pneumaticcraft.lib.PneumaticValues;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
@@ -33,125 +34,126 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Mod.EventBusSubscriber
 @ObjectHolder(Names.MOD_ID)
 public class Itemss {
     @ObjectHolder("gps_tool")
-    public static final Item GPS_TOOL = null;
+    public static final Item GPS_TOOL = Items.AIR;
     @ObjectHolder("gps_area_tool")
-    public static final Item GPS_AREA_TOOL = null;
+    public static final Item GPS_AREA_TOOL = Items.AIR;
     @ObjectHolder("ingot_iron_compressed")
-    public static final Item INGOT_IRON_COMPRESSED = null;
+    public static final Item INGOT_IRON_COMPRESSED = Items.AIR;
     @ObjectHolder("pressure_gauge")
-    public static final Item PRESSURE_GAUGE = null;
+    public static final Item PRESSURE_GAUGE = Items.AIR;
     @ObjectHolder("stone_base")
-    public static final Item STONE_BASE = null;
+    public static final Item STONE_BASE = Items.AIR;
     @ObjectHolder("cannon_barrel")
-    public static final Item CANNON_BARREL = null;
+    public static final Item CANNON_BARREL = Items.AIR;
     @ObjectHolder("turbine_blade")
-    public static final Item TURBINE_BLADE = null;
+    public static final Item TURBINE_BLADE = Items.AIR;
     @ObjectHolder("plastic")
-    public static final Item PLASTIC = null;
+    public static final Item PLASTIC = Items.AIR;
     @ObjectHolder("air_canister")
-    public static final Item AIR_CANISTER = null;
+    public static final Item AIR_CANISTER = Items.AIR;
     @ObjectHolder("reinforced_air_canister")
-    public static final Item REINFORCED_AIR_CANISTER = null;
+    public static final Item REINFORCED_AIR_CANISTER = Items.AIR;
     @ObjectHolder("vortex_cannon")
-    public static final Item VORTEX_CANNON = null;
+    public static final Item VORTEX_CANNON = Items.AIR;
     @ObjectHolder("pneumatic_cylinder")
-    public static final Item PNEUMATIC_CYLINDER = null;
+    public static final Item PNEUMATIC_CYLINDER = Items.AIR;
     @ObjectHolder("pneumatic_helmet")
-    public static final Item PNEUMATIC_HELMET = null;
+    public static final Item PNEUMATIC_HELMET = Items.AIR;
     @ObjectHolder("pneumatic_chestplate")
-    public static final Item PNEUMATIC_CHESTPLATE = null;
+    public static final Item PNEUMATIC_CHESTPLATE = Items.AIR;
     @ObjectHolder("pneumatic_leggings")
-    public static final Item PNEUMATIC_LEGGINGS = null;
+    public static final Item PNEUMATIC_LEGGINGS = Items.AIR;
     @ObjectHolder("pneumatic_boots")
-    public static final Item PNEUMATIC_BOOTS = null;
+    public static final Item PNEUMATIC_BOOTS = Items.AIR;
     @ObjectHolder("manometer")
-    public static final Item MANOMETER = null;
+    public static final Item MANOMETER = Items.AIR;
     @ObjectHolder("turbine_rotor")
-    public static final Item TURBINE_ROTOR = null;
+    public static final Item TURBINE_ROTOR = Items.AIR;
     @ObjectHolder("assembly_program")
-    public static final Item ASSEMBLY_PROGRAM = null;
+    public static final Item ASSEMBLY_PROGRAM = Items.AIR;
     @ObjectHolder("empty_pcb")
-    public static final Item EMPTY_PCB = null;
+    public static final Item EMPTY_PCB = Items.AIR;
     @ObjectHolder("unassembled_pcb")
-    public static final Item UNASSEMBLED_PCB = null;
+    public static final Item UNASSEMBLED_PCB = Items.AIR;
     @ObjectHolder("pcb_blueprint")
-    public static final Item PCB_BLUEPRINT = null;
+    public static final Item PCB_BLUEPRINT = Items.AIR;
     @ObjectHolder("transistor")
-    public static final Item TRANSISTOR = null;
+    public static final Item TRANSISTOR = Items.AIR;
     @ObjectHolder("capacitor")
-    public static final Item CAPACITOR = null;
+    public static final Item CAPACITOR = Items.AIR;
     @ObjectHolder("printed_circuit_board")
-    public static final Item PRINTED_CIRCUIT_BOARD = null;
+    public static final Item PRINTED_CIRCUIT_BOARD = Items.AIR;
     @ObjectHolder("failed_pcb")
-    public static final Item FAILED_PCB = null;
+    public static final Item FAILED_PCB = Items.AIR;
     @ObjectHolder("network_component")
-    public static final Item NETWORK_COMPONENT = null;
+    public static final Item NETWORK_COMPONENT = Items.AIR;
     @ObjectHolder("stop_worm")
-    public static final Item STOP_WORM = null;
+    public static final Item STOP_WORM = Items.AIR;
     @ObjectHolder("nuke_virus")
-    public static final Item NUKE_VIRUS = null;
+    public static final Item NUKE_VIRUS = Items.AIR;
     @ObjectHolder("compressed_iron_gear")
-    public static final Item COMPRESSED_IRON_GEAR = null;
+    public static final Item COMPRESSED_IRON_GEAR = Items.AIR;
     @ObjectHolder("pneumatic_wrench")
-    public static final Item PNEUMATIC_WRENCH = null;
+    public static final Item PNEUMATIC_WRENCH = Items.AIR;
     @ObjectHolder("drone")
-    public static final Item DRONE = null;
+    public static final Item DRONE = Items.AIR;
     @ObjectHolder("programming_puzzle")
-    public static final Item PROGRAMMING_PUZZLE = null;
+    public static final Item PROGRAMMING_PUZZLE = Items.AIR;
     @ObjectHolder("advanced_pcb")
-    public static final Item ADVANCED_PCB = null;
+    public static final Item ADVANCED_PCB = Items.AIR;
     @ObjectHolder("remote")
-    public static final Item REMOTE = null;
+    public static final Item REMOTE = Items.AIR;
     @ObjectHolder("seismic_sensor")
-    public static final Item SEISMIC_SENSOR = null;
+    public static final Item SEISMIC_SENSOR = Items.AIR;
     @ObjectHolder("logistics_configurator")
-    public static final Item LOGISTICS_CONFIGURATOR = null;
+    public static final Item LOGISTICS_CONFIGURATOR = Items.AIR;
     @ObjectHolder(SemiBlockRequester.ID)
-    public static final Item LOGISTICS_FRAME_REQUESTER = null;
+    public static final Item LOGISTICS_FRAME_REQUESTER = Items.AIR;
     @ObjectHolder(SemiBlockStorage.ID)
-    public static final Item LOGISTICS_FRAME_STORAGE = null;
+    public static final Item LOGISTICS_FRAME_STORAGE = Items.AIR;
     @ObjectHolder(SemiBlockDefaultStorage.ID)
-    public static final Item LOGISTICS_FRAME_DEFAULT_STORAGE = null;
+    public static final Item LOGISTICS_FRAME_DEFAULT_STORAGE = Items.AIR;
     @ObjectHolder(SemiBlockPassiveProvider.ID)
-    public static final Item LOGISTICS_FRAME_PASSIVE_PROVIDER = null;
+    public static final Item LOGISTICS_FRAME_PASSIVE_PROVIDER = Items.AIR;
     @ObjectHolder(SemiBlockActiveProvider.ID)
-    public static final Item LOGISTICS_FRAME_ACTIVE_PROVIDER = null;
+    public static final Item LOGISTICS_FRAME_ACTIVE_PROVIDER = Items.AIR;
     @ObjectHolder(SemiBlockHeatFrame.ID)
-    public static final Item HEAT_FRAME = null;
+    public static final Item HEAT_FRAME = Items.AIR;
     @ObjectHolder(SemiBlockSpawnerAgitator.ID)
-    public static final Item SPAWNER_AGITATOR = null;
+    public static final Item SPAWNER_AGITATOR = Items.AIR;
     @ObjectHolder(SemiBlockCropSupport.ID)
-    public static final Item CROP_SUPPORT = null;
+    public static final Item CROP_SUPPORT = Items.AIR;
     @ObjectHolder(SemiBlockTransferGadget.ID)
-    public static final Item TRANSFER_GADGET = null;
+    public static final Item TRANSFER_GADGET = Items.AIR;
     @ObjectHolder("logistic_drone")
-    public static final Item LOGISTICS_DRONE = null;
+    public static final Item LOGISTICS_DRONE = Items.AIR;
     @ObjectHolder("harvesting_drone")
-    public static final Item HARVESTING_DRONE = null;
+    public static final Item HARVESTING_DRONE = Items.AIR;
     @ObjectHolder("gun_ammo")
-    public static final Item GUN_AMMO = null;
+    public static final Item GUN_AMMO = Items.AIR;
     @ObjectHolder("gun_ammo_incendiary")
-    public static final Item GUN_AMMO_INCENDIARY = null;
+    public static final Item GUN_AMMO_INCENDIARY = Items.AIR;
     @ObjectHolder("gun_ammo_weighted")
-    public static final Item GUN_AMMO_WEIGHTED = null;
+    public static final Item GUN_AMMO_WEIGHTED = Items.AIR;
     @ObjectHolder("gun_ammo_ap")
-    public static final Item GUN_AMMO_ARMOR_PIERCING = null;
+    public static final Item GUN_AMMO_ARMOR_PIERCING = Items.AIR;
     @ObjectHolder("gun_ammo_explosive")
-    public static final Item GUN_AMMO_EXPLOSIVE = null;
+    public static final Item GUN_AMMO_EXPLOSIVE = Items.AIR;
     @ObjectHolder("gun_ammo_freezing")
-    public static final Item GUN_AMMO_FREEZING = null;
+    public static final Item GUN_AMMO_FREEZING = Items.AIR;
     @ObjectHolder("amadron_tablet")
-    public static final Item AMADRON_TABLET = null;
+    public static final Item AMADRON_TABLET = Items.AIR;
     @ObjectHolder("minigun")
-    public static final Item MINIGUN = null;
+    public static final Item MINIGUN = Items.AIR;
     @ObjectHolder("camo_applicator")
-    public static final Item CAMO_APPLICATOR = null;
+    public static final Item CAMO_APPLICATOR = Items.AIR;
     @ObjectHolder("micromissiles")
-    public static final Item MICROMISSILES = null;
+    public static final Item MICROMISSILES = Items.AIR;
 
     public static List<Item> items = new ArrayList<>();
     private static final List<ItemBlock> all_itemblocks = new ArrayList<>();
@@ -217,7 +219,8 @@ public class Itemss {
 
         for (Block b : Blockss.blocks) {
             if (!(b instanceof BlockAir)) {
-                ItemBlock itemBlock = b instanceof ICustomItemBlock ? ((ICustomItemBlock) b).getCustomItemBlock() : new ItemBlock(b);
+                ItemBlock itemBlock = b instanceof ICustomItemBlock customItemBlock ? customItemBlock.getCustomItemBlock() : new ItemBlock(b);
+                //noinspection DataFlowIssue
                 registerItem(registry, itemBlock.setRegistryName(b.getRegistryName()));
             }
         }
@@ -239,8 +242,8 @@ public class Itemss {
     public static void registerItem(IForgeRegistry<Item> registry, Item item) {
         registry.register(item);
         ThirdPartyManager.instance().onItemRegistry(item);
-        if (item instanceof ItemBlock) {
-            all_itemblocks.add((ItemBlock) item);
+        if (item instanceof ItemBlock itemBlock) {
+            all_itemblocks.add(itemBlock);
         } else {
             items.add(item);
         }
@@ -271,21 +274,18 @@ public class Itemss {
                         NBTUtil.hasTag(stack, UpgradableItemUtils.NBT_CREATIVE) ? 0xFFFF60FF : 0xFFFFFFFF,
                 Item.getItemFromBlock(Blockss.OMNIDIRECTIONAL_HOPPER), Item.getItemFromBlock(Blockss.LIQUID_HOPPER));
 
-        event.getItemColors().registerItemColorHandler((stack, tintIndex) -> {
-            switch (tintIndex) {
-                case 0: // border
-                    return EnumDyeColor.byDyeDamage(BlockAphorismTile.getBorderColor(stack)).getColorValue();
-                case 1: // background
-                    return Blockss.desaturate(EnumDyeColor.byDyeDamage(BlockAphorismTile.getBackgroundColor(stack)).getColorValue());
-                default:
-                    return 0xFFFFFF;
-            }
+        event.getItemColors().registerItemColorHandler((stack, tintIndex) -> switch (tintIndex) {
+            case 0 -> // border
+                    EnumDyeColor.byDyeDamage(BlockAphorismTile.getBorderColor(stack)).getColorValue();
+            case 1 -> // background
+                    Blockss.desaturate(EnumDyeColor.byDyeDamage(BlockAphorismTile.getBackgroundColor(stack)).getColorValue());
+            default -> 0xFFFFFF;
         }, Item.getItemFromBlock(Blockss.APHORISM_TILE));
     }
 
     public static int getAmmoColor(@Nonnull ItemStack stack) {
-        if (stack.getItem() instanceof ItemGunAmmo) {
-            return ((ItemGunAmmo) stack.getItem()).getAmmoColor(stack);
+        if (stack.getItem() instanceof ItemGunAmmo gunAmmo) {
+            return gunAmmo.getAmmoColor(stack);
         } else {
             return 0x00FFFF00;
         }

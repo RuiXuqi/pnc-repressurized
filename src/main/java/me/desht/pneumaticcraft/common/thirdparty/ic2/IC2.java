@@ -9,6 +9,7 @@ import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -33,9 +34,9 @@ import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 public class IC2 implements IThirdParty, IGuiHandler {
 
     @GameRegistry.ObjectHolder("pneumatic_generator")
-    static final Block PNEUMATIC_GENERATOR = null;
+    static final Block PNEUMATIC_GENERATOR = Blocks.AIR;
     @GameRegistry.ObjectHolder("electric_compressor")
-    static final Block ELECTRIC_COMPRESSOR = null;
+    static final Block ELECTRIC_COMPRESSOR = Blocks.AIR;
 
     static ItemStack glassFibreCable;
     static ItemStack overclockerUpgrade;
