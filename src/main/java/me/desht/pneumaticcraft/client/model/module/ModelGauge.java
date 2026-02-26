@@ -1,6 +1,7 @@
 package me.desht.pneumaticcraft.client.model.module;
 
-import me.desht.pneumaticcraft.client.util.GuiUtils;
+import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer3D;
+import me.desht.pneumaticcraft.client.util.ClientUtils;
 import me.desht.pneumaticcraft.client.util.RenderUtils;
 import me.desht.pneumaticcraft.common.block.tubes.ModulePressureGauge;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityPneumaticBase;
@@ -8,9 +9,11 @@ import me.desht.pneumaticcraft.lib.Textures;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraft.util.math.BlockPos;
 
 public class ModelGauge extends ModelModuleBase {
+    private static final float GAUGE_SCALE = 0.007f;
+
     private final ModelRenderer shape1;
     private final ModelRenderer shape2;
     private final ModulePressureGauge gaugeModule;
@@ -39,24 +42,33 @@ public class ModelGauge extends ModelModuleBase {
         if (this.gaugeModule != null && this.gaugeModule.isUpgraded()) RenderUtils.glColorHex(0xFFC0FF70);
         this.shape1.render(scale);
         this.shape2.render(scale);
+    }
+
+    @Override
+    protected void renderExtras(float scale, float partialTicks) {
+        if (this.gaugeModule == null || this.gaugeModule.isFake()) return;
+
+        BlockPos pos = this.gaugeModule.getTube().pos();
+        if (ClientUtils.getClientPlayer().getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) > 256)
+            return;
+
+        GlStateManager.pushMatrix();
 
         float pressure = 0f;
-        float dangerPressure = 5f;
         float critPressure = 7f;
-        if (this.gaugeModule != null && this.gaugeModule.getTube() instanceof TileEntityPneumaticBase) {
-            TileEntityPneumaticBase base = (TileEntityPneumaticBase) this.gaugeModule.getTube();
+        float dangerPressure = 5f;
+        if (this.gaugeModule.getTube() instanceof TileEntityPneumaticBase base) {
             pressure = base.getPressure();
             critPressure = base.criticalPressure;
             dangerPressure = base.dangerPressure;
         }
-        GlStateManager.translate(0, 1, 0.378);
-        double widgetScale = 0.007D;
-        GlStateManager.scale(widgetScale, widgetScale, widgetScale);
+        RenderUtils.rotateMatrixForDirection(this.gaugeModule.getDirection());
+        GlStateManager.translate(0, 1.01, 0.378);
+        GlStateManager.scale(GAUGE_SCALE, GAUGE_SCALE, GAUGE_SCALE);
         GlStateManager.rotate(180, 0, 1, 0);
-        GlStateManager.disableLighting();
-        GuiUtils.drawPressureGauge(FMLClientHandler.instance().getClient().fontRenderer, -1, critPressure, dangerPressure, -1.001F, pressure, 0, 0, 0);
-        GlStateManager.enableLighting();
+        PressureGaugeRenderer3D.drawPressureGauge(-1, critPressure, dangerPressure, 0, pressure, 0, 0, 0, 0xFF000000);
 
+        GlStateManager.popMatrix();
     }
 
     @Override

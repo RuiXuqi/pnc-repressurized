@@ -6,7 +6,7 @@ import me.desht.pneumaticcraft.api.tileentity.IAirHandler;
 import me.desht.pneumaticcraft.api.tileentity.IHeatExchanger;
 import me.desht.pneumaticcraft.client.gui.widget.*;
 import me.desht.pneumaticcraft.client.gui.widget.GuiAnimatedStat.StatIcon;
-import me.desht.pneumaticcraft.client.util.GuiUtils;
+import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer2D;
 import me.desht.pneumaticcraft.client.util.RenderUtils;
 import me.desht.pneumaticcraft.common.block.Blockss;
 import me.desht.pneumaticcraft.common.network.NetworkHandler;
@@ -265,7 +265,7 @@ public class GuiPneumaticContainerBase<Tile extends TileEntityBase> extends GuiC
             Point gaugeLocation = this.getGaugeLocation();
             if (gaugeLocation != null) {
                 TileEntityPneumaticBase pneu = (TileEntityPneumaticBase) this.te;
-                GuiUtils.drawPressureGauge(this.fontRenderer, -1, pneu.criticalPressure, pneu.dangerPressure, this.te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) this.te).getMinWorkingPressure() : -Float.MAX_VALUE, pneu.getPressure(), gaugeLocation.x, gaugeLocation.y, this.zLevel);
+                PressureGaugeRenderer2D.drawPressureGauge(this.fontRenderer, -1, pneu.criticalPressure, pneu.dangerPressure, this.te instanceof IMinWorkingPressure ? ((IMinWorkingPressure) this.te).getMinWorkingPressure() : -Float.MAX_VALUE, pneu.getPressure(), gaugeLocation.x, gaugeLocation.y, this.zLevel);
             }
         }
     }

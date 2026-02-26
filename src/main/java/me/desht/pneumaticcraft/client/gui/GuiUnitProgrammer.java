@@ -102,7 +102,8 @@ public class GuiUnitProgrammer extends GuiScreen {
             }
             this.addAdditionalInfoToTooltip(widget, tooltip);
 
-            if (tooltip.size() > 0) this.drawHoveringText(tooltip, x - this.guiLeft, y - this.guiTop, this.fontRenderer);
+            if (tooltip.size() > 0)
+                this.drawHoveringText(tooltip, x - this.guiLeft, y - this.guiTop, this.fontRenderer);
         }
 
     }

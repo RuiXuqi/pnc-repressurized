@@ -1,7 +1,7 @@
 package me.desht.pneumaticcraft.client.gui;
 
 import me.desht.pneumaticcraft.api.tileentity.IAirHandler;
-import me.desht.pneumaticcraft.client.util.GuiUtils;
+import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer2D;
 import me.desht.pneumaticcraft.common.inventory.ContainerVacuumPump;
 import me.desht.pneumaticcraft.common.tileentity.TileEntityVacuumPump;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
@@ -37,8 +37,8 @@ public class GuiVacuumPump extends GuiPneumaticContainerBase<TileEntityVacuumPum
 
         int xStart = (this.width - this.xSize) / 2;
         int yStart = (this.height - this.ySize) / 2;
-        GuiUtils.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, PneumaticValues.MIN_PRESSURE_VACUUM_PUMP, this.te.getAirHandler(this.te.getInputSide()).getPressure(), xStart + this.xSize / 5, yStart + this.ySize / 5 + 4, this.zLevel);
-        GuiUtils.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, -1, this.te.getAirHandler(this.te.getVacuumSide()).getPressure(), xStart + this.xSize * 4 / 5, yStart + this.ySize / 5 + 4, this.zLevel);
+        PressureGaugeRenderer2D.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, PneumaticValues.MIN_PRESSURE_VACUUM_PUMP, this.te.getAirHandler(this.te.getInputSide()).getPressure(), xStart + this.xSize / 5, yStart + this.ySize / 5 + 4, this.zLevel);
+        PressureGaugeRenderer2D.drawPressureGauge(this.fontRenderer, -1, PneumaticValues.MAX_PRESSURE_VACUUM_PUMP, PneumaticValues.DANGER_PRESSURE_VACUUM_PUMP, -1, this.te.getAirHandler(this.te.getVacuumSide()).getPressure(), xStart + this.xSize * 4 / 5, yStart + this.ySize / 5 + 4, this.zLevel);
     }
 
     @Override

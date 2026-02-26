@@ -36,13 +36,14 @@ public class OneProbeRecipeFactory implements IRecipeFactory {
             boolean probeFound = false, helmetFound = false;
             for (int i = 0; i < inv.getSizeInventory(); i++) {
                 Item item = inv.getStackInSlot(i).getItem();
+                if (item == Items.AIR) continue;
                 if (item == Itemss.PNEUMATIC_HELMET) {
                     if (helmetFound) return false;
                     helmetFound = true;
                 } else if (item == CraftingRegistrator.ONE_PROBE) {
                     if (probeFound) return false;
                     probeFound = true;
-                } else if (item != Items.AIR) {
+                } else {
                     return false;
                 }
             }

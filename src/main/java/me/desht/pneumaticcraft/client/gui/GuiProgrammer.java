@@ -408,7 +408,8 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
 
         this.programmerUnit.getScrollBar().setEnabled(this.showingWidgetProgress == 0);
         super.drawGuiContainerBackgroundLayer(partialTicks, x, y);
-        if (this.showingWidgetProgress > 0) this.programmerUnit.getScrollBar().setCurrentState(this.programmerUnit.getLastZoom());
+        if (this.showingWidgetProgress > 0)
+            this.programmerUnit.getScrollBar().setCurrentState(this.programmerUnit.getLastZoom());
 
         this.programmerUnit.render(x, y, this.showFlow.checked, this.showInfo.checked && this.showingWidgetProgress == 0, this.draggingWidget == null);
 
@@ -867,7 +868,8 @@ public class GuiProgrammer extends GuiPneumaticContainerBase<TileEntityProgramme
             }
             if (!returnedPieces.isEmpty()) {
                 exportButtonTooltip.add("Returned Programming Puzzles:");
-                if (this.player.capabilities.isCreativeMode) exportButtonTooltip.add("(Creative mode, nothing's given)");
+                if (this.player.capabilities.isCreativeMode)
+                    exportButtonTooltip.add("(Creative mode, nothing's given)");
                 for (ItemStack stack : returnedPieces) {
                     exportButtonTooltip.add("-" + stack.getCount() + "x " + stack.getDisplayName());
                 }

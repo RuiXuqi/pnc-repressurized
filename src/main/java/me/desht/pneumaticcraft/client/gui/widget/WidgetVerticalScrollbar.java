@@ -73,7 +73,8 @@ public class WidgetVerticalScrollbar extends WidgetBase {
         }
         if (!this.enabled) this.dragging = false;
         this.wasClicking = Mouse.isButtonDown(0);
-        if (this.dragging) this.currentScroll = (float) (mouseY - 7 - this.getBounds().y) / (this.getBounds().height - 17);
+        if (this.dragging)
+            this.currentScroll = (float) (mouseY - 7 - this.getBounds().y) / (this.getBounds().height - 17);
         this.currentScroll = MathHelper.clamp(this.currentScroll, 0, 1);
         Minecraft.getMinecraft().getTextureManager().bindTexture(SCROLL_TEXTURE);
         Gui.drawModalRectWithCustomSizedTexture(this.x, this.y, 12, 0, this.getBounds().width, 1, 26, 15);

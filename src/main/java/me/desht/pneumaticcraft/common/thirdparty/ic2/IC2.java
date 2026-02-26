@@ -81,6 +81,7 @@ public class IC2 implements IThirdParty, IGuiHandler {
 
     @SideOnly(Side.CLIENT)
     private void registerModel(Block block) {
+        if (block == Blocks.AIR) return;
         Item item = ItemBlock.getItemFromBlock(block);
         if (item.getRegistryName() != null) {
             ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(item.getRegistryName(), "inventory"));
@@ -92,13 +93,11 @@ public class IC2 implements IThirdParty, IGuiHandler {
     public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
-        switch (EnumGuiId.values()[ID]) {
-            case PNEUMATIC_GENERATOR:
-                return new ContainerPneumaticGenerator(player.inventory, (TileEntityPneumaticGenerator) te);
-            case ELECTRIC_COMPRESSOR:
-                return new ContainerElectricCompressor(player.inventory, (TileEntityElectricCompressor) te);
-        }
-        return null;
+        return switch (EnumGuiId.values()[ID]) {
+            case PNEUMATIC_GENERATOR -> new ContainerPneumaticGenerator(player.inventory, (TileEntityPneumaticGenerator) te);
+            case ELECTRIC_COMPRESSOR -> new ContainerElectricCompressor(player.inventory, (TileEntityElectricCompressor) te);
+            default -> null;
+        };
     }
 
     @Nullable
@@ -106,12 +105,10 @@ public class IC2 implements IThirdParty, IGuiHandler {
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         BlockPos pos = new BlockPos(x, y, z);
         TileEntity te = world.isBlockLoaded(pos) ? world.getTileEntity(pos) : null;
-        switch (EnumGuiId.values()[ID]) {
-            case PNEUMATIC_GENERATOR:
-                return new GuiPneumaticGenerator(player.inventory, (TileEntityPneumaticGenerator) te);
-            case ELECTRIC_COMPRESSOR:
-                return new GuiElectricCompressor(player.inventory, (TileEntityElectricCompressor) te);
-        }
-        return null;
+        return switch (EnumGuiId.values()[ID]) {
+            case PNEUMATIC_GENERATOR -> new GuiPneumaticGenerator(player.inventory, (TileEntityPneumaticGenerator) te);
+            case ELECTRIC_COMPRESSOR -> new GuiElectricCompressor(player.inventory, (TileEntityElectricCompressor) te);
+            default -> null;
+        };
     }
 }

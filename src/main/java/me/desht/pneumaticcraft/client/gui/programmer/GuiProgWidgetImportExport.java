@@ -68,7 +68,8 @@ public class GuiProgWidgetImportExport<Widget extends IProgWidget> extends GuiPr
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        if (this.showSides()) this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
+        if (this.showSides())
+            this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
     }
 
 }

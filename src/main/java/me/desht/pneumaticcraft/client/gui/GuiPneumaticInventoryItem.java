@@ -2,7 +2,7 @@ package me.desht.pneumaticcraft.client.gui;
 
 import me.desht.pneumaticcraft.api.item.IItemRegistry.EnumUpgrade;
 import me.desht.pneumaticcraft.api.item.IPressurizable;
-import me.desht.pneumaticcraft.client.util.GuiUtils;
+import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer2D;
 import me.desht.pneumaticcraft.common.inventory.ContainerChargingStationItemInventory;
 import me.desht.pneumaticcraft.common.network.NetworkHandler;
 import me.desht.pneumaticcraft.common.network.PacketGuiButton;
@@ -104,7 +104,7 @@ public abstract class GuiPneumaticInventoryItem extends GuiPneumaticContainerBas
         int xStart = (this.width - this.xSize) / 2;
         int yStart = (this.height - this.ySize) / 2;
         IPressurizable p = (IPressurizable) this.itemStack.getItem();
-        GuiUtils.drawPressureGauge(this.fontRenderer, 0, p.maxPressure(this.itemStack), p.maxPressure(this.itemStack), 0,
+        PressureGaugeRenderer2D.drawPressureGauge(this.fontRenderer, 0, p.maxPressure(this.itemStack), p.maxPressure(this.itemStack), 0,
                 this.te.chargingItemPressure, xStart + this.xSize * 3 / 4 + 8, yStart + this.ySize / 4 + 4, this.zLevel);
     }
 

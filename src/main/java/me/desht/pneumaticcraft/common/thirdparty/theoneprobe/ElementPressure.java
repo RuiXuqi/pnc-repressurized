@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import mcjty.theoneprobe.api.IElement;
 import me.desht.pneumaticcraft.api.tileentity.IAirHandler;
 import me.desht.pneumaticcraft.api.tileentity.IPneumaticMachine;
-import me.desht.pneumaticcraft.client.util.GuiUtils;
+import me.desht.pneumaticcraft.client.render.pressure_gauge.PressureGaugeRenderer2D;
 import me.desht.pneumaticcraft.common.tileentity.IMinWorkingPressure;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -37,9 +37,9 @@ public class ElementPressure implements IElement {
         GlStateManager.pushMatrix();
 //        double scale = getWidth() / (GuiUtils.PRESSURE_GAUGE_RADIUS * 2.0);
         GlStateManager.scale(SCALE, SCALE, SCALE);
-        int x1 = (int) ((x + this.getWidth() / 2) / SCALE);
-        int y1 = (int) ((y + this.getHeight() / 2) / SCALE);
-        GuiUtils.drawPressureGauge(Minecraft.getMinecraft().fontRenderer, -1, this.crit, this.danger, this.min, this.pressure, x1, y1, 0, 0xFFC0C0C0);
+        int x1 = (int) ((x + (float) this.getWidth() / 2) / SCALE);
+        int y1 = (int) ((y + (float) this.getHeight() / 2) / SCALE);
+        PressureGaugeRenderer2D.drawPressureGauge(Minecraft.getMinecraft().fontRenderer, -1, this.crit, this.danger, this.min, this.pressure, x1, y1, 0, 0xFFC0C0C0);
         GlStateManager.popMatrix();
     }
 

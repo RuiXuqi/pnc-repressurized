@@ -151,7 +151,8 @@ public class GuiPastebin extends GuiPneumaticScreenBase {
     public void drawScreen(int x, int y, float partialTicks) {
         this.drawDefaultBackground();
         super.drawScreen(x, y, partialTicks);
-        if (this.errorMessage != null) this.fontRenderer.drawString(this.errorMessage, this.guiLeft + 5, this.guiTop + 5, 0xFFFF0000);
+        if (this.errorMessage != null)
+            this.fontRenderer.drawString(this.errorMessage, this.guiLeft + 5, this.guiTop + 5, 0xFFFF0000);
     }
 
     /**

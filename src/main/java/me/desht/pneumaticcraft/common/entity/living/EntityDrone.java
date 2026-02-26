@@ -402,7 +402,8 @@ public class EntityDrone extends EntityDroneBase implements
                     for (int z = (int) this.posZ - 2; z <= (int) (this.posZ + this.width); z++) {
                         if (PneumaticCraftUtils.isBlockLiquid(this.world.getBlockState(new BlockPos(x, y, z)).getBlock())) {
                             BlockPos pos = new BlockPos(x, y, z);
-                            if (this.securityUpgradeCount == 2) this.displacedLiquids.put(pos, this.world.getBlockState(pos));
+                            if (this.securityUpgradeCount == 2)
+                                this.displacedLiquids.put(pos, this.world.getBlockState(pos));
                             this.world.setBlockState(pos, Blocks.AIR.getDefaultState(), 2);
                         }
                     }
@@ -427,7 +428,8 @@ public class EntityDrone extends EntityDroneBase implements
             }
         }
         super.onUpdate();
-        if (this.hasMinigun()) this.getMinigun().setAttackTarget(this.getAttackTarget()).update(this.posX, this.posY, this.posZ);
+        if (this.hasMinigun())
+            this.getMinigun().setAttackTarget(this.getAttackTarget()).update(this.posX, this.posY, this.posZ);
         if (!this.world.isRemote && this.isEntityAlive()) {
             if (enabled) this.aiManager.onUpdateTasks();
             for (EnumFacing d : EnumFacing.VALUES) {
@@ -601,8 +603,10 @@ public class EntityDrone extends EntityDroneBase implements
                 targetEntity = null;
             }
             if (targetEntity != null) {
-                if (this.targetLine == null) this.targetLine = new RenderProgressingLine(0, -this.height / 2, 0, 0, 0, 0);
-                if (this.oldTargetLine == null) this.oldTargetLine = new RenderProgressingLine(0, -this.height / 2, 0, 0, 0, 0);
+                if (this.targetLine == null)
+                    this.targetLine = new RenderProgressingLine(0, -this.height / 2, 0, 0, 0, 0);
+                if (this.oldTargetLine == null)
+                    this.oldTargetLine = new RenderProgressingLine(0, -this.height / 2, 0, 0, 0, 0);
 
                 this.targetLine.endX = targetEntity.posX - this.posX;
                 this.targetLine.endY = targetEntity.posY + targetEntity.height / 2 - this.posY;

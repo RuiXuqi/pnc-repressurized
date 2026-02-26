@@ -22,7 +22,7 @@ public class ImmersiveEngineering implements IThirdParty {
 
     @Override
     public void postInit() {
-        if (HEMP_BLOCK != null) {
+        if (HEMP_BLOCK != Blocks.AIR) {
             PneumaticCraftAPIHandler.getInstance().getHarvestRegistry().registerHarvestHandlerCactuslike(state -> state.getBlock() == HEMP_BLOCK);
         } else {
             Log.error("Could not find Immersive Engineering's Hemp block! Harvesting this block is not supported!");

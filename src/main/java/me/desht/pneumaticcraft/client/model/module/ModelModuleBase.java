@@ -20,15 +20,21 @@ public abstract class ModelModuleBase extends ModelBase {
         GlStateManager.pushMatrix();
 
         FMLClientHandler.instance().getClient().getTextureManager().bindTexture(this.getTexture());
-        RenderUtils.rotateMatrixByMetadata(module.getDirection().ordinal());
+        RenderUtils.rotateMatrixForDirection(module.getDirection());
         this.renderDynamic(scale, partialTicks);
 
         GlStateManager.popMatrix();
+
+        this.renderExtras(scale, partialTicks);
     }
 
     protected abstract void renderDynamic(float scale, float partialTicks);
 
     protected abstract ResourceLocation getTexture();
+
+    protected void renderExtras(float scale, float partialTicks) {
+        // nothing; override in subclasses
+    }
 
     // used if there's any kind of problem instantiating the actual model for the module
     public static class MissingModel extends ModelModuleBase {

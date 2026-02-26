@@ -119,7 +119,8 @@ public class GuiProgWidgetCondition extends GuiProgWidgetAreaShow<ProgWidget> {
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
-        if (this.isSidedWidget()) this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
+        if (this.isSidedWidget())
+            this.fontRenderer.drawString("Accessing sides:", this.guiLeft + 4, this.guiTop + 20, 0xFF404060);
         this.fontRenderer.drawString(this.widget.getExtraStringInfo(), this.guiLeft + this.xSize / 2 - this.fontRenderer.getStringWidth(this.widget.getExtraStringInfo()) / 2, this.guiTop + 120, 0xFF404060);
     }
 

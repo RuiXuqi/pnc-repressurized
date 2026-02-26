@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
 public class OpenComputers implements IThirdParty {
+    @SuppressWarnings("unused")
     @GameRegistry.ObjectHolder("pneumaticcraft:drone_interface")
     public static final Block DRONE_INTERFACE = Blocks.AIR;
 

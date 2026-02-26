@@ -53,7 +53,7 @@ public enum ModdedWrenchUtils {
     }
 
     private void registerWrench(Item wrench) {
-        if (wrench != null) this.wrenches.add(makeWrenchKey(new ItemStack(wrench)));
+        if (wrench != Items.AIR) this.wrenches.add(makeWrenchKey(new ItemStack(wrench)));
     }
 
     private static String makeWrenchKey(ItemStack wrench) {

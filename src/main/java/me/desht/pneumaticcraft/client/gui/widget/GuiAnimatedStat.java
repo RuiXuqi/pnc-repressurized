@@ -580,7 +580,8 @@ public class GuiAnimatedStat implements IGuiAnimatedStat, IGuiWidget, IWidgetLis
         }
 
         for (IGuiWidget widget : this.widgets)
-            if (this.isMouseOverWidget(widget, mouseX, mouseY)) widget.addTooltip(mouseX, mouseY, curTooltip, shiftPressed);
+            if (this.isMouseOverWidget(widget, mouseX, mouseY))
+                widget.addTooltip(mouseX, mouseY, curTooltip, shiftPressed);
     }
 
     private boolean mouseIsHoveringOverIcon(int x, int y) {

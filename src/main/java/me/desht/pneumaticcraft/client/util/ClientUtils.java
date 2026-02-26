@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -15,6 +16,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Miscellaneous client-side utilities
@@ -39,6 +41,11 @@ public class ClientUtils {
     @Nonnull
     public static ItemStack getWornArmor(EntityEquipmentSlot slot) {
         return Minecraft.getMinecraft().player.getItemStackFromSlot(slot);
+    }
+
+    @Nonnull
+    public static EntityPlayer getClientPlayer() {
+        return Objects.requireNonNull(Minecraft.getMinecraft().player);
     }
 
     public static double[] getTextureUV(IBlockState state, EnumFacing face) {
