@@ -13,7 +13,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerCareer;
 import net.minecraftforge.fml.common.registry.VillagerRegistry.VillagerProfession;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 public class VillagerHandler {
     public static VillagerProfession mechanicProfession;
 

@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 @GameRegistry.ObjectHolder(Names.MOD_ID)
 public class Blockss {
     @GameRegistry.ObjectHolder("pressure_tube")

@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 @ObjectHolder(Names.MOD_ID)
 public class Itemss {
     @ObjectHolder("gps_tool")

@@ -17,7 +17,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 public class EntityRegistrator {
     private static int ID = 1;
 

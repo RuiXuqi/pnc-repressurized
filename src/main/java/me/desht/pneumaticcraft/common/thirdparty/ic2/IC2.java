@@ -5,6 +5,7 @@ import me.desht.pneumaticcraft.api.PneumaticRegistry;
 import me.desht.pneumaticcraft.common.GuiHandler.EnumGuiId;
 import me.desht.pneumaticcraft.common.block.Blockss;
 import me.desht.pneumaticcraft.common.thirdparty.IThirdParty;
+import me.desht.pneumaticcraft.common.tileentity.TileEntityRegistrator;
 import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,8 +29,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-import static me.desht.pneumaticcraft.common.util.PneumaticCraftUtils.RL;
-
 @GameRegistry.ObjectHolder(Names.MOD_ID)
 public class IC2 implements IThirdParty, IGuiHandler {
 
@@ -47,8 +46,8 @@ public class IC2 implements IThirdParty, IGuiHandler {
     public void preInit() {
         MinecraftForge.EVENT_BUS.register(this);
 
-        GameRegistry.registerTileEntity(TileEntityPneumaticGenerator.class, RL("pneumaticGenerator"));
-        GameRegistry.registerTileEntity(TileEntityElectricCompressor.class, RL("electricCompressor"));
+        TileEntityRegistrator.register(TileEntityPneumaticGenerator.class, "pneumaticGenerator");
+        TileEntityRegistrator.register(TileEntityElectricCompressor.class, "electricCompressor");
 
         PneumaticRegistry.getInstance().getHelmetRegistry().registerBlockTrackEntry(new BlockTrackEntryIC2());
     }

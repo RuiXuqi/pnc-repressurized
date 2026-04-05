@@ -3,6 +3,7 @@ package me.desht.pneumaticcraft.common.block.tubes;
 import me.desht.pneumaticcraft.common.item.ItemTubeModule;
 import me.desht.pneumaticcraft.common.item.Itemss;
 import me.desht.pneumaticcraft.lib.Log;
+import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.item.Item;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,7 +12,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.HashMap;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 public class ModuleRegistrator {
     private static final HashMap<String, Class<? extends TubeModule>> module2class = new HashMap<>();
     private static final HashMap<String, Item> module2Item = new HashMap<>();

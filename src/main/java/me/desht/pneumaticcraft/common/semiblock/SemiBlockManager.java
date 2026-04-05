@@ -9,6 +9,7 @@ import me.desht.pneumaticcraft.common.util.NBTUtil;
 import me.desht.pneumaticcraft.common.util.PneumaticCraftUtils;
 import me.desht.pneumaticcraft.common.util.StreamUtils;
 import me.desht.pneumaticcraft.lib.Log;
+import me.desht.pneumaticcraft.lib.Names;
 import net.minecraft.block.SoundType;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,7 +42,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = Names.MOD_ID)
 public class SemiBlockManager {
     private final Map<Chunk, Map<BlockPos, List<ISemiBlock>>> semiBlocks = new HashMap<>();
     private final List<ISemiBlock> addingBlocks = new LinkedList<>();
