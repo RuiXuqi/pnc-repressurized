@@ -7,44 +7,48 @@ repositories {
     // Other repositories described by default:
     // CleanroomMC: https://maven.cleanroommc.com
     maven {
-        name 'CurseMaven'
-        url 'https://curse.cleanroommc.com'
+        name = 'CurseMaven'
+        url = 'https://cursemaven.com'
     }
     maven {
-        name 'Modrinth'
-        url 'https://api.modrinth.com/maven'
+        name = 'CleanroomCurseMaven'
+        url = 'https://curse.cleanroommc.com'
     }
     maven {
-        name 'CoFH Maven'
-        url 'https://maven.covers1624.net'
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
     }
     maven {
-        name 'JEI'
-        url 'https://dvs1.progwml6.com/files/maven'
+        name = 'CoFH Maven'
+        url = 'https://maven.covers1624.net'
+    }
+    maven {
+        name = 'JEI'
+        url = 'https://dvs1.progwml6.com/files/maven'
     }
 //    maven {
-//        name 'OpenComputers'
-//        url 'https://maven.cil.li/'
+//        name = 'OpenComputers'
+//        url = 'https://maven.cil.li/'
 //    }
     maven { // TOP
-        name 'tterrag maven'
-        url 'https://maven.tterrag.com/'
+        name = 'tterrag maven'
+        url = 'https://maven.tterrag.com/'
     }
     maven {
-        name 'BlameJared - Crafttweaker/Patchouli'
-        url 'https://maven.blamejared.com/'
+        name = 'BlameJared - Crafttweaker/Patchouli'
+        url = 'https://maven.blamejared.com/'
     }
     maven {
-        name 'Mod maven'
-        url 'https://modmaven.dev/'
+        name = 'Mod maven'
+        url = 'https://modmaven.dev/'
     }
     maven {
-        name 'ic2'
-        url 'https://maven.ic2.player.to/'
+        name = 'ic2'
+        url = 'https://maven.ic2.player.to/'
     }
     maven { // Baubles
-        name 'thiakil'
-        url 'https://maven.thiakil.com'
+        name = 'thiakil'
+        url = 'https://maven.thiakil.com'
     }
     mavenLocal() // Must be last for caching to work
 }
